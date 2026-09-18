@@ -113,8 +113,24 @@ def create_app(db_conn=None) -> Flask:
         if not query:
             return jsonify({"error": "Missing required field 'query' in JSON body or 'q' query parameter."}), 400
 
-        result = agent.ask(query)
-        return jsonify(result.to_dict())
+        try:
+            result = agent.ask(query)
+            return jsonify(result.to_dict())
+        except Exception as exc:
+            try:
+                # Deterministic fallback grounded directly in SQLite
+                fb_agent = AtomosAgent(conn, use_llm=False)
+                res = fb_agent.ask(query)
+                return jsonify(res.to_dict())
+            except Exception as inner_exc:
+                return jsonify({
+                    "query": query,
+                    "intent": "ERROR",
+                    "answer": f"Unable to process query: {str(exc)}",
+                    "tool_calls": [],
+                    "success": False,
+                    "error": str(exc),
+                }), 200
 
     # 3. Unified Entity Search
     @app.route("/api/search", methods=["GET"])

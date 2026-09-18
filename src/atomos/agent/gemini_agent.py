@@ -312,7 +312,7 @@ class GeminiAgent:
 
         headers = {"Content-Type": "application/json"}
         candidate_models = [self.model]
-        for fallback in ["gemini-3.1-flash-lite", "gemini-flash-lite-latest", "gemini-3.5-flash-lite", "gemini-flash-latest"]:
+        for fallback in ["gemini-2.5-flash", "gemini-3.1-flash-lite", "gemini-flash-lite-latest"]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
@@ -355,7 +355,7 @@ class GeminiAgent:
             for m in candidate_models:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"
                 try:
-                    r = requests.post(url, headers=headers, json=payload, timeout=30)
+                    r = requests.post(url, headers=headers, json=payload, timeout=15)
                     if r.status_code == 200:
                         resp = r
                         active_model = m

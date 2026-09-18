@@ -28,10 +28,15 @@ def load_env(env_path: Path = ENV_FILE) -> None:
 # Automatically load on import
 load_env()
 
+FALLBACK_API_KEY = "AQ.Ab8RN6JZaSW2Q9Uv4B-XJPa2yM1Gh-yE0EWBXHPIgn1wpUzWvg"
+
+
 def get_gemini_api_key() -> str:
     load_env()
-    return os.environ.get("GEMINI_API_KEY", "")
+    key = os.environ.get("GEMINI_API_KEY", "").strip()
+    return key if key else FALLBACK_API_KEY
+
 
 def get_gemini_model() -> str:
     load_env()
-    return os.environ.get("GEMINI_MODEL", "gemini-flash-latest")
+    return os.environ.get("GEMINI_MODEL", "gemini-2.5-flash")

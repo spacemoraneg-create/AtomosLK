@@ -6,19 +6,23 @@ import sqlite3
 from pathlib import Path
 from typing import Optional
 
-DEFAULT_DB_PATH = Path("data/atomos.db")
+PROJECT_ROOT = Path(__file__).resolve().parent.parent.parent.parent
+DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "atomos.db"
 SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
 
 def get_connection(db_path: Optional[Path] = None, check_same_thread: bool = True) -> sqlite3.Connection:
     """
     Get a SQLite database connection with foreign keys enabled and Row factory configured.
+    Configures WAL mode and a 5000ms busy timeout for concurrent multi-threaded access.
     """
     target_path = db_path or DEFAULT_DB_PATH
     target_path.parent.mkdir(parents=True, exist_ok=True)
 
     conn = sqlite3.connect(str(target_path), check_same_thread=check_same_thread)
     conn.execute("PRAGMA foreign_keys = ON;")
+    conn.execute("PRAGMA journal_mode = WAL;")
+    conn.execute("PRAGMA busy_timeout = 5000;")
     conn.row_factory = sqlite3.Row
     return conn
 
