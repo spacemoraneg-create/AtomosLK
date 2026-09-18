@@ -936,12 +936,14 @@
 
       // If server profile not loaded, find in local datasets
       if (!profile) {
-        const found = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find(
-          (d) => d.name.toLowerCase() === name.toLowerCase() || d.name.toLowerCase().includes(name.toLowerCase())
-        );
+        const found = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find((d) => {
+          const dn = d.name || d.speaker_name || '';
+          return dn.toLowerCase() === name.toLowerCase() || dn.toLowerCase().includes(name.toLowerCase());
+        });
         if (found) {
+          const dName = found.name || found.speaker_name || '';
           profile = {
-            canonical_name: found.name,
+            canonical_name: dName,
             national_level: found.national_level,
             latest_institution: found.institution,
             most_debated_team: 'Circuit Team',
@@ -968,11 +970,34 @@
       if (input) input.value = profile.canonical_name;
       if (clearBtn) clearBtn.classList.remove('hidden');
 
+      function extractPosAvg(p) {
+        if (!p) return '-';
+        if (typeof p === 'number') return fmt(p, 2);
+        if (typeof p === 'object') {
+          const avg = p.average !== undefined ? p.average : p.avg;
+          if (avg === undefined || avg === null || isNaN(avg) || Number(avg) === 0) return '-';
+          return fmt(avg, 2);
+        }
+        return '-';
+      }
+
+      function extractPosCount(p) {
+        if (p && typeof p === 'object' && p.count) {
+          return `${p.count} ${p.count === 1 ? 'speech' : 'speeches'}`;
+        }
+        return '';
+      }
+
       const pos = profile.position_averages || {};
-      const pos1 = pos["1st"] ? fmt(pos["1st"], 2) : '-';
-      const pos2 = pos["2nd"] ? fmt(pos["2nd"], 2) : '-';
-      const pos3 = pos["3rd"] ? fmt(pos["3rd"], 2) : '-';
-      const posReply = pos["Reply"] ? fmt(pos["Reply"], 2) : '-';
+      const pos1 = extractPosAvg(pos["1st"]);
+      const pos2 = extractPosAvg(pos["2nd"]);
+      const pos3 = extractPosAvg(pos["3rd"]);
+      const posReply = extractPosAvg(pos["Reply"]);
+
+      const count1 = extractPosCount(pos["1st"]);
+      const count2 = extractPosCount(pos["2nd"]);
+      const count3 = extractPosCount(pos["3rd"]);
+      const countReply = extractPosCount(pos["Reply"]);
 
       const tourBreakdown = profile.tournament_breakdown || [];
 
@@ -1033,18 +1058,22 @@
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos1}</div>
             <div class="bio-stat-lbl">1ST SPEAKER AVG</div>
+            ${count1 ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${count1}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos2}</div>
             <div class="bio-stat-lbl">2ND SPEAKER AVG</div>
+            ${count2 ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${count2}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos3}</div>
             <div class="bio-stat-lbl">3RD SPEAKER AVG</div>
+            ${count3 ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${count3}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #a855f7;">${posReply}</div>
             <div class="bio-stat-lbl">REPLY SPEAKER AVG</div>
+            ${countReply ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${countReply}</div>` : ''}
           </div>
         </div>
 
