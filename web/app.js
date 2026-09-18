@@ -27,10 +27,20 @@
     apiUrl: window.location.origin.includes('http') ? window.location.origin : 'http://127.0.0.1:5000',
   };
 
-  // Helper: Format decimal numbers
-  function fmt(val, decimals = 2) {
-    if (val === undefined || val === null || isNaN(val)) return 'N/A';
-    return Number(val).toFixed(decimals);
+  // UNIVERSAL RULE: DO NOT ROUND UP, UP TO 3 DECIMAL PLACES IF EXIST HAS TO BE SHOWN
+  function fmt(val, maxDecimals = 3) {
+    if (val === undefined || val === null || isNaN(val) || val === '') return 'N/A';
+    const num = Number(val);
+    if (!isFinite(num)) return 'N/A';
+    if (num % 1 === 0) return String(Math.trunc(num));
+    // Up to 3 decimal places if exist, never round up
+    const targetDecimals = Math.max(maxDecimals || 3, 3);
+    const s = num.toFixed(8);
+    const parts = s.split('.');
+    const integerPart = parts[0];
+    let decimalPart = parts[1].substring(0, targetDecimals).replace(/0+$/, '');
+    if (!decimalPart) return integerPart;
+    return `${integerPart}.${decimalPart}`;
   }
 
   // Helper: Escape HTML

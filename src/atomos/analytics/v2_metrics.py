@@ -54,6 +54,24 @@ def calc_sample_stdev(values: List[float]) -> float:
     return round(math.sqrt(variance), 4)
 
 
+def truncate_3(val: Optional[float]) -> Optional[float]:
+    """Universal Rule: Do not round up. Up to 3 decimal places if exist."""
+    if val is None:
+        return None
+    try:
+        f = float(val)
+        if f.is_integer():
+            return int(f)
+        s = f"{f:.8f}"
+        parts = s.split(".")
+        truncated = parts[0] + "." + parts[1][:3].rstrip("0")
+        if truncated.endswith("."):
+            return int(parts[0])
+        return float(truncated)
+    except Exception:
+        return val
+
+
 class V2MetricsEngine:
     """Engine computing all Atomos V2 analytical and multi-purpose metrics."""
 
@@ -1240,8 +1258,8 @@ class V2MetricsEngine:
         for tid, r_dict in tour_dict.items():
             sub_scores.extend(r_dict.values())
 
-        spk_avg = round(sum(sub_scores) / len(sub_scores), 5) if sub_scores else 0.0
-        stdev = calc_sample_stdev(sub_scores)
+        spk_avg = truncate_3(sum(sub_scores) / len(sub_scores)) if sub_scores else 0.0
+        stdev = truncate_3(calc_sample_stdev(sub_scores))
         prelims_cnt = len(sub_scores)
         tourneys_cnt = len(tour_dict)
 
@@ -1260,7 +1278,7 @@ class V2MetricsEngine:
         deb_rows = cur.fetchall()
         tot_debates = len(deb_rows)
         wins = sum(r["won"] for r in deb_rows if r["won"])
-        win_pct = round((wins / tot_debates * 100.0), 1) if tot_debates else 0.0
+        win_pct = truncate_3(wins / tot_debates * 100.0) if tot_debates else 0.0
 
         # Speaker position breakdown (1st, 2nd, 3rd) - combination of individual speeches in those spots
         positions = {}
@@ -1277,7 +1295,7 @@ class V2MetricsEngine:
                 GROUP BY sp.debate_id, sp.position
             """, (pid, pos))
             pos_scores = [float(r["speech_score"]) for r in cur.fetchall()]
-            avg = round(sum(pos_scores) / len(pos_scores), 2) if pos_scores else 0.0
+            avg = truncate_3(sum(pos_scores) / len(pos_scores)) if pos_scores else 0.0
             positions[pos] = {"count": len(pos_scores), "average": avg}
 
         # Reply speeches - combination of individual reply speeches
@@ -1292,7 +1310,7 @@ class V2MetricsEngine:
             GROUP BY sp.debate_id, sp.position
         """, (pid,))
         rep_scores = [float(r["speech_score"]) for r in cur.fetchall()]
-        rep_avg = round(sum(rep_scores) / len(rep_scores), 2) if rep_scores else 0.0
+        rep_avg = truncate_3(sum(rep_scores) / len(rep_scores)) if rep_scores else 0.0
         positions["Reply"] = {"count": len(rep_scores), "average": rep_avg}
 
         # Tournament breakdown with round-level hover details using verified DebaterProfileEngine
@@ -1305,7 +1323,7 @@ class V2MetricsEngine:
             for t in base_prof.tournaments:
                 tname = CLEAN_TOURNAMENT_NAMES.get(t.tournament_id, t.tournament_name)
                 sub_scores = t.prelim_substantive_scores
-                t_avg = round(t.tournament_average, 2) if t.tournament_average is not None else 0.0
+                t_avg = truncate_3(t.tournament_average) if t.tournament_average is not None else 0.0
 
                 rounds_list = []
                 for r in t.prelim_rounds:
@@ -1321,7 +1339,7 @@ class V2MetricsEngine:
                             'round_type': r.round_type,
                             'position': counted_pos,
                             'speech_type': 'SUBSTANTIVE',
-                            'score': round(r.substantive_score, 2),
+                            'score': truncate_3(r.substantive_score),
                             'adjudicator': judge_str,
                             'opponent': r.opp_team_name,
                         })
@@ -1333,7 +1351,7 @@ class V2MetricsEngine:
                             'round_type': r.round_type,
                             'position': 'Reply',
                             'speech_type': 'REPLY',
-                            'score': round(r.reply_score, 2),
+                            'score': truncate_3(r.reply_score),
                             'adjudicator': judge_str,
                             'opponent': r.opp_team_name,
                         })
