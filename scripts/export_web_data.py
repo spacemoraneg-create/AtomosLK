@@ -54,6 +54,16 @@ def export_web_data(output_dir: Path):
         ("tournament_rankings.json", "tournament_rankings"),
         ("national_pool.json", "national_pool"),
         ("search_index.json", "search_index"),
+        # V2 Multi Purpose Datasets
+        ("v2_speakers_tab.json", "v2_speakers_tab"),
+        ("v2_speakers_general.json", "v2_speakers_general"),
+        ("v2_teams_tab.json", "v2_teams_tab"),
+        ("v2_teams_general.json", "v2_teams_general"),
+        ("v2_institutions_tab.json", "v2_institutions_tab"),
+        ("v2_institutions_general.json", "v2_institutions_general"),
+        ("v2_tournaments.json", "v2_tournaments"),
+        ("v2_adjudicators.json", "v2_adjudicators"),
+        ("v2_national_pool.json", "v2_national_pool"),
     ]
 
     print("\n  [*] Writing static JSON files to target...")

@@ -1,0 +1,502 @@
+[
+  {
+    "name": "AC A",
+    "institution": "Ananda College"
+  },
+  {
+    "name": "AC B",
+    "institution": "Ananda College"
+  },
+  {
+    "name": "AC C",
+    "institution": "Ananda College"
+  },
+  {
+    "name": "AC D",
+    "institution": "Ananda College"
+  },
+  {
+    "name": "AIS A",
+    "institution": "Asian International School"
+  },
+  {
+    "name": "AIS B",
+    "institution": "Asian International School"
+  },
+  {
+    "name": "AV A",
+    "institution": "Anula Vidyalaya"
+  },
+  {
+    "name": "AV B",
+    "institution": "Anula Vidyalaya"
+  },
+  {
+    "name": "BC A",
+    "institution": "Bishop's College"
+  },
+  {
+    "name": "BC B",
+    "institution": "Bishop's College"
+  },
+  {
+    "name": "BSC A",
+    "institution": "The British School in Colombo"
+  },
+  {
+    "name": "BYE",
+    "institution": "Independent"
+  },
+  {
+    "name": "CIS A",
+    "institution": "Colombo International School"
+  },
+  {
+    "name": "DBV A",
+    "institution": "Devi Balika Vidyalaya"
+  },
+  {
+    "name": "DIS A",
+    "institution": "Daybridge International School"
+  },
+  {
+    "name": "DIS B",
+    "institution": "Daybridge International School"
+  },
+  {
+    "name": "DRCK A",
+    "institution": "Dharmaraja College Kandy"
+  },
+  {
+    "name": "DRCK B",
+    "institution": "Dharmaraja College Kandy"
+  },
+  {
+    "name": "DS A",
+    "institution": "D. S. Senanayake College"
+  },
+  {
+    "name": "DS B",
+    "institution": "D. S. Senanayake College"
+  },
+  {
+    "name": "DS C",
+    "institution": "D. S. Senanayake College"
+  },
+  {
+    "name": "EC A",
+    "institution": "Ecole Internationale Kandy"
+  },
+  {
+    "name": "EC B",
+    "institution": "Ecole Internationale Kandy"
+  },
+  {
+    "name": "EIK A",
+    "institution": "Ecole Internationale Kandy"
+  },
+  {
+    "name": "GCC A",
+    "institution": "Gateway College Colombo"
+  },
+  {
+    "name": "GCC B",
+    "institution": "Gateway College Colombo"
+  },
+  {
+    "name": "GCD A",
+    "institution": "Gateway College Dehiwala"
+  },
+  {
+    "name": "GCD B",
+    "institution": "Gateway College Dehiwala"
+  },
+  {
+    "name": "GCK A",
+    "institution": "Gateway College Kandy"
+  },
+  {
+    "name": "GCN A",
+    "institution": "Gateway College Negombo"
+  },
+  {
+    "name": "GCN B",
+    "institution": "Gateway College Negombo"
+  },
+  {
+    "name": "HC A",
+    "institution": "Hindu College"
+  },
+  {
+    "name": "HC A",
+    "institution": "HC"
+  },
+  {
+    "name": "HCI A",
+    "institution": "Horizon College International"
+  },
+  {
+    "name": "HCK A",
+    "institution": "Hillwood College Kandy"
+  },
+  {
+    "name": "HCK B",
+    "institution": "Hillwood College Kandy"
+  },
+  {
+    "name": "HCK C",
+    "institution": "Hillwood College Kandy"
+  },
+  {
+    "name": "HFBV A",
+    "institution": "Holy Family Balika Maha Vidyalaya Kurunegala"
+  },
+  {
+    "name": "HFC A",
+    "institution": "Holy Family Convent"
+  },
+  {
+    "name": "HFC B",
+    "institution": "Holy Family Convent"
+  },
+  {
+    "name": "HFC C",
+    "institution": "Holy Family Convent"
+  },
+  {
+    "name": "HIS A",
+    "institution": "Hejaaz International School"
+  },
+  {
+    "name": "HIS A",
+    "institution": "HIS"
+  },
+  {
+    "name": "IC A",
+    "institution": "Isipathana College"
+  },
+  {
+    "name": "IC A",
+    "institution": "IC"
+  },
+  {
+    "name": "IC B",
+    "institution": "Isipathana College"
+  },
+  {
+    "name": "IIGS A",
+    "institution": "Ilma International Girls' School"
+  },
+  {
+    "name": "IIGS B",
+    "institution": "Ilma International Girls' School"
+  },
+  {
+    "name": "JHLC A",
+    "institution": "Jaffna Hindu Ladies' College"
+  },
+  {
+    "name": "JHLC B",
+    "institution": "Jaffna Hindu Ladies' College"
+  },
+  {
+    "name": "JLC A",
+    "institution": "Jaffna Ladies' College"
+  },
+  {
+    "name": "JLC B",
+    "institution": "Jaffna Ladies' College"
+  },
+  {
+    "name": "KMBV A",
+    "institution": "Kurunegala Maliyadeva Balika Vidyalaya"
+  },
+  {
+    "name": "KMBV A",
+    "institution": "Ku/ Maliyadeva Balika Vidyalaya"
+  },
+  {
+    "name": "LC A",
+    "institution": "Ladies' College"
+  },
+  {
+    "name": "LC B",
+    "institution": "Ladies' College"
+  },
+  {
+    "name": "LC C",
+    "institution": "Ladies' College"
+  },
+  {
+    "name": "LC D",
+    "institution": "Ladies' College"
+  },
+  {
+    "name": "LIS A",
+    "institution": "Lyceum International School Wattala"
+  },
+  {
+    "name": "LISN A",
+    "institution": "Lyceum International School Nugegoda"
+  },
+  {
+    "name": "LISN B",
+    "institution": "Lyceum International School Nugegoda"
+  },
+  {
+    "name": "LOC A",
+    "institution": "Loyola college"
+  },
+  {
+    "name": "Logos A",
+    "institution": "Logos College"
+  },
+  {
+    "name": "MC A",
+    "institution": "Methodist College"
+  },
+  {
+    "name": "MC B",
+    "institution": "Methodist College"
+  },
+  {
+    "name": "MGCK A",
+    "institution": "Mahamaya Girls' College Kandy"
+  },
+  {
+    "name": "MGCK B",
+    "institution": "Mahamaya Girls' College Kandy"
+  },
+  {
+    "name": "MLC A",
+    "institution": "Muslim Ladies' College"
+  },
+  {
+    "name": "MLC B",
+    "institution": "Muslim Ladies' College"
+  },
+  {
+    "name": "Moir A",
+    "institution": "Elizabeth Moir School"
+  },
+  {
+    "name": "Moir B",
+    "institution": "Elizabeth Moir School"
+  },
+  {
+    "name": "NC A",
+    "institution": "Nalanda College"
+  },
+  {
+    "name": "NC B",
+    "institution": "Nalanda College"
+  },
+  {
+    "name": "PCK A",
+    "institution": "President's College Kotte"
+  },
+  {
+    "name": "PCK B",
+    "institution": "President's College Kotte"
+  },
+  {
+    "name": "RC A",
+    "institution": "Royal College"
+  },
+  {
+    "name": "RC B",
+    "institution": "Royal College"
+  },
+  {
+    "name": "RC C",
+    "institution": "Royal College"
+  },
+  {
+    "name": "RIIS A",
+    "institution": "Royal Institute International School"
+  },
+  {
+    "name": "RISK A",
+    "institution": "Royal International School Kurunegala"
+  },
+  {
+    "name": "RISK B",
+    "institution": "Royal International School Kurunegala"
+  },
+  {
+    "name": "SACK A",
+    "institution": "St. Anthony's College Kandy"
+  },
+  {
+    "name": "SACK B",
+    "institution": "St. Anthony's College Kandy"
+  },
+  {
+    "name": "SBC A",
+    "institution": "St. Bridget's Convent"
+  },
+  {
+    "name": "SBC B",
+    "institution": "St. Bridget's Convent"
+  },
+  {
+    "name": "SBC C",
+    "institution": "St. Bridget's Convent"
+  },
+  {
+    "name": "SCG A",
+    "institution": "Southlands College Galle"
+  },
+  {
+    "name": "SCG B",
+    "institution": "Southlands College Galle"
+  },
+  {
+    "name": "SCK A",
+    "institution": "Sussex College Kurunegala"
+  },
+  {
+    "name": "SCK A",
+    "institution": "Sussex College,Kurunegala"
+  },
+  {
+    "name": "SCK B",
+    "institution": "Sussex College Kurunegala"
+  },
+  {
+    "name": "SGC A",
+    "institution": "Swarnamali Girls' College Kandy"
+  },
+  {
+    "name": "SGC B",
+    "institution": "Swarnamali Girls' College Kandy"
+  },
+  {
+    "name": "SGC C",
+    "institution": "Swarnamali Girls' College Kandy"
+  },
+  {
+    "name": "SIS A",
+    "institution": "Stafford International School"
+  },
+  {
+    "name": "SJC A",
+    "institution": "St. Joseph's College"
+  },
+  {
+    "name": "SJC B",
+    "institution": "St. Joseph's College"
+  },
+  {
+    "name": "SJCJ A",
+    "institution": "St. John's College Jaffna"
+  },
+  {
+    "name": "SJCJ B",
+    "institution": "St. John's College Jaffna"
+  },
+  {
+    "name": "SJM A",
+    "institution": "Sujatha Vidyalaya Matara"
+  },
+  {
+    "name": "SN A",
+    "institution": "St. Nicholas' International College"
+  },
+  {
+    "name": "SPC A",
+    "institution": "St. Peter's College"
+  },
+  {
+    "name": "SPC B",
+    "institution": "St. Peter's College"
+  },
+  {
+    "name": "SPGSM A",
+    "institution": "St Pauls Girls School Milagiriya"
+  },
+  {
+    "name": "SPGSM B",
+    "institution": "St Pauls Girls School Milagiriya"
+  },
+  {
+    "name": "SSCK A",
+    "institution": "St. Sylvester's College Kandy"
+  },
+  {
+    "name": "STC A",
+    "institution": "S. Thomas' College"
+  },
+  {
+    "name": "STC B",
+    "institution": "S. Thomas' College"
+  },
+  {
+    "name": "STC C",
+    "institution": "S. Thomas' College"
+  },
+  {
+    "name": "STCIC A",
+    "institution": "St. Thomas' Catholic International College"
+  },
+  {
+    "name": "STCIC B",
+    "institution": "St. Thomas' Catholic International College"
+  },
+  {
+    "name": "STPS A",
+    "institution": "S. Thomas' Preparatory School"
+  },
+  {
+    "name": "Swing",
+    "institution": "Independent"
+  },
+  {
+    "name": "TC A",
+    "institution": "Thurstan College"
+  },
+  {
+    "name": "TCK A",
+    "institution": "Trinity College Kandy"
+  },
+  {
+    "name": "TCK B",
+    "institution": "Trinity College Kandy"
+  },
+  {
+    "name": "TCK C",
+    "institution": "Trinity College Kandy"
+  },
+  {
+    "name": "TCK D",
+    "institution": "Trinity College Kandy"
+  },
+  {
+    "name": "VCC A",
+    "institution": "Vidura college Colombo"
+  },
+  {
+    "name": "VV A",
+    "institution": "Visakha Vidyalaya"
+  },
+  {
+    "name": "VV B",
+    "institution": "Visakha Vidyalaya"
+  },
+  {
+    "name": "VV C",
+    "institution": "Visakha Vidyalaya"
+  },
+  {
+    "name": "VV D",
+    "institution": "Visakha Vidyalaya"
+  },
+  {
+    "name": "WC A",
+    "institution": "Wesley College"
+  },
+  {
+    "name": "ZCC A",
+    "institution": "Zahira College Colombo"
+  }
+]

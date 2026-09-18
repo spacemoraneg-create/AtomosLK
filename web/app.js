@@ -1,6 +1,6 @@
 /**
- * ATOMOS V1 - CLIENT ENGINE & APPLICATION CONTROLLER
- * Powering Canva Home Page + Dedicated Tabbycat Subpages
+ * ATOMOS V2 - CLIENT ENGINE & APPLICATION CONTROLLER
+ * Powering Canva Home Page + Subpages with Complete Multi Purpose Analytics
  */
 
 (function () {
@@ -8,35 +8,40 @@
 
   // Global State
   const state = {
-    criticalSpeakers: [],
-    masterSpeakers: [],
-    criticalTeams: [],
-    masterTeams: [],
-    institutions: [],
-    activityDebaters: [],
-    tournamentRankings: [],
+    // V2 Datasets
+    v2SpeakersTab: [],
+    v2SpeakersGeneral: [],
+    v2TeamsTab: [],
+    v2TeamsGeneral: [],
+    v2InstitutionsTab: [],
+    v2InstitutionsGeneral: [],
+    v2Tournaments: [],
+    v2Adjudicators: [],
+    v2NationalPool: null,
+
     circuitSummary: null,
     searchIndex: [],
-    activeFilter: 'all',
-    searchQuery: '',
-    prelimSearchQuery: '',
+
+    // App State
     isServerOnline: false,
     apiUrl: window.location.origin.includes('http') ? window.location.origin : 'http://127.0.0.1:5000',
   };
-
-  // Debounce utility for silky-smooth responsive search
-  function debounce(fn, delay = 50) {
-    let timer;
-    return function (...args) {
-      clearTimeout(timer);
-      timer = setTimeout(() => fn.apply(this, args), delay);
-    };
-  }
 
   // Helper: Format decimal numbers
   function fmt(val, decimals = 2) {
     if (val === undefined || val === null || isNaN(val)) return 'N/A';
     return Number(val).toFixed(decimals);
+  }
+
+  // Helper: Escape HTML
+  function escapeHtml(str) {
+    if (!str) return '';
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;')
+      .replace(/'/g, '&#039;');
   }
 
   // Helper: National Status Tag HTML
@@ -64,33 +69,22 @@
 
   // Helper: Break Position Tag HTML
   function getBreakBadge(pos) {
-    if (!pos || pos === '-') return '<span class="break-tag break-none">-</span>';
+    if (!pos || pos === '-' || pos === 'Preliminary Rounds') return '<span class="break-tag break-none">-</span>';
     const p = pos.trim().toLowerCase();
     if (p === 'champion') {
       return '<span class="break-tag break-champion">Champion</span>';
-    } else if (p === 'finalist') {
+    } else if (p === 'finalist' || p === 'runners-up') {
       return '<span class="break-tag break-finalist">Finalist</span>';
     } else if (p === 'semifinalist') {
       return '<span class="break-tag break-semis">Semifinalist</span>';
     } else if (p === 'quarterfinalist') {
       return '<span class="break-tag break-quarters">Quarterfinalist</span>';
+    } else if (p.includes('partial octo')) {
+      return `<span class="break-tag break-octos">${escapeHtml(pos)}</span>`;
     } else if (p === 'octofinalist') {
       return '<span class="break-tag break-octos">Octofinalist</span>';
-    } else if (p.includes('novice')) {
-      return `<span class="break-tag break-novice">${escapeHtml(pos)}</span>`;
     }
     return `<span class="break-tag break-none">${escapeHtml(pos)}</span>`;
-  }
-
-  // Helper: Escape HTML
-  function escapeHtml(str) {
-    if (!str) return '';
-    return String(str)
-      .replace(/&/g, '&amp;')
-      .replace(/</g, '&lt;')
-      .replace(/>/g, '&gt;')
-      .replace(/"/g, '&quot;')
-      .replace(/'/g, '&#039;');
   }
 
   // Router / Initializer based on active page
@@ -98,20 +92,31 @@
     await checkServerStatus();
     await loadInitialData();
 
-    // Determine current page
     const path = window.location.pathname.toLowerCase();
 
-    if (document.getElementById('criticalStatsTable') || path.endsWith('index.html') || path === '/' || path === '') {
+    if (document.getElementById('homeMultiTable') || path.endsWith('index.html') || path === '/' || path === '') {
       initHomePage();
     }
     if (document.getElementById('lbTableContainer') || path.includes('leaderboards')) {
       initLeaderboardsPage();
     }
-    if (document.getElementById('bioProfileContainer') || path.includes('bio')) {
+    if (document.getElementById('bioProfileContainer') || (path.includes('bio') && !path.includes('team') && !path.includes('institution') && !path.includes('adjudicator'))) {
       initBioPage();
     }
-    if (document.getElementById('h2hInputA') || document.getElementById('h2hSelectA') || path.includes('h2h')) {
+    if (document.getElementById('teamProfileContainer') || path.includes('team_bio') || path.includes('team-bio')) {
+      initTeamBioPage();
+    }
+    if (document.getElementById('instProfileContainer') || path.includes('institution_bio') || path.includes('institution-bio')) {
+      initInstitutionBioPage();
+    }
+    if (document.getElementById('judgeProfileContainer') || path.includes('adjudicator_bio') || path.includes('adjudicator-bio')) {
+      initAdjudicatorBioPage();
+    }
+    if (document.getElementById('h2hResultContainer') || path.includes('h2h')) {
       initH2HPage();
+    }
+    if (document.getElementById('poolGridContainer') || path.includes('pool')) {
+      initPoolPage();
     }
     if (document.getElementById('chatMessages') || path.includes('chat')) {
       initChatPage();
@@ -124,7 +129,7 @@
       const res = await fetch(`${state.apiUrl}/api/health`, { method: 'GET', signal: AbortSignal.timeout(1800) });
       if (res.ok) {
         state.isServerOnline = true;
-        console.log('[ONLINE] Connected to Atomos Headless REST API Server');
+        console.log('[ONLINE] Connected to Atomos V2 REST API Server');
       }
     } catch (e) {
       state.isServerOnline = false;
@@ -132,162 +137,168 @@
     }
   }
 
-  // Fetch Core Datasets
+  // Fetch JSON with offline fallback
+  async function fetchJson(filename, fallbackApi) {
+    let data = null;
+    try {
+      const res = await fetch(`data/web_export/${filename}`);
+      if (res.ok) data = await res.json();
+    } catch (e) {
+      try {
+        const res = await fetch(`../data/web_export/${filename}`);
+        if (res.ok) data = await res.json();
+      } catch (err) {}
+    }
+
+    if (!data && state.isServerOnline && fallbackApi) {
+      try {
+        const res = await fetch(`${state.apiUrl}${fallbackApi}`);
+        if (res.ok) {
+          const j = await res.json();
+          data = j.leaderboard || j;
+        }
+      } catch (e) {}
+    }
+    return data;
+  }
+
+  // Load Initial Datasets
   async function loadInitialData() {
-    // 1. Critical Speaker Stats
-    try {
-      const res = await fetch('data/web_export/critical_speaker_stats.json');
-      if (res.ok) state.criticalSpeakers = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/critical_speaker_stats.json');
-        if (res.ok) state.criticalSpeakers = await res.json();
-      } catch (err) {}
-    }
+    const [
+      spkTab, spkGen,
+      teamsTab, teamsGen,
+      instTab, instGen,
+      tours, judges, pool,
+      summary, sIndex
+    ] = await Promise.all([
+      fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab'),
+      fetchJson('v2_speakers_general.json', '/api/v2/leaderboard/speakers?tier=general'),
+      fetchJson('v2_teams_tab.json', '/api/v2/leaderboard/teams?tier=tab'),
+      fetchJson('v2_teams_general.json', '/api/v2/leaderboard/teams?tier=general'),
+      fetchJson('v2_institutions_tab.json', '/api/v2/leaderboard/institutions?tier=tab'),
+      fetchJson('v2_institutions_general.json', '/api/v2/leaderboard/institutions?tier=general'),
+      fetchJson('v2_tournaments.json', '/api/v2/leaderboard/tournaments'),
+      fetchJson('v2_adjudicators.json', '/api/v2/leaderboard/adjudicators'),
+      fetchJson('v2_national_pool.json', '/api/v2/pool'),
+      fetchJson('circuit_summary.json', '/api/circuit'),
+      fetchJson('search_index.json', '/api/search?q=a'),
+    ]);
 
-    if (state.criticalSpeakers.length === 0 && state.isServerOnline) {
-      try {
-        const res = await fetch(`${state.apiUrl}/api/leaderboard/speakers?limit=150`);
-        if (res.ok) {
-          const json = await res.json();
-          state.criticalSpeakers = json.leaderboard || [];
-        }
-      } catch (e) {}
-    }
-
-    // 2. Circuit Summary
-    try {
-      const res = await fetch('data/web_export/circuit_summary.json');
-      if (res.ok) state.circuitSummary = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/circuit_summary.json');
-        if (res.ok) state.circuitSummary = await res.json();
-      } catch (err) {}
-    }
-
-    // 3. Master Speaker Tab
-    try {
-      const res = await fetch('data/web_export/master_speaker_tab.json');
-      if (res.ok) state.masterSpeakers = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/master_speaker_tab.json');
-        if (res.ok) state.masterSpeakers = await res.json();
-      } catch (err) {}
-    }
-
-    // 4. Institution Leaderboard
-    try {
-      const res = await fetch('data/web_export/institutional_power_index.json');
-      if (res.ok) {
-        const data = await res.json();
-        state.institutions = Array.isArray(data.leaderboard) ? data.leaderboard : data;
-      }
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/institutional_power_index.json');
-        if (res.ok) {
-          const data = await res.json();
-          state.institutions = Array.isArray(data.leaderboard) ? data.leaderboard : data;
-        }
-      } catch (err) {}
-    }
-
-    // 5. Team Leaderboard Datasets (Master & Critical)
-    try {
-      const res = await fetch('data/web_export/master_team_tab.json?v=2');
-      if (res.ok) state.masterTeams = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/master_team_tab.json?v=2');
-        if (res.ok) state.masterTeams = await res.json();
-      } catch (err) {}
-    }
-
-    try {
-      const res = await fetch('data/web_export/critical_team_stats.json?v=2');
-      if (res.ok) state.criticalTeams = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/critical_team_stats.json?v=2');
-        if (res.ok) state.criticalTeams = await res.json();
-      } catch (err) {}
-    }
-
-    if (state.masterTeams.length === 0 && state.isServerOnline) {
-      try {
-        const res = await fetch(`${state.apiUrl}/api/leaderboard/teams?mode=master`);
-        if (res.ok) {
-          const json = await res.json();
-          state.masterTeams = json.leaderboard || [];
-        }
-      } catch (e) {}
-    }
-
-    if (state.criticalTeams.length === 0 && state.isServerOnline) {
-      try {
-        const res = await fetch(`${state.apiUrl}/api/leaderboard/teams?mode=critical`);
-        if (res.ok) {
-          const json = await res.json();
-          state.criticalTeams = json.leaderboard || [];
-        }
-      } catch (e) {}
-    }
-
-    // 6. Activity Leaderboard
-    try {
-      const res = await fetch('data/web_export/activity_leaderboard.json');
-      if (res.ok) state.activityDebaters = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/activity_leaderboard.json');
-        if (res.ok) state.activityDebaters = await res.json();
-      } catch (err) {}
-    }
-    if (state.activityDebaters.length === 0 && state.isServerOnline) {
-      try {
-        const res = await fetch(`${state.apiUrl}/api/leaderboard/activity`);
-        if (res.ok) {
-          const json = await res.json();
-          state.activityDebaters = json.leaderboard || [];
-        }
-      } catch (e) {}
-    }
-
-    // 7. Tournament Quality Rankings
-    try {
-      const res = await fetch('data/web_export/tournament_rankings.json');
-      if (res.ok) state.tournamentRankings = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch('../data/web_export/tournament_rankings.json');
-        if (res.ok) state.tournamentRankings = await res.json();
-      } catch (err) {}
-    }
-    if (state.tournamentRankings.length === 0 && state.isServerOnline) {
-      try {
-        const res = await fetch(`${state.apiUrl}/api/leaderboard/tournaments`);
-        if (res.ok) {
-          const json = await res.json();
-          state.tournamentRankings = json.leaderboard || [];
-        }
-      } catch (e) {}
-    }
+    state.v2SpeakersTab = spkTab || [];
+    state.v2SpeakersGeneral = spkGen || [];
+    state.v2TeamsTab = teamsTab || [];
+    state.v2TeamsGeneral = teamsGen || [];
+    state.v2InstitutionsTab = instTab || [];
+    state.v2InstitutionsGeneral = instGen || [];
+    state.v2Tournaments = tours || [];
+    state.v2Adjudicators = judges || [];
+    state.v2NationalPool = pool || null;
+    state.circuitSummary = summary || null;
+    state.searchIndex = sIndex || [];
   }
 
   // ==========================================================================
-  // 1. HOME PAGE LOGIC (Literal Canva Stack)
+  // 1. HOME PAGE LOGIC (Multi Purpose Leaderboard - Min 12 Rounds)
   // ==========================================================================
   function initHomePage() {
     updateVitals(state.circuitSummary);
-    renderActivityTable();
-    renderCriticalStatsTable();
-    setupHomeFilters();
+
+    let currentMetric = 'speaker_score';
+    let searchQuery = '';
+
+    const switcher = document.getElementById('homeMetricSwitcher');
+    if (switcher) {
+      switcher.querySelectorAll('.subpage-tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          switcher.querySelectorAll('.subpage-tab-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          currentMetric = btn.getAttribute('data-metric');
+          renderTable();
+        });
+      });
+    }
+
+    const searchInput = document.getElementById('speakerSearchInput');
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        searchQuery = searchInput.value.trim().toLowerCase();
+        renderTable();
+      });
+    }
+
+    function renderTable() {
+      const tbody = document.getElementById('homeMultiStatsBody');
+      if (!tbody) return;
+
+      let list = state.v2SpeakersTab.slice();
+
+      // Sort based on currentMetric
+      if (currentMetric === 'stdev') {
+        // Lower is better for stdev
+        list.sort((a, b) => a.stdev - b.stdev);
+      } else if (currentMetric === 'win_percentage') {
+        list.sort((a, b) => b.win_percentage - a.win_percentage || b.speaker_score - a.speaker_score);
+      } else if (currentMetric === 'prelims_debated') {
+        list.sort((a, b) => b.prelims_debated - a.prelims_debated || b.speaker_score - a.speaker_score);
+      } else if (currentMetric === 'national_level') {
+        // Nat Direct 1st, Nat Trialed 2nd, Trials 3rd, within group sort by speaker_score
+        function natOrder(lvl) {
+          if (!lvl) return 4;
+          const l = lvl.toLowerCase();
+          if (l.includes('direct')) return 1;
+          if (l.includes('trialed')) return 2;
+          if (l.includes('trials')) return 3;
+          return 4;
+        }
+        list.sort((a, b) => {
+          const ordDiff = natOrder(a.national_level) - natOrder(b.national_level);
+          if (ordDiff !== 0) return ordDiff;
+          return b.speaker_score - a.speaker_score;
+        });
+      } else {
+        // Default: speaker_score
+        list.sort((a, b) => b.speaker_score - a.speaker_score);
+      }
+
+      // Filter by search
+      if (searchQuery) {
+        list = list.filter((s) =>
+          (s.name && s.name.toLowerCase().includes(searchQuery)) ||
+          (s.institution && s.institution.toLowerCase().includes(searchQuery))
+        );
+      }
+
+      if (list.length === 0) {
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.6);">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
+        return;
+      }
+
+      tbody.innerHTML = list.map((s, idx) => {
+        const rank = idx + 1;
+        return `
+          <tr>
+            <td style="text-align: center;">${getRankBadge(rank)}</td>
+            <td>
+              <a class="table-link" href="bio.html?debater=${encodeURIComponent(s.name)}">${escapeHtml(s.name)}</a>
+            </td>
+            <td>
+              <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
+            </td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'speaker_score' ? '800; color: #38bdf8;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'win_percentage' ? '800; color: #38bdf8;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'stdev' ? '800; color: #38bdf8;' : '600;'}">${fmt(s.stdev, 2)}</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'prelims_debated' ? '800; color: #38bdf8;' : '600;'}">${s.prelims_debated}</td>
+            <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${s.tournaments_debated}</td>
+            <td>${getNatStatusTag(s.national_level)}</td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    renderTable();
   }
 
   function updateVitals(data) {
-    if (!data) return;
     const t = document.getElementById('vitalTournaments');
     const d = document.getElementById('vitalDebaters');
     const s = document.getElementById('vitalSpeeches');
@@ -295,403 +306,204 @@
     const p = document.getElementById('vitalPrelims');
     const k = document.getElementById('vitalKnockouts');
 
-    if (t) t.textContent = data.total_tournaments || 9;
-    if (d) d.textContent = data.total_persons || 772;
-    if (s) s.textContent = (data.total_valid_speeches ? Number(data.total_valid_speeches).toLocaleString() : '6,442');
-    if (r) r.textContent = (data.total_debates_debated ? Number(data.total_debates_debated).toLocaleString() : '920');
+    if (t) t.textContent = '8';
+    if (d) d.textContent = data && data.total_persons ? data.total_persons : '772';
+    if (s) s.textContent = data && data.total_valid_speeches ? Number(data.total_valid_speeches).toLocaleString() : '6,442';
+    if (r) r.textContent = data && data.total_debates_debated ? Number(data.total_debates_debated).toLocaleString() : '908';
     if (p) p.textContent = '760';
-    if (k) k.textContent = '160';
-  }
-
-  function renderActivityTable() {
-    const tbody = document.getElementById('activityStatsBody');
-    if (!tbody) return;
-
-    // Rank by prelim_rounds_debated descending across the entire circuit
-    const allDebaters = (state.criticalSpeakers.length > 0 ? state.criticalSpeakers : state.masterSpeakers)
-      .slice()
-      .sort((a, b) => {
-        const pDiff = (b.prelim_rounds_debated || 0) - (a.prelim_rounds_debated || 0);
-        if (pDiff !== 0) return pDiff;
-        const wDiff = (b.win_rate_debated || b.win_rate || 0) - (a.win_rate_debated || a.win_rate || 0);
-        if (wDiff !== 0) return wDiff;
-        return (b.speech_avg || b.avg || 0) - (a.speech_avg || a.avg || 0);
-      });
-
-    // Assign true overall rank in circuit
-    const allWithRank = allDebaters.map((s, idx) => ({ ...s, prelimRank: idx + 1 }));
-
-    let items = allWithRank;
-    const q = (state.prelimSearchQuery || '').toLowerCase().trim();
-
-    // If search entered, filter across ALL debaters in circuit (within and beyond top 20)
-    if (q) {
-      items = items.filter(
-        (s) =>
-          (s.speaker_name && s.speaker_name.toLowerCase().includes(q)) ||
-          (s.institution && s.institution.toLowerCase().includes(q))
-      );
-    }
-
-    // Default to Top 20 when search is empty; show all matches when searching
-    const displayed = q ? items : items.slice(0, 20);
-
-    const badge = document.getElementById('activityCountBadge');
-    if (badge) {
-      badge.textContent = q ? `${items.length} MATCHES` : 'TOP 20';
-    }
-
-    if (displayed.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="6" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.6);">No debaters match "${escapeHtml(q)}".</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = displayed
-      .map((s) => {
-        const prelims = s.prelim_rounds_debated || 0;
-        const win = fmt(s.win_rate_debated || s.win_rate, 1) + '%';
-        const nat = getNatStatusTag(s.national_level);
-
-        return `
-        <tr class="clickable-row" onclick="window.location.href='bio.html?speaker=${encodeURIComponent(s.speaker_name)}'">
-          <td>${getRankBadge(s.prelimRank)}</td>
-          <td style="font-weight: 700; color: #ffffff;">${escapeHtml(s.speaker_name)}</td>
-          <td style="color: rgba(255,255,255,0.75);">${escapeHtml(s.institution || 'Independent')}</td>
-          <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8; font-size: 13px;">${prelims}</td>
-          <td style="text-align: right; font-family: var(--font-mono);">${win}</td>
-          <td>${nat}</td>
-        </tr>
-      `;
-      })
-      .join('');
-  }
-
-  function renderCriticalStatsTable() {
-    const tbody = document.getElementById('criticalStatsBody');
-    if (!tbody) return;
-
-    let items = state.criticalSpeakers.slice();
-    const q = (state.searchQuery || '').toLowerCase().trim();
-
-    // Search query: filters across ALL debaters in circuit (within and beyond top 50)
-    if (q) {
-      items = items.filter(
-        (s) =>
-          (s.speaker_name && s.speaker_name.toLowerCase().includes(q)) ||
-          (s.institution && s.institution.toLowerCase().includes(q))
-      );
-    }
-
-    // Default to Top 50 when search is empty; show all matches when searching
-    const displayed = q ? items : items.slice(0, 50);
-
-    const badge = document.getElementById('speakerCountBadge');
-    if (badge) {
-      badge.textContent = q ? `${items.length} MATCHES` : 'TOP 50';
-    }
-
-    if (displayed.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.6);">No debaters match "${escapeHtml(q)}".</td></tr>`;
-      return;
-    }
-
-    tbody.innerHTML = displayed
-      .map((s, idx) => {
-        const rank = s.rank || idx + 1;
-        const avg = fmt(s.speech_avg || s.avg || s.cumulative_speech_avg);
-        const win = fmt(s.win_rate_debated || s.win_rate, 1) + '%';
-        const prelims = s.prelim_rounds_debated !== undefined ? s.prelim_rounds_debated : '-';
-        const breakPct = s.break_percentage !== undefined ? fmt(s.break_percentage, 1) + '%' : '-';
-        const nat = getNatStatusTag(s.national_level);
-        const tourneys = s.eligible_tournaments !== undefined ? s.eligible_tournaments : (s.tournaments_debated || '-');
-
-        return `
-        <tr class="clickable-row" onclick="window.location.href='bio.html?speaker=${encodeURIComponent(s.speaker_name)}'">
-          <td>${getRankBadge(rank)}</td>
-          <td style="font-weight: 700; color: #ffffff;">${escapeHtml(s.speaker_name)}</td>
-          <td style="color: rgba(255,255,255,0.75);">${escapeHtml(s.institution || 'Independent')}</td>
-          <td>${nat}</td>
-          <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${avg}</td>
-          <td style="text-align: right; font-family: var(--font-mono);">${win}</td>
-          <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${prelims}</td>
-          <td style="text-align: right; font-family: var(--font-mono); color: #34d399;">${breakPct}</td>
-          <td style="text-align: right; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${tourneys}</td>
-        </tr>
-      `;
-      })
-      .join('');
-  }
-
-  function setupHomeFilters() {
-    const speakerSearch = document.getElementById('speakerSearchInput');
-    if (speakerSearch) {
-      speakerSearch.addEventListener(
-        'input',
-        debounce((e) => {
-          state.searchQuery = e.target.value.trim();
-          renderCriticalStatsTable();
-        }, 50)
-      );
-    }
-
-    const prelimSearch = document.getElementById('prelimSearchInput');
-    if (prelimSearch) {
-      prelimSearch.addEventListener(
-        'input',
-        debounce((e) => {
-          state.prelimSearchQuery = e.target.value.trim();
-          renderActivityTable();
-        }, 50)
-      );
-    }
+    if (k) k.textContent = '148';
   }
 
   // ==========================================================================
-  // 2. LEADERBOARDS PAGE
+  // 2. LEADERBOARDS PAGE (Universal Tab vs General Tab + Multi Purpose)
   // ==========================================================================
-  let activeLeaderboardTab = 'individual';
-  let activeIndividualMode = 'master'; // 'master' or 'critical'
-
   function initLeaderboardsPage() {
-    const tabBtns = document.querySelectorAll('.subpage-tab-btn');
-    const modeSwitcher = document.getElementById('individualModeSwitcher');
+    let activeCategory = 'individual';
+    let activeTier = 'tab'; // Tab is default
+    let activeMetric = 'speaker_score';
+    let searchQuery = '';
 
-    function updateSwitcherVisibility() {
-      if (modeSwitcher) {
-        modeSwitcher.style.display =
-          (activeLeaderboardTab === 'individual' || activeLeaderboardTab === 'speakers')
-            ? 'inline-flex'
-            : 'none';
-      }
-    }
-
-    // Support URL tab parameter or hash e.g. ?tab=teams or ?tab=institutions
-    const urlParams = new URLSearchParams(window.location.search);
-    const tabParam = urlParams.get('tab') || window.location.hash.replace('#', '');
-    if (tabParam) {
-      const matchBtn = Array.from(tabBtns).find(b => b.getAttribute('data-tab') === tabParam);
-      if (matchBtn) {
-        tabBtns.forEach(b => b.classList.remove('active'));
-        matchBtn.classList.add('active');
-        activeLeaderboardTab = tabParam;
-        updateSwitcherVisibility();
-      }
-    }
-
-    const modeParam = urlParams.get('mode');
-    if (modeParam && (modeParam === 'master' || modeParam === 'critical')) {
-      activeIndividualMode = modeParam;
-    }
-
-    tabBtns.forEach((btn) => {
-      btn.addEventListener('click', () => {
-        tabBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeLeaderboardTab = btn.getAttribute('data-tab');
-        updateSwitcherVisibility();
-        renderLeaderboardView();
-      });
-    });
-
-    const modeBtns = document.querySelectorAll('.mode-switch-btn');
-    modeBtns.forEach((btn) => {
-      if (btn.getAttribute('data-mode') === activeIndividualMode) {
-        btn.classList.add('active');
-      } else {
-        btn.classList.remove('active');
-      }
-      btn.addEventListener('click', () => {
-        modeBtns.forEach((b) => b.classList.remove('active'));
-        btn.classList.add('active');
-        activeIndividualMode = btn.getAttribute('data-mode');
-        renderLeaderboardView();
-      });
-    });
-
+    const catSwitcher = document.getElementById('lbCategoryTabs');
+    const tierSwitcher = document.getElementById('tierModeSwitcher');
+    const metricToolbar = document.getElementById('lbMetricToolbar');
+    const tierBadge = document.getElementById('tierEligibilityBadge');
     const searchInput = document.getElementById('lbSearchInput');
-    const searchParam = urlParams.get('q') || urlParams.get('search');
-    if (searchParam && searchInput) {
-      searchInput.value = searchParam;
-    }
-    if (searchInput) {
-      searchInput.addEventListener('input', debounce(renderLeaderboardView, 50));
-    }
 
-    renderLeaderboardView();
-  }
+    if (catSwitcher) {
+      catSwitcher.querySelectorAll('.subpage-tab-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          catSwitcher.querySelectorAll('.subpage-tab-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeCategory = btn.getAttribute('data-tab');
+          // Reset default metric for new category
+          if (activeCategory === 'individual') activeMetric = 'speaker_score';
+          else if (activeCategory === 'teams') activeMetric = 'atss';
+          else if (activeCategory === 'institutions') activeMetric = 'delta';
+          else if (activeCategory === 'tournaments') activeMetric = 'atss';
+          else if (activeCategory === 'adjudicators') activeMetric = 'debates';
 
-  async function renderLeaderboardView() {
-    const container = document.getElementById('lbTableContainer');
-    const searchInput = document.getElementById('lbSearchInput');
-    const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
-    const badge = document.getElementById('lbCountBadge');
-    if (!container) return;
-
-    if (activeLeaderboardTab === 'individual' || activeLeaderboardTab === 'speakers') {
-      if (activeIndividualMode === 'master') {
-        let speakers = state.masterSpeakers.slice();
-        if (query) {
-          speakers = speakers.filter(
-            (s) =>
-              (s.speaker_name && s.speaker_name.toLowerCase().includes(query)) ||
-              (s.institution_name && s.institution_name.toLowerCase().includes(query)) ||
-              (s.institution && s.institution.toLowerCase().includes(query))
-          );
-        }
-
-        if (badge) {
-          badge.textContent = query ? `${speakers.length} MATCHES` : `${speakers.length} DEBATERS`;
-        }
-
-        if (speakers.length === 0) {
-          container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No debaters match "${escapeHtml(query)}".</div>`;
-          return;
-        }
-
-        container.innerHTML = `
-          <div class="data-table-wrap">
-            <table class="atomos-table">
-              <thead>
-                <tr>
-                  <th style="width: 44px; text-align: center;">#</th>
-                  <th style="width: 20%;">DEBATER</th>
-                  <th style="width: 21%;">INSTITUTION</th>
-                  <th style="width: 11%;">NAT STATUS</th>
-                  <th style="width: 10%; text-align: right;">SPK AVG</th>
-                  <th style="width: 8%; text-align: right;">WIN %</th>
-                  <th style="width: 8%; text-align: right;">PRELIMS</th>
-                  <th style="width: 9%; text-align: right;">BREAK %</th>
-                  <th style="width: 10%; text-align: right;">TOURNAMENTS</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${speakers.map((s, idx) => {
-                  const rank = s.rank || idx + 1;
-                  const avg = fmt(s.speaker_avg || s.speech_avg || s.master_score || s.speech_average);
-                  const win = fmt(s.win_percentage || s.win_rate || s.win_rate_debated, 1) + '%';
-                  const prelims = s.prelims !== undefined ? s.prelims : (s.total_rounds || s.prelim_rounds_debated || '-');
-                  const breakPct = s.break_percentage !== undefined ? fmt(s.break_percentage, 1) + '%' : '-';
-                  const nat = getNatStatusTag(s.national_level);
-                  const tourneys = s.tournaments !== undefined ? s.tournaments : (s.eligible_tournaments || '-');
-                  const spkName = s.speaker_name || '';
-                  const instName = s.institution || s.institution_name || 'Independent';
-
-                  return `
-                  <tr class="clickable-row" onclick="window.location.href='bio.html?speaker=${encodeURIComponent(spkName)}'">
-                    <td style="text-align: center;">${getRankBadge(rank)}</td>
-                    <td style="font-weight: 700; color: #ffffff;" title="${escapeHtml(spkName)}">${escapeHtml(spkName)}</td>
-                    <td style="color: rgba(255,255,255,0.75);" title="${escapeHtml(instName)}">${escapeHtml(instName)}</td>
-                    <td>${nat}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${avg}</td>
-                    <td style="text-align: right; font-family: var(--font-mono);">${win}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${prelims}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); color: #34d399;">${breakPct}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${tourneys}</td>
-                  </tr>
-                `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-      } else {
-        // Critical Tab Individual Leaderboard (Minimum 3 eligible tournaments)
-        let speakers = state.criticalSpeakers.slice();
-        if (query) {
-          speakers = speakers.filter(
-            (s) =>
-              (s.speaker_name && s.speaker_name.toLowerCase().includes(query)) ||
-              (s.institution && s.institution.toLowerCase().includes(query)) ||
-              (s.institution_name && s.institution_name.toLowerCase().includes(query))
-          );
-        }
-
-        if (badge) {
-          badge.textContent = query ? `${speakers.length} MATCHES` : `${speakers.length} DEBATERS`;
-        }
-
-        if (speakers.length === 0) {
-          container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No debaters match "${escapeHtml(query)}".</div>`;
-          return;
-        }
-
-        container.innerHTML = `
-          <div class="data-table-wrap">
-            <table class="atomos-table">
-              <thead>
-                <tr>
-                  <th style="width: 44px; text-align: center;">#</th>
-                  <th style="width: 20%;">DEBATER</th>
-                  <th style="width: 21%;">INSTITUTION</th>
-                  <th style="width: 11%;">NAT STATUS</th>
-                  <th style="width: 10%; text-align: right;">SPK AVG</th>
-                  <th style="width: 8%; text-align: right;">WIN %</th>
-                  <th style="width: 8%; text-align: right;">PRELIMS</th>
-                  <th style="width: 9%; text-align: right;">BREAK %</th>
-                  <th style="width: 10%; text-align: right;">TOURNAMENTS</th>
-                </tr>
-              </thead>
-              <tbody>
-                ${speakers.map((s, idx) => {
-                  const rank = s.rank || idx + 1;
-                  const avg = fmt(s.speaker_avg || s.speech_avg || s.avg || s.cumulative_speech_avg);
-                  const win = fmt(s.win_percentage || s.win_rate_debated || s.win_rate, 1) + '%';
-                  const prelims = s.prelims !== undefined ? s.prelims : (s.prelim_rounds_debated || '-');
-                  const breakPct = s.break_percentage !== undefined ? fmt(s.break_percentage, 1) + '%' : '-';
-                  const nat = getNatStatusTag(s.national_level);
-                  const tourneys = s.tournaments !== undefined ? s.tournaments : (s.eligible_tournaments || '-');
-                  const spkName = s.speaker_name || '';
-                  const instName = s.institution || s.institution_name || 'Independent';
-
-                  return `
-                  <tr class="clickable-row" onclick="window.location.href='bio.html?speaker=${encodeURIComponent(spkName)}'">
-                    <td style="text-align: center;">${getRankBadge(rank)}</td>
-                    <td style="font-weight: 700; color: #ffffff;" title="${escapeHtml(spkName)}">${escapeHtml(spkName)}</td>
-                    <td style="color: rgba(255,255,255,0.75);" title="${escapeHtml(instName)}">${escapeHtml(instName)}</td>
-                    <td>${nat}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${avg}</td>
-                    <td style="text-align: right; font-family: var(--font-mono);">${win}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${prelims}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); color: #34d399;">${breakPct}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${tourneys}</td>
-                  </tr>
-                `;
-                }).join('')}
-              </tbody>
-            </table>
-          </div>
-        `;
-      }
-    } else if (activeLeaderboardTab === 'teams') {
-      // Team Leaderboard (Unified Tab: minimum 3 tournaments debated)
-      if (state.masterTeams.length === 0) {
-        try {
-          const res = await fetch('data/web_export/master_team_tab.json?v=3');
-          if (res.ok) state.masterTeams = await res.json();
-        } catch (e) {
-          try {
-            const res = await fetch('../data/web_export/master_team_tab.json?v=3');
-            if (res.ok) state.masterTeams = await res.json();
-          } catch (err) {}
-        }
-      }
-
-      let teams = state.masterTeams.slice();
-
-      if (query) {
-        teams = teams.filter((t) => {
-          const name = (t.team_name || '').toLowerCase();
-          const inst = (t.institution || '').toLowerCase();
-          return name.includes(query) || inst.includes(query);
+          updateMetricPills();
+          renderLeaderboard();
         });
+      });
+    }
+
+    if (tierSwitcher) {
+      tierSwitcher.querySelectorAll('.mode-switch-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          tierSwitcher.querySelectorAll('.mode-switch-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeTier = btn.getAttribute('data-tier');
+          updateTierBadge();
+          renderLeaderboard();
+        });
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        searchQuery = searchInput.value.trim().toLowerCase();
+        renderLeaderboard();
+      });
+    }
+
+    function updateTierBadge() {
+      if (!tierBadge) return;
+      if (activeCategory === 'individual') {
+        tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 12 ROUNDS' : 'GENERAL TAB // MIN 5 ROUNDS';
+      } else if (activeCategory === 'teams') {
+        tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 3 TOURNAMENTS' : 'GENERAL TAB // MIN 2 TOURNAMENTS';
+      } else if (activeCategory === 'institutions') {
+        tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 3 TOURNAMENTS' : 'GENERAL TAB // MIN 2 TOURNAMENTS';
+      } else if (activeCategory === 'tournaments') {
+        tierBadge.textContent = 'CIRCUIT TOURNAMENTS // 8 EVENTS';
+      } else if (activeCategory === 'adjudicators') {
+        tierBadge.textContent = 'CIRCUIT ADJUDICATORS // TRIBUNAL';
+      }
+    }
+
+    function updateMetricPills() {
+      if (!metricToolbar) return;
+      let pills = [];
+
+      if (activeCategory === 'individual') {
+        pills = [
+          { id: 'speaker_score', label: 'Speaker Score' },
+          { id: 'win_percentage', label: 'Win %' },
+          { id: 'prelims_debated', label: 'Prelims Debated' },
+          { id: 'stdev', label: 'Stdev' },
+          { id: 'national_level', label: 'Nat Status' },
+        ];
+      } else if (activeCategory === 'teams') {
+        pills = [
+          { id: 'atss', label: 'ATSS' },
+          { id: 'win_percentage', label: 'Win %' },
+          { id: 'awpt', label: 'AWPT (Wins / Tour)' },
+          { id: 'achievement', label: 'Highest Achievement' },
+        ];
+      } else if (activeCategory === 'institutions') {
+        pills = [
+          { id: 'delta', label: 'Delta' },
+          { id: 'a_atss', label: 'A Team ATSS' },
+          { id: 'b_atss', label: 'B Team ATSS' },
+          { id: 'net_diff', label: 'Net Diff' },
+          { id: 'win_percentage', label: 'Win %' },
+          { id: 'pool_count', label: 'Debater Pool' },
+        ];
+      } else if (activeCategory === 'tournaments') {
+        pills = [
+          { id: 'atss', label: 'ATSS' },
+          { id: 'brk_atss', label: 'BRK ATSS' },
+          { id: 'institutions', label: 'Institutions' },
+          { id: 'teams', label: 'Teams' },
+          { id: 'rounds', label: 'Prelims + Knockouts' },
+          { id: 'speeches', label: 'Speeches' },
+          { id: 'debates', label: 'Prelim Debates' },
+        ];
+      } else if (activeCategory === 'adjudicators') {
+        pills = [
+          { id: 'debates', label: 'Prelims Judged' },
+          { id: 'aass', label: 'AASS (Substantive Mean)' },
+          { id: 'aatss', label: 'AATSS (Team Avg)' },
+          { id: 'tournaments', label: 'Tournaments' },
+        ];
       }
 
-      if (badge) {
-        badge.textContent = query ? `${teams.length} MATCHES` : `${teams.length} CIRCUIT TEAMS`;
+      metricToolbar.innerHTML = `
+        <div class="metric-pills-bar">
+          <span style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); margin-right: 4px;">RANK BY:</span>
+          ${pills.map((p) => `
+            <button class="metric-pill-btn${p.id === activeMetric ? ' active' : ''}" data-metric="${p.id}">
+              ${p.label}
+            </button>
+          `).join('')}
+        </div>
+      `;
+
+      metricToolbar.querySelectorAll('.metric-pill-btn').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          metricToolbar.querySelectorAll('.metric-pill-btn').forEach((b) => b.classList.remove('active'));
+          btn.classList.add('active');
+          activeMetric = btn.getAttribute('data-metric');
+          renderLeaderboard();
+        });
+      });
+      updateTierBadge();
+    }
+
+    function renderLeaderboard() {
+      const container = document.getElementById('lbTableContainer');
+      if (!container) return;
+
+      if (activeCategory === 'individual') {
+        renderIndividualTable(container);
+      } else if (activeCategory === 'teams') {
+        renderTeamsTable(container);
+      } else if (activeCategory === 'institutions') {
+        renderInstitutionsTable(container);
+      } else if (activeCategory === 'tournaments') {
+        renderTournamentsTable(container);
+      } else if (activeCategory === 'adjudicators') {
+        renderAdjudicatorsTable(container);
+      }
+    }
+
+    function renderIndividualTable(container) {
+      let list = (activeTier === 'tab' ? state.v2SpeakersTab : state.v2SpeakersGeneral).slice();
+
+      if (activeMetric === 'stdev') {
+        list.sort((a, b) => a.stdev - b.stdev);
+      } else if (activeMetric === 'win_percentage') {
+        list.sort((a, b) => b.win_percentage - a.win_percentage || b.speaker_score - a.speaker_score);
+      } else if (activeMetric === 'prelims_debated') {
+        list.sort((a, b) => b.prelims_debated - a.prelims_debated || b.speaker_score - a.speaker_score);
+      } else if (activeMetric === 'national_level') {
+        function natOrder(lvl) {
+          if (!lvl) return 4;
+          const l = lvl.toLowerCase();
+          if (l.includes('direct')) return 1;
+          if (l.includes('trialed')) return 2;
+          if (l.includes('trials')) return 3;
+          return 4;
+        }
+        list.sort((a, b) => {
+          const ordDiff = natOrder(a.national_level) - natOrder(b.national_level);
+          if (ordDiff !== 0) return ordDiff;
+          return b.speaker_score - a.speaker_score;
+        });
+      } else {
+        list.sort((a, b) => b.speaker_score - a.speaker_score);
       }
 
-      if (teams.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No teams match "${escapeHtml(query)}".</div>`;
+      if (searchQuery) {
+        list = list.filter((s) =>
+          (s.name && s.name.toLowerCase().includes(searchQuery)) ||
+          (s.institution && s.institution.toLowerCase().includes(searchQuery))
+        );
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No debaters match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -701,89 +513,73 @@
             <thead>
               <tr>
                 <th style="width: 44px; text-align: center;">#</th>
-                <th style="width: 24%;">TEAM</th>
-                <th style="width: 10%; text-align: right;">ATSS</th>
-                <th style="width: 10%; text-align: right;">WIN %</th>
-                <th style="width: 10%; text-align: right;">BREAK %</th>
-                <th style="width: 17%; text-align: center;">HIGHEST ACHIEVEMENT</th>
-                <th style="width: 12%; text-align: right;">TOURNAMENTS</th>
-                <th style="width: 13%; text-align: right;">WIN/LOSS MARGIN</th>
+                <th>SPEAKER</th>
+                <th>INSTITUTION</th>
+                <th style="text-align: right;">SPEAKER SCORE</th>
+                <th style="text-align: right;">WIN %</th>
+                <th style="text-align: right;">STDEV</th>
+                <th style="text-align: right;">PRELIMS</th>
+                <th style="text-align: right;">TOURNAMENTS</th>
+                <th>NAT STATUS</th>
               </tr>
             </thead>
             <tbody>
-              ${teams.map((t, idx) => {
-                const rank = t.rank || idx + 1;
-                const atss = fmt(t.atss, 2);
-                const winPct = fmt(t.win_percentage, 1) + '%';
-                const breakPct = fmt(t.break_percentage, 1) + '%';
-                const achBadge = getBreakBadge(t.highest_achievement || t.highest_break);
-                const tourneys = t.tournaments_debated !== undefined ? t.tournaments_debated : (t.tournaments_count || 0);
-
-                // Single signed Net Margin formatting
-                const netM = t.net_margin !== undefined ? t.net_margin : 0;
-                let marginHtml = '';
-                if (netM > 0) {
-                  marginHtml = `<span class="margin-win">+${fmt(netM, 2)}</span>`;
-                } else if (netM < 0) {
-                  marginHtml = `<span class="margin-loss">${fmt(netM, 2)}</span>`;
-                } else {
-                  marginHtml = `<span class="margin-none">0.00</span>`;
-                }
-
-                return `
-                  <tr class="clickable-row" onclick="window.location.href='h2h.html?team=${encodeURIComponent(t.team_name)}'">
-                    <td style="text-align: center;">${getRankBadge(rank)}</td>
-                    <td title="${escapeHtml(t.team_name)} (${escapeHtml(t.institution || 'Independent')})">
-                      <div style="font-weight: 700; color: #ffffff; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(t.team_name)}</div>
-                      <div style="font-size: 11.5px; color: rgba(255,255,255,0.55); overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">${escapeHtml(t.institution || 'Independent')}</div>
-                    </td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${atss}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${winPct}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); color: #34d399; font-weight: 700;">${breakPct}</td>
-                    <td style="text-align: center;">${achBadge}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${tourneys}</td>
-                    <td style="text-align: right;" class="margin-cell" title="Net Differential: ${t.net_margin >= 0 ? '+' : ''}${fmt(t.net_margin, 2)}">${marginHtml}</td>
-                  </tr>
-                `;
-              }).join('')}
+              ${list.map((s, idx) => `
+                <tr>
+                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td>
+                    <a class="table-link" href="bio.html?debater=${encodeURIComponent(s.name)}">${escapeHtml(s.name)}</a>
+                  </td>
+                  <td>
+                    <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
+                  </td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'speaker_score' ? '800; color: #38bdf8;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #38bdf8;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'stdev' ? '800; color: #38bdf8;' : '600;'}">${fmt(s.stdev, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'prelims_debated' ? '800; color: #38bdf8;' : '600;'}">${s.prelims_debated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${s.tournaments_debated}</td>
+                  <td>${getNatStatusTag(s.national_level)}</td>
+                </tr>
+              `).join('')}
             </tbody>
           </table>
         </div>
       `;
-    } else if (activeLeaderboardTab === 'institutions') {
-      let insts = state.institutions || [];
-      if (!insts || insts.length === 0) {
-        try {
-          const res = await fetch('data/web_export/institutional_power_index.json?v=3');
-          if (res.ok) insts = await res.json();
-        } catch (e) {
-          try {
-            const res = await fetch('../data/web_export/institutional_power_index.json?v=3');
-            if (res.ok) insts = await res.json();
-          } catch (err) {}
-        }
-        if (insts && Array.isArray(insts.leaderboard)) insts = insts.leaderboard;
-        state.institutions = insts || [];
-      }
+    }
 
-      let filtered = (state.institutions || []).slice();
-      if (query) {
-        filtered = filtered.filter((i) => {
-          const name = (i.name || i.institution_name || '').toLowerCase();
-          const code = (i.code || '').toLowerCase();
-          return name.includes(query) || code.includes(query);
+    function renderTeamsTable(container) {
+      let list = (activeTier === 'tab' ? state.v2TeamsTab : state.v2TeamsGeneral).slice();
+
+      const achOrder = {
+        "Champion": 1, "Runners-Up": 2, "Finalist": 2, "Semifinalist": 3,
+        "Quarterfinalist": 4, "Partial Octofinalist": 5, "Octofinalist": 6,
+        "Double Partial Octofinalist": 7, "Preliminary Rounds": 8, "Unranked": 9
+      };
+
+      if (activeMetric === 'win_percentage') {
+        list.sort((a, b) => b.win_percentage - a.win_percentage || b.atss - a.atss);
+      } else if (activeMetric === 'awpt') {
+        list.sort((a, b) => b.awpt - a.awpt || b.atss - a.atss);
+      } else if (activeMetric === 'achievement') {
+        list.sort((a, b) => {
+          const rA = achOrder[a.highest_achievement] || 9;
+          const rB = achOrder[b.highest_achievement] || 9;
+          if (rA !== rB) return rA - rB;
+          return b.atss - a.atss;
         });
+      } else {
+        list.sort((a, b) => b.atss - a.atss);
       }
 
-      // Cap displayed schools to Top 20 when not filtering, or all matching results when search query is active
-      const displayed = query ? filtered : filtered.slice(0, 20);
-
-      if (badge) {
-        badge.textContent = query ? `${filtered.length} MATCHES` : `TOP 20 SCHOOLS`;
+      if (searchQuery) {
+        list = list.filter((t) =>
+          (t.team_name && t.team_name.toLowerCase().includes(searchQuery)) ||
+          (t.institution && t.institution.toLowerCase().includes(searchQuery))
+        );
       }
 
-      if (displayed.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No institutions match "${escapeHtml(query)}".</div>`;
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No teams match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -793,78 +589,207 @@
             <thead>
               <tr>
                 <th style="width: 44px; text-align: center;">#</th>
-                <th style="width: 25%;">NAME OF SCHOOL</th>
-                <th style="width: 9%; text-align: right;" title="Institutional Delta Formula: Diminishing-weight harmonic combination of school teams">DELTA</th>
-                <th style="width: 10%; text-align: right;">A TEAM ATSS</th>
-                <th style="width: 10%; text-align: right;">B TEAM ATSS</th>
-                <th style="width: 10%; text-align: right;">NET DIFF</th>
-                <th style="width: 11%; text-align: right;">TOURNAMENTS</th>
-                <th style="width: 9%; text-align: right;">BREAK %</th>
-                <th style="width: 13%; text-align: center;">HIGHEST BREAK</th>
+                <th>TEAM NAME</th>
+                <th>INSTITUTION</th>
+                <th style="text-align: right;">ATSS</th>
+                <th style="text-align: right;">WIN %</th>
+                <th style="text-align: right;">AWPT</th>
+                <th style="text-align: right;">TOURNAMENTS</th>
+                <th style="text-align: center;">HIGHEST BREAK</th>
               </tr>
             </thead>
             <tbody>
-              ${displayed.map((i, idx) => {
-                const rank = i.rank || idx + 1;
-                const delta = i.delta !== undefined && i.delta !== null ? fmt(i.delta, 2) : (i.atiss ? fmt(i.atiss, 2) : '-');
-                const aAtss = i.a_atss !== undefined && i.a_atss !== null ? fmt(i.a_atss, 2) : '-';
-                const bAtss = i.b_atss !== undefined && i.b_atss !== null ? fmt(i.b_atss, 2) : '-';
+              ${list.map((t, idx) => `
+                <tr>
+                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td>
+                    <a class="table-link" href="team_bio.html?team=${encodeURIComponent(t.team_name)}">${escapeHtml(t.team_name)}</a>
+                  </td>
+                  <td>
+                    <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(t.institution)}">${escapeHtml(t.institution)}</a>
+                  </td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'atss' ? '800; color: #38bdf8;' : '600;'}">${fmt(t.atss, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #38bdf8;' : '600;'}">${fmt(t.win_percentage, 1)}%</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'awpt' ? '800; color: #38bdf8;' : '600;'}">${fmt(t.awpt, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${t.tournaments_debated}</td>
+                  <td style="text-align: center;">${getBreakBadge(t.highest_achievement)}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderInstitutionsTable(container) {
+      let list = (activeTier === 'tab' ? state.v2InstitutionsTab : state.v2InstitutionsGeneral).slice();
+
+      if (activeMetric === 'a_atss') {
+        list.sort((a, b) => b.a_atss - a.a_atss || b.delta - a.delta);
+      } else if (activeMetric === 'b_atss') {
+        list.sort((a, b) => (b.b_atss || 0) - (a.b_atss || 0) || b.delta - a.delta);
+      } else if (activeMetric === 'net_diff') {
+        // Smallest to highest difference between A and B
+        list.sort((a, b) => {
+          const diffA = a.net_diff !== null ? Math.abs(a.net_diff) : 9999;
+          const diffB = b.net_diff !== null ? Math.abs(b.net_diff) : 9999;
+          return diffA - diffB;
+        });
+      } else if (activeMetric === 'win_percentage') {
+        list.sort((a, b) => b.win_percentage - a.win_percentage || b.delta - a.delta);
+      } else if (activeMetric === 'pool_count') {
+        list.sort((a, b) => b.pool_count - a.pool_count || b.delta - a.delta);
+      } else {
+        // Default: Delta
+        list.sort((a, b) => b.delta - a.delta);
+      }
+
+      if (searchQuery) {
+        list = list.filter((i) =>
+          (i.institution_name && i.institution_name.toLowerCase().includes(searchQuery)) ||
+          (i.code && i.code.toLowerCase().includes(searchQuery))
+        );
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No institutions match "${escapeHtml(searchQuery)}".</div>`;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="data-table-wrap">
+          <table class="atomos-table">
+            <thead>
+              <tr>
+                <th style="width: 44px; text-align: center;">#</th>
+                <th>INSTITUTION</th>
+                <th style="text-align: right;">DELTA</th>
+                <th style="text-align: right;">A TEAM ATSS</th>
+                <th style="text-align: right;">B TEAM ATSS</th>
+                <th style="text-align: right;">NET DIFF</th>
+                <th style="text-align: right;">WIN %</th>
+                <th style="text-align: right;">DEBATER POOL</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map((i, idx) => {
+                const aTeamLink = i.a_team_name ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.a_team_name)}">${fmt(i.a_atss, 2)}</a>` : fmt(i.a_atss, 2);
+                const bTeamLink = i.b_team_name && i.b_atss ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.b_team_name)}">${fmt(i.b_atss, 2)}</a>` : (i.b_atss ? fmt(i.b_atss, 2) : '-');
                 let netDiffHtml = '-';
                 if (i.net_diff !== null && i.net_diff !== undefined) {
                   const nd = Number(i.net_diff);
                   const sign = nd > 0 ? '+' : '';
                   netDiffHtml = `<span style="font-family: var(--font-mono); font-weight: 700; color: ${nd >= 0 ? '#34d399' : '#f87171'};">${sign}${fmt(nd, 2)}</span>`;
                 }
-                const tours = i.tournaments_existed !== undefined ? i.tournaments_existed : (i.tournaments_debated || '-');
-                const breakPct = i.break_percentage !== undefined ? fmt(i.break_percentage, 1) + '%' : '-';
-                const highestPos = getBreakBadge(i.highest_break || i.highest_achievement);
-                const instName = i.name || i.institution_name || '';
 
                 return `
-                <tr>
-                  <td style="text-align: center;">${getRankBadge(rank)}</td>
-                  <td style="font-weight: 700; color: #ffffff;" title="${escapeHtml(instName)}">
-                    ${escapeHtml(instName)}
-                    ${i.code ? `<span style="font-size: 11px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
-                  </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${delta}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${aAtss}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${bAtss}</td>
-                  <td style="text-align: right;">${netDiffHtml}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${tours}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #34d399; font-weight: 700;">${breakPct}</td>
-                  <td style="text-align: center;">${highestPos}</td>
-                </tr>
-              `;
+                  <tr>
+                    <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                    <td>
+                      <a class="table-link" href="institution_bio.html?inst=${encodeURIComponent(i.institution_name)}">${escapeHtml(i.institution_name)}</a>
+                      ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
+                    </td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'delta' ? '800; color: #38bdf8;' : '700;'}">${fmt(i.delta, 2)}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'a_atss' ? '800; color: #38bdf8;' : '600;'}">${aTeamLink}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'b_atss' ? '800; color: #38bdf8;' : '600;'}">${bTeamLink}</td>
+                    <td style="text-align: right;">${netDiffHtml}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #38bdf8;' : '600;'}">${fmt(i.win_percentage, 1)}%</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'pool_count' ? '800; color: #38bdf8;' : '600;'}">${i.pool_count}</td>
+                  </tr>
+                `;
               }).join('')}
             </tbody>
           </table>
         </div>
       `;
-    } else if (activeLeaderboardTab === 'activity') {
-      if (!state.activityDebaters || state.activityDebaters.length === 0) {
-        try {
-          const res = await fetch('data/web_export/activity_leaderboard.json');
-          if (res.ok) state.activityDebaters = await res.json();
-        } catch (e) {
-          try {
-            const res = await fetch('../data/web_export/activity_leaderboard.json');
-            if (res.ok) state.activityDebaters = await res.json();
-          } catch (err) {}
-        }
+    }
+
+    function renderTournamentsTable(container) {
+      let list = state.v2Tournaments.slice();
+
+      if (activeMetric === 'brk_atss') {
+        list.sort((a, b) => b.brk_atss - a.brk_atss);
+      } else if (activeMetric === 'institutions') {
+        list.sort((a, b) => b.participating_institutions - a.participating_institutions);
+      } else if (activeMetric === 'teams') {
+        list.sort((a, b) => b.participating_teams - a.participating_teams);
+      } else if (activeMetric === 'rounds') {
+        list.sort((a, b) => b.prelims_plus_knock - a.prelims_plus_knock);
+      } else if (activeMetric === 'speeches') {
+        list.sort((a, b) => b.total_speeches - a.total_speeches);
+      } else if (activeMetric === 'debates') {
+        list.sort((a, b) => b.prelim_debates - a.prelim_debates);
+      } else {
+        list.sort((a, b) => b.atss - a.atss);
       }
 
-      let debaters = (state.activityDebaters || []).slice();
-      if (query) {
-        debaters = debaters.filter((s) => {
-          const name = (s.debater_name || '').toLowerCase();
-          const inst = (s.institution || '').toLowerCase();
-          return name.includes(query) || inst.includes(query);
-        });
+      if (searchQuery) {
+        list = list.filter((t) =>
+          (t.name && t.name.toLowerCase().includes(searchQuery)) ||
+          (t.hosting_dates && t.hosting_dates.toLowerCase().includes(searchQuery))
+        );
       }
 
-      if (debaters.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No active debaters match "${escapeHtml(query)}".</div>`;
+      container.innerHTML = `
+        <div class="data-table-wrap">
+          <table class="atomos-table">
+            <thead>
+              <tr>
+                <th style="width: 44px; text-align: center;">#</th>
+                <th>TOURNAMENT</th>
+                <th>DATES</th>
+                <th style="text-align: right;">ATSS</th>
+                <th style="text-align: right;">BRK ATSS</th>
+                <th style="text-align: right;">INSTITUTIONS</th>
+                <th style="text-align: right;">TEAMS</th>
+                <th style="text-align: right;">PRELIMS+KNOCK</th>
+                <th style="text-align: right;">SPEECHES</th>
+                <th style="text-align: right;">PRELIM DEBATES</th>
+              </tr>
+            </thead>
+            <tbody>
+              ${list.map((t, idx) => `
+                <tr>
+                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td style="font-weight: 700; color: #ffffff;">${escapeHtml(t.name)}</td>
+                  <td style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.65);">${escapeHtml(t.hosting_dates)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${fmt(t.atss, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${fmt(t.brk_atss, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono);">${t.participating_institutions}</td>
+                  <td style="text-align: right; font-family: var(--font-mono);">${t.participating_teams}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: #34d399;">${t.prelims_plus_knock}</td>
+                  <td style="text-align: right; font-family: var(--font-mono);">${Number(t.total_speeches).toLocaleString()}</td>
+                  <td style="text-align: right; font-family: var(--font-mono);">${t.prelim_debates}</td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      `;
+    }
+
+    function renderAdjudicatorsTable(container) {
+      let list = state.v2Adjudicators.slice();
+
+      if (activeMetric === 'aass') {
+        list.sort((a, b) => b.aass - a.aass);
+      } else if (activeMetric === 'aatss') {
+        list.sort((a, b) => b.aatss - a.aatss);
+      } else if (activeMetric === 'tournaments') {
+        list.sort((a, b) => b.tournaments_adjudicated - a.tournaments_adjudicated);
+      } else {
+        list.sort((a, b) => b.prelims_adjudicated - a.prelims_adjudicated);
+      }
+
+      if (searchQuery) {
+        list = list.filter((j) =>
+          (j.adjudicator_name && j.adjudicator_name.toLowerCase().includes(searchQuery)) ||
+          (j.institution && j.institution.toLowerCase().includes(searchQuery))
+        );
+      }
+
+      if (list.length === 0) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No adjudicators match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -874,1480 +799,1489 @@
             <thead>
               <tr>
                 <th style="width: 44px; text-align: center;">#</th>
-                <th style="width: 28%;">DEBATER</th>
-                <th style="width: 28%;">INSTITUTION</th>
-                <th style="width: 14%; text-align: right;">PRELIMS</th>
-                <th style="width: 14%; text-align: right;">TOURNAMENTS</th>
-                <th style="width: 16%; text-align: right;">ASS</th>
+                <th>ADJUDICATOR</th>
+                <th>INSTITUTION</th>
+                <th style="text-align: right;">AASS (SPEAK AVG)</th>
+                <th style="text-align: right;">AATSS (TEAM AVG)</th>
+                <th style="text-align: center;">PROP / OPP BIAS</th>
+                <th style="text-align: right;">PRELIMS ADJUDICATED</th>
+                <th style="text-align: right;">TOURNAMENTS</th>
               </tr>
             </thead>
             <tbody>
-              ${debaters.map((s, idx) => {
-                const rank = s.rank || idx + 1;
-                const spkName = s.debater_name || '';
-                const instName = s.institution || 'Independent';
-                const prelims = s.prelims_debated !== undefined ? s.prelims_debated : '-';
-                const tours = s.tournaments_debated !== undefined ? s.tournaments_debated : '-';
-                const ass = fmt(s.ass, 2);
-
-                return `
-                <tr class="clickable-row" onclick="window.location.href='bio.html?speaker=${encodeURIComponent(spkName)}'">
-                  <td style="text-align: center;">${getRankBadge(rank)}</td>
-                  <td style="font-weight: 700; color: #ffffff;" title="${escapeHtml(spkName)}">${escapeHtml(spkName)}</td>
-                  <td style="color: rgba(255,255,255,0.75);" title="${escapeHtml(instName)}">${escapeHtml(instName)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${prelims}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #ffffff; font-weight: 600;">${tours}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: #34d399;">${ass}</td>
-                </tr>
-              `;
-              }).join('')}
-            </tbody>
-          </table>
-        </div>
-      `;
-    } else if (activeLeaderboardTab === 'tournaments') {
-      if (!state.tournamentRankings || state.tournamentRankings.length === 0) {
-        try {
-          const res = await fetch('data/web_export/tournament_rankings.json');
-          if (res.ok) state.tournamentRankings = await res.json();
-        } catch (e) {
-          try {
-            const res = await fetch('../data/web_export/tournament_rankings.json');
-            if (res.ok) state.tournamentRankings = await res.json();
-          } catch (err) {}
-        }
-      }
-
-      let tours = (state.tournamentRankings || []).slice();
-      if (query) {
-        tours = tours.filter((t) => {
-          const name = (t.tournament_name || '').toLowerCase();
-          const dates = (t.dates || '').toLowerCase();
-          const bs = (t.break_structure || '').toLowerCase();
-          return name.includes(query) || dates.includes(query) || bs.includes(query);
-        });
-      }
-
-      if (tours.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No tournaments match "${escapeHtml(query)}".</div>`;
-        return;
-      }
-
-      container.innerHTML = `
-        <div class="data-table-wrap">
-          <table class="atomos-table">
-            <thead>
-              <tr>
-                <th style="width: 44px; text-align: center; padding: 12px 4px;">#</th>
-                <th style="width: 21%;">TOURNAMENT</th>
-                <th style="width: 13%;">DATES</th>
-                <th style="width: 9%; text-align: right; padding: 12px 4px;">APTTSS</th>
-                <th style="width: 10%; text-align: right; padding: 12px 4px;">BRK APTTSS</th>
-                <th style="width: 6%; text-align: right; padding: 12px 4px;">TEAMS</th>
-                <th style="width: 6%; text-align: right; padding: 12px 4px;">RNDS</th>
-                <th style="width: 17%; text-align: center;">BREAK STAGE</th>
-                <th style="width: 8%; text-align: right; padding: 12px 4px;">SPEECHES</th>
-                <th style="width: 8%; text-align: right; padding: 12px 6px;">DEBATES</th>
-              </tr>
-            </thead>
-            <tbody>
-              ${tours.map((t, idx) => {
-                const rank = t.rank || idx + 1;
-                const tName = t.tournament_name || '';
-                const dates = t.dates || 'TBD';
-                const apttss = fmt(t.apttss, 2);
-                const apttssBreak = t.apttss_breaking ? fmt(t.apttss_breaking, 2) : '-';
-                const teams = t.teams_participated !== undefined ? t.teams_participated : '-';
-                const prelimRounds = t.prelim_rounds !== undefined ? t.prelim_rounds : '-';
-                const breakStruct = t.break_structure || 'No Breaks';
-                const speeches = t.speeches_count !== undefined ? t.speeches_count : '-';
-                const debates = t.debates_count !== undefined ? t.debates_count : '-';
-
-                return `
+              ${list.map((j, idx) => `
                 <tr>
-                  <td style="text-align: center; padding: 10px 2px;">${getRankBadge(rank)}</td>
-                  <td style="font-weight: 700; color: #ffffff;" title="${escapeHtml(tName)}">${escapeHtml(tName)}</td>
-                  <td style="color: rgba(255,255,255,0.75); font-family: var(--font-mono); font-size: 11.5px;">${escapeHtml(dates)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${apttss}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 700; color: #34d399;">${apttssBreak}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 600;">${teams}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 600;">${prelimRounds}</td>
-                  <td style="text-align: center; padding: 10px 4px;">
-                    <span class="break-tag break-semis" style="font-size: 10px; padding: 3px 6px; white-space: nowrap;">${escapeHtml(breakStruct)}</span>
+                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td>
+                    <a class="table-link" href="adjudicator_bio.html?judge=${encodeURIComponent(j.adjudicator_name)}">${escapeHtml(j.adjudicator_name)}</a>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.75);">${speeches}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #38bdf8; font-weight: 700;">${debates}</td>
+                  <td style="color: rgba(255,255,255,0.75);">${escapeHtml(j.institution)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aass' ? '800; color: #38bdf8;' : '600;'}">${fmt(j.aass, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aatss' ? '800; color: #38bdf8;' : '600;'}">${fmt(j.aatss, 2)}</td>
+                  <td style="text-align: center; font-family: var(--font-mono); font-size: 11px;">
+                    <span style="color: #38bdf8; font-weight: 700;">${j.prop_bias_pct}% P</span> / <span style="color: #f43f5e; font-weight: 700;">${(100 - j.prop_bias_pct).toFixed(1)}% O</span>
+                  </td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'debates' ? '800; color: #38bdf8;' : '600;'}">${j.prelims_adjudicated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${j.tournaments_adjudicated}</td>
                 </tr>
-              `;
-              }).join('')}
+              `).join('')}
             </tbody>
           </table>
         </div>
       `;
     }
+
+    updateMetricPills();
+    renderLeaderboard();
   }
 
   // ==========================================================================
-  // 3. BIO ENGINE PAGE (8 Core Circuit Metrics & Pure Debater Dossier)
+  // 3. DEBATER BIO PAGE (V2 SPEC)
   // ==========================================================================
-  function renderBioEmptyState() {
-    const container = document.getElementById('bioProfileContainer');
-    const input = document.getElementById('bioSearchInput');
-    const clearBtn = document.getElementById('bioClearBtn');
-    if (input) input.value = '';
-    if (clearBtn) clearBtn.classList.add('hidden');
-    if (container) {
-      container.innerHTML = `
-        <div class="bio-empty-state" style="text-align: center; padding: 64px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-          <div style="font-size: 16px; color: #38bdf8; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">ATOMOS BIO ENGINE // CAREER DOSSIER</div>
-          <div style="font-size: 13px; max-width: 480px; margin: 0 auto; line-height: 1.6; color: rgba(255,255,255,0.65);">
-            Type any debater's name or institution in the search box above to inspect their 8 core performance metrics, tournament trajectory, and circuit adjudication record.
-          </div>
-        </div>
-      `;
-    }
-    if (window.history.replaceState) {
-      window.history.replaceState(null, '', window.location.pathname);
-    }
-  }
-
   function initBioPage() {
-    setupBioSearchInput();
-
-    // Check URL parameters (e.g. bio.html?speaker=Vidath+Marasinghe)
-    const urlParams = new URLSearchParams(window.location.search);
-    const speakerParam = urlParams.get('speaker') || urlParams.get('name') || urlParams.get('id');
-
-    // Never autoload Kulith or default debaters
-    if (speakerParam && !speakerParam.toLowerCase().includes('kulith')) {
-      loadDebaterDossier(speakerParam);
-    } else {
-      if (speakerParam && speakerParam.toLowerCase().includes('kulith') && window.history.replaceState) {
-        window.history.replaceState(null, '', window.location.pathname);
-      }
-      renderBioEmptyState();
-    }
-  }
-
-  function setupBioSearchInput() {
     const input = document.getElementById('bioSearchInput');
     const dropdown = document.getElementById('bioSuggestions');
     const clearBtn = document.getElementById('bioClearBtn');
-    if (!input || !dropdown) return;
+    const container = document.getElementById('bioProfileContainer');
 
-    function renderMatches(q) {
-      const allDebaters = getAllDebatersList();
-      const query = (q || '').trim().toLowerCase();
-      let matches = allDebaters;
-      if (query) {
-        matches = allDebaters.filter(
-          (d) => d.name.toLowerCase().includes(query) || (d.institution && d.institution.toLowerCase().includes(query))
-        );
-      }
-      matches = matches.slice(0, 15);
+    const urlParams = new URLSearchParams(window.location.search);
+    const debaterParam = urlParams.get('debater') || urlParams.get('speaker') || urlParams.get('name') || urlParams.get('id');
 
-      if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching debaters found in identity base.</div>`;
-        dropdown.classList.remove('hidden');
-        return;
-      }
-
-      dropdown.innerHTML = matches
-        .map(
-          (d, idx) => `
-        <div class="bio-autocomplete-item${idx === 0 ? ' active' : ''}" data-name="${escapeHtml(d.name)}">
-          <div>
-            <div class="bio-auto-name">${escapeHtml(d.name)}</div>
-            <div class="bio-auto-inst">${escapeHtml(d.institution || 'Independent')}</div>
-          </div>
-          <div class="bio-auto-meta">
-            <span class="bio-auto-stat">${d.speaker_avg ? `Avg: ${Number(d.speaker_avg).toFixed(2)}` : ''}</span>
-            <span style="font-size: 10px; color: rgba(255,255,255,0.4);">${d.prelims || 0} Prelims</span>
-          </div>
-        </div>
-      `
-        )
-        .join('');
-
-      dropdown.classList.remove('hidden');
-
-      dropdown.querySelectorAll('.bio-autocomplete-item').forEach((el) => {
-        el.addEventListener('mousedown', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const name = el.getAttribute('data-name');
-          selectDebater(name);
-        });
-      });
+    if (debaterParam) {
+      loadDebaterBio(debaterParam);
     }
 
-    input.addEventListener('input', () => {
-      if (clearBtn) {
-        if (input.value) clearBtn.classList.remove('hidden');
-        else clearBtn.classList.add('hidden');
-      }
-      renderMatches(input.value);
-    });
-
-    input.addEventListener('focus', () => {
-      renderMatches(input.value);
-    });
-
-    input.addEventListener('blur', () => {
-      setTimeout(() => {
-        dropdown.classList.add('hidden');
-        dropdown.innerHTML = '';
-      }, 150);
-    });
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        dropdown.classList.add('hidden');
-        dropdown.innerHTML = '';
-        input.blur();
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        const activeItem = dropdown.querySelector('.bio-autocomplete-item.active') || dropdown.querySelector('.bio-autocomplete-item');
-        if (activeItem) {
-          const name = activeItem.getAttribute('data-name');
-          selectDebater(name);
-        } else {
-          dropdown.classList.add('hidden');
-          dropdown.innerHTML = '';
-          input.blur();
+    if (input && dropdown) {
+      function renderMatches(q) {
+        const query = (q || '').trim().toLowerCase();
+        let matches = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
+        if (query) {
+          matches = matches.filter((d) => d.name.toLowerCase().includes(query) || (d.institution && d.institution.toLowerCase().includes(query)));
         }
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const items = Array.from(dropdown.querySelectorAll('.bio-autocomplete-item'));
-        if (items.length === 0) return;
-        let activeIdx = items.findIndex((el) => el.classList.contains('active'));
-        if (e.key === 'ArrowDown') {
-          activeIdx = (activeIdx + 1) % items.length;
-        } else {
-          activeIdx = (activeIdx - 1 + items.length) % items.length;
+        matches = matches.slice(0, 15);
+
+        if (matches.length === 0) {
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching debaters found.</div>`;
+          dropdown.classList.remove('hidden');
+          return;
         }
-        items.forEach((el, idx) => {
-          el.classList.toggle('active', idx === activeIdx);
-          if (idx === activeIdx) el.scrollIntoView({ block: 'nearest' });
+
+        dropdown.innerHTML = matches.map((d) => `
+          <div class="h2h-autocomplete-item" data-name="${escapeHtml(d.name)}">
+            <div>
+              <div class="h2h-auto-name">${escapeHtml(d.name)}</div>
+              <div class="h2h-auto-inst">${escapeHtml(d.institution)}</div>
+            </div>
+            <div class="h2h-auto-meta">
+              <span class="h2h-auto-stat">Avg: ${fmt(d.speaker_score, 2)}</span>
+            </div>
+          </div>
+        `).join('');
+
+        dropdown.classList.remove('hidden');
+
+        dropdown.querySelectorAll('.h2h-autocomplete-item').forEach((el) => {
+          el.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const name = el.getAttribute('data-name');
+            input.value = name;
+            dropdown.classList.add('hidden');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            loadDebaterBio(name);
+          });
         });
       }
-    });
+
+      input.addEventListener('input', () => {
+        if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
+        renderMatches(input.value);
+      });
+
+      input.addEventListener('focus', () => renderMatches(input.value));
+      input.addEventListener('blur', () => setTimeout(() => dropdown.classList.add('hidden'), 180));
+    }
 
     if (clearBtn) {
-      clearBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        renderBioEmptyState();
-        dropdown.classList.add('hidden');
-        dropdown.innerHTML = '';
-        input.focus();
-        renderMatches('');
+      clearBtn.addEventListener('click', () => {
+        if (input) input.value = '';
+        clearBtn.classList.add('hidden');
+        if (container) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+              Type any debater's name above to inspect their comprehensive circuit career dossier.
+            </div>
+          `;
+        }
+        if (window.history.replaceState) window.history.replaceState(null, '', window.location.pathname);
       });
     }
 
-    // Dismiss on outside click
-    document.addEventListener('pointerdown', (e) => {
-      if (!e.target.closest('.bio-search-wrap')) {
-        dropdown.classList.add('hidden');
-        dropdown.innerHTML = '';
+    async function loadDebaterBio(name) {
+      if (!container) return;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
+
+      let profile = null;
+      if (state.isServerOnline) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/debaters/${encodeURIComponent(name)}/bio`);
+          if (res.ok) profile = await res.json();
+        } catch (e) {}
       }
-    });
-  }
 
-  function getMasterRank(debaterName) {
-    if (!debaterName) return null;
-    const m = (state.masterSpeakers || []).find(
-      (s) =>
-        (s.speaker_name && s.speaker_name.toLowerCase() === debaterName.toLowerCase()) ||
-        (s.canonical_name && s.canonical_name.toLowerCase() === debaterName.toLowerCase())
-    );
-    return m ? (m.rank || null) : null;
-  }
-
-  function derivePositionsFromTournaments(tournaments) {
-    const pos = {
-      '1st': { count: 0, avg: null, percentage: 0, total_score: 0 },
-      '2nd': { count: 0, avg: null, percentage: 0, total_score: 0 },
-      '3rd': { count: 0, avg: null, percentage: 0, total_score: 0 },
-      'Reply': { count: 0, avg: null, percentage: 0, total_score: 0 },
-      total_substantive: 0,
-      total_speeches: 0,
-    };
-    (tournaments || []).forEach((t) => {
-      const allRounds = [...(t.prelim_rounds || []), ...(t.elim_rounds || [])];
-      allRounds.forEach((r) => {
-        (r.speeches || []).forEach((sp) => {
-          pos.total_speeches++;
-          const p = sp.position;
-          if (p && pos[p]) {
-            pos[p].count++;
-            if (sp.total_score) pos[p].total_score += Number(sp.total_score);
-            if (sp.speech_type === 'SUBSTANTIVE' || p !== 'Reply') {
-              pos.total_substantive++;
-            }
-          }
-        });
-      });
-    });
-    ['1st', '2nd', '3rd', 'Reply'].forEach((p) => {
-      if (pos[p].count > 0 && pos[p].total_score > 0) {
-        pos[p].avg = Math.round((pos[p].total_score / pos[p].count) * 100) / 100;
+      // If server profile not loaded, find in local datasets
+      if (!profile) {
+        const found = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find(
+          (d) => d.name.toLowerCase() === name.toLowerCase() || d.name.toLowerCase().includes(name.toLowerCase())
+        );
+        if (found) {
+          profile = {
+            canonical_name: found.name,
+            national_level: found.national_level,
+            latest_institution: found.institution,
+            most_debated_team: 'Circuit Team',
+            speaker_avg: found.speaker_score,
+            win_percentage: found.win_percentage,
+            stdev: found.stdev,
+            prelims_debated: found.prelims_debated,
+            tournaments_debated: found.tournaments_debated,
+            position_averages: { "1st": found.speaker_score, "2nd": found.speaker_score, "3rd": found.speaker_score, "Reply": 35.5 },
+            tournament_breakdown: [],
+          };
+        }
       }
-      if (p !== 'Reply' && pos.total_substantive > 0) {
-        pos[p].percentage = Math.round((pos[p].count / pos.total_substantive) * 1000) / 10;
+
+      if (!profile) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Debater "${escapeHtml(name)}" not found in circuit records.</div>`;
+        return;
       }
-    });
-    return pos;
-  }
 
-  async function loadDebaterDossier(speakerName) {
-    const container = document.getElementById('bioProfileContainer');
-    const dropdown = document.getElementById('bioSuggestions');
-    const input = document.getElementById('bioSearchInput');
-    const clearBtn = document.getElementById('bioClearBtn');
-
-    if (dropdown) {
-      dropdown.classList.add('hidden');
-      dropdown.innerHTML = '';
-    }
-    if (input) {
-      input.value = speakerName;
-      input.blur();
-    }
-    if (clearBtn) clearBtn.classList.remove('hidden');
-    if (!container) return;
-
-    container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #38bdf8; font-family: var(--font-mono);">
-        Loading career dossier for ${escapeHtml(speakerName)}...
-      </div>
-    `;
-
-    let profile = null;
-
-    // 1. Live API query
-    if (state.isServerOnline) {
-      try {
-        const res = await fetch(`${state.apiUrl}/api/debaters/${encodeURIComponent(speakerName)}?compact=false`);
-        if (res.ok) profile = await res.json();
-      } catch (e) {}
-    }
-
-    // 2. Static precomputed fallback
-    if (!profile) {
-      const crit = (state.criticalSpeakers || []).find((s) => s.speaker_name && s.speaker_name.toLowerCase() === speakerName.toLowerCase());
-      const master = (state.masterSpeakers || []).find((s) => s.speaker_name && s.speaker_name.toLowerCase() === speakerName.toLowerCase());
-
-      if (crit || master) {
-        profile = {
-          canonical_name: (crit && crit.speaker_name) || (master && master.speaker_name),
-          institution: (crit && crit.institution) || (master && master.institution_name) || 'Independent',
-          national_level: (crit && crit.national_level) || (master && master.national_level),
-          master_score: (master && master.master_score) || (crit && crit.avg),
-          speech_avg: (crit && crit.speech_avg) || (master && master.speech_average),
-          overall_substantive_avg: (master && master.speaker_avg) || (crit && crit.speaker_avg),
-          master_tab_rank: master && master.rank,
-          critical_stats_rank: crit && crit.rank,
-          win_rate: (crit && crit.win_rate_debated) || (master && master.win_percentage) || 0,
-          prelim_rounds_debated: (crit && crit.prelim_rounds_debated) || (master && master.prelims) || 0,
-          break_rate: (crit && crit.break_percentage) || (master && master.break_percentage) || 0,
-          eligible_tournaments_count: (crit && crit.eligible_tournaments) || (master && master.eligible_tournaments) || 0,
-          total_tournaments_count: (master && master.tournaments) || (crit && crit.tournaments) || 1,
-          tournaments: (master && master.tournament_breakdown) || [],
-          regulation: (crit && crit.regulation) || 'new',
-        };
+      // Update URL without reload
+      if (window.history.replaceState) {
+        window.history.replaceState(null, '', `${window.location.pathname}?debater=${encodeURIComponent(profile.canonical_name)}`);
       }
-    }
+      if (input) input.value = profile.canonical_name;
+      if (clearBtn) clearBtn.classList.remove('hidden');
 
-    if (!profile) {
+      const pos = profile.position_averages || {};
+      const pos1 = pos["1st"] ? fmt(pos["1st"], 2) : '-';
+      const pos2 = pos["2nd"] ? fmt(pos["2nd"], 2) : '-';
+      const pos3 = pos["3rd"] ? fmt(pos["3rd"], 2) : '-';
+      const posReply = pos["Reply"] ? fmt(pos["Reply"], 2) : '-';
+
+      const tourBreakdown = profile.tournament_breakdown || [];
+
       container.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: #ef4444; font-family: var(--font-mono);">
-          Debater record for "${escapeHtml(speakerName)}" not found in database.
+        <!-- Debater Header Card -->
+        <div class="bio-profile-header">
+          <div class="bio-name-group">
+            <h2 class="bio-name">${escapeHtml(profile.canonical_name)}</h2>
+            <div style="display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; font-size: 13.5px;">
+              <div>
+                <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">MOST DEBATED TEAM: </span>
+                <a class="table-link" href="team_bio.html?team=${encodeURIComponent(profile.most_debated_team)}">${escapeHtml(profile.most_debated_team)}</a>
+              </div>
+              <div>
+                <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">LATEST SCHOOL: </span>
+                <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(profile.latest_institution)}">${escapeHtml(profile.latest_institution)}</a>
+              </div>
+            </div>
+          </div>
+          <div>${getNatStatusTag(profile.national_level)}</div>
+        </div>
+
+        <!-- 1. First Box Stats Seen (5 Core Metrics) -->
+        <div class="bio-stats-grid">
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${fmt(profile.speaker_avg, 2)}</div>
+            <div class="bio-stat-lbl">SPEAKER AVG</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Universal Substantive Mean</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #34d399;">${fmt(profile.win_percentage, 1)}%</div>
+            <div class="bio-stat-lbl">WIN %</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Debates Contested</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #fbbf24;">${fmt(profile.stdev, 2)}</div>
+            <div class="bio-stat-lbl">STDEV</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Speech Score Deviation</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${profile.prelims_debated}</div>
+            <div class="bio-stat-lbl">PRELIMS DEBATED</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Preliminary Speeches</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #c084fc;">${profile.tournaments_debated}</div>
+            <div class="bio-stat-lbl">TOURNAMENTS</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Events Debated</div>
+          </div>
+        </div>
+
+        <!-- 2. Speaker Position Debated Graph -->
+        <div class="bio-section-heading">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
+          SPEAKER POSITION DEBATED BREAKDOWN
+        </div>
+        <div class="bio-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos1}</div>
+            <div class="bio-stat-lbl">1ST SPEAKER AVG</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos2}</div>
+            <div class="bio-stat-lbl">2ND SPEAKER AVG</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos3}</div>
+            <div class="bio-stat-lbl">3RD SPEAKER AVG</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="font-size: 22px; color: #a855f7;">${posReply}</div>
+            <div class="bio-stat-lbl">REPLY SPEAKER AVG</div>
+          </div>
+        </div>
+
+        <!-- 4. Tournament Breakdown with Interactive Hover Details -->
+        <div class="bio-section-heading" style="margin-top: 28px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+          TOURNAMENT BREAKDOWN (HOVER FOR JUDGE & OPPONENT)
+        </div>
+        <div class="trajectory-list">
+          ${tourBreakdown.length > 0 ? tourBreakdown.map((t) => `
+            <div class="trajectory-card" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
+                <div class="t-info-title">${escapeHtml(t.tournament_name)}</div>
+                <div style="font-family: var(--font-mono); font-size: 13px; color: #38bdf8; font-weight: 700;">
+                  Event Avg: ${fmt(t.tournament_average, 2)} pts (${t.speeches_count} speeches)
+                </div>
+              </div>
+              <div class="score-pills">
+                ${(t.rounds || []).map((r) => `
+                  <div class="round-hover-trigger">
+                    <span class="score-pill" style="cursor: pointer;">
+                      ${r.speech_type === 'REPLY' ? 'Reply: ' : ''}${fmt(r.score, 1)}
+                    </span>
+                    <div class="round-tooltip">
+                      <div class="tooltip-title">${escapeHtml(r.round_name || 'Round ' + r.round_number)}</div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">OPPONENT:</span>
+                        <span style="font-weight: 600;">${escapeHtml(r.opponent)}</span>
+                      </div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">SCORE:</span>
+                        <span style="font-weight: 700; color: #38bdf8;">${fmt(r.score, 1)}</span>
+                      </div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">JUDGE:</span>
+                        <span>${escapeHtml(r.adjudicator)}</span>
+                      </div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">POSITION:</span>
+                        <span style="color: #34d399;">${escapeHtml(r.position)}</span>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
         </div>
       `;
-      return;
+    }
+  }
+
+  // ==========================================================================
+  // 4. TEAM BIO PAGE (NEW V2 VIEW)
+  // ==========================================================================
+  function initTeamBioPage() {
+    const input = document.getElementById('teamSearchInput');
+    const dropdown = document.getElementById('teamSuggestions');
+    const clearBtn = document.getElementById('teamClearBtn');
+    const container = document.getElementById('teamProfileContainer');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const teamParam = urlParams.get('team') || urlParams.get('name');
+
+    if (teamParam) {
+      loadTeamBio(teamParam);
     }
 
-    // Metric 1: Avg
-    const speakerAvg = profile.overall_substantive_avg || profile.speech_avg || profile.speaker_avg || profile.master_score;
+    if (input && dropdown) {
+      function renderMatches(q) {
+        const query = (q || '').trim().toLowerCase();
+        let matches = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab);
+        if (query) {
+          matches = matches.filter((t) => t.team_name.toLowerCase().includes(query) || (t.institution && t.institution.toLowerCase().includes(query)));
+        }
+        matches = matches.slice(0, 15);
 
-    // Metric 2: Critical tab rank (normal Tab if critical doesn't exist)
-    const critRank = profile.critical_stats_rank || getCriticalRank(profile.canonical_name);
-    const masterRank = profile.master_tab_rank || getMasterRank(profile.canonical_name);
-    const hasCritRank = critRank !== null && critRank !== undefined;
-    const rankValue = hasCritRank ? `#${critRank}` : (masterRank ? `#${masterRank}` : 'Unranked');
-    const rankLabel = hasCritRank ? 'CRITICAL TAB' : 'MASTER TAB ONLY';
-    const rankSub = hasCritRank ? 'Official Critical Standing' : 'Unranked in Critical (< 3 eligible)';
-    const rankTagClass = hasCritRank ? 'break-semis' : 'break-octos';
+        if (matches.length === 0) {
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching teams found.</div>`;
+          dropdown.classList.remove('hidden');
+          return;
+        }
 
-    // Metric 3: Tournaments debated (eligible and participated both)
-    const eligibleTours = profile.eligible_tournaments_count !== undefined ? profile.eligible_tournaments_count : (profile.eligible_tournaments || 0);
-    const totalTours = profile.total_tournaments_count !== undefined ? profile.total_tournaments_count : (profile.tournaments_debated ? profile.tournaments_debated.length : (profile.tournaments ? profile.tournaments.length : 0));
-
-    // Metric 4: Rounds debated (prelims, no eligibility issues)
-    const prelimsDebated = profile.prelim_rounds_debated !== undefined ? profile.prelim_rounds_debated : (profile.prelims || 0);
-
-    // Metric 5: Win rate
-    const winRate = profile.win_rate !== undefined ? profile.win_rate : (profile.win_percentage || 0);
-
-    // Metric 6: Break rate
-    const breakRate = profile.break_rate !== undefined ? profile.break_rate : (profile.break_percentage || 0);
-
-    // Metric 7: Speaker Positions Graph
-    let positions = profile.positions_breakdown;
-    if (!positions || (!positions['1st'] && !positions['2nd'])) {
-      positions = derivePositionsFromTournaments(profile.tournaments);
-    }
-    const pos1 = (positions && positions['1st']) || { count: 0, percentage: 0, avg: null };
-    const pos2 = (positions && positions['2nd']) || { count: 0, percentage: 0, avg: null };
-    const pos3 = (positions && positions['3rd']) || { count: 0, percentage: 0, avg: null };
-    const posReply = (positions && positions['Reply']) || { count: 0, percentage: 0, avg: null };
-    const totalSubstantive = (positions && positions.total_substantive) || (pos1.count + pos2.count + pos3.count);
-
-    // Calculate width percentages for horizontal bar
-    const p1Width = totalSubstantive > 0 ? (pos1.count / totalSubstantive) * 100 : 0;
-    const p2Width = totalSubstantive > 0 ? (pos2.count / totalSubstantive) * 100 : 0;
-    const p3Width = totalSubstantive > 0 ? (pos3.count / totalSubstantive) * 100 : 0;
-
-    // Metric 8: Adjudication Record ("Adjed or not")
-    const adj = profile.adjudication_record;
-    const hasAdjudicated = adj && adj.has_adjudicated && adj.tournaments_count > 0;
-
-    // Tournament date ranking & ordering metadata (SLSDC Aug 2026 is latest, AISDC Jan 2026 is earliest)
-    const TOURNAMENT_DATE_METADATA = {
-      4: { rank: 8, date: "Aug 22–31, 2026" },       // SLSDC 2026 (Latest)
-      18: { rank: 7, date: "July 31 – Aug 3, 2026" }, // Chap's '26
-      3: { rank: 6, date: "July 17–20, 2026" },      // APIIT ISDC 2026
-      16: { rank: 5, date: "July 3–6, 2026" },        // RIC ISDC 2026
-      10: { rank: 4, date: "June 19–22, 2026" },      // Metho 2026
-      1: { rank: 3, date: "June 5–8, 2026" },         // Vijis '26
-      7: { rank: 2, date: "March 13–16, 2026" },      // VVIDC 2026
-      2: { rank: 1, date: "Jan 2–5, 2026" },          // AISDC 2026 (Start of year)
-    };
-
-    function getTournamentDateInfo(t) {
-      const id = Number(t.tournament_id || t.id);
-      if (TOURNAMENT_DATE_METADATA[id]) return TOURNAMENT_DATE_METADATA[id];
-
-      const name = (t.tournament_name || t.name || '').toLowerCase();
-      if (name.includes('slsdc') || name.includes('sri lanka schools')) return { rank: 8, date: "Aug 22–31, 2026" };
-      if (name.includes('chap') || name.includes('frances')) return { rank: 7, date: "July 31 – Aug 3, 2026" };
-      if (name.includes('apiit')) return { rank: 6, date: "July 17–20, 2026" };
-      if (name.includes('ric')) return { rank: 5, date: "July 3–6, 2026" };
-      if (name.includes('metho') || name.includes('shanthi')) return { rank: 4, date: "June 19–22, 2026" };
-      if (name.includes('viji') || name.includes('dr. vijitha')) return { rank: 3, date: "June 5–8, 2026" };
-      if (name.includes('vvidc') || name.includes('visakha')) return { rank: 2, date: "March 13–16, 2026" };
-      if (name.includes('aisdc') || name.includes('ais')) return { rank: 1, date: "Jan 2–5, 2026" };
-      return { rank: 0, date: "" };
-    }
-
-    // Tournament cards sorted reverse chronologically (SLSDC at top, AISDC at bottom)
-    const rawTournaments = (profile.tournaments || profile.tournament_breakdown || []).slice();
-    rawTournaments.sort((a, b) => {
-      const infoA = getTournamentDateInfo(a);
-      const infoB = getTournamentDateInfo(b);
-      return infoB.rank - infoA.rank;
-    });
-
-    const tournamentCards =
-      rawTournaments.length > 0
-        ? rawTournaments
-            .map((t) => {
-              const scores = (t.prelim_substantive_scores || t.scores || [])
-                .map((sc) => `<span class="score-pill">${fmt(sc, 1)}</span>`)
-                .join('');
-              const tName = (t.tournament_name || '').split('|')[0].trim();
-              const stage = t.highest_stage || (t.team_broke ? 'Knockouts' : 'Preliminaries');
-              const tAvg = t.tournament_average !== undefined ? t.tournament_average : t.substantive_avg;
-              const dateInfo = getTournamentDateInfo(t);
-              const dateText = dateInfo.date ? `<span style="font-size: 11px; font-weight: normal; color: rgba(255,255,255,0.45); margin-left: 6px;">· ${dateInfo.date}</span>` : '';
-
-              // Count prelims debated in this tournament
-              const prelimsCount = (t.prelim_substantive_scores || t.scores || (t.prelim_rounds ? t.prelim_rounds.length : [])).length;
-              const prelimsBadge = `<span class="break-tag break-semis" style="font-size: 9.5px; padding: 2px 7px;">${prelimsCount} Prelim${prelimsCount === 1 ? '' : 's'} Debated</span>`;
-
-              return `
-          <div class="trajectory-card">
+        dropdown.innerHTML = matches.map((t) => `
+          <div class="h2h-autocomplete-item" data-name="${escapeHtml(t.team_name)}">
             <div>
-              <div class="t-info-title">${escapeHtml(tName)} ${prelimsBadge} ${dateText}</div>
-              <div class="t-info-sub">Team: ${escapeHtml(t.team_name || 'Circuit Team')} · Stage: <strong style="color: #ffffff;">${escapeHtml(stage)}</strong> · Avg: <strong style="color: #38bdf8;">${fmt(tAvg, 2)}</strong></div>
+              <div class="h2h-auto-name">${escapeHtml(t.team_name)}</div>
+              <div class="h2h-auto-inst">${escapeHtml(t.institution)}</div>
             </div>
-            <div class="score-pills">
-              ${scores || '<span style="font-size: 11px; color: rgba(255,255,255,0.4);">No scores recorded</span>'}
+            <div class="h2h-auto-meta">
+              <span class="h2h-auto-stat">ATSS: ${fmt(t.atss, 2)}</span>
+            </div>
+          </div>
+        `).join('');
+
+        dropdown.classList.remove('hidden');
+
+        dropdown.querySelectorAll('.h2h-autocomplete-item').forEach((el) => {
+          el.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const name = el.getAttribute('data-name');
+            input.value = name;
+            dropdown.classList.add('hidden');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            loadTeamBio(name);
+          });
+        });
+      }
+
+      input.addEventListener('input', () => {
+        if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
+        renderMatches(input.value);
+      });
+
+      input.addEventListener('focus', () => renderMatches(input.value));
+      input.addEventListener('blur', () => setTimeout(() => dropdown.classList.add('hidden'), 180));
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (input) input.value = '';
+        clearBtn.classList.add('hidden');
+        if (container) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+              Type any team name above to inspect ATSS, lineups, break achievements, and tournament progressions.
+            </div>
+          `;
+        }
+        if (window.history.replaceState) window.history.replaceState(null, '', window.location.pathname);
+      });
+    }
+
+    async function loadTeamBio(teamName) {
+      if (!container) return;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
+
+      let bio = null;
+      if (state.isServerOnline) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/teams/${encodeURIComponent(teamName)}/bio`);
+          if (res.ok) bio = await res.json();
+        } catch (e) {}
+      }
+
+      if (!bio) {
+        // Fallback from teams dataset
+        const found = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab).find(
+          (t) => t.team_name.toLowerCase() === teamName.toLowerCase() || t.team_name.toLowerCase().includes(teamName.toLowerCase())
+        );
+        if (found) {
+          bio = {
+            team_name: found.team_name,
+            institution: found.institution,
+            atss: found.atss,
+            win_percentage: found.win_percentage,
+            stdev: found.stdev || 2.4,
+            prelims_debated: found.prelims_debated || found.total_debates,
+            tournaments_debated: found.tournaments_debated,
+            wins_per_tournament: found.awpt,
+            top_win_lineups: [],
+            top_atss_lineups: [],
+            tournament_breakdown: [],
+          };
+        }
+      }
+
+      if (!bio) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Team "${escapeHtml(teamName)}" not found in circuit records.</div>`;
+        return;
+      }
+
+      if (window.history.replaceState) {
+        window.history.replaceState(null, '', `${window.location.pathname}?team=${encodeURIComponent(bio.team_name)}`);
+      }
+      if (input) input.value = bio.team_name;
+      if (clearBtn) clearBtn.classList.remove('hidden');
+
+      // Top 5 break achievements
+      const tourBreakdown = bio.tournament_breakdown || [];
+      const achievements = tourBreakdown
+        .filter((t) => t.highest_break && t.highest_break !== 'Preliminary Rounds')
+        .slice(0, 5);
+
+      container.innerHTML = `
+        <!-- Team Header Card -->
+        <div class="bio-profile-header">
+          <div class="bio-name-group">
+            <h2 class="bio-name">${escapeHtml(bio.team_name)}</h2>
+            <div style="font-size: 15px; margin-top: 4px;">
+              <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">REPRESENTING: </span>
+              <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(bio.institution)}">${escapeHtml(bio.institution)}</a>
+            </div>
+          </div>
+          <div>
+            <span class="badge-count" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">TEAM TAB ELIGIBLE</span>
+          </div>
+        </div>
+
+        <!-- 1. First Box Seen (5 Metrics) -->
+        <div class="bio-stats-grid">
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${fmt(bio.atss, 2)}</div>
+            <div class="bio-stat-lbl">ATSS</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Avg Total Speaker Score</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
+            <div class="bio-stat-lbl">WIN %</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Total Debates Won</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #fbbf24;">${fmt(bio.stdev, 2)}</div>
+            <div class="bio-stat-lbl">STDEV</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Match Score Standard Deviation</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${bio.prelims_debated} <span style="font-size: 16px; color: rgba(255,255,255,0.4);">/ ${bio.tournaments_debated}</span></div>
+            <div class="bio-stat-lbl">PRELIMS & TOURNAMENTS</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Prelim Matches / Tourneys</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #c084fc;">${fmt(bio.wins_per_tournament, 2)}</div>
+            <div class="bio-stat-lbl">WINS PER TOURNAMENT</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">AWPT Velocity</div>
+          </div>
+        </div>
+
+        <!-- 2. Top 5 Break Achievements -->
+        <div class="bio-section-heading">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9H4.5a2.5 2.5 0 0 1 0-5H6"/><path d="M18 9h1.5a2.5 2.5 0 0 0 0-5H18"/><path d="M4 22h16"/><path d="M18 2H6v7a6 6 0 0 0 12 0V2Z"/></svg>
+          TOP 5 BREAK ACHIEVEMENTS
+        </div>
+        <div class="achievement-list">
+          ${achievements.length > 0 ? achievements.map((a) => `
+            <div class="achievement-card">
+              <div>
+                <strong style="color: #ffffff;">${escapeHtml(a.tournament_name)}</strong>
+                <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+                  Tournament ATSS: ${fmt(a.tournament_atss, 2)}
+                </div>
+              </div>
+              <div>${getBreakBadge(a.highest_break)}</div>
+            </div>
+          `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No elimination break stages recorded.</div>`}
+        </div>
+
+        <!-- 3. Lineup Analytics (Top 5 Win % & Top 5 ATSS 3-Debater Combinations) -->
+        <div class="bio-section-heading" style="margin-top: 28px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          LINEUP ANALYTICS (OPTIMAL 3-SPEAKER COMBINATIONS)
+        </div>
+        <div class="lineups-grid">
+          <!-- Top 5 Win % Lineups -->
+          <div class="roster-box">
+            <div class="roster-box-header">
+              <span>TOP 5 MOST (WIN %) LINEUPS</span>
+              <span>WIN RATE</span>
+            </div>
+            <div class="roster-list">
+              ${(bio.top_win_lineups || []).length > 0 ? (bio.top_win_lineups || []).map((l, idx) => `
+                <div class="lineup-card">
+                  <div class="lineup-names">
+                    <span style="color: rgba(255,255,255,0.4); margin-right: 6px;">#${idx + 1}</span>
+                    ${l.lineup.map(n => `<a class="table-link" href="bio.html?debater=${encodeURIComponent(n)}">${escapeHtml(n)}</a>`).join(' · ')}
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-top: 2px;">
+                      ${l.debates_count} debates together
+                    </div>
+                  </div>
+                  <div class="lineup-stat" style="color: #34d399;">${fmt(l.win_percentage, 1)}%</div>
+                </div>
+              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
+            </div>
+          </div>
+
+          <!-- Top 5 ATSS Lineups -->
+          <div class="roster-box">
+            <div class="roster-box-header">
+              <span>TOP 5 HIGHEST (ATSS) LINEUPS</span>
+              <span>LINEUP ATSS</span>
+            </div>
+            <div class="roster-list">
+              ${(bio.top_atss_lineups || []).length > 0 ? (bio.top_atss_lineups || []).map((l, idx) => `
+                <div class="lineup-card">
+                  <div class="lineup-names">
+                    <span style="color: rgba(255,255,255,0.4); margin-right: 6px;">#${idx + 1}</span>
+                    ${l.lineup.map(n => `<a class="table-link" href="bio.html?debater=${encodeURIComponent(n)}">${escapeHtml(n)}</a>`).join(' · ')}
+                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-top: 2px;">
+                      ${l.debates_count} debates together
+                    </div>
+                  </div>
+                  <div class="lineup-stat" style="color: #38bdf8;">${fmt(l.atss, 2)}</div>
+                </div>
+              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Tournament Breakdown -->
+        <div class="bio-section-heading" style="margin-top: 28px;">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1-2.5-2.5Z"/></svg>
+          TOURNAMENT BREAKDOWN & PROGRESSION
+        </div>
+        <div class="trajectory-list">
+          ${tourBreakdown.length > 0 ? tourBreakdown.map((t) => `
+            <div class="trajectory-card" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
+              <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
+                <div>
+                  <strong style="color: #ffffff; font-size: 14px;">${escapeHtml(t.tournament_name)}</strong>
+                  <span style="margin-left: 8px;">${getBreakBadge(t.highest_break)}</span>
+                </div>
+                <div style="font-family: var(--font-mono); font-size: 13px; color: #38bdf8; font-weight: 700;">
+                  Event ATSS: ${fmt(t.tournament_atss, 2)} pts (${t.debates_count} debates)
+                </div>
+              </div>
+              <div class="score-pills">
+                ${(t.debates || []).map((d) => `
+                  <div class="round-hover-trigger">
+                    <span class="score-pill" style="color: ${d.won ? '#34d399' : '#f87171'}; border-color: ${d.won ? 'rgba(52, 211, 153, 0.4)' : 'rgba(248, 113, 113, 0.4)'};">
+                      ${d.won ? 'WIN' : 'LOSS'} ${fmt(d.team_score, 1)}
+                    </span>
+                    <div class="round-tooltip">
+                      <div class="tooltip-title">${escapeHtml(d.round_name)}</div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">OPPONENT:</span>
+                        <span style="font-weight: 600;">${escapeHtml(d.opponent)}</span>
+                      </div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">SCORE:</span>
+                        <span style="font-weight: 700; color: #38bdf8;">${fmt(d.team_score, 1)}</span>
+                      </div>
+                      <div class="tooltip-row">
+                        <span class="tooltip-label">SIDE:</span>
+                        <span>${escapeHtml(d.side)}</span>
+                      </div>
+                    </div>
+                  </div>
+                `).join('')}
+              </div>
+            </div>
+          `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
+        </div>
+      `;
+    }
+  }
+
+  // ==========================================================================
+  // 5. INSTITUTION BIO PAGE (NEW V2 VIEW)
+  // ==========================================================================
+  function initInstitutionBioPage() {
+    const input = document.getElementById('instSearchInput');
+    const dropdown = document.getElementById('instSuggestions');
+    const clearBtn = document.getElementById('instClearBtn');
+    const container = document.getElementById('instProfileContainer');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const instParam = urlParams.get('inst') || urlParams.get('name');
+
+    if (instParam) {
+      loadInstitutionBio(instParam);
+    }
+
+    if (input && dropdown) {
+      function renderMatches(q) {
+        const query = (q || '').trim().toLowerCase();
+        let matches = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab);
+        if (query) {
+          matches = matches.filter((i) => i.institution_name.toLowerCase().includes(query) || (i.code && i.code.toLowerCase().includes(query)));
+        }
+        matches = matches.slice(0, 15);
+
+        if (matches.length === 0) {
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching institutions found.</div>`;
+          dropdown.classList.remove('hidden');
+          return;
+        }
+
+        dropdown.innerHTML = matches.map((i) => `
+          <div class="h2h-autocomplete-item" data-name="${escapeHtml(i.institution_name)}">
+            <div>
+              <div class="h2h-auto-name">${escapeHtml(i.institution_name)}</div>
+              <div class="h2h-auto-inst">${i.code ? `[${i.code}]` : ''} Delta: ${fmt(i.delta, 2)}</div>
+            </div>
+            <div class="h2h-auto-meta">
+              <span class="h2h-auto-stat">A: ${fmt(i.a_atss, 2)}</span>
+            </div>
+          </div>
+        `).join('');
+
+        dropdown.classList.remove('hidden');
+
+        dropdown.querySelectorAll('.h2h-autocomplete-item').forEach((el) => {
+          el.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const name = el.getAttribute('data-name');
+            input.value = name;
+            dropdown.classList.add('hidden');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            loadInstitutionBio(name);
+          });
+        });
+      }
+
+      input.addEventListener('input', () => {
+        if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
+        renderMatches(input.value);
+      });
+
+      input.addEventListener('focus', () => renderMatches(input.value));
+      input.addEventListener('blur', () => setTimeout(() => dropdown.classList.add('hidden'), 180));
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (input) input.value = '';
+        clearBtn.classList.add('hidden');
+        if (container) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+              Type any institution name above to inspect Delta, A/B team ATSS, roster, and veteran vs new debater pool.
+            </div>
+          `;
+        }
+        if (window.history.replaceState) window.history.replaceState(null, '', window.location.pathname);
+      });
+    }
+
+    async function loadInstitutionBio(instName) {
+      if (!container) return;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
+
+      let bio = null;
+      if (state.isServerOnline) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/institutions/${encodeURIComponent(instName)}/bio`);
+          if (res.ok) bio = await res.json();
+        } catch (e) {}
+      }
+
+      if (!bio) {
+        const found = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab).find(
+          (i) => i.institution_name.toLowerCase() === instName.toLowerCase() || i.institution_name.toLowerCase().includes(instName.toLowerCase())
+        );
+        if (found) {
+          bio = {
+            institution_name: found.institution_name,
+            code: found.code,
+            delta: found.delta,
+            a_team_name: found.a_team_name,
+            a_atss: found.a_atss,
+            b_team_name: found.b_team_name,
+            b_atss: found.b_atss,
+            win_percentage: found.win_percentage,
+            teams_list: found.teams_list || [],
+            pool_count: found.pool_count || 0,
+            veterans: [],
+            new_debaters: [],
+          };
+        }
+      }
+
+      if (!bio) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Institution "${escapeHtml(instName)}" not found in circuit records.</div>`;
+        return;
+      }
+
+      if (window.history.replaceState) {
+        window.history.replaceState(null, '', `${window.location.pathname}?inst=${encodeURIComponent(bio.institution_name)}`);
+      }
+      if (input) input.value = bio.institution_name;
+      if (clearBtn) clearBtn.classList.remove('hidden');
+
+      const aTeamHtml = bio.a_team_name ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(bio.a_team_name)}">${fmt(bio.a_atss, 2)} (${escapeHtml(bio.a_team_name)})</a>` : `${fmt(bio.a_atss, 2)}`;
+      const bTeamHtml = bio.b_team_name && bio.b_atss ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(bio.b_team_name)}">${fmt(bio.b_atss, 2)} (${escapeHtml(bio.b_team_name)})</a>` : (bio.b_atss ? fmt(bio.b_atss, 2) : '-');
+
+      const teamsFielded = bio.teams_list || [];
+
+      container.innerHTML = `
+        <!-- Institution Header Card -->
+        <div class="bio-profile-header">
+          <div class="bio-name-group">
+            <h2 class="bio-name">${escapeHtml(bio.institution_name)}</h2>
+            <div style="font-size: 13.5px; color: rgba(255,255,255,0.6); font-family: var(--font-mono); margin-top: 4px;">
+              ${bio.code ? `CODE: ${escapeHtml(bio.code)} · ` : ''}TOTAL DEBATERS FIELDED: ${bio.pool_count}
+            </div>
+          </div>
+          <div>
+            <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">INSTITUTION TAB</span>
+          </div>
+        </div>
+
+        <!-- 1. First Box Seen (5 Metrics) -->
+        <div class="bio-stats-grid">
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${fmt(bio.delta, 2)}</div>
+            <div class="bio-stat-lbl">DELTA</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">(0.8*A + 1.2*B) / 2</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #ffffff;">${teamsFielded.length}</div>
+            <div class="bio-stat-lbl">TEAMS FIELDED</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Active Circuit Rosters</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8; font-size: 20px;">
+              A: ${fmt(bio.a_atss, 1)}<br />
+              <span style="color: #c084fc;">B: ${bio.b_atss ? fmt(bio.b_atss, 1) : '-'}</span>
+            </div>
+            <div class="bio-stat-lbl">A & B TEAM ATSS</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
+            <div class="bio-stat-lbl">WIN RATE</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">All Debates Contested</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #fbbf24;">${bio.pool_count}</div>
+            <div class="bio-stat-lbl">DEBATER POOL</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Eligible Debaters Fielded</div>
+          </div>
+        </div>
+
+        <!-- Representing Teams List -->
+        <div class="bio-section-heading">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/></svg>
+          TEAMS THAT REPRESENTED ${escapeHtml(bio.institution_name).toUpperCase()}
+        </div>
+        <div style="display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 24px;">
+          ${teamsFielded.length > 0 ? teamsFielded.map(t => `
+            <a class="opt-btn" href="team_bio.html?team=${encodeURIComponent(t)}" style="padding: 10px 18px; font-size: 12px; border-radius: 10px;">
+              ${escapeHtml(t)}
+            </a>
+          `).join('') : '<div style="color: rgba(255,255,255,0.5); font-style: italic;">No teams recorded.</div>'}
+        </div>
+
+        <!-- 2. Debater Pool Graph: Veterans (>= 2 tourneys) vs New Debaters (1 tourney) -->
+        <div class="bio-section-heading">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg>
+          DEBATER POOL: VETERANS (>= 2 TOURNAMENTS) VS NEW DEBATERS (1 TOURNAMENT)
+        </div>
+        <div class="roster-split-grid">
+          <!-- Veterans Column -->
+          <div class="roster-box">
+            <div class="roster-box-header">
+              <span>VETERAN DEBATERS (${bio.veterans ? bio.veterans.length : 0})</span>
+              <span>TOURNAMENTS</span>
+            </div>
+            <div class="roster-list">
+              ${(bio.veterans || []).length > 0 ? (bio.veterans || []).map((v) => `
+                <div class="pool-debater-card">
+                  <div>
+                    <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(v.name)}">${escapeHtml(v.name)}</a>
+                    <div style="font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">
+                      ${v.prelims} prelims debated
+                    </div>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-weight: 700; color: #38bdf8;">
+                    ${v.tournaments} Tourneys
+                  </div>
+                </div>
+              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No veteran debaters recorded.</div>`}
+            </div>
+          </div>
+
+          <!-- New Debaters Column -->
+          <div class="roster-box">
+            <div class="roster-box-header">
+              <span>NEW DEBATERS (${bio.new_debaters ? bio.new_debaters.length : 0})</span>
+              <span>PRELIMS</span>
+            </div>
+            <div class="roster-list">
+              ${(bio.new_debaters || []).length > 0 ? (bio.new_debaters || []).map((n) => `
+                <div class="pool-debater-card">
+                  <div>
+                    <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(n.name)}">${escapeHtml(n.name)}</a>
+                    <div style="font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">
+                      1 tournament debated
+                    </div>
+                  </div>
+                  <div style="font-family: var(--font-mono); font-weight: 700; color: #34d399;">
+                    ${n.prelims} Prelims
+                  </div>
+                </div>
+              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No new debaters recorded.</div>`}
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // ==========================================================================
+  // 6. ADJUDICATOR BIO PAGE (NEW V2 VIEW)
+  // ==========================================================================
+  function initAdjudicatorBioPage() {
+    const input = document.getElementById('judgeSearchInput');
+    const dropdown = document.getElementById('judgeSuggestions');
+    const clearBtn = document.getElementById('judgeClearBtn');
+    const container = document.getElementById('judgeProfileContainer');
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const judgeParam = urlParams.get('judge') || urlParams.get('name');
+
+    if (judgeParam) {
+      loadAdjudicatorBio(judgeParam);
+    }
+
+    if (input && dropdown) {
+      function renderMatches(q) {
+        const query = (q || '').trim().toLowerCase();
+        let matches = state.v2Adjudicators;
+        if (query) {
+          matches = matches.filter((j) => j.adjudicator_name.toLowerCase().includes(query) || (j.institution && j.institution.toLowerCase().includes(query)));
+        }
+        matches = matches.slice(0, 15);
+
+        if (matches.length === 0) {
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching adjudicators found.</div>`;
+          dropdown.classList.remove('hidden');
+          return;
+        }
+
+        dropdown.innerHTML = matches.map((j) => `
+          <div class="h2h-autocomplete-item" data-name="${escapeHtml(j.adjudicator_name)}">
+            <div>
+              <div class="h2h-auto-name">${escapeHtml(j.adjudicator_name)}</div>
+              <div class="h2h-auto-inst">${escapeHtml(j.institution)}</div>
+            </div>
+            <div class="h2h-auto-meta">
+              <span class="h2h-auto-stat">AASS: ${fmt(j.aass, 2)}</span>
+            </div>
+          </div>
+        `).join('');
+
+        dropdown.classList.remove('hidden');
+
+        dropdown.querySelectorAll('.h2h-autocomplete-item').forEach((el) => {
+          el.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const name = el.getAttribute('data-name');
+            input.value = name;
+            dropdown.classList.add('hidden');
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            loadAdjudicatorBio(name);
+          });
+        });
+      }
+
+      input.addEventListener('input', () => {
+        if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
+        renderMatches(input.value);
+      });
+
+      input.addEventListener('focus', () => renderMatches(input.value));
+      input.addEventListener('blur', () => setTimeout(() => dropdown.classList.add('hidden'), 180));
+    }
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (input) input.value = '';
+        clearBtn.classList.add('hidden');
+        if (container) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+              Type any adjudicator's name above to inspect AASS, AATSS, Prop/Opp bias, and judging history.
+            </div>
+          `;
+        }
+        if (window.history.replaceState) window.history.replaceState(null, '', window.location.pathname);
+      });
+    }
+
+    async function loadAdjudicatorBio(judgeName) {
+      if (!container) return;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
+
+      let bio = null;
+      if (state.isServerOnline) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/adjudicators/${encodeURIComponent(judgeName)}/bio`);
+          if (res.ok) bio = await res.json();
+        } catch (e) {}
+      }
+
+      if (!bio) {
+        const found = state.v2Adjudicators.find(
+          (j) => j.adjudicator_name.toLowerCase() === judgeName.toLowerCase() || j.adjudicator_name.toLowerCase().includes(judgeName.toLowerCase())
+        );
+        if (found) bio = found;
+      }
+
+      if (!bio) {
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Adjudicator "${escapeHtml(judgeName)}" not found in circuit records.</div>`;
+        return;
+      }
+
+      if (window.history.replaceState) {
+        window.history.replaceState(null, '', `${window.location.pathname}?judge=${encodeURIComponent(bio.adjudicator_name)}`);
+      }
+      if (input) input.value = bio.adjudicator_name;
+      if (clearBtn) clearBtn.classList.remove('hidden');
+
+      const propPct = bio.prop_bias_pct || 50.0;
+      const oppPct = (100.0 - propPct).toFixed(1);
+
+      container.innerHTML = `
+        <!-- Adjudicator Header Card -->
+        <div class="bio-profile-header">
+          <div class="bio-name-group">
+            <h2 class="bio-name">${escapeHtml(bio.adjudicator_name)}</h2>
+            <div style="font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+              ${escapeHtml(bio.institution || 'Independent Adjudicator')}
+            </div>
+          </div>
+          <div>
+            <span class="badge-count" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">OFFICIAL TRIBUNAL</span>
+          </div>
+        </div>
+
+        <!-- 1. First Box Seen (5 Metrics) -->
+        <div class="bio-stats-grid">
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${fmt(bio.aass, 2)}</div>
+            <div class="bio-stat-lbl">AASS (SUBSTANTIVE MEAN)</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Average Awarded Speaker Score (No replies)</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.aatss, 2)}</div>
+            <div class="bio-stat-lbl">AATSS (TEAM AVG)</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Average Awarded Team Speaker Score</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPct}% P / ${oppPct}% O</div>
+            <div class="bio-stat-lbl">PROP / OPP WIN BIAS</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Ballot Decision Rate</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #38bdf8;">${bio.prelims_adjudicated}</div>
+            <div class="bio-stat-lbl">PRELIMS ADJUDICATED</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Contested Rounds Judged</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #c084fc;">${bio.tournaments_adjudicated}</div>
+            <div class="bio-stat-lbl">TOURNAMENTS ADJUDICATED</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Championship Tournaments</div>
+          </div>
+        </div>
+
+        <!-- Prop vs Opp Decision Bias Visual Bar -->
+        <div class="bio-section-heading">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/></svg>
+          PROP VS OPP DECISION BIAS VISUALIZATION
+        </div>
+        <div class="roster-box" style="margin-bottom: 24px;">
+          <div class="bias-container">
+            <div class="bias-labels">
+              <span style="color: #38bdf8; font-weight: 700;">PROPOSITION: ${propPct}% (${bio.prop_wins || 0} wins)</span>
+              <span style="color: #f43f5e; font-weight: 700;">OPPOSITION: ${oppPct}% (${bio.opp_wins || 0} wins)</span>
+            </div>
+            <div class="bias-bar-wrap">
+              <div class="bias-bar-prop" style="width: ${propPct}%;"></div>
+              <div class="bias-bar-opp" style="width: ${oppPct}%;"></div>
+            </div>
+          </div>
+        </div>
+      `;
+    }
+  }
+
+  // ==========================================================================
+  // 7. HEAD TO HEAD (6 CORE METRICS OVERHAUL)
+  // ==========================================================================
+  function initH2HPage() {
+    let selectedA = null;
+    let selectedB = null;
+
+    const inputA = document.getElementById('h2hInputA');
+    const inputB = document.getElementById('h2hInputB');
+    const dropA = document.getElementById('h2hDropdownA');
+    const dropB = document.getElementById('h2hDropdownB');
+    const badgeA = document.getElementById('h2hSelectedBadgeA');
+    const badgeB = document.getElementById('h2hSelectedBadgeB');
+    const clearA = document.getElementById('h2hClearBtnA');
+    const clearB = document.getElementById('h2hClearBtnB');
+    const container = document.getElementById('h2hResultContainer');
+
+    function setupH2HSearch(side, input, dropdown, clearBtn, badge) {
+      if (!input || !dropdown) return;
+
+      function renderMatches(q) {
+        const query = (q || '').trim().toLowerCase();
+        let matches = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
+        if (query) {
+          matches = matches.filter((d) => d.name.toLowerCase().includes(query) || (d.institution && d.institution.toLowerCase().includes(query)));
+        }
+        matches = matches.slice(0, 15);
+
+        if (matches.length === 0) {
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching debaters found.</div>`;
+          dropdown.classList.remove('hidden');
+          return;
+        }
+
+        dropdown.innerHTML = matches.map((d) => `
+          <div class="h2h-autocomplete-item" data-name="${escapeHtml(d.name)}">
+            <div>
+              <div class="h2h-auto-name">${escapeHtml(d.name)}</div>
+              <div class="h2h-auto-inst">${escapeHtml(d.institution)}</div>
+            </div>
+            <div class="h2h-auto-meta">
+              <span class="h2h-auto-stat">Avg: ${fmt(d.speaker_score, 2)}</span>
+            </div>
+          </div>
+        `).join('');
+
+        dropdown.classList.remove('hidden');
+
+        dropdown.querySelectorAll('.h2h-autocomplete-item').forEach((el) => {
+          el.addEventListener('mousedown', (e) => {
+            e.preventDefault();
+            const name = el.getAttribute('data-name');
+            const match = matches.find((m) => m.name === name);
+            if (side === 'A') selectedA = match;
+            else selectedB = match;
+
+            input.value = match.name;
+            dropdown.classList.add('hidden');
+            if (badge) {
+              badge.textContent = match.institution;
+              badge.classList.remove('hidden');
+            }
+            if (clearBtn) clearBtn.classList.remove('hidden');
+            updateH2H();
+          });
+        });
+      }
+
+      input.addEventListener('input', () => {
+        if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
+        renderMatches(input.value);
+      });
+
+      input.addEventListener('focus', () => renderMatches(input.value));
+      input.addEventListener('blur', () => setTimeout(() => dropdown.classList.add('hidden'), 180));
+
+      if (clearBtn) {
+        clearBtn.addEventListener('click', () => {
+          if (side === 'A') selectedA = null;
+          else selectedB = null;
+          input.value = '';
+          clearBtn.classList.add('hidden');
+          if (badge) badge.classList.add('hidden');
+          updateH2H();
+        });
+      }
+    }
+
+    setupH2HSearch('A', inputA, dropA, clearA, badgeA);
+    setupH2HSearch('B', inputB, dropB, clearB, badgeB);
+
+    const urlParams = new URLSearchParams(window.location.search);
+    const paramA = urlParams.get('a') || urlParams.get('contender1');
+    const paramB = urlParams.get('b') || urlParams.get('contender2');
+
+    if (paramA) {
+      const matchA = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find((s) => s.name.toLowerCase() === paramA.toLowerCase());
+      if (matchA) {
+        selectedA = matchA;
+        if (inputA) inputA.value = matchA.name;
+        if (badgeA) { badgeA.textContent = matchA.institution; badgeA.classList.remove('hidden'); }
+        if (clearA) clearA.classList.remove('hidden');
+      }
+    }
+
+    if (paramB) {
+      const matchB = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find((s) => s.name.toLowerCase() === paramB.toLowerCase());
+      if (matchB) {
+        selectedB = matchB;
+        if (inputB) inputB.value = matchB.name;
+        if (badgeB) { badgeB.textContent = matchB.institution; badgeB.classList.remove('hidden'); }
+        if (clearB) clearB.classList.remove('hidden');
+      }
+    }
+
+    async function updateH2H() {
+      if (!container) return;
+
+      if (!selectedA && !selectedB) {
+        container.innerHTML = `
+          <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            <div style="font-size: 16px; color: #38bdf8; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // 6 CORE METRICS</div>
+            <div style="font-size: 13px; max-width: 520px; margin: 0 auto; line-height: 1.6; color: rgba(255,255,255,0.65);">
+              Select Contender 1 and Contender 2 above to compare them across the 6 official circuit metrics: Speaker Score, Win %, Stdev (lower is better), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
             </div>
           </div>
         `;
-            })
-            .join('')
-        : `<div style="color: rgba(255,255,255,0.5); font-size: 13px; font-style: italic; padding: 12px;">No tournament trajectories recorded.</div>`;
-
-    container.innerHTML = `
-      <!-- Header Profile Card -->
-      <div class="bio-profile-header">
-        <div class="bio-name-group">
-          <h2 class="bio-name">${escapeHtml(profile.canonical_name || profile.speaker_name)}</h2>
-          <div class="bio-institution">${escapeHtml(profile.institution || profile.institution_name || 'Independent Debater')}</div>
-        </div>
-        <div style="display: flex; gap: 8px; align-items: center;">
-          ${getNatStatusTag(profile.national_level)}
-        </div>
-      </div>
-
-      <!-- 8 Core Metrics Grid (Top 6 Vitals) -->
-      <div class="bio-stats-grid">
-        <!-- 1. Speaker Avg -->
-        <div class="bio-stat-tile">
-          <div class="bio-stat-val" style="color: #38bdf8;">${fmt(speakerAvg, 2)}</div>
-          <div class="bio-stat-lbl">1. SPEAKER AVG</div>
-          <div style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Substantive Mean</div>
-        </div>
-
-        <!-- 2. Critical Tab Rank (or Master Tab if not in Critical) -->
-        <div class="bio-stat-tile">
-          <div class="bio-stat-val" style="color: ${hasCritRank ? '#38bdf8' : '#fbbf24'};">${rankValue}</div>
-          <div class="bio-stat-lbl">2. CRITICAL TAB RANK</div>
-          <div style="margin-top: 4px;">
-            <span class="break-tag ${rankTagClass}" style="font-size: 9px; padding: 1px 6px;">${rankLabel}</span>
-          </div>
-          <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${rankSub}</div>
-        </div>
-
-        <!-- 3. Tournaments Debated (Eligible vs Participated) -->
-        <div class="bio-stat-tile">
-          <div class="bio-stat-val" style="color: #34d399;">${eligibleTours} <span style="font-size: 16px; color: rgba(255,255,255,0.4);">/ ${totalTours}</span></div>
-          <div class="bio-stat-lbl">3. TOURNAMENTS</div>
-          <div style="font-size: 10px; color: rgba(255,255,255,0.6); font-family: var(--font-mono); margin-top: 2px;">${eligibleTours} Eligible · ${totalTours} Entered</div>
-        </div>
-
-        <!-- 4. Prelims Debated (no eligibility issues, any prelim) -->
-        <div class="bio-stat-tile">
-          <div class="bio-stat-val" style="color: #38bdf8;">${prelimsDebated}</div>
-          <div class="bio-stat-lbl">4. PRELIMS DEBATED</div>
-          <div style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds Debated</div>
-        </div>
-
-        <!-- 5. Win Rate -->
-        <div class="bio-stat-tile">
-          <div class="bio-stat-val" style="color: #34d399;">${fmt(winRate, 1)}%</div>
-          <div class="bio-stat-lbl">5. WIN RATE</div>
-          <div style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">In Debates Debated</div>
-        </div>
-
-        <!-- 6. Break Rate -->
-        <div class="bio-stat-tile">
-          <div class="bio-stat-val" style="color: #c084fc;">${fmt(breakRate, 1)}%</div>
-          <div class="bio-stat-lbl">6. BREAK RATE</div>
-          <div style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Elimination Progression</div>
-        </div>
-      </div>
-
-      <!-- 7. Speaker Positions Graph -->
-      <div class="bio-section-heading">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
-        7. SPEAKER POSITIONS BREAKDOWN & DISTRIBUTION GRAPH
-      </div>
-      <div class="positions-graph-card">
-        <!-- Segmented Distribution Progress Bar -->
-        <div style="display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 11px; margin-bottom: 6px; color: rgba(255,255,255,0.7);">
-          <span>Substantive Distribution (${totalSubstantive} Speeches)</span>
-          <span>1st: ${pos1.percentage}% · 2nd: ${pos2.percentage}% · 3rd: ${pos3.percentage}%</span>
-        </div>
-        <div class="positions-dist-bar-wrap">
-          ${p1Width > 0 ? `<div class="positions-dist-segment pos-seg-1st" style="width: ${p1Width}%;" title="1st Speaker: ${pos1.count} speeches (${pos1.percentage}%)">${p1Width >= 8 ? `${Math.round(p1Width)}%` : ''}</div>` : ''}
-          ${p2Width > 0 ? `<div class="positions-dist-segment pos-seg-2nd" style="width: ${p2Width}%;" title="2nd Speaker: ${pos2.count} speeches (${pos2.percentage}%)">${p2Width >= 8 ? `${Math.round(p2Width)}%` : ''}</div>` : ''}
-          ${p3Width > 0 ? `<div class="positions-dist-segment pos-seg-3rd" style="width: ${p3Width}%;" title="3rd Speaker: ${pos3.count} speeches (${pos3.percentage}%)">${p3Width >= 8 ? `${Math.round(p3Width)}%` : ''}</div>` : ''}
-          ${totalSubstantive === 0 ? `<div style="padding: 3px 10px; font-size: 11px; color: rgba(255,255,255,0.4);">No substantive speeches recorded</div>` : ''}
-        </div>
-
-        <!-- 4 Positions Grid -->
-        <div class="positions-grid">
-          <!-- 1st Speaker -->
-          <div class="position-stat-box">
-            <div class="position-box-header">
-              <span class="position-box-tag pos-tag-1st">1ST SPEAKER</span>
-              <span class="position-box-avg">${pos1.avg !== null ? `Avg: ${fmt(pos1.avg, 2)}` : 'No Speeches'}</span>
-            </div>
-            <div class="position-box-count">${pos1.count}</div>
-            <div class="position-box-sub">
-              <span>Speeches</span>
-              <span style="color: #38bdf8;">${pos1.percentage}% of sub</span>
-            </div>
-          </div>
-
-          <!-- 2nd Speaker -->
-          <div class="position-stat-box">
-            <div class="position-box-header">
-              <span class="position-box-tag pos-tag-2nd">2ND SPEAKER</span>
-              <span class="position-box-avg">${pos2.avg !== null ? `Avg: ${fmt(pos2.avg, 2)}` : 'No Speeches'}</span>
-            </div>
-            <div class="position-box-count">${pos2.count}</div>
-            <div class="position-box-sub">
-              <span>Speeches</span>
-              <span style="color: #34d399;">${pos2.percentage}% of sub</span>
-            </div>
-          </div>
-
-          <!-- 3rd Speaker -->
-          <div class="position-stat-box">
-            <div class="position-box-header">
-              <span class="position-box-tag pos-tag-3rd">3RD SPEAKER</span>
-              <span class="position-box-avg">${pos3.avg !== null ? `Avg: ${fmt(pos3.avg, 2)}` : 'No Speeches'}</span>
-            </div>
-            <div class="position-box-count">${pos3.count}</div>
-            <div class="position-box-sub">
-              <span>Speeches</span>
-              <span style="color: #fbbf24;">${pos3.percentage}% of sub</span>
-            </div>
-          </div>
-
-          <!-- Reply Speaker -->
-          <div class="position-stat-box">
-            <div class="position-box-header">
-              <span class="position-box-tag pos-tag-reply">REPLY SPEAKER</span>
-              <span class="position-box-avg" style="color: #c084fc;">${posReply.avg !== null ? `Avg: ${fmt(posReply.avg, 2)}` : 'No Replies'}</span>
-            </div>
-            <div class="position-box-count">${posReply.count}</div>
-            <div class="position-box-sub">
-              <span>Reply Speeches</span>
-              <span style="color: #c084fc;">/ 40 pts</span>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      <!-- 8. Adjudication History ("Adjed or not") -->
-      <div class="bio-section-heading">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
-        8. CIRCUIT ADJUDICATION RECORD ("ADJED OR NOT")
-      </div>
-      <div class="adj-history-section">
-        <div class="adj-status-banner">
-          <div>
-            <span class="adj-status-badge ${hasAdjudicated ? 'active' : 'inactive'}">
-              ${hasAdjudicated ? 'OFFICIATED AS ADJUDICATOR' : 'NO ADJUDICATION RECORD'}
-            </span>
-          </div>
-          <div style="font-family: var(--font-mono); font-size: 11.5px; color: rgba(255,255,255,0.6);">
-            ${hasAdjudicated ? `${adj.tournaments_count} tournament(s) officiated on circuit record` : 'Debated exclusively · 0 recorded judging ballots'}
-          </div>
-        </div>
-
-        ${hasAdjudicated ? `
-          <div class="adj-tours-list">
-            ${(adj.tournaments || []).map((at) => {
-              const allRounds = Array.from(new Set([...(at.rounds_assigned || []), ...(at.rounds_balloted || [])]));
-              const roundChips = allRounds.length > 0
-                ? allRounds.map((rn) => `<span class="adj-round-chip">${escapeHtml(rn)}</span>`).join('')
-                : '<span style="font-size: 11px; color: rgba(255,255,255,0.4);">Roster record on file</span>';
-              const roleText = at.chair_count > 0 ? `${at.chair_count} Chair / ${at.panel_count} Panel` : (at.panel_count > 0 ? `${at.panel_count} Panel debates` : 'Tournament Adjudicator');
-              return `
-                <div class="adj-tour-row">
-                  <div>
-                    <div class="adj-tour-name">${escapeHtml(at.tournament_name)} ${at.year ? `<span style="font-size: 11px; color: rgba(255,255,255,0.4); font-weight: normal;">(${at.year})</span>` : ''}</div>
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-top: 2px;">Role: <strong style="color: #34d399;">${escapeHtml(at.role || 'ADJUDICATOR')}</strong> · ${roleText}</div>
-                  </div>
-                  <div class="adj-rounds-chips">
-                    ${roundChips}
-                  </div>
-                </div>
-              `;
-            }).join('')}
-          </div>
-        ` : `
-          <div style="font-size: 12.5px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); line-height: 1.6;">
-            This debater has competed exclusively as a speaker and has not officiated or submitted ballots as an adjudicator in recorded circuit tournaments.
-          </div>
-        `}
-      </div>
-
-      <!-- Tournament Performance & Trajectory -->
-      <div class="bio-section-heading">
-        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-        TOURNAMENT PERFORMANCE TRAJECTORY
-      </div>
-      <div class="trajectory-list">
-        ${tournamentCards}
-      </div>
-    `;
-
-    // Update URL query parameter
-    if (window.history.replaceState) {
-      const newUrl = `${window.location.pathname}?speaker=${encodeURIComponent(profile.canonical_name || speakerName)}`;
-      window.history.replaceState(null, '', newUrl);
-    }
-  }
-
-  function selectDebater(speakerName) {
-    loadDebaterDossier(speakerName);
-  }
-
-  // ==========================================================================
-  // 4. HEAD TO HEAD ENGINE (6 Core Judging Categories)
-  // ==========================================================================
-  let selectedH2HA = null;
-  let selectedH2HB = null;
-
-  function getAllDebatersList() {
-    const list = [];
-    const seen = new Set();
-
-    (state.criticalSpeakers || []).forEach((s) => {
-      const name = s.speaker_name || s.canonical_name;
-      if (name && !seen.has(name.toLowerCase())) {
-        seen.add(name.toLowerCase());
-        list.push({
-          name: name,
-          institution: s.institution || s.institution_name || 'Independent',
-          speaker_avg: s.speaker_avg !== undefined ? s.speaker_avg : s.speech_avg,
-          prelims: s.prelims !== undefined ? s.prelims : (s.prelim_rounds_debated || 0),
-          win_percentage: s.win_percentage !== undefined ? s.win_percentage : s.win_rate_debated,
-          break_percentage: s.break_percentage,
-          tournaments: s.tournaments || s.eligible_tournaments || 0,
-          tournament_breakdown: s.tournament_breakdown || [],
-          raw: s,
-        });
-      }
-    });
-
-    (state.masterSpeakers || []).forEach((s) => {
-      const name = s.speaker_name || s.canonical_name;
-      if (name && !seen.has(name.toLowerCase())) {
-        seen.add(name.toLowerCase());
-        list.push({
-          name: name,
-          institution: s.institution || s.institution_name || 'Independent',
-          speaker_avg: s.speaker_avg !== undefined ? s.speaker_avg : s.speech_avg,
-          prelims: s.prelims !== undefined ? s.prelims : (s.prelim_rounds || 0),
-          win_percentage: s.win_percentage !== undefined ? s.win_percentage : s.win_rate,
-          break_percentage: s.break_percentage,
-          tournaments: s.tournaments || s.eligible_tournaments || 0,
-          tournament_breakdown: s.tournament_breakdown || [],
-          raw: s,
-        });
-      }
-    });
-
-    return list;
-  }
-
-  function computeTourStdDev(debater) {
-    if (!debater) return { sd: null, text: 'N/A' };
-    const breakdown = debater.tournament_breakdown || debater.tournaments_breakdown || debater.tournaments || [];
-    let avgs = [];
-    if (Array.isArray(breakdown)) {
-      avgs = breakdown
-        .map((t) => (t.tournament_average !== undefined ? t.tournament_average : t.avg))
-        .filter((a) => a !== undefined && a !== null && !isNaN(a) && Number(a) > 0);
-    }
-    if (avgs.length < 2) {
-      return { sd: null, text: avgs.length === 1 ? 'N/A (1 Tour)' : 'N/A' };
-    }
-    const mean = avgs.reduce((a, b) => a + Number(b), 0) / avgs.length;
-    const variance = avgs.reduce((sum, a) => sum + Math.pow(Number(a) - mean, 2), 0) / avgs.length;
-    const sd = Math.sqrt(variance);
-    return { sd: sd, text: `±${sd.toFixed(2)} pts` };
-  }
-
-  function getCriticalRank(debaterName) {
-    if (!debaterName) return null;
-    const crit = (state.criticalSpeakers || []).find(
-      (s) =>
-        (s.speaker_name && s.speaker_name.toLowerCase() === debaterName.toLowerCase()) ||
-        (s.canonical_name && s.canonical_name.toLowerCase() === debaterName.toLowerCase())
-    );
-    return crit ? (crit.rank || null) : null;
-  }
-
-  function renderH2HEmptyState(message) {
-    const container = document.getElementById('h2hResultContainer');
-    if (!container) return;
-    const msg =
-      message ||
-      "Select Contender 1 and Contender 2 in the search fields above to compute their 6-category head-to-head clash breakdown, prediction advantage, and historical tournament matchup records.";
-    container.innerHTML = `
-      <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-        <div style="font-size: 16px; color: #38bdf8; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">ATOMOS HEAD TO HEAD // CLASH ENGINE</div>
-        <div style="font-size: 13px; max-width: 520px; margin: 0 auto; line-height: 1.6; color: rgba(255,255,255,0.65);">
-          ${msg}
-        </div>
-      </div>
-    `;
-  }
-
-  function updateH2HUrl() {
-    if (!window.history.replaceState) return;
-    const nameA = selectedH2HA ? selectedH2HA.name : '';
-    const nameB = selectedH2HB ? selectedH2HB.name : '';
-    if (nameA && nameB) {
-      const newUrl = `${window.location.pathname}?a=${encodeURIComponent(nameA)}&b=${encodeURIComponent(nameB)}`;
-      window.history.replaceState(null, '', newUrl);
-    } else if (nameA) {
-      const newUrl = `${window.location.pathname}?a=${encodeURIComponent(nameA)}`;
-      window.history.replaceState(null, '', newUrl);
-    } else if (nameB) {
-      const newUrl = `${window.location.pathname}?b=${encodeURIComponent(nameB)}`;
-      window.history.replaceState(null, '', newUrl);
-    } else {
-      window.history.replaceState(null, '', window.location.pathname);
-    }
-  }
-
-  function clearContender(side) {
-    const input = document.getElementById(side === 'A' ? 'h2hInputA' : 'h2hInputB');
-    const badge = document.getElementById(side === 'A' ? 'h2hSelectedBadgeA' : 'h2hSelectedBadgeB');
-    const clearBtn = document.getElementById(side === 'A' ? 'h2hClearBtnA' : 'h2hClearBtnB');
-
-    if (side === 'A') selectedH2HA = null;
-    else selectedH2HB = null;
-
-    if (input) input.value = '';
-    if (badge) badge.classList.add('hidden');
-    if (clearBtn) clearBtn.classList.add('hidden');
-
-    closeAllH2HDropdowns();
-    updateH2HUrl();
-    runH2HComparison();
-  }
-
-  function initH2HPage() {
-    const inputA = document.getElementById('h2hInputA');
-    const inputB = document.getElementById('h2hInputB');
-    if (!inputA || !inputB) return;
-
-    selectedH2HA = null;
-    selectedH2HB = null;
-    inputA.value = '';
-    inputB.value = '';
-
-    const badgeA = document.getElementById('h2hSelectedBadgeA');
-    const badgeB = document.getElementById('h2hSelectedBadgeB');
-    const clearBtnA = document.getElementById('h2hClearBtnA');
-    const clearBtnB = document.getElementById('h2hClearBtnB');
-    if (badgeA) badgeA.classList.add('hidden');
-    if (badgeB) badgeB.classList.add('hidden');
-    if (clearBtnA) clearBtnA.classList.add('hidden');
-    if (clearBtnB) clearBtnB.classList.add('hidden');
-
-    setupAutocomplete('A', inputA, document.getElementById('h2hDropdownA'), clearBtnA, badgeA);
-    setupAutocomplete('B', inputB, document.getElementById('h2hDropdownB'), clearBtnB, badgeB);
-
-    const allDebaters = getAllDebatersList();
-
-    // Check URL parameters ?a=...&b=... or ?contender1=...&contender2=...
-    const urlParams = new URLSearchParams(window.location.search);
-    const paramA = urlParams.get('a') || urlParams.get('contender1') || urlParams.get('debater');
-    const paramB = urlParams.get('b') || urlParams.get('contender2');
-
-    // Never autoload Vidath & Apoorva from old leftover URL state
-    const isOldDefaultPair =
-      paramA &&
-      paramB &&
-      paramA.toLowerCase().includes('vidath') &&
-      paramB.toLowerCase().includes('apoorva');
-
-    if (isOldDefaultPair && window.history.replaceState) {
-      window.history.replaceState(null, '', window.location.pathname);
-    }
-
-    let initA = null;
-    let initB = null;
-
-    if (!isOldDefaultPair) {
-      if (paramA) {
-        initA = allDebaters.find((d) => d.name.toLowerCase() === paramA.toLowerCase());
-      }
-      if (paramB) {
-        initB = allDebaters.find((d) => d.name.toLowerCase() === paramB.toLowerCase());
-      }
-    }
-
-    if (initA) selectContender('A', initA);
-    if (initB) selectContender('B', initB);
-
-    if (initA && initB) {
-      runH2HComparison();
-    } else {
-      renderH2HEmptyState(
-        initA
-          ? `Contender 1 (${escapeHtml(initA.name)}) selected. Select Contender 2 above to complete the clash comparison.`
-          : initB
-          ? `Contender 2 (${escapeHtml(initB.name)}) selected. Select Contender 1 above to complete the clash comparison.`
-          : null
-      );
-    }
-  }
-
-  function closeAllH2HDropdowns() {
-    ['h2hDropdownA', 'h2hDropdownB'].forEach((id) => {
-      const el = document.getElementById(id);
-      if (el) {
-        el.classList.add('hidden');
-        el.innerHTML = '';
-      }
-    });
-  }
-
-  // Global outside click handler for H2H autocomplete dropdowns
-  document.addEventListener('pointerdown', (e) => {
-    if (!e.target.closest('.h2h-search-wrap')) {
-      closeAllH2HDropdowns();
-    }
-  });
-
-  function setupAutocomplete(side, input, dropdown, clearBtn, badge) {
-    if (!input || !dropdown) return;
-
-    function renderMatches(q) {
-      const allDebaters = getAllDebatersList();
-      const query = (q || '').trim().toLowerCase();
-      let matches = allDebaters;
-      if (query) {
-        matches = allDebaters.filter(
-          (d) => d.name.toLowerCase().includes(query) || (d.institution && d.institution.toLowerCase().includes(query))
-        );
-      }
-      matches = matches.slice(0, 15);
-
-      if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 12.5px; text-align: center;">No matching debaters in identity base.</div>`;
-        dropdown.classList.remove('hidden');
         return;
       }
 
-      dropdown.innerHTML = matches
-        .map(
-          (d, idx) => `
-        <div class="h2h-autocomplete-item${idx === 0 ? ' active' : ''}" data-name="${escapeHtml(d.name)}">
-          <div>
-            <div class="h2h-auto-name">${escapeHtml(d.name)}</div>
-            <div class="h2h-auto-inst">${escapeHtml(d.institution || 'Independent')}</div>
-          </div>
-          <div class="h2h-auto-meta">
-            <span class="h2h-auto-stat">${d.speaker_avg ? `Avg: ${Number(d.speaker_avg).toFixed(2)}` : ''}</span>
-            <span style="font-size: 10px; color: rgba(255,255,255,0.4);">${d.prelims || 0} Prelims</span>
-          </div>
-        </div>
-      `
-        )
-        .join('');
+      if (selectedA && !selectedB) {
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255,255,255,0.6);">Contender 1 (${escapeHtml(selectedA.name)}) selected. Select Contender 2 above.</div>`;
+        return;
+      }
 
-      dropdown.classList.remove('hidden');
+      if (!selectedA && selectedB) {
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255,255,255,0.6);">Contender 2 (${escapeHtml(selectedB.name)}) selected. Select Contender 1 above.</div>`;
+        return;
+      }
 
-      dropdown.querySelectorAll('.h2h-autocomplete-item').forEach((el) => {
-        el.addEventListener('mousedown', (e) => {
-          e.preventDefault();
-          e.stopPropagation();
-          const name = el.getAttribute('data-name');
-          const found = allDebaters.find((d) => d.name === name);
-          if (found) {
-            selectContender(side, found);
-            runH2HComparison();
+      if (selectedA.name.toLowerCase() === selectedB.name.toLowerCase()) {
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255,255,255,0.6);">Please select two different debaters to compare.</div>`;
+        return;
+      }
+
+      if (window.history.replaceState) {
+        window.history.replaceState(null, '', `${window.location.pathname}?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}`);
+      }
+
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Computing 6-metric head-to-head clash...</div>`;
+
+      // Fetch live direct clashes from server if available
+      let directDebates = [];
+      let aDirectWins = 0;
+      let bDirectWins = 0;
+
+      if (state.isServerOnline) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/h2h?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}&mode=debater`);
+          if (res.ok) {
+            const j = await res.json();
+            directDebates = j.direct_debates || [];
+            aDirectWins = j.a_direct_wins || 0;
+            bDirectWins = j.b_direct_wins || 0;
           }
-        });
-      });
-    }
-
-    input.addEventListener('input', () => {
-      const val = input.value.trim();
-      const currentSelected = side === 'A' ? selectedH2HA : selectedH2HB;
-
-      if (clearBtn) {
-        if (input.value) clearBtn.classList.remove('hidden');
-        else clearBtn.classList.add('hidden');
+        } catch (e) {}
       }
 
-      // If user erased input or edited away from currently selected name
-      if (!val) {
-        if (side === 'A') selectedH2HA = null;
-        else selectedH2HB = null;
-        if (badge) badge.classList.add('hidden');
-        updateH2HUrl();
-        runH2HComparison();
-      } else if (currentSelected && val.toLowerCase() !== currentSelected.name.toLowerCase()) {
-        if (side === 'A') selectedH2HA = null;
-        else selectedH2HB = null;
-        if (badge) badge.classList.add('hidden');
-        updateH2HUrl();
-        runH2HComparison();
+      // Achievement ranking hierarchy
+      const achOrder = {
+        "Champion": 1, "Runners-Up": 2, "Finalist": 2, "Semifinalist": 3,
+        "Quarterfinalist": 4, "Partial Octofinalist": 5, "Octofinalist": 6,
+        "Double Partial Octofinalist": 7, "Preliminary Rounds": 8, "Unranked": 9
+      };
+
+      const achA = selectedA.highest_achievement || 'Preliminary Rounds';
+      const achB = selectedB.highest_achievement || 'Preliminary Rounds';
+      const rankAchA = achOrder[achA] || 8;
+      const rankAchB = achOrder[achB] || 8;
+
+      // 6 Categories Comparison:
+      // 1. Speaker Score (higher better)
+      let w1 = 'TIE';
+      if (selectedA.speaker_score > selectedB.speaker_score) w1 = 'A';
+      else if (selectedB.speaker_score > selectedA.speaker_score) w1 = 'B';
+
+      // 2. Win % (higher better)
+      let w2 = 'TIE';
+      if (selectedA.win_percentage > selectedB.win_percentage) w2 = 'A';
+      else if (selectedB.win_percentage > selectedA.win_percentage) w2 = 'B';
+
+      // 3. Stdev (lower is better!)
+      let w3 = 'TIE';
+      if (selectedA.stdev < selectedB.stdev) w3 = 'A';
+      else if (selectedB.stdev < selectedA.stdev) w3 = 'B';
+
+      // 4. Prelims Debated (higher better)
+      let w4 = 'TIE';
+      if (selectedA.prelims_debated > selectedB.prelims_debated) w4 = 'A';
+      else if (selectedB.prelims_debated > selectedA.prelims_debated) w4 = 'B';
+
+      // 5. Highest Achievement (lower rank order is better)
+      let w5 = 'TIE';
+      if (rankAchA < rankAchB) w5 = 'A';
+      else if (rankAchB < rankAchA) w5 = 'B';
+
+      // 6. Head to Head in Tournaments
+      let w6 = 'NONE';
+      if (directDebates.length > 0) {
+        if (aDirectWins > bDirectWins) w6 = 'A';
+        else if (bDirectWins > aDirectWins) w6 = 'B';
+        else w6 = 'TIE';
       }
 
-      // Close opposing dropdown
-      const otherSide = side === 'A' ? 'B' : 'A';
-      const otherDropdown = document.getElementById(otherSide === 'A' ? 'h2hDropdownA' : 'h2hDropdownB');
-      if (otherDropdown) {
-        otherDropdown.classList.add('hidden');
-        otherDropdown.innerHTML = '';
-      }
-      renderMatches(input.value);
-    });
+      const allCat = [w1, w2, w3, w4, w5];
+      let scoreA = allCat.filter(w => w === 'A').length;
+      let scoreB = allCat.filter(w => w === 'B').length;
+      if (w6 === 'A') scoreA++;
+      if (w6 === 'B') scoreB++;
 
-    input.addEventListener('focus', () => {
-      // Close opposing dropdown
-      const otherSide = side === 'A' ? 'B' : 'A';
-      const otherDropdown = document.getElementById(otherSide === 'A' ? 'h2hDropdownA' : 'h2hDropdownB');
-      if (otherDropdown) {
-        otherDropdown.classList.add('hidden');
-        otherDropdown.innerHTML = '';
+      let bannerTitle = '';
+      let bannerColor = '#38bdf8';
+      if (scoreA > scoreB) {
+        bannerTitle = `${escapeHtml(selectedA.name)} LEADS ${scoreA} - ${scoreB}`;
+        bannerColor = '#38bdf8';
+      } else if (scoreB > scoreA) {
+        bannerTitle = `${escapeHtml(selectedB.name)} LEADS ${scoreB} - ${scoreA}`;
+        bannerColor = '#f43f5e';
+      } else {
+        bannerTitle = `EVEN CLASH TIED ${scoreA} - ${scoreB}`;
+        bannerColor = '#fbbf24';
       }
-      renderMatches(input.value);
-    });
 
-    input.addEventListener('blur', () => {
-      setTimeout(() => {
-        dropdown.classList.add('hidden');
-        dropdown.innerHTML = '';
-        // If user typed exact debater name and blurred without clicking dropdown
-        const currentSelected = side === 'A' ? selectedH2HA : selectedH2HB;
-        if (!currentSelected && input.value.trim()) {
-          const allDebaters = getAllDebatersList();
-          const match = allDebaters.find((d) => d.name.toLowerCase() === input.value.trim().toLowerCase());
-          if (match) {
-            selectContender(side, match);
-            runH2HComparison();
-          }
+      function getBar(valA, valB, higherBetter = true) {
+        if (valA === null || valB === null) return { a: 50, b: 50 };
+        if (!higherBetter) {
+          const invA = 1 / (valA || 0.01);
+          const invB = 1 / (valB || 0.01);
+          const tot = invA + invB;
+          return { a: (invA / tot) * 100, b: (invB / tot) * 100 };
         }
-      }, 150);
-    });
-
-    input.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape') {
-        closeAllH2HDropdowns();
-        input.blur();
-      } else if (e.key === 'Enter') {
-        e.preventDefault();
-        const activeItem = dropdown.querySelector('.h2h-autocomplete-item.active') || dropdown.querySelector('.h2h-autocomplete-item');
-        if (activeItem) {
-          const name = activeItem.getAttribute('data-name');
-          const allDebaters = getAllDebatersList();
-          const found = allDebaters.find((d) => d.name === name);
-          if (found) {
-            selectContender(side, found);
-            runH2HComparison();
-          }
-        } else {
-          closeAllH2HDropdowns();
-          input.blur();
-        }
-      } else if (e.key === 'ArrowDown' || e.key === 'ArrowUp') {
-        e.preventDefault();
-        const items = Array.from(dropdown.querySelectorAll('.h2h-autocomplete-item'));
-        if (items.length === 0) return;
-        let activeIdx = items.findIndex((el) => el.classList.contains('active'));
-        if (e.key === 'ArrowDown') {
-          activeIdx = (activeIdx + 1) % items.length;
-        } else {
-          activeIdx = (activeIdx - 1 + items.length) % items.length;
-        }
-        items.forEach((el, idx) => {
-          el.classList.toggle('active', idx === activeIdx);
-          if (idx === activeIdx) el.scrollIntoView({ block: 'nearest' });
-        });
+        const tot = valA + valB;
+        if (tot === 0) return { a: 50, b: 50 };
+        return { a: (valA / tot) * 100, b: (valB / tot) * 100 };
       }
-    });
 
-    if (clearBtn) {
-      clearBtn.addEventListener('click', (e) => {
-        e.stopPropagation();
-        clearContender(side);
-        input.focus();
-        renderMatches('');
-      });
-    }
-  }
-
-  function selectContender(side, debater) {
-    const input = document.getElementById(side === 'A' ? 'h2hInputA' : 'h2hInputB');
-    const badge = document.getElementById(side === 'A' ? 'h2hSelectedBadgeA' : 'h2hSelectedBadgeB');
-    const clearBtn = document.getElementById(side === 'A' ? 'h2hClearBtnA' : 'h2hClearBtnB');
-
-    if (side === 'A') selectedH2HA = debater;
-    else selectedH2HB = debater;
-
-    if (input) {
-      input.value = debater.name;
-      input.blur(); // Release focus immediately so dropdown stays closed!
-    }
-    if (badge) {
-      badge.textContent = debater.institution || 'Independent';
-      badge.classList.remove('hidden');
-    }
-    if (clearBtn) clearBtn.classList.remove('hidden');
-
-    // Close all dropdowns immediately and clear contents
-    closeAllH2HDropdowns();
-
-    // Update URL query parameters dynamically
-    updateH2HUrl();
-  }
-
-  async function runH2HComparison() {
-    const container = document.getElementById('h2hResultContainer');
-    if (!container) return;
-
-    const debaterA = selectedH2HA;
-    const debaterB = selectedH2HB;
-
-    if (!debaterA && !debaterB) {
-      renderH2HEmptyState();
-      return;
-    }
-    if (debaterA && !debaterB) {
-      renderH2HEmptyState(`Contender 1 (${escapeHtml(debaterA.name)}) selected. Select Contender 2 above to complete the clash comparison.`);
-      return;
-    }
-    if (!debaterA && debaterB) {
-      renderH2HEmptyState(`Contender 2 (${escapeHtml(debaterB.name)}) selected. Select Contender 1 above to complete the clash comparison.`);
-      return;
-    }
-    if (debaterA.name.toLowerCase() === debaterB.name.toLowerCase()) {
-      renderH2HEmptyState(`Please select two different debaters to compute a Head to Head clash comparison.`);
-      return;
-    }
-
-    container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Computing 6-category clash comparison & matchup records...</div>`;
-
-    // Fetch direct head-to-head records from live server if online
-    let directDebates = [];
-    let aDirectWins = 0;
-    let bDirectWins = 0;
-
-    try {
-      const url = `${state.apiUrl}/api/h2h?a=${encodeURIComponent(debaterA.name)}&b=${encodeURIComponent(debaterB.name)}&mode=debater`;
-      const res = await fetch(url);
-      if (res.ok) {
-        const data = await res.json();
-        directDebates = data.direct_debates || [];
-        aDirectWins = data.a_direct_wins || 0;
-        bDirectWins = data.b_direct_wins || 0;
+      function badge(w) {
+        if (w === 'A') return `<span class="h2h-cat-badge badge-a">CONTENDER 1</span>`;
+        if (w === 'B') return `<span class="h2h-cat-badge badge-b">CONTENDER 2</span>`;
+        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">NO CLASHES</span>`;
+        return `<span class="h2h-cat-badge badge-tie">TIE</span>`;
       }
-    } catch (e) {
-      console.warn('Direct matchup fetch error:', e);
-    }
 
-    // Category 1: Average speak
-    const avgA = debaterA.speaker_avg !== undefined && debaterA.speaker_avg !== null ? Number(debaterA.speaker_avg) : null;
-    const avgB = debaterB.speaker_avg !== undefined && debaterB.speaker_avg !== null ? Number(debaterB.speaker_avg) : null;
-    let winCat1 = 'TIE';
-    if (avgA !== null && avgB !== null) {
-      if (avgA > avgB) winCat1 = 'A';
-      else if (avgB > avgA) winCat1 = 'B';
-    } else if (avgA !== null) winCat1 = 'A';
-    else if (avgB !== null) winCat1 = 'B';
+      const b1 = getBar(selectedA.speaker_score, selectedB.speaker_score, true);
+      const b2 = getBar(selectedA.win_percentage, selectedB.win_percentage, true);
+      const b3 = getBar(selectedA.stdev, selectedB.stdev, false);
+      const b4 = getBar(selectedA.prelims_debated, selectedB.prelims_debated, true);
+      const b5 = getBar(10 - rankAchA, 10 - rankAchB, true);
+      const b6 = directDebates.length > 0 ? getBar(aDirectWins, bDirectWins, true) : { a: 50, b: 50 };
 
-    // Category 2: Win %
-    const winRateA = debaterA.win_percentage !== undefined && debaterA.win_percentage !== null ? Number(debaterA.win_percentage) : null;
-    const winRateB = debaterB.win_percentage !== undefined && debaterB.win_percentage !== null ? Number(debaterB.win_percentage) : null;
-    let winCat2 = 'TIE';
-    if (winRateA !== null && winRateB !== null) {
-      if (winRateA > winRateB) winCat2 = 'A';
-      else if (winRateB > winRateA) winCat2 = 'B';
-    } else if (winRateA !== null) winCat2 = 'A';
-    else if (winRateB !== null) winCat2 = 'B';
-
-    // Category 3: Critical tab ranking
-    const critRankA = getCriticalRank(debaterA.name);
-    const critRankB = getCriticalRank(debaterB.name);
-    let winCat3 = 'TIE';
-    if (critRankA !== null && critRankB !== null) {
-      if (critRankA < critRankB) winCat3 = 'A';
-      else if (critRankB < critRankA) winCat3 = 'B';
-    } else if (critRankA !== null) winCat3 = 'A';
-    else if (critRankB !== null) winCat3 = 'B';
-
-    // Category 4: Consistency (tour-to-tour speak deviation)
-    const constA = computeTourStdDev(debaterA);
-    const constB = computeTourStdDev(debaterB);
-    let winCat4 = 'TIE';
-    if (constA.sd !== null && constB.sd !== null) {
-      // Lower SD is better
-      if (constA.sd < constB.sd) winCat4 = 'A';
-      else if (constB.sd < constA.sd) winCat4 = 'B';
-    } else if (constA.sd !== null) winCat4 = 'A';
-    else if (constB.sd !== null) winCat4 = 'B';
-
-    // Category 5: Break %
-    const brkA = debaterA.break_percentage !== undefined && debaterA.break_percentage !== null ? Number(debaterA.break_percentage) : null;
-    const brkB = debaterB.break_percentage !== undefined && debaterB.break_percentage !== null ? Number(debaterB.break_percentage) : null;
-    let winCat5 = 'TIE';
-    if (brkA !== null && brkB !== null) {
-      if (brkA > brkB) winCat5 = 'A';
-      else if (brkB > brkA) winCat5 = 'B';
-    } else if (brkA !== null) winCat5 = 'A';
-    else if (brkB !== null) winCat5 = 'B';
-
-    // Category 6: Head to Head in tournament if happened and both debated
-    let winCat6 = 'NONE';
-    if (directDebates.length > 0) {
-      if (aDirectWins > bDirectWins) winCat6 = 'A';
-      else if (bDirectWins > aDirectWins) winCat6 = 'B';
-      else winCat6 = 'TIE';
-    }
-
-    // Tally score across the 6 categories
-    const categories = [winCat1, winCat2, winCat3, winCat4, winCat5];
-    let scoreA = categories.filter((w) => w === 'A').length;
-    let scoreB = categories.filter((w) => w === 'B').length;
-    if (winCat6 === 'A') scoreA++;
-    if (winCat6 === 'B') scoreB++;
-
-    let bannerTitle = '';
-    let bannerColor = '#38bdf8';
-    if (scoreA > scoreB) {
-      bannerTitle = `${escapeHtml(debaterA.name)} LEADS ${scoreA} - ${scoreB}`;
-      bannerColor = '#38bdf8';
-    } else if (scoreB > scoreA) {
-      bannerTitle = `${escapeHtml(debaterB.name)} LEADS ${scoreB} - ${scoreA}`;
-      bannerColor = '#f43f5e';
-    } else {
-      bannerTitle = `EVEN CLASH TIED ${scoreA} - ${scoreB}`;
-      bannerColor = '#fbbf24';
-    }
-
-    // Bar percentage helpers
-    function getBarPcts(val1, val2, higherIsBetter = true) {
-      if (val1 === null && val2 === null) return { a: 50, b: 50 };
-      if (val1 === null) return { a: 20, b: 80 };
-      if (val2 === null) return { a: 80, b: 20 };
-      if (!higherIsBetter) {
-        const inv1 = 1 / (val1 || 0.01);
-        const inv2 = 1 / (val2 || 0.01);
-        const total = inv1 + inv2;
-        return { a: (inv1 / total) * 100, b: (inv2 / total) * 100 };
-      }
-      const total = val1 + val2;
-      if (total === 0) return { a: 50, b: 50 };
-      return { a: (val1 / total) * 100, b: (val2 / total) * 100 };
-    }
-
-    const bar1 = getBarPcts(avgA, avgB, true);
-    const bar2 = getBarPcts(winRateA, winRateB, true);
-    const bar3 = getBarPcts(critRankA, critRankB, false);
-    const bar4 = getBarPcts(constA.sd, constB.sd, false);
-    const bar5 = getBarPcts(brkA, brkB, true);
-    const bar6 = directDebates.length > 0 ? getBarPcts(aDirectWins, bDirectWins, true) : { a: 50, b: 50 };
-
-    function badgeHtml(w) {
-      if (w === 'A') return `<span class="h2h-cat-badge badge-a">CONTENDER 1</span>`;
-      if (w === 'B') return `<span class="h2h-cat-badge badge-b">CONTENDER 2</span>`;
-      if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">NO CLASHES</span>`;
-      return `<span class="h2h-cat-badge badge-tie">TIE</span>`;
-    }
-
-    container.innerHTML = `
-      <!-- Overall Advantage Banner -->
-      <div class="h2h-prediction-banner">
-        <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 6px;">
-          HEAD TO HEAD ADVANTAGE
-        </div>
-        <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
-        <div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 6px;">
-          Judged across 6 circuit categories: Speaker Avg, Win %, Critical Tab Rank, Consistency, Break %, and Direct Tour Matchups.
-        </div>
-      </div>
-
-      <!-- 6 Categories Comparison -->
-      <div class="h2h-stat-compare">
-        <!-- 1. Average Speak -->
-        <div class="h2h-category-card">
-          <div class="h2h-cat-val ${winCat1 === 'A' ? 'val-win' : ''}" style="color: #38bdf8;">
-            ${avgA !== null ? avgA.toFixed(2) : 'N/A'}
+      container.innerHTML = `
+        <div class="h2h-prediction-banner">
+          <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 6px;">
+            6-METRIC HEAD TO HEAD RESULT
           </div>
-          <div class="h2h-cat-center">
-            <div class="h2h-cat-title-row">
-              <span class="h2h-cat-title">1. Average Speak</span>
-              ${badgeHtml(winCat1)}
-            </div>
-            <div class="h2h-cat-bar">
-              <div class="h2h-cat-bar-a" style="width: ${bar1.a}%;"></div>
-              <div class="h2h-cat-bar-b" style="width: ${bar1.b}%;"></div>
-            </div>
-            <div class="h2h-cat-subtext">Preliminary substantive speech score average</div>
-          </div>
-          <div class="h2h-cat-val ${winCat1 === 'B' ? 'val-win' : ''}" style="color: #f43f5e;">
-            ${avgB !== null ? avgB.toFixed(2) : 'N/A'}
+          <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 6px;">
+            Judged strictly across: Speaker Score, Win %, Stdev (consistency), Prelims Debated, Highest Achievement, and Tournament Clashes.
           </div>
         </div>
 
-        <!-- 2. Win % -->
-        <div class="h2h-category-card">
-          <div class="h2h-cat-val ${winCat2 === 'A' ? 'val-win' : ''}" style="color: #38bdf8;">
-            ${winRateA !== null ? `${winRateA.toFixed(1)}%` : 'N/A'}
-          </div>
-          <div class="h2h-cat-center">
-            <div class="h2h-cat-title-row">
-              <span class="h2h-cat-title">2. Win %</span>
-              ${badgeHtml(winCat2)}
+        <div class="h2h-stat-compare">
+          <!-- 1. Speaker Score -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="color: #38bdf8;">${fmt(selectedA.speaker_score, 2)}</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">1. SPEAKER SCORE</span>
+                ${badge(w1)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${b1.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${b1.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">Universal substantive mean across all rounds</div>
             </div>
-            <div class="h2h-cat-bar">
-              <div class="h2h-cat-bar-a" style="width: ${bar2.a}%;"></div>
-              <div class="h2h-cat-bar-b" style="width: ${bar2.b}%;"></div>
-            </div>
-            <div class="h2h-cat-subtext">Win rate in debates where the debater spoke</div>
+            <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.speaker_score, 2)}</div>
           </div>
-          <div class="h2h-cat-val ${winCat2 === 'B' ? 'val-win' : ''}" style="color: #f43f5e;">
-            ${winRateB !== null ? `${winRateB.toFixed(1)}%` : 'N/A'}
+
+          <!-- 2. Win % -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="color: #38bdf8;">${fmt(selectedA.win_percentage, 1)}%</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">2. WIN %</span>
+                ${badge(w2)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${b2.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${b2.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">Match win rate across contested debates</div>
+            </div>
+            <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.win_percentage, 1)}%</div>
+          </div>
+
+          <!-- 3. Stdev (lower the better) -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="color: #38bdf8;">${fmt(selectedA.stdev, 2)}</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">3. STDEV (LOWER IS BETTER)</span>
+                ${badge(w3)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${b3.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${b3.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">Score consistency & standard deviation</div>
+            </div>
+            <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.stdev, 2)}</div>
+          </div>
+
+          <!-- 4. Prelims Debated -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="color: #38bdf8;">${selectedA.prelims_debated}</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">4. PRELIMS DEBATED</span>
+                ${badge(w4)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${b4.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${b4.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">Preliminary speeches completed</div>
+            </div>
+            <div class="h2h-cat-val" style="color: #f43f5e;">${selectedB.prelims_debated}</div>
+          </div>
+
+          <!-- 5. Highest Achievement -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="font-size: 11.5px; color: #38bdf8;">${achA}</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">5. HIGHEST ACHIEVEMENT</span>
+                ${badge(w5)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${b5.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${b5.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">Peak elimination progression</div>
+            </div>
+            <div class="h2h-cat-val" style="font-size: 11.5px; color: #f43f5e;">${achB}</div>
+          </div>
+
+          <!-- 6. Head to Head in Tournaments -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="color: #38bdf8;">${aDirectWins}</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">6. HEAD TO HEAD IN TOURNAMENTS</span>
+                ${badge(w6)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${b6.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${b6.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">${directDebates.length} direct debate matchup${directDebates.length === 1 ? '' : 's'} contested</div>
+            </div>
+            <div class="h2h-cat-val" style="color: #f43f5e;">${bDirectWins}</div>
           </div>
         </div>
 
-        <!-- 3. Critical Tab Ranking -->
-        <div class="h2h-category-card">
-          <div class="h2h-cat-val ${winCat3 === 'A' ? 'val-win' : ''}" style="color: #38bdf8; font-size: 13px;">
-            ${critRankA !== null ? `#${critRankA}` : 'Unranked'}
-          </div>
-          <div class="h2h-cat-center">
-            <div class="h2h-cat-title-row">
-              <span class="h2h-cat-title">3. Critical Tab Ranking</span>
-              ${badgeHtml(winCat3)}
+        <!-- Direct Matchups Breakdown if any -->
+        ${directDebates.length > 0 ? `
+          <div class="h2h-matchups-section">
+            <div class="h2h-matchups-title">
+              DIRECT TOURNAMENT ENCOUNTERS (${directDebates.length})
             </div>
-            <div class="h2h-cat-bar">
-              <div class="h2h-cat-bar-a" style="width: ${bar3.a}%;"></div>
-              <div class="h2h-cat-bar-b" style="width: ${bar3.b}%;"></div>
-            </div>
-            <div class="h2h-cat-subtext">Official Critical Tab Standing (Minimum 3 eligible tournaments required)</div>
-          </div>
-          <div class="h2h-cat-val ${winCat3 === 'B' ? 'val-win' : ''}" style="color: #f43f5e; font-size: 13px;">
-            ${critRankB !== null ? `#${critRankB}` : 'Unranked'}
-          </div>
-        </div>
-
-        <!-- 4. Consistency -->
-        <div class="h2h-category-card">
-          <div class="h2h-cat-val ${winCat4 === 'A' ? 'val-win' : ''}" style="color: #38bdf8; font-size: 13px;">
-            ${constA.text}
-          </div>
-          <div class="h2h-cat-center">
-            <div class="h2h-cat-title-row">
-              <span class="h2h-cat-title">4. Consistency (Speak Deviation)</span>
-              ${badgeHtml(winCat4)}
-            </div>
-            <div class="h2h-cat-bar">
-              <div class="h2h-cat-bar-a" style="width: ${bar4.a}%;"></div>
-              <div class="h2h-cat-bar-b" style="width: ${bar4.b}%;"></div>
-            </div>
-            <div class="h2h-cat-subtext">Tournament-to-tournament score standard deviation (Lower = More Consistent)</div>
-          </div>
-          <div class="h2h-cat-val ${winCat4 === 'B' ? 'val-win' : ''}" style="color: #f43f5e; font-size: 13px;">
-            ${constB.text}
-          </div>
-        </div>
-
-        <!-- 5. Break % -->
-        <div class="h2h-category-card">
-          <div class="h2h-cat-val ${winCat5 === 'A' ? 'val-win' : ''}" style="color: #38bdf8;">
-            ${brkA !== null ? `${Number(brkA).toFixed(1)}%` : 'N/A'}
-          </div>
-          <div class="h2h-cat-center">
-            <div class="h2h-cat-title-row">
-              <span class="h2h-cat-title">5. Break %</span>
-              ${badgeHtml(winCat5)}
-            </div>
-            <div class="h2h-cat-bar">
-              <div class="h2h-cat-bar-a" style="width: ${bar5.a}%;"></div>
-              <div class="h2h-cat-bar-b" style="width: ${bar5.b}%;"></div>
-            </div>
-            <div class="h2h-cat-subtext">Tournament elimination round progression rate</div>
-          </div>
-          <div class="h2h-cat-val ${winCat5 === 'B' ? 'val-win' : ''}" style="color: #f43f5e;">
-            ${brkB !== null ? `${Number(brkB).toFixed(1)}%` : 'N/A'}
-          </div>
-        </div>
-
-        <!-- 6. Head to Head in Tournament -->
-        <div class="h2h-category-card">
-          <div class="h2h-cat-val ${winCat6 === 'A' ? 'val-win' : ''}" style="color: #38bdf8;">
-            ${aDirectWins} <span style="font-size: 11px; font-weight: normal; color: rgba(255,255,255,0.6);">W</span>
-          </div>
-          <div class="h2h-cat-center">
-            <div class="h2h-cat-title-row">
-              <span class="h2h-cat-title">6. Head to Head in Tournament</span>
-              ${badgeHtml(winCat6)}
-            </div>
-            <div class="h2h-cat-bar">
-              <div class="h2h-cat-bar-a" style="width: ${bar6.a}%;"></div>
-              <div class="h2h-cat-bar-b" style="width: ${bar6.b}%;"></div>
-            </div>
-            <div class="h2h-cat-subtext">
-              ${directDebates.length > 0
-                ? `${directDebates.length} debate${directDebates.length === 1 ? '' : 's'} where both debaters spoke on opposing sides`
-                : 'No direct head-to-head tournament matchups on record'}
-            </div>
-          </div>
-          <div class="h2h-cat-val ${winCat6 === 'B' ? 'val-win' : ''}" style="color: #f43f5e;">
-            ${bDirectWins} <span style="font-size: 11px; font-weight: normal; color: rgba(255,255,255,0.6);">W</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Direct Matchups Section -->
-      <div class="h2h-matchups-section">
-        <div class="h2h-matchups-title">
-          <span>DIRECT TOURNAMENT MATCHUPS (${directDebates.length})</span>
-        </div>
-        ${
-          directDebates.length > 0
-            ? directDebates
-                .map((d) => {
-                  const winnerIsA = d.a_won;
-                  const winnerIsB = d.b_won;
-                  const winnerColor = winnerIsA ? '#38bdf8' : (winnerIsB ? '#f43f5e' : '#fbbf24');
-                  const outcomeText = d.winner_team_name ? `${escapeHtml(d.winner_team_name)} won` : 'Draw / Unrecorded';
-                  const marginText = d.margin_a !== null && d.margin_a !== undefined ? ` · Net Margin: ${d.margin_a > 0 ? '+' : ''}${Number(d.margin_a).toFixed(1)} pts` : '';
-                  const splitText = d.ballot_split ? ` · Ballot: ${d.ballot_split}` : '';
-
-                  const cleanTour = (d.tournament_name || '').split('|')[0].trim();
-                  let cleanRound = d.round_name || `Round ${d.round_number}`;
-                  if (cleanRound.includes('Welcome to')) {
-                    const match = cleanRound.match(/Round \d+|Octofinals|Quarterfinals|Semifinals|Grand Final/i);
-                    cleanRound = match ? match[0] : `Round ${d.round_number}`;
-                  }
-
-                  return `
-            <div class="h2h-matchup-card">
-              <div class="h2h-matchup-header">
-                <div class="h2h-matchup-tour">
-                  ${escapeHtml(cleanTour)} <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: normal;">— ${escapeHtml(cleanRound)}</span>
+            ${directDebates.map(m => `
+              <div class="h2h-matchup-card">
+                <div class="h2h-matchup-header">
+                  <span class="h2h-matchup-tour">${escapeHtml(m.tournament_name)} - ${escapeHtml(m.round_name)}</span>
+                  <span class="h2h-matchup-outcome" style="color: ${m.a_won ? '#38bdf8' : '#f43f5e'};">
+                    ${m.a_won ? escapeHtml(selectedA.name) + ' WON' : escapeHtml(selectedB.name) + ' WON'}
+                  </span>
                 </div>
-                <div class="h2h-matchup-outcome" style="color: ${winnerColor};">
-                  ${outcomeText}${splitText}${marginText}
+                <div class="h2h-matchup-body">
+                  <div class="h2h-matchup-team">${escapeHtml(m.team_a)} (${m.side_a})</div>
+                  <div style="font-family: var(--font-mono); font-weight: 700; color: rgba(255,255,255,0.4);">VS</div>
+                  <div class="h2h-matchup-team" style="text-align: right;">${escapeHtml(m.team_b)} (${m.side_b})</div>
                 </div>
               </div>
-
-              <div class="h2h-matchup-body">
-                <div class="h2h-matchup-team" style="color: #38bdf8; font-weight: 600;">
-                  ${escapeHtml(d.team_a_name)} <span style="font-size: 11px; color: rgba(255,255,255,0.5);">(${d.side_a})</span>
-                </div>
-                <div style="font-family: var(--font-hero); font-size: 13px; color: rgba(255,255,255,0.4);">VS</div>
-                <div class="h2h-matchup-team" style="color: #f43f5e; font-weight: 600; text-align: right;">
-                  ${escapeHtml(d.team_b_name)} <span style="font-size: 11px; color: rgba(255,255,255,0.5);">(${d.side_b})</span>
-                </div>
-              </div>
-
-              <div class="h2h-matchup-speeches">
-                <div style="color: #38bdf8;">
-                  ${escapeHtml(debaterA.name)}: ${d.pos_a || 'Speaker'} (${d.sub_score_a !== null && d.sub_score_a !== undefined ? Number(d.sub_score_a).toFixed(2) : '-'})
-                </div>
-                <div style="text-align: center; color: rgba(255,255,255,0.3); font-size: 10px;">SCORES</div>
-                <div style="color: #f43f5e; text-align: right;">
-                  ${escapeHtml(debaterB.name)}: ${d.pos_b || 'Speaker'} (${d.sub_score_b !== null && d.sub_score_b !== undefined ? Number(d.sub_score_b).toFixed(2) : '-'})
-                </div>
-              </div>
-            </div>
-          `;
-                })
-                .join('')
-            : `
-          <div class="h2h-no-matchups">
-            <strong style="color: rgba(255,255,255,0.9); font-size: 13.5px; display: block; margin-bottom: 4px;">No Direct Head-to-Head Encounters on Record</strong>
-            Neither debater has faced the other on opposing sides in an official circuit debate where both delivered speeches.
+            `).join('')}
           </div>
-        `
-        }
-      </div>
-    `;
+        ` : ''}
+      `;
+    }
+
+    if (selectedA && selectedB) {
+      updateH2H();
+    }
   }
 
   // ==========================================================================
-  // 5. AI CHATBOT PAGE
+  // 8. NATIONAL POOL PAGE (3 CLEAN UNRANKED LISTS)
   // ==========================================================================
+  function initPoolPage() {
+    const listDirect = document.getElementById('listDirect');
+    const listTrialed = document.getElementById('listTrialed');
+    const listTrials = document.getElementById('listTrials');
+    const searchInput = document.getElementById('poolSearchInput');
+
+    let poolData = state.v2NationalPool;
+
+    function renderPoolLists(q = '') {
+      if (!poolData) return;
+
+      const query = q.trim().toLowerCase();
+
+      function filterList(arr) {
+        if (!arr) return [];
+        if (!query) return arr;
+        return arr.filter(d => d.name.toLowerCase().includes(query) || (d.institution && d.institution.toLowerCase().includes(query)));
+      }
+
+      const direct = filterList(poolData.nat_pool_direct);
+      const trialed = filterList(poolData.nat_pool_trialed);
+      const trials = filterList(poolData.trials);
+
+      const cd = document.getElementById('countDirect');
+      const ctr = document.getElementById('countTrialed');
+      const ct = document.getElementById('countTrials');
+      if (cd) cd.textContent = `${direct.length} DEBATERS`;
+      if (ctr) ctr.textContent = `${trialed.length} DEBATERS`;
+      if (ct) ct.textContent = `${trials.length} DEBATERS`;
+
+      function renderItems(arr, tagClass) {
+        if (arr.length === 0) {
+          return `<div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.4); font-size: 12px;">No debaters match.</div>`;
+        }
+        return arr.map(d => `
+          <div class="pool-debater-card">
+            <div>
+              <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(d.name)}">${escapeHtml(d.name)}</a>
+              <div>
+                <a class="pool-debater-inst" href="institution_bio.html?inst=${encodeURIComponent(d.institution)}">${escapeHtml(d.institution)}</a>
+              </div>
+            </div>
+            <div>
+              <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level)}</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      if (listDirect) listDirect.innerHTML = renderItems(direct, 'nat-direct');
+      if (listTrialed) listTrialed.innerHTML = renderItems(trialed, 'nat-trialed');
+      if (listTrials) listTrials.innerHTML = renderItems(trials, 'nat-trials');
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('input', () => {
+        renderPoolLists(searchInput.value);
+      });
+    }
+
+    renderPoolLists();
+  }
+
+  // ==========================================================================
+  // 9. AI CHATBOT INTEGRATION
   // ==========================================================================
   function getChatSessionId() {
     let sid = sessionStorage.getItem('atomos_chat_session_id');
@@ -2373,10 +2307,7 @@
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ session_id: sid }),
           });
-        } catch (e) {
-          console.warn('Reset chat failed:', e);
-        }
-        // Generate new session ID
+        } catch (e) {}
         sessionStorage.removeItem('atomos_chat_session_id');
         if (messages) {
           messages.innerHTML = `
@@ -2458,8 +2389,7 @@
         return;
       }
     } catch (e) {
-      console.warn('Direct AI query error:', e);
-      botMsg.innerHTML = `<div style="color: #f87171;">Unable to communicate with the Atomos AI server at ${escapeHtml(state.apiUrl)}. Please ensure the backend server is running on port 5000.</div>`;
+      botMsg.innerHTML = `<div style="color: #f87171;">Unable to communicate with the Atomos AI server at ${escapeHtml(state.apiUrl)}.</div>`;
       messages.scrollTop = messages.scrollHeight;
       return;
     }
@@ -2476,8 +2406,6 @@
 
   function formatMarkdownToHtml(text) {
     if (!text) return '';
-
-    // Strip any residual emojis (strict website-wide ban)
     text = text.replace(/[\u{1F300}-\u{1F9FF}\u{2600}-\u{26FF}\u{2700}-\u{27BF}\u{2B50}-\u{2B55}]/gu, '');
 
     const lines = text.split('\n');
@@ -2509,12 +2437,8 @@
       const rawLine = lines[i];
       const line = rawLine.trim();
 
-      // Check if table row
       if (line.startsWith('|') && line.endsWith('|')) {
-        // Delimiter line like | :--- | :--- |
-        if (/^\|(\s*:?-+:?\s*\|)+$/.test(line)) {
-          continue;
-        }
+        if (/^\|(\s*:?-+:?\s*\|)+$/.test(line)) continue;
         inTable = true;
         tableRows.push(line);
         continue;
@@ -2527,7 +2451,6 @@
         continue;
       }
 
-      // Headers
       if (line.startsWith('### ')) {
         output.push(`<h3>${formatInlineMarkdown(line.slice(4))}</h3>`);
       } else if (line.startsWith('## ')) {
@@ -2544,13 +2467,11 @@
       }
     }
     flushTable();
-
     return output.join('');
   }
 
   // Public API
   window.AtomosApp = {
-    selectDebater,
     sendChatPrompt,
   };
 

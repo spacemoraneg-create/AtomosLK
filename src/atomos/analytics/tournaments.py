@@ -28,6 +28,17 @@ OFFICIAL_TOURNAMENT_DATES = {
     18: "July 31 – Aug 3, 2026" # Chap's '26
 }
 
+CHRONOLOGICAL_TOURNAMENT_ORDER = {
+    2: 1,   # AISDC 2026 (Jan 2–5)
+    7: 2,   # VVIDC 2026 (March 13–16)
+    1: 3,   # Vijis '26 (June 5–8)
+    10: 4,  # Metho 2026 (June 19–22)
+    16: 5,  # RIC ISDC 2026 (July 3–6)
+    3: 6,   # APIIT ISDC 2026 (July 17–20)
+    18: 7,  # Chap's '26 (July 31–Aug 3)
+    4: 8,   # SLSDC 2026 (Aug 22–31)
+}
+
 CLEAN_TOURNAMENT_NAMES = {
     1: "Vijitha Weerasinghe Memorial (Vijis '26)",
     2: "AIS Debating Championship (AISDC 2026)",

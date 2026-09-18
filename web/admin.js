@@ -234,12 +234,12 @@
       .map((t) => {
         return `
           <tr>
-            <td class="monospace" style="color: #38bdf8; font-weight: 600;">#${t.id}</td>
+            <td class="monospace" style="color: #38bdf8; font-weight: 700;">#${t.chrono_order ?? t.id}</td>
             <td class="monospace">${escapeHtml(t.slug)}</td>
             <td style="font-weight: 500;">
-              <div>${escapeHtml(t.name)}</div>
-              <div style="font-size: 11px; color: rgba(255,255,255,0.45); font-family: var(--font-mono); margin-top: 2px;">
-                ${t.source_url ? escapeHtml(t.source_url) : 'Local Archive'}
+              <div>${escapeHtml(t.official_name || t.name)}</div>
+              <div style="font-size: 11px; color: #38bdf8; font-family: var(--font-mono); margin-top: 2px;">
+                ${t.hosting_dates ? escapeHtml(t.hosting_dates) : '2026'} · ${t.source_url ? escapeHtml(t.source_url) : 'Local Tab Archive'}
               </div>
             </td>
             <td class="monospace">${t.year || '--'}</td>

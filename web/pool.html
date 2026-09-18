@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>National Pool - Atomos V2</title>
+  <link rel="stylesheet" href="styles.css?v=5" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- Top Tabbycat-style Navigation Bar -->
+  <header class="tabby-nav">
+    <div class="nav-brand">
+      <a href="index.html" class="nav-brand-link">
+        <span class="nav-brand-name">ATOMOS</span>
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="leaderboards.html" class="nav-link">LEADERBOARDS</a>
+      <a href="bio.html" class="nav-link">DEBATER BIO</a>
+      <a href="team_bio.html" class="nav-link">TEAM BIO</a>
+      <a href="institution_bio.html" class="nav-link">INSTITUTION BIO</a>
+      <a href="adjudicator_bio.html" class="nav-link">ADJUDICATOR BIO</a>
+      <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
+      <a href="pool.html" class="nav-link active">POOL</a>
+      <a href="admin.html" class="nav-link">ADMIN</a>
+      <a href="chat.html" class="nav-link">AI CHATBOT</a>
+    </nav>
+  </header>
+
+  <main class="subpage-container">
+    <div class="subpage-card">
+      <div class="subpage-title">
+        <span>SRI LANKA NATIONAL TEAM POOL // UNRANKED ROSTERS</span>
+        <span class="badge-count" style="background: rgba(234, 179, 8, 0.2); color: #fde047;">3-TIER REGISTRY</span>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="filter-bar">
+        <input
+          type="text"
+          id="poolSearchInput"
+          class="filter-input"
+          placeholder="Filter national debaters by name or school..."
+        />
+      </div>
+
+      <!-- 3-Tier Registry Grid -->
+      <div class="pool-grid-container" id="poolGridContainer">
+        <!-- List 1: Nat Pool Direct -->
+        <div class="pool-tier-column">
+          <div class="pool-tier-header" style="border-top: 3px solid #38bdf8;">
+            <div class="pool-tier-title">NAT POOL, DIRECT</div>
+            <div class="pool-tier-count" id="countDirect">9 DEBATERS</div>
+          </div>
+          <div class="pool-tier-body" id="listDirect">
+            <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">Loading...</div>
+          </div>
+        </div>
+
+        <!-- List 2: Nat Pool Trialed -->
+        <div class="pool-tier-column">
+          <div class="pool-tier-header" style="border-top: 3px solid #a855f7;">
+            <div class="pool-tier-title">NAT POOL, TRIALED</div>
+            <div class="pool-tier-count" id="countTrialed">9 DEBATERS</div>
+          </div>
+          <div class="pool-tier-body" id="listTrialed">
+            <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">Loading...</div>
+          </div>
+        </div>
+
+        <!-- List 3: Trials -->
+        <div class="pool-tier-column">
+          <div class="pool-tier-header" style="border-top: 3px solid #f59e0b;">
+            <div class="pool-tier-title">TRIALS</div>
+            <div class="pool-tier-count" id="countTrials">9 DEBATERS</div>
+          </div>
+          <div class="pool-tier-body" id="listTrials">
+            <div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.5);">Loading...</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="atomos-footer">
+      <div class="footer-tag">ATOMOS V2</div>
+    </footer>
+  </main>
+
+  <script src="app.js?v=4"></script>
+</body>
+</html>

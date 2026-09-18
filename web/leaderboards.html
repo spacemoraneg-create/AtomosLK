@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaderboards - Atomos V1</title>
-  <link rel="stylesheet" href="styles.css?v=4" />
+  <title>Leaderboards - Atomos V2</title>
+  <link rel="stylesheet" href="styles.css?v=5" />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
 </head>
 <body>
@@ -19,34 +19,44 @@
     <nav class="nav-links">
       <a href="index.html" class="nav-link">HOME</a>
       <a href="leaderboards.html" class="nav-link active">LEADERBOARDS</a>
+      <a href="bio.html" class="nav-link">DEBATER BIO</a>
+      <a href="team_bio.html" class="nav-link">TEAM BIO</a>
+      <a href="institution_bio.html" class="nav-link">INSTITUTION BIO</a>
+      <a href="adjudicator_bio.html" class="nav-link">ADJUDICATOR BIO</a>
       <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
-      <a href="bio.html" class="nav-link">BIO ENGINE</a>
-      <a href="chat.html" class="nav-link">AI CHATBOT</a>
+      <a href="pool.html" class="nav-link">POOL</a>
       <a href="admin.html" class="nav-link">ADMIN</a>
+      <a href="chat.html" class="nav-link">AI CHATBOT</a>
     </nav>
   </header>
 
   <main class="subpage-container">
     <div class="subpage-card">
       <div class="subpage-title">
-        <span>CIRCUIT MASTER LEADERBOARDS</span>
+        <span>CIRCUIT MULTI PURPOSE LEADERBOARDS</span>
+        <span class="badge-count" id="tierEligibilityBadge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">TAB // MIN 12 ROUNDS</span>
       </div>
 
       <!-- Tabbycat Leaderboard Navigation Tabs & Mode Switcher -->
       <div class="subpage-tabs-bar">
-        <div class="subpage-tabs">
-          <button class="subpage-tab-btn active" data-tab="individual">Individual Leaderboard</button>
-          <button class="subpage-tab-btn" data-tab="teams">Team Leaderboard</button>
-          <button class="subpage-tab-btn" data-tab="institutions">Institution Leaderboard</button>
-          <button class="subpage-tab-btn" data-tab="activity">Activity Leaderboard</button>
-          <button class="subpage-tab-btn" data-tab="tournaments">Tournament Rankings</button>
+        <div class="subpage-tabs" id="lbCategoryTabs">
+          <button class="subpage-tab-btn active" data-tab="individual">Individual</button>
+          <button class="subpage-tab-btn" data-tab="teams">Teams</button>
+          <button class="subpage-tab-btn" data-tab="institutions">Institutions</button>
+          <button class="subpage-tab-btn" data-tab="tournaments">Tournaments</button>
+          <button class="subpage-tab-btn" data-tab="adjudicators">Adjudicators</button>
         </div>
 
-        <!-- Option to switch between Tab and Critical Tab (for Individual leaderboard) -->
-        <div class="subpage-mode-switcher" id="individualModeSwitcher" aria-label="Leaderboard Mode">
-          <button class="mode-switch-btn active" data-mode="master">TAB</button>
-          <button class="mode-switch-btn" data-mode="critical">CRITICAL TAB</button>
+        <!-- Universal Tier Switcher: Tab (Default) vs General Tab -->
+        <div class="subpage-mode-switcher" id="tierModeSwitcher" aria-label="Leaderboard Tier">
+          <button class="mode-switch-btn active" data-tier="tab">TAB</button>
+          <button class="mode-switch-btn" data-tier="general">GENERAL TAB</button>
         </div>
+      </div>
+
+      <!-- Dynamic Metric Switcher Toolbar for Active Category -->
+      <div class="metric-toolbar-wrap" id="lbMetricToolbar" style="margin-bottom: 14px;">
+        <!-- Injected dynamically via JS based on category -->
       </div>
 
       <!-- Search Bar -->
@@ -67,10 +77,10 @@
 
     <!-- Footer -->
     <footer class="atomos-footer">
-      <div class="footer-tag">ATOMOS V1</div>
+      <div class="footer-tag">ATOMOS V2</div>
     </footer>
   </main>
 
-  <script src="app.js?v=3"></script>
+  <script src="app.js?v=4"></script>
 </body>
 </html>

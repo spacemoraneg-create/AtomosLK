@@ -25,6 +25,8 @@ from atomos.query import AtomosQuery
 from atomos.tools import dispatch_tool
 from atomos.pipeline.ingestion import IngestionPipeline
 from atomos.normalizer.validator import IntegrityValidator
+from atomos.analytics.v2_metrics import V2MetricsEngine
+from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER, CLEAN_TOURNAMENT_NAMES, OFFICIAL_TOURNAMENT_DATES
 
 ADMIN_PASSWORD = "Olivedelight"
 ADMIN_AUTH_TOKEN = hashlib.sha256(f"{ADMIN_PASSWORD}_atomos_secure_salt_2026".encode("utf-8")).hexdigest()
@@ -39,6 +41,7 @@ def create_app(db_conn=None) -> Flask:
     conn = db_conn or get_connection(check_same_thread=False)
     query_engine = AtomosQuery(conn)
     agent = AtomosAgent(conn)
+    v2_engine = V2MetricsEngine(conn)
 
     @app.after_request
     def add_cors_headers(response):
@@ -71,6 +74,25 @@ def create_app(db_conn=None) -> Flask:
     @app.route("/admin")
     def page_admin():
         return send_from_directory(str(web_dir), "admin.html")
+
+    @app.route("/team-bio")
+    @app.route("/team_bio")
+    def page_team_bio():
+        return send_from_directory(str(web_dir), "team_bio.html")
+
+    @app.route("/institution-bio")
+    @app.route("/institution_bio")
+    def page_institution_bio():
+        return send_from_directory(str(web_dir), "institution_bio.html")
+
+    @app.route("/adjudicator-bio")
+    @app.route("/adjudicator_bio")
+    def page_adjudicator_bio():
+        return send_from_directory(str(web_dir), "adjudicator_bio.html")
+
+    @app.route("/pool")
+    def page_pool():
+        return send_from_directory(str(web_dir), "pool.html")
 
     @app.route("/data/web_export/<path:filename>")
     def serve_export_data(filename):
@@ -355,6 +377,123 @@ def create_app(db_conn=None) -> Flask:
         return jsonify(ballot)
 
     # =========================================================================
+    # ATOMOS V2 REST API ENDPOINTS
+    # =========================================================================
+
+    @app.route("/api/v2/leaderboard/speakers", methods=["GET"])
+    def v2_speakers_lb():
+        tier = request.args.get("tier", "tab").lower()
+        sort_by = request.args.get("sort", "speaker_score").lower()
+        limit = request.args.get("limit")
+        data = v2_engine.get_multipurpose_speakers(tier=tier, sort_by=sort_by)
+        if limit and limit.isdigit():
+            data = data[:int(limit)]
+        return jsonify({
+            "tier": tier,
+            "sort_by": sort_by,
+            "leaderboard": data,
+            "total_returned": len(data),
+        })
+
+    @app.route("/api/v2/leaderboard/teams", methods=["GET"])
+    def v2_teams_lb():
+        tier = request.args.get("tier", "tab").lower()
+        sort_by = request.args.get("sort", "atss").lower()
+        limit = request.args.get("limit")
+        data = v2_engine.get_multipurpose_teams(tier=tier, sort_by=sort_by)
+        if limit and limit.isdigit():
+            data = data[:int(limit)]
+        return jsonify({
+            "tier": tier,
+            "sort_by": sort_by,
+            "leaderboard": data,
+            "total_returned": len(data),
+        })
+
+    @app.route("/api/v2/leaderboard/institutions", methods=["GET"])
+    def v2_institutions_lb():
+        tier = request.args.get("tier", "tab").lower()
+        sort_by = request.args.get("sort", "delta").lower()
+        limit = request.args.get("limit")
+        data = v2_engine.get_multipurpose_institutions(tier=tier, sort_by=sort_by)
+        if limit and limit.isdigit():
+            data = data[:int(limit)]
+        return jsonify({
+            "tier": tier,
+            "sort_by": sort_by,
+            "leaderboard": data,
+            "total_returned": len(data),
+        })
+
+    @app.route("/api/v2/leaderboard/tournaments", methods=["GET"])
+    def v2_tournaments_lb():
+        sort_by = request.args.get("sort", "atss").lower()
+        data = v2_engine.get_tournament_hard_rankings(sort_by=sort_by)
+        limit = request.args.get("limit")
+        if limit and limit.isdigit():
+            data = data[:int(limit)]
+        return jsonify({
+            "sort_by": sort_by,
+            "leaderboard": data,
+            "total_returned": len(data),
+        })
+
+    @app.route("/api/v2/leaderboard/adjudicators", methods=["GET"])
+    def v2_adjudicators_lb():
+        sort_by = request.args.get("sort", "debates").lower()
+        data = v2_engine.get_adjudicator_leaderboard()
+        if sort_by == "aass":
+            data.sort(key=lambda x: -x["aass"])
+        elif sort_by == "aatss":
+            data.sort(key=lambda x: -x["aatss"])
+        elif sort_by == "tournaments":
+            data.sort(key=lambda x: -x["tournaments_adjudicated"])
+        else:
+            data.sort(key=lambda x: -x["prelims_adjudicated"])
+        for idx, j in enumerate(data, start=1):
+            j["rank"] = idx
+        limit = request.args.get("limit")
+        if limit and limit.isdigit():
+            data = data[:int(limit)]
+        return jsonify({
+            "sort_by": sort_by,
+            "leaderboard": data,
+            "total_returned": len(data),
+        })
+
+    @app.route("/api/v2/pool", methods=["GET"])
+    def v2_national_pool():
+        return jsonify(v2_engine.get_national_pool_tiers())
+
+    @app.route("/api/v2/debaters/<path:identifier>/bio", methods=["GET"])
+    def v2_debater_bio(identifier: str):
+        profile = v2_engine.get_debater_v2_profile(identifier)
+        if not profile:
+            return jsonify({"error": f"Debater '{identifier}' not found"}), 404
+        return jsonify(profile)
+
+    @app.route("/api/v2/teams/<path:team_name>/bio", methods=["GET"])
+    def v2_team_bio(team_name: str):
+        bio = v2_engine.get_team_bio(team_name)
+        if not bio:
+            return jsonify({"error": f"Team '{team_name}' not found"}), 404
+        return jsonify(bio)
+
+    @app.route("/api/v2/institutions/<path:inst_name>/bio", methods=["GET"])
+    def v2_institution_bio(inst_name: str):
+        bio = v2_engine.get_institution_bio(inst_name)
+        if not bio:
+            return jsonify({"error": f"Institution '{inst_name}' not found"}), 404
+        return jsonify(bio)
+
+    @app.route("/api/v2/adjudicators/<path:judge_name>/bio", methods=["GET"])
+    def v2_adjudicator_bio(judge_name: str):
+        bio = v2_engine.get_adjudicator_bio(judge_name)
+        if not bio:
+            return jsonify({"error": f"Adjudicator '{judge_name}' not found"}), 404
+        return jsonify(bio)
+
+    # =========================================================================
     # ADMINISTRATIVE API ENDPOINTS (PROTECTED BY PASSWORD "Olivedelight")
     # =========================================================================
 
@@ -441,7 +580,13 @@ def create_app(db_conn=None) -> Flask:
             FROM tournaments t
             ORDER BY t.id ASC
         """)
-        tournaments = [dict(row) for row in cur.fetchall()]
+        raw_tournaments = [dict(row) for row in cur.fetchall()]
+        for t in raw_tournaments:
+            t["official_name"] = CLEAN_TOURNAMENT_NAMES.get(t["id"], t["name"])
+            t["hosting_dates"] = OFFICIAL_TOURNAMENT_DATES.get(t["id"], "2026")
+            t["chrono_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], 999)
+
+        tournaments = sorted(raw_tournaments, key=lambda x: x["chrono_order"])
 
         return jsonify({
             "authenticated": True,

@@ -138,6 +138,37 @@ class PrecomputedCache:
         }
         self.set("search_index", search_index)
 
+        # 9. V2 Analytical Materializations
+        from atomos.analytics.v2_metrics import V2MetricsEngine
+        v2 = V2MetricsEngine(self.conn)
+
+        v2_speakers_tab = v2.get_multipurpose_speakers(tier="tab", sort_by="speaker_score")
+        self.set("v2_speakers_tab", v2_speakers_tab)
+
+        v2_speakers_general = v2.get_multipurpose_speakers(tier="general", sort_by="speaker_score")
+        self.set("v2_speakers_general", v2_speakers_general)
+
+        v2_teams_tab = v2.get_multipurpose_teams(tier="tab", sort_by="atss")
+        self.set("v2_teams_tab", v2_teams_tab)
+
+        v2_teams_general = v2.get_multipurpose_teams(tier="general", sort_by="atss")
+        self.set("v2_teams_general", v2_teams_general)
+
+        v2_institutions_tab = v2.get_multipurpose_institutions(tier="tab", sort_by="delta")
+        self.set("v2_institutions_tab", v2_institutions_tab)
+
+        v2_institutions_general = v2.get_multipurpose_institutions(tier="general", sort_by="delta")
+        self.set("v2_institutions_general", v2_institutions_general)
+
+        v2_tournaments = v2.get_tournament_hard_rankings()
+        self.set("v2_tournaments", v2_tournaments)
+
+        v2_adjudicators = v2.get_adjudicator_leaderboard()
+        self.set("v2_adjudicators", v2_adjudicators)
+
+        v2_national_pool = v2.get_national_pool_tiers()
+        self.set("v2_national_pool", v2_national_pool)
+
         return {
             "master_speaker_tab": len(mtab),
             "master_reply_tab": len(rtab),
@@ -148,4 +179,14 @@ class PrecomputedCache:
             "judge_leaderboard": len(judges),
             "national_pool": len(nat_rows),
             "search_index_entries": len(persons_idx) + len(inst_idx) + len(tour_idx),
+            "v2_speakers_tab": len(v2_speakers_tab),
+            "v2_speakers_general": len(v2_speakers_general),
+            "v2_teams_tab": len(v2_teams_tab),
+            "v2_teams_general": len(v2_teams_general),
+            "v2_institutions_tab": len(v2_institutions_tab),
+            "v2_institutions_general": len(v2_institutions_general),
+            "v2_tournaments": len(v2_tournaments),
+            "v2_adjudicators": len(v2_adjudicators),
+            "v2_national_pool": v2_national_pool.get("total_count", 0),
         }
+
