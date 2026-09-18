@@ -105,7 +105,8 @@ class PrecomputedCache:
         # 7. National Contingent Roster
         cur.execute("""
             SELECT p.id, p.canonical_name, p.national_level,
-                   i.name as institution_name
+                   COALESCE(i.name, 'Independent') as institution,
+                   COALESCE(i.name, 'Independent') as institution_name
             FROM persons p
             LEFT JOIN (
                 SELECT tm.person_id, t.institution_id

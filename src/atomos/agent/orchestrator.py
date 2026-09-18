@@ -74,10 +74,10 @@ class AtomosAgent:
             except Exception:
                 self._gemini_agent = None
 
-    def reset_memory(self):
+    def reset_memory(self, session_id: Optional[str] = None):
         """Reset conversation memory in the underlying LLM agent."""
         if self._gemini_agent:
-            self._gemini_agent.reset_memory()
+            self._gemini_agent.reset_memory(session_id=session_id)
 
     @property
     def conversation_history(self) -> List[Dict[str, Any]]:
@@ -86,12 +86,12 @@ class AtomosAgent:
             return self._gemini_agent.conversation_history
         return []
 
-    def ask(self, query: str) -> AgentResult:
+    def ask(self, query: str, session_id: str = "default") -> AgentResult:
         """Process a natural language question and return a structured AgentResult."""
         # 1. Prioritize Cloud LLM (Gemini) if active
         if self._use_llm and self._gemini_agent:
             try:
-                g_res = self._gemini_agent.run(query)
+                g_res = self._gemini_agent.run(query, session_id=session_id)
                 if g_res.get("success") and g_res.get("answer"):
                     return AgentResult(
                         query=query,
@@ -104,7 +104,7 @@ class AtomosAgent:
                 elif g_res.get("error"):
                     try:
                         self._gemini_agent.model = "gemini-3.1-flash-lite"
-                        g_res2 = self._gemini_agent.run(query)
+                        g_res2 = self._gemini_agent.run(query, session_id=session_id)
                         if g_res2.get("success") and g_res2.get("answer"):
                             return AgentResult(
                                 query=query,

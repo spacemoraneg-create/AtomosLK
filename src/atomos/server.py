@@ -109,12 +109,18 @@ def create_app(db_conn=None) -> Flask:
     @app.route("/api/ask", methods=["POST"])
     def ask():
         payload = request.get_json(force=True, silent=True) or {}
+        session_id = str(payload.get("session_id") or request.headers.get("X-Session-ID") or "default").strip()
+
+        if payload.get("reset"):
+            agent.reset_memory(session_id=session_id)
+            return jsonify({"status": "reset", "session_id": session_id, "success": True})
+
         query = payload.get("query") or request.args.get("q")
         if not query:
             return jsonify({"error": "Missing required field 'query' in JSON body or 'q' query parameter."}), 400
 
         try:
-            result = agent.ask(query)
+            result = agent.ask(query, session_id=session_id)
             return jsonify(result.to_dict())
         except Exception as exc:
             try:
@@ -131,6 +137,13 @@ def create_app(db_conn=None) -> Flask:
                     "success": False,
                     "error": str(exc),
                 }), 200
+
+    @app.route("/api/chat/reset", methods=["POST"])
+    def reset_chat():
+        payload = request.get_json(force=True, silent=True) or {}
+        session_id = str(payload.get("session_id") or request.headers.get("X-Session-ID") or "default").strip()
+        agent.reset_memory(session_id=session_id)
+        return jsonify({"status": "reset", "session_id": session_id, "success": True})
 
     # 3. Unified Entity Search
     @app.route("/api/search", methods=["GET"])

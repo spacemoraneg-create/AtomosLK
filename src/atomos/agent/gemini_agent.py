@@ -301,21 +301,28 @@ class GeminiAgent:
 
         self.function_declarations = [s["function"] for s in TOOL_SCHEMAS]
         self.max_history_turns = max_history_turns
-        # Persistent multi-turn conversation memory
+        # Isolated multi-turn session memory: session_id -> list of contents
+        self.sessions: Dict[str, List[Dict[str, Any]]] = {}
         self.conversation_history: List[Dict[str, Any]] = []
 
     def close(self):
         if self._owned_query and self.query_engine:
             self.query_engine.close()
 
-    def reset_memory(self):
-        """Clear session conversational memory."""
-        self.conversation_history = []
+    def reset_memory(self, session_id: Optional[str] = None):
+        """Clear conversational memory for a specific session or all sessions."""
+        if session_id:
+            self.sessions.pop(session_id, None)
+            if session_id == "default":
+                self.conversation_history = []
+        else:
+            self.sessions.clear()
+            self.conversation_history = []
 
-    def run(self, query: str, max_turns: int = 20) -> Dict[str, Any]:
+    def run(self, query: str, session_id: str = "default", max_turns: int = 20) -> Dict[str, Any]:
         """
         Execute an autonomous multi-turn reasoning and tool-calling loop,
-        maintaining conversational history across calls.
+        maintaining conversational history across calls for the given session.
         """
         if not self.api_key:
             return {
@@ -334,7 +341,8 @@ class GeminiAgent:
                 candidate_models.append(fallback)
 
         # Build contents from conversation history + new user query
-        contents = list(self.conversation_history)
+        session_history = self.sessions.get(session_id, [])
+        contents = list(session_history)
         contents.append({"role": "user", "parts": [{"text": query}]})
 
         # Trim oldest turns if history exceeds max capacity (keep even number of turns)
@@ -488,6 +496,7 @@ class GeminiAgent:
 
         if success:
             # Update persistent conversation memory with the completed turn
+            self.sessions[session_id] = contents
             self.conversation_history = contents
             return {
                 "query": query,

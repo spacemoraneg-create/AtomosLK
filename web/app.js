@@ -2348,9 +2348,45 @@
   // ==========================================================================
   // 5. AI CHATBOT PAGE
   // ==========================================================================
+  // ==========================================================================
+  function getChatSessionId() {
+    let sid = sessionStorage.getItem('atomos_chat_session_id');
+    if (!sid) {
+      sid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
+      sessionStorage.setItem('atomos_chat_session_id', sid);
+    }
+    return sid;
+  }
+
   function initChatPage() {
     const input = document.getElementById('chatInput');
     const sendBtn = document.getElementById('chatSendBtn');
+    const clearBtn = document.getElementById('clearChatBtn');
+    const messages = document.getElementById('chatMessages');
+
+    if (clearBtn) {
+      clearBtn.addEventListener('click', async () => {
+        const sid = getChatSessionId();
+        try {
+          await fetch(`${state.apiUrl}/api/chat/reset`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ session_id: sid }),
+          });
+        } catch (e) {
+          console.warn('Reset chat failed:', e);
+        }
+        // Generate new session ID
+        sessionStorage.removeItem('atomos_chat_session_id');
+        if (messages) {
+          messages.innerHTML = `
+            <div class="chat-bubble bot">
+              <strong>Atomos AI:</strong> Session reset. What would you like to explore about the circuit?
+            </div>
+          `;
+        }
+      });
+    }
 
     if (sendBtn) {
       sendBtn.addEventListener('click', () => {
@@ -2389,15 +2425,17 @@
 
     const botMsg = document.createElement('div');
     botMsg.className = 'chat-bubble bot';
-    botMsg.innerHTML = `<em>Thinking... querying Gemini 3.1 & atomos.db...</em>`;
+    botMsg.innerHTML = `<em>Thinking... querying Gemini 3.6 Flash & atomos.db...</em>`;
     messages.appendChild(botMsg);
     messages.scrollTop = messages.scrollHeight;
+
+    const sid = getChatSessionId();
 
     try {
       const res = await fetch(`${state.apiUrl}/api/ask`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ query: promptText }),
+        body: JSON.stringify({ query: promptText, session_id: sid }),
       });
 
       if (res.ok) {

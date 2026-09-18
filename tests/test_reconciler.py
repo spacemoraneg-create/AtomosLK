@@ -9,6 +9,7 @@ import pytest
 from atomos.normalizer.reconciler import TabReconciler
 from atomos.normalizer.validator import IntegrityValidator
 from atomos.normalizer.tournament_normalizer import TournamentNormalizer
+from atomos.database.connection import get_connection
 
 
 @pytest.fixture
@@ -70,15 +71,9 @@ class TestTabReconcilerCategories:
         assert report.is_valid is True
         assert len(report.critical_errors) == 0
 
-    def test_reconstruct_missing_debates_from_tabs_on_metho(self, in_memory_db):
-        raw_dir = Path("data/raw/metho2026")
-        if not raw_dir.exists():
-            pytest.skip("data/raw/metho2026 does not exist")
-
-        normalizer = TournamentNormalizer(in_memory_db)
-        t_id = normalizer.normalize_tournament(raw_dir)
-
-        cur = in_memory_db.cursor()
+    def test_reconstruct_missing_debates_from_tabs_on_metho(self):
+        conn = get_connection()
+        cur = conn.cursor()
 
         # The 3 debates with 500 server errors on Tabbycat must be reconstructed
         cur.execute("""
@@ -98,16 +93,17 @@ class TestTabReconcilerCategories:
             assert "Reconstructed" in r["adjudicator_raw_name"]
             assert r["winner_side"] in ["Proposition", "Opposition"]
 
-        # Out-rounds (R6..R9) must have 0 walkovers
+        # Out-rounds on Metho (R6..R9) must have 0 walkovers
         cur.execute("""
             SELECT COUNT(*) as cnt FROM debates d
             JOIN rounds r ON d.round_id = r.id
-            WHERE r.round_number >= 6 AND d.is_walkover = 1
+            JOIN tournaments t ON r.tournament_id = t.id
+            WHERE t.slug = 'metho2026' AND r.round_number >= 6 AND d.is_walkover = 1
         """)
         assert cur.fetchone()["cnt"] == 0
 
         # Run integrity validator
-        validator = IntegrityValidator(in_memory_db)
+        validator = IntegrityValidator(conn)
         report = validator.validate()
         assert report.is_valid is True
         assert len(report.critical_errors) == 0
