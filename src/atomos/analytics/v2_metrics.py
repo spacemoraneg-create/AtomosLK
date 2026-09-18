@@ -1262,25 +1262,36 @@ class V2MetricsEngine:
         wins = sum(r["won"] for r in deb_rows if r["won"])
         win_pct = round((wins / tot_debates * 100.0), 1) if tot_debates else 0.0
 
-        # Speaker position breakdown (1st, 2nd, 3rd, Reply)
+        # Speaker position breakdown (1st, 2nd, 3rd) - combination of individual speeches in those spots
         positions = {}
         for pos in ["1st", "2nd", "3rd"]:
             cur.execute("""
-                SELECT total_score
-                FROM speech_performances
-                WHERE person_id = ? AND position = ? AND speech_type = 'SUBSTANTIVE' AND total_score > 0
+                SELECT sp.debate_id, AVG(sp.total_score) as speech_score
+                FROM speech_performances sp
+                JOIN debates d ON sp.debate_id = d.id
+                WHERE sp.person_id = ?
+                  AND sp.position = ?
+                  AND sp.speech_type = 'SUBSTANTIVE'
+                  AND d.is_walkover = 0
+                  AND sp.total_score > 0
+                GROUP BY sp.debate_id, sp.position
             """, (pid, pos))
-            pos_scores = [float(r["total_score"]) for r in cur.fetchall()]
+            pos_scores = [float(r["speech_score"]) for r in cur.fetchall()]
             avg = round(sum(pos_scores) / len(pos_scores), 2) if pos_scores else 0.0
             positions[pos] = {"count": len(pos_scores), "average": avg}
 
-        # Reply speeches
+        # Reply speeches - combination of individual reply speeches
         cur.execute("""
-            SELECT total_score
-            FROM speech_performances
-            WHERE person_id = ? AND speech_type = 'REPLY' AND total_score > 0
+            SELECT sp.debate_id, AVG(sp.total_score) as speech_score
+            FROM speech_performances sp
+            JOIN debates d ON sp.debate_id = d.id
+            WHERE sp.person_id = ?
+              AND sp.speech_type = 'REPLY'
+              AND d.is_walkover = 0
+              AND sp.total_score > 0
+            GROUP BY sp.debate_id, sp.position
         """, (pid,))
-        rep_scores = [float(r["total_score"]) for r in cur.fetchall()]
+        rep_scores = [float(r["speech_score"]) for r in cur.fetchall()]
         rep_avg = round(sum(rep_scores) / len(rep_scores), 2) if rep_scores else 0.0
         positions["Reply"] = {"count": len(rep_scores), "average": rep_avg}
 

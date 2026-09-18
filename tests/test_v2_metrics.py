@@ -230,3 +230,18 @@ class TestV2RestApi:
         r = client.get("/api/v2/adjudicators/Senuka%20Seneviratne/bio")
         assert r.status_code == 200
         assert r.get_json()["adjudicator_name"] == "Senuka Seneviratne"
+
+    def test_debater_position_breakdown(self, v2):
+        prof = v2.get_debater_v2_profile("Balishta Wijesinghe")
+        assert prof is not None
+        pos = prof["position_averages"]
+        assert pos["1st"]["count"] == 3
+        assert round(pos["1st"]["average"], 2) == 70.67
+        assert pos["2nd"]["count"] == 14
+        assert round(pos["2nd"]["average"], 2) == 71.50
+        assert pos["3rd"]["count"] == 19
+        assert round(pos["3rd"]["average"], 2) == 70.96
+        assert pos["Reply"]["count"] == 14
+        assert round(pos["Reply"]["average"], 2) == 35.50
+        # Check sum of substantive counts equals 36
+        assert pos["1st"]["count"] + pos["2nd"]["count"] + pos["3rd"]["count"] == 36
