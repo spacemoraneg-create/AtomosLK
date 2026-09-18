@@ -1088,14 +1088,16 @@
               <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
                 <div class="t-info-title">${escapeHtml(t.tournament_name)}</div>
                 <div style="font-family: var(--font-mono); font-size: 13px; color: #38bdf8; font-weight: 700;">
-                  Event Avg: ${fmt(t.tournament_average, 2)} pts (${t.speeches_count} speeches)
+                  Event Avg: ${fmt(t.tournament_average, 2)} pts (${t.speeches_count} prelim speeches)
                 </div>
               </div>
               <div class="score-pills">
-                ${(t.rounds || []).map((r) => `
+                ${(t.rounds || []).map((r) => {
+                  const isReply = r.speech_type === 'REPLY';
+                  return `
                   <div class="round-hover-trigger">
-                    <span class="score-pill" style="cursor: pointer;">
-                      ${r.speech_type === 'REPLY' ? 'Reply: ' : ''}${fmt(r.score, 1)}
+                    <span class="score-pill" style="cursor: pointer; ${isReply ? 'background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); color: #d8b4fe;' : ''}">
+                      ${isReply ? 'Reply: ' : ''}${fmt(r.score, 1)}
                     </span>
                     <div class="round-tooltip">
                       <div class="tooltip-title">${escapeHtml(r.round_name || 'Round ' + r.round_number)}</div>
@@ -1105,7 +1107,7 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">SCORE:</span>
-                        <span style="font-weight: 700; color: #38bdf8;">${fmt(r.score, 1)}</span>
+                        <span style="font-weight: 700; color: ${isReply ? '#d8b4fe' : '#38bdf8'};">${fmt(r.score, 1)}</span>
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">JUDGE:</span>
@@ -1113,11 +1115,11 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">POSITION:</span>
-                        <span style="color: #34d399;">${escapeHtml(r.position)}</span>
+                        <span style="color: ${isReply ? '#c084fc' : '#34d399'};">${escapeHtml(r.position)}</span>
                       </div>
                     </div>
                   </div>
-                `).join('')}
+                `;}).join('')}
               </div>
             </div>
           `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}

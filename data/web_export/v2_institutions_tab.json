@@ -68,6 +68,33 @@
     "rank": 3
   },
   {
+    "institution_id": 1,
+    "institution_name": "Trinity College Kandy",
+    "code": "TCK",
+    "delta": 246.28,
+    "a_team_name": "Trinity A",
+    "a_atss": 248.87,
+    "b_team_name": "TCK B",
+    "b_atss": 244.55,
+    "net_diff": 4.32,
+    "win_percentage": 50.9,
+    "pool_count": 61,
+    "tournaments_debated": 8,
+    "teams_count": 9,
+    "teams_list": [
+      "TCK A",
+      "TCK B",
+      "TCK C",
+      "TCK Juchith",
+      "TCK Munchi",
+      "TCK Pettiya",
+      "TCK Senukans",
+      "Trinity A",
+      "Trinity B"
+    ],
+    "rank": 4
+  },
+  {
     "institution_id": 7,
     "institution_name": "Visakha Vidyalaya",
     "code": "VV",
@@ -90,7 +117,7 @@
       "VV VI",
       "VV VII"
     ],
-    "rank": 4
+    "rank": 5
   },
   {
     "institution_id": 6,
@@ -114,7 +141,7 @@
       "BC gold",
       "BC purple"
     ],
-    "rank": 5
+    "rank": 6
   },
   {
     "institution_id": 10,
@@ -135,7 +162,7 @@
       "SBC B",
       "SBC C"
     ],
-    "rank": 6
+    "rank": 7
   },
   {
     "institution_id": 8,
@@ -156,7 +183,7 @@
       "STC B",
       "STC C"
     ],
-    "rank": 7
+    "rank": 8
   },
   {
     "institution_id": 5,
@@ -180,18 +207,18 @@
       "AC Labhiyavasabha",
       "AC Theraputthabhaya"
     ],
-    "rank": 8
+    "rank": 9
   },
   {
     "institution_id": 12,
     "institution_name": "Elizabeth Moir School",
     "code": "Moir",
-    "delta": 244.64,
-    "a_team_name": "EMS A",
-    "a_atss": 247.4,
+    "delta": 245.14,
+    "a_team_name": "Moir A",
+    "a_atss": 248.65,
     "b_team_name": "Moir B",
     "b_atss": 242.8,
-    "net_diff": 4.6,
+    "net_diff": 5.85,
     "win_percentage": 64.1,
     "pool_count": 18,
     "tournaments_debated": 5,
@@ -201,7 +228,7 @@
       "Moir A",
       "Moir B"
     ],
-    "rank": 9
+    "rank": 10
   },
   {
     "institution_id": 4,
@@ -224,7 +251,7 @@
       "HCK Sahas",
       "HCK Sanithma"
     ],
-    "rank": 10
+    "rank": 11
   },
   {
     "institution_id": 13,
@@ -249,45 +276,18 @@
       "HFC WHITE",
       "HFC White"
     ],
-    "rank": 11
-  },
-  {
-    "institution_id": 1,
-    "institution_name": "Trinity College Kandy",
-    "code": "TCK",
-    "delta": 243.01,
-    "a_team_name": "Trinity A",
-    "a_atss": 248.87,
-    "b_team_name": "Trinity B",
-    "b_atss": 239.1,
-    "net_diff": 9.77,
-    "win_percentage": 50.9,
-    "pool_count": 61,
-    "tournaments_debated": 8,
-    "teams_count": 9,
-    "teams_list": [
-      "TCK A",
-      "TCK B",
-      "TCK C",
-      "TCK Juchith",
-      "TCK Munchi",
-      "TCK Pettiya",
-      "TCK Senukans",
-      "Trinity A",
-      "Trinity B"
-    ],
     "rank": 12
   },
   {
     "institution_id": 56,
     "institution_name": "Methodist College",
     "code": "MC",
-    "delta": 242.72,
-    "a_team_name": "MC A",
-    "a_atss": 242.1,
+    "delta": 243.02,
+    "a_team_name": "Metho A",
+    "a_atss": 242.85,
     "b_team_name": "Metho B",
     "b_atss": 243.14,
-    "net_diff": 1.04,
+    "net_diff": 0.29,
     "win_percentage": 44.8,
     "pool_count": 15,
     "tournaments_debated": 4,
@@ -387,12 +387,12 @@
     "institution_id": 25,
     "institution_name": "St. John's College Jaffna",
     "code": "SJCJ",
-    "delta": 241.31,
-    "a_team_name": "SJCJ A",
-    "a_atss": 239.79,
+    "delta": 241.32,
+    "a_team_name": "SJOC A",
+    "a_atss": 239.8,
     "b_team_name": "SJCJ B",
     "b_atss": 242.33,
-    "net_diff": 2.54,
+    "net_diff": 2.53,
     "win_percentage": 33.3,
     "pool_count": 12,
     "tournaments_debated": 3,
@@ -468,12 +468,12 @@
     "institution_id": 20,
     "institution_name": "Nalanda College",
     "code": "NC",
-    "delta": 235.06,
-    "a_team_name": "Nalanda A",
-    "a_atss": 236.2,
+    "delta": 237.11,
+    "a_team_name": "NC A",
+    "a_atss": 241.33,
     "b_team_name": "NC B",
     "b_atss": 234.3,
-    "net_diff": 1.9,
+    "net_diff": 7.03,
     "win_percentage": 33.3,
     "pool_count": 27,
     "tournaments_debated": 6,

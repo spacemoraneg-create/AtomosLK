@@ -1295,66 +1295,56 @@ class V2MetricsEngine:
         rep_avg = round(sum(rep_scores) / len(rep_scores), 2) if rep_scores else 0.0
         positions["Reply"] = {"count": len(rep_scores), "average": rep_avg}
 
-        # Tournament breakdown with round-level hover details
-        cur.execute("""
-            SELECT tour.id as tournament_id,
-                   tour.slug as tournament_slug,
-                   tour.name as tournament_name,
-                   r.round_number,
-                   r.name as round_name,
-                   r.round_type,
-                   sp.position,
-                   sp.speech_type,
-                   sp.total_score,
-                   b.adjudicator_raw_name as adjudicator,
-                   opp_t.name as opp_team_name
-            FROM speech_performances sp
-            JOIN rounds r ON sp.round_id = r.id
-            JOIN tournaments tour ON r.tournament_id = tour.id
-            JOIN debates d ON sp.debate_id = d.id
-            LEFT JOIN teams opp_t ON (CASE WHEN d.prop_team_id = sp.team_id THEN d.opp_team_id ELSE d.prop_team_id END) = opp_t.id
-            LEFT JOIN adjudicator_ballots b ON sp.ballot_id = b.id
-            WHERE sp.person_id = ? AND sp.total_score > 0
-            ORDER BY tour.id ASC, r.round_number ASC
-        """, (pid,))
-        round_entries = cur.fetchall()
-
-        tour_dict = {}
-        for re in round_entries:
-            tslug = re["tournament_slug"]
-            tname = CLEAN_TOURNAMENT_NAMES.get(re["tournament_id"], re["tournament_name"])
-            if tslug not in tour_dict:
-                tour_dict[tslug] = {
-                    "tournament_name": tname,
-                    "slug": tslug,
-                    "substantive_scores": [],
-                    "rounds": []
-                }
-            if re["speech_type"] == "SUBSTANTIVE":
-                tour_dict[tslug]["substantive_scores"].append(float(re["total_score"]))
-
-            tour_dict[tslug]["rounds"].append({
-                "round_number": re["round_number"],
-                "round_name": re["round_name"],
-                "round_type": re["round_type"],
-                "position": re["position"],
-                "speech_type": re["speech_type"],
-                "score": float(re["total_score"]),
-                "adjudicator": re["adjudicator"] or "Adjudication Panel",
-                "opponent": re["opp_team_name"] or "TBD",
-            })
+        # Tournament breakdown with round-level hover details using verified DebaterProfileEngine
+        from atomos.analytics.debater_profile import DebaterProfileEngine
+        prof_engine = DebaterProfileEngine(self.conn)
+        base_prof = prof_engine.get_profile(pid)
 
         tournament_breakdown = []
-        for tslug, tg in tour_dict.items():
-            t_scores = tg["substantive_scores"]
-            t_avg = round(sum(t_scores) / len(t_scores), 2) if t_scores else 0.0
-            tournament_breakdown.append({
-                "tournament_name": tg["tournament_name"],
-                "slug": tslug,
-                "tournament_average": t_avg,
-                "speeches_count": len(t_scores),
-                "rounds": tg["rounds"],
-            })
+        if base_prof:
+            for t in base_prof.tournaments:
+                tname = CLEAN_TOURNAMENT_NAMES.get(t.tournament_id, t.tournament_name)
+                sub_scores = t.prelim_substantive_scores
+                t_avg = round(t.tournament_average, 2) if t.tournament_average is not None else 0.0
+
+                rounds_list = []
+                for r in t.prelim_rounds:
+                    counted_spk = [sp for sp in r.speeches if sp.is_counted_in_tab]
+                    counted_pos = counted_spk[0].position if counted_spk else 'Substantive'
+                    judges = list(dict.fromkeys(sp.judge_name for sp in r.speeches if sp.judge_name))
+                    judge_str = ', '.join(judges) if judges else 'Adjudication Panel'
+
+                    if r.substantive_score is not None:
+                        rounds_list.append({
+                            'round_number': r.round_number,
+                            'round_name': r.round_name,
+                            'round_type': r.round_type,
+                            'position': counted_pos,
+                            'speech_type': 'SUBSTANTIVE',
+                            'score': round(r.substantive_score, 2),
+                            'adjudicator': judge_str,
+                            'opponent': r.opp_team_name,
+                        })
+
+                    if r.reply_score is not None:
+                        rounds_list.append({
+                            'round_number': r.round_number,
+                            'round_name': r.round_name,
+                            'round_type': r.round_type,
+                            'position': 'Reply',
+                            'speech_type': 'REPLY',
+                            'score': round(r.reply_score, 2),
+                            'adjudicator': judge_str,
+                            'opponent': r.opp_team_name,
+                        })
+
+                tournament_breakdown.append({
+                    'tournament_name': tname,
+                    'slug': t.tournament_slug,
+                    'tournament_average': t_avg,
+                    'speeches_count': len(sub_scores),
+                    'rounds': rounds_list
+                })
 
         return {
             "person_id": pid,
