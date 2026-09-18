@@ -1,0 +1,682 @@
+{
+  "tournament_name": "Vijis '26 | Welcome to Dr. Vijitha Weerasinghe Memorial Debating Championship 2026",
+  "tournament_slug": "vijis26",
+  "total_elimination_stages": 5,
+  "champion": {
+    "team": "TCK A",
+    "institution": "Trinity College Kandy"
+  },
+  "runner_up": {
+    "team": "VV A",
+    "institution": "Visakha Vidyalaya"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Octofinals",
+      "round_number": 6,
+      "motion": "This House opposes the narrative that young love will fail",
+      "info_slide": null,
+      "matches_count": 8,
+      "matchups": [
+        {
+          "debate_id": 337,
+          "venue": "Partial Double Octo-Final @ Room 06",
+          "proposition": {
+            "team_name": "SACK A",
+            "institution": "St. Anthony's College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC C",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "SACK A",
+            "winner_institution": "St. Anthony's College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Dinal Wellappili)"
+          ]
+        },
+        {
+          "debate_id": 339,
+          "venue": "Partial Double Octo-Final @ Room 05",
+          "proposition": {
+            "team_name": "SBC A",
+            "institution": "St. Bridget's Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC B",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "STC B",
+            "winner_institution": "S. Thomas' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Himanshu Jayasinghe)"
+          ]
+        },
+        {
+          "debate_id": 341,
+          "venue": "Partial Double Octo-Final @ Room 03",
+          "proposition": {
+            "team_name": "DRCK A",
+            "institution": "Dharmaraja College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "SPC A",
+            "institution": "St. Peter's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "DRCK A",
+            "winner_institution": "Dharmaraja College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne)"
+          ]
+        },
+        {
+          "debate_id": 343,
+          "venue": "Partial Double Octo-Final @ Room 07",
+          "proposition": {
+            "team_name": "RISK A",
+            "institution": "Royal International School Kurunegala",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC C",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "LC C",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Adam Dhilshan)"
+          ]
+        },
+        {
+          "debate_id": 345,
+          "venue": "Partial Double Octo-Final @ Room 01",
+          "proposition": {
+            "team_name": "LC B",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AC B",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "AC B",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Attauda)"
+          ]
+        },
+        {
+          "debate_id": 347,
+          "venue": "Round 6",
+          "proposition": {
+            "team_name": "IC A",
+            "institution": "Isipathana College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "STC A",
+            "winner_institution": "S. Thomas' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Kulith Wickramasinghe)"
+          ]
+        },
+        {
+          "debate_id": 349,
+          "venue": "Round 6",
+          "proposition": {
+            "team_name": "DS B",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV B",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV B",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Mevindu Asuramanna)"
+          ]
+        },
+        {
+          "debate_id": 351,
+          "venue": "Round 6",
+          "proposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HFC A",
+            "institution": "Holy Family Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "Moir A",
+            "winner_institution": "Elizabeth Moir School",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Suchith Tissera)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Octofinals",
+      "round_number": 7,
+      "motion": "This House would destroy the painting",
+      "info_slide": null,
+      "matches_count": 8,
+      "matchups": [
+        {
+          "debate_id": 353,
+          "venue": "Octo-Final @ Room 02",
+          "proposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "TCK A",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sarah Warnakulasuriya)"
+          ]
+        },
+        {
+          "debate_id": 355,
+          "venue": "Octo-Final @ Room 08",
+          "proposition": {
+            "team_name": "TCK B",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AC B",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "AC B",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Adam Dhilshan)"
+          ]
+        },
+        {
+          "debate_id": 357,
+          "venue": "Octo-Final @ Room 01",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV B",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV B",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sandil Ranasinghe)"
+          ]
+        },
+        {
+          "debate_id": 359,
+          "venue": "Octo-Final @ Room 06",
+          "proposition": {
+            "team_name": "DRCK A",
+            "institution": "Dharmaraja College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne)"
+          ]
+        },
+        {
+          "debate_id": 361,
+          "venue": "Octo-Final @ Room 04",
+          "proposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "SACK A",
+            "institution": "St. Anthony's College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "LC A",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Savith Wijesundara)"
+          ]
+        },
+        {
+          "debate_id": 363,
+          "venue": "Round 7",
+          "proposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV A",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Mevindu Asuramanna)"
+          ]
+        },
+        {
+          "debate_id": 365,
+          "venue": "Round 7",
+          "proposition": {
+            "team_name": "LC C",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "LC C",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Suchith Tissera)"
+          ]
+        },
+        {
+          "debate_id": 367,
+          "venue": "Round 7",
+          "proposition": {
+            "team_name": "STC B",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Kulith Wickramasinghe)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 8,
+      "motion": "This House believes that it is in the interests of the Catholic Pope to have a foreign policy stance",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 369,
+          "venue": "Quarter Final @ Room 04",
+          "proposition": {
+            "team_name": "VV B",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Mevindu Asuramanna , Kulith Wickramasinghe , Lehara Edirisinghe)"
+          ]
+        },
+        {
+          "debate_id": 371,
+          "venue": "Quarter Final @ Room 02",
+          "proposition": {
+            "team_name": "LC C",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV A",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Visura Padeniya)"
+          ]
+        },
+        {
+          "debate_id": 373,
+          "venue": "Quarter Final @ Room 03",
+          "proposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AC B",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "TCK A",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sarah Warnakulasuriya)"
+          ]
+        },
+        {
+          "debate_id": 375,
+          "venue": "Quarter Final @ Room 01",
+          "proposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Suchith Tissera , Sandil Ranasinghe , Senuka Seneviratne)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 9,
+      "motion": "This House regrets the rise of the far-left",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 377,
+          "venue": "Semi-Final @ Room 03",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV A",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne , Akindu Attauda , Raashid Cassim)"
+          ]
+        },
+        {
+          "debate_id": 379,
+          "venue": "Semi-Final @ Room 02",
+          "proposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "TCK A",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Gavin Senaratne , Shakeeb Mohideen , Visura Padeniya 💢)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 10,
+      "motion": "This House, as Cobb, would choose to stay in limbo",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 381,
+          "venue": "Grand Final @ Room 01",
+          "proposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "TCK A",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shalem Sumanthiran , Akindu Attauda , Raashid Cassim , Sanithma Jayasooriya , Visura Padeniya)"
+          ]
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+[project]
+name = "atomos"
+version = "1.0.0"
+description = "Intelligence & Analytical Engine for Sri Lankan WSDC Debating Circuit"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "requests>=2.31.0",
+    "flask>=3.0.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pytest>=8.0.0",
+]
+
+[project.scripts]
+atomos = "atomos.agent.orchestrator:main"
+atomos-server = "atomos.server:run_server"
+
+[tool.pyright]
+extraPaths = ["src", "scripts"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["src"]
+

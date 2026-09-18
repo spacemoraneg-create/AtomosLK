@@ -1,0 +1,445 @@
+{
+  "tournament_name": "Metho 2026 | Welcome to Shanthi Peiris Memorial Debating Championship 2026",
+  "tournament_slug": "metho2026",
+  "total_elimination_stages": 4,
+  "champion": {
+    "team": "RC B",
+    "institution": "Royal College"
+  },
+  "runner_up": {
+    "team": "HCK A",
+    "institution": "Hillwood College Kandy"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Octofinals",
+      "round_number": 6,
+      "motion": "This House Prefers a world where marriage is a fixed-term, renewable contract rather than a lifelong commitment.",
+      "info_slide": null,
+      "matches_count": 8,
+      "matchups": [
+        {
+          "debate_id": 2147,
+          "venue": "Octofinals @ Room 3",
+          "proposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "AIS A",
+            "winner_institution": "Asian International School",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sanithma Jayasooriya , Amnah Jiffrey , Nethma Madawala)"
+          ]
+        },
+        {
+          "debate_id": 2149,
+          "venue": "Octofinals @ Room 1",
+          "proposition": {
+            "team_name": "IC A",
+            "institution": "IC",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Undecided / Tie",
+            "winner_team": "Undecided",
+            "winner_institution": "Undecided",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": []
+        },
+        {
+          "debate_id": 2151,
+          "venue": "Octofinals @ Room 8",
+          "proposition": {
+            "team_name": "BSC A",
+            "institution": "The British School in Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Undecided / Tie",
+            "winner_team": "Undecided",
+            "winner_institution": "Undecided",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": []
+        },
+        {
+          "debate_id": 2153,
+          "venue": "Octofinals @ Room 5",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "SBC A",
+            "institution": "St. Bridget's Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Undecided / Tie",
+            "winner_team": "Undecided",
+            "winner_institution": "Undecided",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": []
+        },
+        {
+          "debate_id": 2155,
+          "venue": "Octofinals @ Room 7",
+          "proposition": {
+            "team_name": "GCD A",
+            "institution": "Gateway College Dehiwala",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Undecided / Tie",
+            "winner_team": "Undecided",
+            "winner_institution": "Undecided",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": []
+        },
+        {
+          "debate_id": 2157,
+          "venue": "Octofinals @ Room 2",
+          "proposition": {
+            "team_name": "SIS A",
+            "institution": "Stafford International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "SIS A",
+            "winner_institution": "Stafford International School",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne)"
+          ]
+        },
+        {
+          "debate_id": 2159,
+          "venue": "Octofinals @ Room 6",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC B",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Kulith Wickramasinghe)"
+          ]
+        },
+        {
+          "debate_id": 2161,
+          "venue": "Octofinals @ Room 4",
+          "proposition": {
+            "team_name": "LC B",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "LC B",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Naika)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 7,
+      "motion": "This house, as the anti-AI movement, would prioritize existential risks over near-term harms in its messaging.",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 2163,
+          "venue": "Quarterfinals @ Room 3",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Anah Cassim , Naika , Sanithma Jayasooriya)"
+          ]
+        },
+        {
+          "debate_id": 2165,
+          "venue": "Quarterfinals @ Room 2",
+          "proposition": {
+            "team_name": "LC B",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Jayageeth Basnayake , Amnah Jiffrey , Senuka Seneviratne)"
+          ]
+        },
+        {
+          "debate_id": 2167,
+          "venue": "Quarterfinals @ Room 4",
+          "proposition": {
+            "team_name": "SIS A",
+            "institution": "Stafford International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "GCD A",
+            "institution": "Gateway College Dehiwala",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Undecided / Tie",
+            "winner_team": "Undecided",
+            "winner_institution": "Undecided",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": []
+        },
+        {
+          "debate_id": 2169,
+          "venue": "Quarterfinals @ Room 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Daniel)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 8,
+      "motion": "This house supports the glorification of female rage in television and film (Amy Dunne in Gone Girl, Maxxine in Pearl, Kiddo in Kill Bill).",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 2171,
+          "venue": "Semifinals @ Room 2",
+          "proposition": {
+            "team_name": "GCD A",
+            "institution": "Gateway College Dehiwala",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Undecided / Tie",
+            "winner_team": "Undecided",
+            "winner_institution": "Undecided",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": []
+        },
+        {
+          "debate_id": 2173,
+          "venue": "Semifinals @ Room 1",
+          "proposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shakeeb Mohideen , Daniel , Sarah Warnakulasuriya)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 9,
+      "motion": "Assuming you are middle class, TH prefers living life in focus mode rather than in flow mode.",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 2175,
+          "venue": "Grand Final @ Room 1",
+          "proposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Naika , Anah Cassim , Jayageeth Basnayake , Sarah Warnakulasuriya , Shenaya Rodrigo)"
+          ]
+        }
+      ]
+    }
+  ]
+}

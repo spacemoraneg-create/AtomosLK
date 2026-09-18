@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>AI Chatbot - Atomos V1</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- Top Tabbycat-style Navigation Bar -->
+  <header class="tabby-nav">
+    <div class="nav-brand">
+      <a href="index.html" class="nav-brand-link">
+        <span class="nav-brand-name">ATOMOS</span>
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="leaderboards.html" class="nav-link">LEADERBOARDS</a>
+      <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
+      <a href="bio.html" class="nav-link">BIO ENGINE</a>
+      <a href="chat.html" class="nav-link active">AI CHATBOT</a>
+      <a href="admin.html" class="nav-link">ADMIN</a>
+    </nav>
+  </header>
+
+  <main class="subpage-container">
+    <div class="subpage-card">
+      <div class="subpage-title">
+        <span>ATOMOS AI DEBATE INTELLIGENCE CONSOLE</span>
+        <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">GEMINI 3.1 FLASH LITE & ATOMOS.DB</span>
+      </div>
+
+      <!-- Chat Window -->
+      <div class="chat-window">
+        <div class="chat-messages" id="chatMessages">
+          <div class="chat-bubble bot">
+            <strong>Atomos AI:</strong> Hi! I am Atomos. I combine the intelligence of Gemini 3.1 with the data of Atomos's proprietary database. I am designed to answer any and every debate statistics-based question—ask whatever you can think of, and I will answer with the most accurate information.
+          </div>
+        </div>
+
+        <!-- Suggestion Chips -->
+        <div class="quick-chips-row">
+          <button class="quick-chip" onclick="window.AtomosApp.sendChatPrompt('Who is ranked #1 on the circuit?')">Who is ranked #1?</button>
+          <button class="quick-chip" onclick="window.AtomosApp.sendChatPrompt('What is Balishta Wijesinghe\'s career record?')">Balishta's record?</button>
+          <button class="quick-chip" onclick="window.AtomosApp.sendChatPrompt('List all National Pool Direct debaters.')">National Pool Direct list</button>
+          <button class="quick-chip" onclick="window.AtomosApp.sendChatPrompt('Tell me about the closeout at Law Fac.')">Law Fac closeout</button>
+        </div>
+
+        <!-- Chat Input Bar -->
+        <div class="chat-input-bar">
+          <input
+            type="text"
+            id="chatInput"
+            class="chat-input"
+            placeholder="Ask Atomos AI anything about debaters, ballots, closeouts, or stats..."
+          />
+          <button class="chat-send-btn" id="chatSendBtn">SEND</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="atomos-footer">
+      <div class="footer-tag">ATOMOS V1</div>
+    </footer>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

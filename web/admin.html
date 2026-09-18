@@ -1,0 +1,398 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Admin Command Console - Atomos V1</title>
+  <link rel="stylesheet" href="styles.css" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- Top Tabbycat-style Navigation Bar -->
+  <header class="tabby-nav">
+    <div class="nav-brand">
+      <a href="index.html" class="nav-brand-link">
+        <span class="nav-brand-name">ATOMOS</span>
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="leaderboards.html" class="nav-link">LEADERBOARDS</a>
+      <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
+      <a href="bio.html" class="nav-link">BIO ENGINE</a>
+      <a href="chat.html" class="nav-link">AI CHATBOT</a>
+      <a href="admin.html" class="nav-link active">ADMIN</a>
+    </nav>
+  </header>
+
+  <main class="subpage-container">
+
+    <!-- ==================================================================== -->
+    <!-- 1. PASSWORD LOCK SCREEN (VISIBLE BY DEFAULT WHEN UNAUTHENTICATED)   -->
+    <!-- ==================================================================== -->
+    <div id="adminLockView" class="subpage-card admin-lock-card">
+      <div class="admin-lock-header">
+        <div class="admin-lock-icon">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+            <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+          </svg>
+        </div>
+        <div class="subpage-title" style="margin-bottom: 6px; font-size: 20px;">
+          <span>ATOMOS SECURITY GATEWAY // RESTRICTED ACCESS</span>
+        </div>
+        <div class="admin-lock-subtitle">
+          Administrative credentials required to inspect relational tables, manage tournament pipelines, and execute system diagnostics.
+        </div>
+      </div>
+
+      <form id="adminLoginForm" class="admin-lock-form" onsubmit="return false;">
+        <div class="admin-form-group">
+          <label for="adminPasswordInput" class="admin-form-label">ADMINISTRATIVE PASSWORD</label>
+          <div class="admin-input-wrap">
+            <input
+              type="password"
+              id="adminPasswordInput"
+              class="admin-password-input"
+              placeholder="Enter administrative password..."
+              autocomplete="current-password"
+              required
+            />
+          </div>
+        </div>
+
+        <div id="adminLoginError" class="admin-error-box hidden"></div>
+
+        <button type="submit" id="adminLoginBtn" class="admin-btn admin-btn-primary" style="width: 100%; justify-content: center;">
+          AUTHENTICATE & UNLOCK CONSOLE
+        </button>
+      </form>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- 2. AUTHENTICATED ADMIN CONSOLE (REVEALED AFTER SUCCESSFUL AUTH)      -->
+    <!-- ==================================================================== -->
+    <div id="adminDashboardView" class="subpage-card hidden">
+      
+      <!-- Top Action Bar -->
+      <div class="admin-top-bar">
+        <div class="admin-bar-left">
+          <div class="subpage-title" style="margin-bottom: 0;">
+            <span>ATOMOS CORE ADMINISTRATION // COMMAND CONSOLE</span>
+          </div>
+          <div class="admin-tags-row">
+            <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">AUTHENTICATED</span>
+            <span class="badge-count" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">SESSION ACTIVE</span>
+            <span class="badge-count" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">SYNTHETIC BALLOTS: 0</span>
+          </div>
+        </div>
+        <div class="admin-bar-right">
+          <button id="adminRefreshBtn" class="admin-btn admin-btn-secondary" title="Refresh all database metrics">
+            REFRESH DATA
+          </button>
+          <button id="adminLockBtn" class="admin-btn admin-btn-danger" title="Lock console and clear session">
+            LOCK CONSOLE
+          </button>
+        </div>
+      </div>
+
+      <!-- Navigation Tabs -->
+      <div class="admin-tabs-nav">
+        <button class="admin-tab-btn active" data-tab="paneStatus" id="tabBtnStatus">
+          1. DATABASE & SYSTEM STATUS
+        </button>
+        <button class="admin-tab-btn" data-tab="paneBio" id="tabBtnBio">
+          2. DATA CONFIRMATION // BIO ENGINE
+        </button>
+        <button class="admin-tab-btn" data-tab="paneTournaments" id="tabBtnTournaments">
+          3. TOURNAMENT OPERATIONS
+        </button>
+        <button class="admin-tab-btn" data-tab="paneTests" id="tabBtnTests">
+          4. DIAGNOSTIC TESTING
+        </button>
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 1: SYSTEM & DATABASE STATUS                                    -->
+      <!-- ================================================================== -->
+      <div id="paneStatus" class="admin-tab-pane active">
+        
+        <!-- Live KPI Stats Grid -->
+        <div class="bio-stats-grid" style="margin-bottom: 24px;">
+          <div class="bio-stat-tile">
+            <div id="kpiTournaments" class="bio-stat-val" style="color: #38bdf8;">--</div>
+            <div class="bio-stat-lbl">Ingested Tournaments</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiDebates" class="bio-stat-val">--</div>
+            <div class="bio-stat-lbl">Contested Debates</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiDebaters" class="bio-stat-val">--</div>
+            <div class="bio-stat-lbl">Registered Persons</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiBallots" class="bio-stat-val">--</div>
+            <div class="bio-stat-lbl">Adjudicator Ballots</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiSpeeches" class="bio-stat-val">--</div>
+            <div class="bio-stat-lbl">Speech Performances</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiFallback" class="bio-stat-val" style="color: #10b981;">0</div>
+            <div class="bio-stat-lbl">Fallback Ballots (Strict 0)</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiIntegrity" class="bio-stat-val" style="color: #10b981;">OK</div>
+            <div class="bio-stat-lbl">Relational Integrity</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div id="kpiDbSize" class="bio-stat-val">-- MB</div>
+            <div class="bio-stat-lbl">SQLite Database Size</div>
+          </div>
+        </div>
+
+        <!-- Database Vitals Summary Box -->
+        <div class="admin-box" style="margin-bottom: 28px;">
+          <div class="admin-box-title">DATABASE INFRASTRUCTURE SPECS</div>
+          <div class="admin-kv-grid">
+            <div class="admin-kv-row">
+              <span class="admin-kv-key">Database Path:</span>
+              <span id="dbFilePath" class="admin-kv-val monospace">--</span>
+            </div>
+            <div class="admin-kv-row">
+              <span class="admin-kv-key">Last Ingest / Modified:</span>
+              <span id="dbLastModified" class="admin-kv-val monospace">--</span>
+            </div>
+            <div class="admin-kv-row">
+              <span class="admin-kv-key">Contested vs Walkovers:</span>
+              <span id="dbDebatesBreakdown" class="admin-kv-val monospace">--</span>
+            </div>
+            <div class="admin-kv-row">
+              <span class="admin-kv-key">Teams & Institutions:</span>
+              <span id="dbTeamsInstitutions" class="admin-kv-val monospace">--</span>
+            </div>
+            <div class="admin-kv-row">
+              <span class="admin-kv-key">National Pool Contingent:</span>
+              <span id="dbNationalPool" class="admin-kv-val monospace">--</span>
+            </div>
+            <div class="admin-kv-row">
+              <span class="admin-kv-key">SQLite Pragma Check:</span>
+              <span id="dbPragmaCheck" class="admin-kv-val monospace" style="color: #34d399;">--</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Ingested Tournaments Table -->
+        <div class="bio-section-heading">INGESTED TOURNAMENTS REGISTRY</div>
+        <div class="table-responsive">
+          <table class="leaderboard-table" id="adminTournamentsTable">
+            <thead>
+              <tr>
+                <th style="width: 50px;">ID</th>
+                <th style="width: 140px;">SLUG</th>
+                <th>TOURNAMENT NAME</th>
+                <th style="width: 70px;">YEAR</th>
+                <th style="width: 85px;">DEBATES</th>
+                <th style="width: 75px;">ROUNDS</th>
+                <th style="width: 75px;">TEAMS</th>
+                <th style="width: 90px;">SPEECHES</th>
+                <th style="width: 110px; text-align: center;">ACTIONS</th>
+              </tr>
+            </thead>
+            <tbody id="adminTournamentsTableBody">
+              <tr>
+                <td colspan="9" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.5);">
+                  Loading tournament records...
+                </td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 2: DATA CONFIRMATION // BIO ENGINE                             -->
+      <!-- ================================================================== -->
+      <div id="paneBio" class="admin-tab-pane">
+        
+        <div class="admin-box" style="margin-bottom: 20px;">
+          <div class="admin-box-title">DEBATER DATA CONFIRMATION & AUDIT</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 14px; line-height: 1.5;">
+            Search any debater below to directly inspect their live database record, exact speech position counts (1st, 2nd, 3rd, Reply), averages, and chronological tournament progression to confirm data accuracy.
+          </p>
+
+          <!-- Search Bar -->
+          <div class="bio-search-box" style="margin-bottom: 12px;">
+            <div class="bio-search-wrap">
+              <input
+                type="text"
+                id="adminBioSearchInput"
+                class="bio-search-input"
+                placeholder="Search debater by name or school (e.g. Vidath Marasinghe, Balishta, Apoorva)..."
+                autocomplete="off"
+              />
+              <button type="button" id="adminBioClearBtn" class="bio-input-clear hidden">&times;</button>
+              <div class="bio-autocomplete-list hidden" id="adminBioSuggestions"></div>
+            </div>
+          </div>
+
+          <!-- Quick Audit Debater Chips -->
+          <div class="admin-chips-row">
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-right: 6px;">QUICK AUDIT:</span>
+            <button class="admin-chip-btn" data-name="Vidath Marasinghe">Vidath Marasinghe</button>
+            <button class="admin-chip-btn" data-name="Apoorva Ekanayake">Apoorva Ekanayake</button>
+            <button class="admin-chip-btn" data-name="Balishta Wijesinghe">Balishta Wijesinghe</button>
+            <button class="admin-chip-btn" data-name="Kulith Senhas">Kulith Senhas</button>
+            <button class="admin-chip-btn" data-name="Mazen Mansoor">Mazen Mansoor</button>
+          </div>
+        </div>
+
+        <!-- Bio Profile Container -->
+        <div id="adminBioProfileContainer">
+          <div class="bio-empty-state" style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            Select a debater above to confirm their raw database records, positions, and tournament trajectory.
+          </div>
+        </div>
+
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 3: TOURNAMENT OPERATIONS (IMPORT / DELETE)                     -->
+      <!-- ================================================================== -->
+      <div id="paneTournaments" class="admin-tab-pane">
+        
+        <div class="admin-grid-2col">
+          
+          <!-- Ingestion Card -->
+          <div class="admin-box">
+            <div class="admin-box-title">IMPORT / INGEST TOURNAMENT</div>
+            <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
+              Provide a public Tabbycat URL or a local raw directory slug to trigger the 4-stage automated ingestion pipeline (Extraction, Normalization, Reconciliation with 0 fake positions, and Integrity Validation).
+            </p>
+
+            <div class="admin-form-group">
+              <label for="importTargetInput" class="admin-form-label">TABBYCAT URL OR SLUG</label>
+              <input
+                type="text"
+                id="importTargetInput"
+                class="admin-text-input"
+                placeholder="https://site.calicotab.com/slug/ or local slug (e.g. ric2026)"
+              />
+            </div>
+
+            <div class="admin-checkbox-row">
+              <input type="checkbox" id="skipExtractCheck" />
+              <label for="skipExtractCheck" style="font-size: 13px; color: rgba(255,255,255,0.8); cursor: pointer;">
+                Skip extraction (use existing raw data in data/raw/&lt;slug&gt;)
+              </label>
+            </div>
+
+            <div id="importStatusBox" class="admin-status-box hidden"></div>
+
+            <button id="startImportBtn" class="admin-btn admin-btn-primary" style="margin-top: 14px;">
+              START INGESTION PIPELINE
+            </button>
+          </div>
+
+          <!-- Purge / Delete Card -->
+          <div class="admin-box">
+            <div class="admin-box-title" style="color: #f87171;">PURGE / DELETE TOURNAMENT</div>
+            <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
+              Safely remove an ingested tournament from the SQLite database. Cascades across all associated rounds, debates, adjudicator ballots, and speech performances, and automatically refreshes all static web exports.
+            </p>
+
+            <div class="admin-form-group">
+              <label for="deleteTournamentSelect" class="admin-form-label">SELECT TOURNAMENT TO PURGE</label>
+              <select id="deleteTournamentSelect" class="admin-select-input">
+                <option value="">-- Choose Tournament --</option>
+              </select>
+            </div>
+
+            <div id="deleteStatusBox" class="admin-status-box hidden"></div>
+
+            <button id="openDeleteModalBtn" class="admin-btn admin-btn-danger" style="margin-top: 14px;">
+              DELETE SELECTED TOURNAMENT
+            </button>
+          </div>
+
+        </div>
+
+      </div>
+
+      <!-- ================================================================== -->
+      <!-- TAB 4: DIAGNOSTIC TESTING                                          -->
+      <!-- ================================================================== -->
+      <div id="paneTests" class="admin-tab-pane">
+        
+        <div class="admin-box" style="margin-bottom: 20px;">
+          <div class="admin-box-title">AUTOMATED DIAGNOSTIC SUITE & INTEGRITY RUNNER</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
+            Execute live diagnostic tests against the active SQLite database to verify relational foreign keys, speaker score rubric boundaries (60-80), winner margins, and ranking math consistency.
+          </p>
+
+          <div class="admin-btn-row">
+            <button id="btnRunIntegrity" class="admin-btn admin-btn-primary">
+              RUN INTEGRITY GATEKEEPER
+            </button>
+            <button id="btnRunAccuracy" class="admin-btn admin-btn-secondary">
+              RUN DATA ACCURACY TESTS
+            </button>
+            <button id="btnRunAllTests" class="admin-btn admin-btn-secondary">
+              RUN FULL TEST SUITE
+            </button>
+            <button id="btnClearTerminal" class="admin-btn admin-btn-outline" style="margin-left: auto;">
+              CLEAR OUTPUT
+            </button>
+          </div>
+        </div>
+
+        <!-- Terminal Window Console -->
+        <div class="admin-terminal">
+          <div class="admin-terminal-header">
+            <div class="admin-terminal-dots">
+              <span class="admin-dot dot-red"></span>
+              <span class="admin-dot dot-yellow"></span>
+              <span class="admin-dot dot-green"></span>
+            </div>
+            <div class="admin-terminal-title">ATOMOS TEST RUNNER // CONSOLE OUTPUT</div>
+            <div id="testStatusBadge" class="admin-terminal-badge">IDLE</div>
+          </div>
+          <pre id="adminTerminalBody" class="admin-terminal-body">Select a test suite above to execute diagnostic validation...</pre>
+        </div>
+
+      </div>
+
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- DELETE CONFIRMATION MODAL                                            -->
+    <!-- ==================================================================== -->
+    <div id="adminDeleteModal" class="admin-modal-backdrop hidden">
+      <div class="admin-modal-card">
+        <div class="admin-modal-title">CONFIRM TOURNAMENT PURGE</div>
+        <p id="deleteModalMessage" class="admin-modal-text">
+          Are you sure you want to permanently delete this tournament? This action cannot be undone.
+        </p>
+        <div class="admin-modal-alert">
+          WARNING: All rounds, debates, adjudicator ballots, and debater speech performances associated with this tournament will be completely erased from the database, and precomputed web caches will be recomputed.
+        </div>
+        <div class="admin-modal-actions">
+          <button id="cancelDeleteBtn" class="admin-btn admin-btn-outline">CANCEL</button>
+          <button id="confirmDeleteBtn" class="admin-btn admin-btn-danger">CONFIRM PERMANENT DELETE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="atomos-footer">
+      <div class="footer-tag">ATOMOS V1 // ADMINISTRATIVE GATEWAY</div>
+    </footer>
+  </main>
+
+  <script src="admin.js"></script>
+</body>
+</html>

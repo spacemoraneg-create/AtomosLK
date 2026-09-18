@@ -1,0 +1,18 @@
+{
+  "total_persons": 788,
+  "total_institutions": 67,
+  "total_tournaments": 8,
+  "total_debates_debated": 908,
+  "total_valid_speeches": 6148,
+  "national_side_balance": {
+    "total_decisions": 922,
+    "prop_wins": 438,
+    "opp_wins": 484,
+    "ties": 0,
+    "prop_win_rate": 47.50542,
+    "opp_win_rate": 52.49458,
+    "dominant_side": "Opposition",
+    "bias_margin": 2.49458,
+    "bias_classification": "SLIGHT_OPP_BIAS"
+  }
+}

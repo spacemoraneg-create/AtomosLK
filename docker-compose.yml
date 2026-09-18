@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  atomos:
+    build: .
+    container_name: atomos_server
+    restart: always
+    ports:
+      - "5000:5000"
+    environment:
+      - GEMINI_API_KEY=${GEMINI_API_KEY}
+      - FLASK_ENV=production
+    volumes:
+      - ./data:/app/data

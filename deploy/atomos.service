@@ -1,0 +1,17 @@
+[Unit]
+Description=Atomos Debate Intelligence Server
+After=network.target
+
+[Service]
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/atomos
+Environment="PATH=/var/www/atomos/venv/bin"
+Environment="PYTHONPATH=/var/www/atomos/src"
+Environment="GEMINI_API_KEY=YOUR_GEMINI_API_KEY"
+ExecStart=/var/www/atomos/venv/bin/gunicorn --workers 3 --bind 127.0.0.1:5000 --timeout 120 "atomos.server:create_app()"
+Restart=always
+RestartSec=5
+
+[Install]
+WantedBy=multi-user.target

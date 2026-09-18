@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leaderboards - Atomos V1</title>
+  <link rel="stylesheet" href="styles.css?v=4" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+</head>
+<body>
+
+  <!-- Top Tabbycat-style Navigation Bar -->
+  <header class="tabby-nav">
+    <div class="nav-brand">
+      <a href="index.html" class="nav-brand-link">
+        <span class="nav-brand-name">ATOMOS</span>
+      </a>
+    </div>
+    <nav class="nav-links">
+      <a href="index.html" class="nav-link">HOME</a>
+      <a href="leaderboards.html" class="nav-link active">LEADERBOARDS</a>
+      <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
+      <a href="bio.html" class="nav-link">BIO ENGINE</a>
+      <a href="chat.html" class="nav-link">AI CHATBOT</a>
+      <a href="admin.html" class="nav-link">ADMIN</a>
+    </nav>
+  </header>
+
+  <main class="subpage-container">
+    <div class="subpage-card">
+      <div class="subpage-title">
+        <span>CIRCUIT MASTER LEADERBOARDS</span>
+      </div>
+
+      <!-- Tabbycat Leaderboard Navigation Tabs & Mode Switcher -->
+      <div class="subpage-tabs-bar">
+        <div class="subpage-tabs">
+          <button class="subpage-tab-btn active" data-tab="individual">Individual Leaderboard</button>
+          <button class="subpage-tab-btn" data-tab="teams">Team Leaderboard</button>
+          <button class="subpage-tab-btn" data-tab="institutions">Institution Leaderboard</button>
+          <button class="subpage-tab-btn" data-tab="activity">Activity Leaderboard</button>
+          <button class="subpage-tab-btn" data-tab="tournaments">Tournament Rankings</button>
+        </div>
+
+        <!-- Option to switch between Tab and Critical Tab (for Individual leaderboard) -->
+        <div class="subpage-mode-switcher" id="individualModeSwitcher" aria-label="Leaderboard Mode">
+          <button class="mode-switch-btn active" data-mode="master">TAB</button>
+          <button class="mode-switch-btn" data-mode="critical">CRITICAL TAB</button>
+        </div>
+      </div>
+
+      <!-- Search Bar -->
+      <div class="filter-bar">
+        <input
+          type="text"
+          id="lbSearchInput"
+          class="filter-input"
+          placeholder="Filter by name or institution..."
+        />
+      </div>
+
+      <!-- Dynamic Data Table -->
+      <div id="lbTableContainer">
+        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Loading leaderboard...</div>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="atomos-footer">
+      <div class="footer-tag">ATOMOS V1</div>
+    </footer>
+  </main>
+
+  <script src="app.js?v=3"></script>
+</body>
+</html>

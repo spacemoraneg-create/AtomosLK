@@ -1,0 +1,136 @@
+Tabulation	Procedures	for	all	Debaters’	Council	Endorsed	Tournaments	
+(WSDC	Format)
+1.	General
+1.1 The	procedures	detailed	in	this	document	have	been	approved	by	the	Board	of	
+Directors	of	the	Debaters’	Council	of	Sri	Lanka
+1.2	Procedures	detailed	in	this	document	are	mandatory at	all	Debaters’	Council	(DC)	
+endorsed	tournaments	in	the	WSDC	format	from	October	2020.	
+1.3	Tabulation	for	all	DC	endorsed	tournaments	will	be	done	through	an online	
+tabulation	software approved	by	the	Tournament	Committee	of the	Debaters’	Council.
+2.	Creating	the	Draw	for	Preliminary	Rounds
+2.1 Preliminary Round 1 shall be randomly drawn. Teams from the same institution will
+not be drawn against each other in the first preliminary round.
+2.2 For all subsequent preliminary rounds, the draw shall be power-paired using an
+approved computer tabulation programme, administered by the Tab Masters.
+2.3 At the end of each preliminary round, from preliminary round 1 to the last, a league
+table shall be calculated by the computer tabulation programme for the purpose of
+preparing the draw for the next round, ranking teams based on the following criteria in
+this order or priority:
+(i) The number of debates which the team has won, followed by
+(ii) The total speaker score of the team, followed by
+(iii)	 The	net	margin	of victory,	for the	team		
+2.4 When creating the draw for each preliminary round from round 2 onwards, teams
+will be divided into brackets made up of teams which have won the same number of
+debates over the preliminary rounds that have already been completed.
+2.5 Each team will be drawn to debate against another team from the same bracket
+as them.		Teams shall not debate against each other more than once during the
+preliminary rounds. If a bracket contains an odd number of teams, a ‘pull-up’ is
+necessary before generating the draw for the bracket. For ‘pull-up’ principles, refer to
+2.6-2.10.
+2.6 When a bracket consists of an odd number of teams, a ‘pull-up’ is necessary to
+ensure that every team in the bracket has an opponent from the same bracket. The
+computer tabulation programme shall determine the ‘pull-up’ teams from the top
+bracket down to the bottom, based on guidelines specified in 2.5, 2.7, 2.8, 2.9 and 2.10.
+2.7 If it is necessary for a team to be ‘pulled-up’, the team which is ‘pulled-up’ shall be
+taken from the bracket immediately below (or the closest available bracket below in
+the event that all teams in the bracket immediately below have either been ‘pulledup’ already, or have competed against all teams in the higher bracket which needs a
+‘pull-up’ team).
+2.8 Teams shall be ‘pulled-up’ to a higher bracket no more than once during
+preliminary rounds, unless no other teams could be pulled-up without violating
+guidelines specified in 2.5, 2.7, 2.8, or 2.9. Each bracket shall contain no more than
+one team that is ‘pulled-up’ from the lower brackets (with the exception of the
+extreme case specified in 2.10).
+2.9 The team which is ‘pulled-up’ to a bracket shall be the team in the middle of the
+bracket immediately below (or the closest available bracket below as explained in 2.7).
+In the event that pulling-up a team would violate 2.5 (avoid repeated matchup) or 2.8
+(‘pull-up’ no more than once), the team that has the next lowest average rank in the
+preliminary round league tables shall be ‘pulled-up’ instead.
+2.10 In the very extreme case (<<1%) where there is an odd number of teams in the
+bottom bracket and all teams in the bottom bracket have already competed against all
+teams in the bracket immediately above them, a team needs to be ‘pulled-up’ from the
+bottom bracket to the third lowest bracket in order to meet the guidelines specified in
+2.5 (avoid repeated matchup). If the third lowest bracket originally requires a ‘pull-up’
+team, the ‘pull-up’ team shall come from the bottom bracket instead of the second
+lowest bracket; If the third lowest bracket does not need a ‘pull-up’ team before
+‘pulling-up’ a team from the bottom bracket, another ‘pull-up’ needs to be made from
+the second lowest bracket based on guidelines specified in 2.9.
+2.11 Once all brackets contain an even number of teams, the computer tabulation
+software shall rank all teams based on the following criteria in this order or priority:
+(i) The average judges’ scores awarded to the team, followed by
+(ii) The net margin of victory in favour of the team.
+Note:		When calculating the ranking within the bracket for the purpose of
+power-paired draw, number of wins shall no longer matter, as all teams in the
+bracket shall be treated as being on the same number of wins.
+2.12 The computer tabulation programme shall pair teams up in the following system,
+based on the bracket ranking calculated as instructed in 2.11:
+(a)		Highest-ranked team within the bracket against lowest-ranked team within
+the bracket,
+(b)		2nd highest-ranked team within the bracket against 2nd lowest-ranked team
+within the bracket, etc.
+Adjustment to the above system is only allowed for provisions specified in 2.5 (avoid
+repeated matchup), 2.13 and 2.14. The principle for adjustment is that it shall keep the
+highest [Prop ranking within bracket + Opp ranking within bracket] among all matches
+in the bracket as close as possible to [Number of teams in the bracket + 1].
+2.13		As far as possible, the computer tabulation programme shall ensure that as many
+teams as possible shall have balanced side allocation across the preliminary rounds.
+However, where necessary, the computer tabulation programme shall be able to assign
+some teams to have 4 debates on 1 side and 1 debate on the other side in order to meet
+other provisions within these guidelines.
+3. Procedures regarding walkovers and swing teams
+3.1		In the event that the number of competing teams is an odd number, the Host shall
+arrange for a ‘swing team’ debate in the preliminary rounds in order to ensure an even
+number of teams.
+3.2 The swing team shall be made up of 3 students who shall meet the age criteria and
+education status criteria for debaters set out in the DC League Rules, however the
+members of the swing team do not necessarily have to come from the same institution.
+3.3 Adjudicators shall judge the swing team in the same way as a competing team in the
+tournament, however the swing team and its members shall not be considered to be an
+official competing team and thus shall not be eligible to qualify for the break rounds or
+receive any team or individual speaker awards.
+3.4 In the event of a team being unable to participate in a round, the following shall
+happen:
+(i) The team’s opponents in the draw for that round shall be awarded a 6 point
+margin victory along with (for the purpose of rankings at the end of the
+preliminary rounds) a team score which is equivalent to that team’s average
+score for the preliminary rounds, rounded down to the nearest 0.5, in which the
+team did participate, unless the Chief Adjudicators decide that it is possible to
+amend the draw for the round to ensure that every competing team
+participating in the round has an appropriate opponent (for example by adding
+or withdrawing the swing team) in a manner which, in the Chief Adjudicators’
+opinion, does not significantly affect the fairness and integrity of the draw.
+(ii) The team which is unable to participate in the round shall be awarded a 6
+point defeat for the round along with (for the purpose of rankings at the end of
+the preliminary rounds) a team score adjusted to reflect a 6 point loss based on
+the average score of the opposition.
+3.5 In the event of a walkover in the first preliminary round and the organizers are
+unable to field/withdraw a swing team to accomodate a debate:
+(i) The team receiving the walkover will be awarded a 6 point margin victory for
+the round along with (for the purpose of rankings at the end of the preliminary
+rounds) an average speaker score of 75 for substantive speeches, and a 37.5 for
+the reply speech.
+(ii) The team unable to participate in the round shall be awarded a 6 point defeat
+for the round along with (for the purposes of rankings at the end of the
+preliminary rounds) an average speaker of 73 for substantive speeches, and a
+37.5 for the reply speech.
+Overview
+The	above-mentioned	criteria	can	be	summarised	as	follows:
+• All	tabulation	must	take	place	through	an	approved	tabulation	software
+Round	1:	
+- Random	draw	(teams	from	the	same	institution	should	not	meet)
+All	subsequent	preliminary	rounds:
+- Teams	to	be	ordered	based	on	wins,	total	speaker	points,	margins
+- Teams	to	be	divided	into	brackets	based	on	same	number	of	wins
+- Draw	will	be	based	on	a	within	the	bracket	fold	(highest	vs	lowest)
+- No	two	teams	will	meet	each	other	more	than	once
+Pull	ups	(where	required):
+- A	team	from	the	middle	of	the	bracket	below	will	be	pulled	up	
+- No	team	will	be	pulled	up	twice
+Walkovers:
+- Organizers	 should	 attempt	 to	 field	 a	 “swing	 team”	 as	 much	 as	 possible.	 A	
+walkover	should	always	be	considered	a	last	resort
+- Team	giving	 the	walkover	will	 receive	an	automatic	loss	 (automatic	win	 for	 the	
+team	receiving	the	walkover)
+- The	win/loss	margin	will	be	6 points
+- If	 walkover	 takes	 place	 in	 the	 first	 round,	 speakers	 from	 the	 team	 giving	 the	
+walkover	 will	 be	 given	an	automatic	 73;	 Speakers	 from	 the	 team	 receiving	 the	
+walkover	will	be	given	an	automatic	75

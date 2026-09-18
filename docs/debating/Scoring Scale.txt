@@ -1,0 +1,185 @@
+TH
+DEB
+CO
+AMENDMENT OF SPEAKER SCORING CRITERIA FOR ENDORSED
+TOURNAMENTS
+Overview............................................................................................................................... 2
+Guideline 1: WSDC Scale vs. Old SL Scale Mapping............................................... 3
+Guideline 2: Speaker Score Element Definitions....................................................4
+Guideline 3: Individual Component Scoring Ranges.............................................5
+Guideline 4: Further Reading........................................................................................ 7
+1
+Overview
+The DC will be updating its speaker scoring system across all DC endorsed
+tournaments. This amendment is intended to align the Sri Lankan debating
+circuit with the World Schools Debating Championship (WSDC) standards.
+The primary objectives for this change are to make external WSDC resources
+and training materials directly applicable to the local circuit, and to create
+more accountability and transparency when scoring speeches.
+Accordingly, the following standards will be enforced:
+1. Adoption of WSDC Scoring Range: the speaker scoring system will shift
+from the traditional 69–81 range to the WSDC standard 60–80 range.
+(See Guideline 1 for the scale mapping and comparison of the two
+scales)
+2. Enforcement of Component Scoring: adjudicators will be required to
+allocate individual scores for the three distinct elements of a speech,
+weighted as follows:
+○ Content: 40% of the score
+○ Style: 40% of the score
+○ Strategy: 20% of the score
+(See Guideline 2 for a detailed breakdown of each scoring element).
+3. Component Point Allocation: Under the new 60–80 scale, the points for
+each component will be allocated within the following ranges:
+○ Content: 24–32 points
+○ Style: 24–32 points
+○ Strategy: 12–16 points
+(See Guideline 3 for an understanding of how to score each component)
+This amendment will come into effect on 1 January 2026 for all DC endorsed
+tournaments
+2
+Guideline 1: WSDC Scale vs. Old SL Scale Mapping
+*Check Section 4 for more details
+Source: Adapted from World Schools Debating Council, Judge Training (2024)
+3
+WSDC Scale Old SL Scale Explanation *
+80 80 • Plausibly one of the best schools’ debating speeches ever
+given;
+• Flawless and compelling arguments, made with outstanding
+delivery.
+77-79 78.5-79.5 • Sophisticated arguments that are exclusively relevant, very
+well-explained with no logical gaps, and are very difficult to
+respond to.
+• Style is very engaging and persuasive,
+74-77 77-78.5 • Arguments have minimal logical gaps, and engage
+comprehensively with core issues of the debate, but are
+susceptible to strong responses.
+• Speech is very easy to follow, style is engaging.
+71-74 75.5-77 • Arguments engage with core issues of the debate, but may
+have some logical gaps.
+• Speech is easy to follow, style is often engaging.
+70 (Avg) 75 • Arguments are almost exclusively relevant, but not all
+sufficiently explained and are prone to responses.
+• Speech is always clear, and mostly easy to follow
+66-69 73-74.5 • Arguments are often relevant, and partially explained.
+• Speech is nearly always clear, but sometimes difficult to follow.
+63-66 71.5-73 • Arguments are sometimes relevant, but little explanation
+provided
+• Speech is sometimes clear, but often difficult to follow.
+61-63 70.5-71.5 • Arguments are occasionally relevant, but very minimal
+explanation provided.
+• Speech is rarely clear, and very difficult to follow.
+60 70 • Content is not relevant nor explained;
+• Speech is not clear and impossible to follow in its entirety..
+Guideline 2: Speaker Score Element Definitions
+WSDC Speaker Scores are evaluated using 3 distinct, discrete elements:
+1. Content (40% of the score)
+● Deals with WHAT is being presented.
+● Evaluates the quality of content, how well it is proved, and the
+evaluation of all levels of analysis to prove the claim.
+● Covers arguments, rebuttal, content of Points of Information (POIs),
+and responses to POIs.
+● If an argument or rebuttal is weak or poorly developed, it is generally a
+content weakness.
+2. Style (40% of the score)
+● Deals with HOW the content is presented.
+● Includes: pace of speech, volume and tonal variations, choice of
+vocabulary (too technical or too lay; emotive or dry?), eye contact, and
+body language (if applicable).
+● Does not include natural aspects of the person’s voice or body
+language (e.g., accents).
+● Style also includes what content is used and how claims are explained.
+If rhetoric and good examples are present, it would be considered
+good style.
+● Bad style typically hinders the intelligibility or persuasiveness of the
+argumentation offered, and could include mumbling, shouting, or
+speaking too quickly to be understood.
+3. Strategy (20% of the score)
+● Deals with WHY content is said.
+● It is the sum of choices that a speaker makes in order to win
+● It includes: interpretation and relevance of the motion, time
+allocation, structuring of the speech (prioritization), consistency
+between arguments and speeches, and dealing with POIs within your
+speech.
+● Strategy points are awarded when a speaker identifies and addresses
+the right issues in the debate and makes intelligent calls in relation to
+said strategy.Good strategy can be independent of good content and
+is intrinsically tied to good engagement.
+● Points can be cut for not taking POIs (if offered). Limited at a
+maximum of 1 point deduction.
+4
+Guideline 3: Individual Component Scoring Ranges
+Standard Content (/40) Style (/40) Strategy (/20)
+Perfect 31.5-32 31.5-32 16
+Exceptional 30.5-31 30.5-31 15.5
+Excellent 29.5-30 29.5-30 15
+Good 28.5-29 28.5-29 14.5
+Average 28 28 14
+Below Average 27-27.5 27-27.5 13.5
+Unsatisfactory 26-26.5 26-26.5 13
+Poor 25-25.5 25-25.5 12.5
+Very Poor 24-24.5 24-24.5 12
+5
+Guideline 4: Further Reading
+Mark
+(WSDC
+standard)
+Explanation
+60 ● Content is not relevant to the motion and what the team
+needs to prove.
+● All points made are claims, with no analysis, and are
+confusing.
+● The speech is hard to follow throughout, so it is hard to give
+it any credit.
+61-63 ● A few marginally relevant claims.
+● No analysis provided in the claims, which are mainly lines
+without explanation.
+● Parts of the speech are clear, but significant parts are still
+hard to follow.
+64 - 66 ● Some of the points made are relevant to the debate.
+● Arguments / rebuttals are made with some explanation and
+analysis, but with significant logical gaps in the explanation.
+● Sometimes the speech is difficult to follow
+67 - 69 ● Most of the points made are relevant to the debate.
+● All arguments / rebuttals have some explanation, but it still
+has logical and analytical gaps in important parts of the
+argument and lacks evidence.
+● Mostly easy to follow, but some sections may still be hard to
+understand.
+70 ● No major shortfalls, nor any strong moments.
+● Arguments are almost exclusively relevant, although may fail
+to address one or more core issues sufficiently.
+● All arguments have sufficient explanation without major
+logical gaps and some examples, but are simplistic and easy
+to attack.
+● Easy to follow throughout which makes the speech
+understandable, though style does not necessarily serve to
+make the speech more persuasive
+6
+71 - 72 ● Arguments are all relevant, and address the core issues in
+the debate.
+● All arguments have sufficient explanation without major
+logical gaps and most have credible evidence. Some points
+raised may have minor logical gaps or deficits in explanation.
+● Easy to follow throughout. On occasion the style may even
+serve to make the speech more engaging and persuasive
+73 - 76 ● Arguments are relevant and engage with the most
+important issues. Arguments have sufficient explanation
+without major logical gaps.
+● Occasionally, the speaker provides more sophisticated and
+nuanced analysis, making their arguments hard to attack.
+● Easy to follow throughout. On occasion the style may even
+serve to make the speech more engaging and persuasive
+77 - 79 ● Arguments are all relevant and well-illustrated, and address
+the core issues in the debate, with thorough explanations, no
+logical gaps, and credible examples, making them hard to
+attack .
+● Easy to follow throughout. The style serves to make the
+speech’s content more engaging.
+80 ● Plausibly one of the best debating speeches ever given in a
+schools competition.
+● It is incredibly difficult to think up satisfactory responses to
+any of the arguments made.
+● Flawless and compelling arguments, made with
+outstanding delivery
+Source: Adapted from World Schools Debating Council, Judge Training (2024)
+7

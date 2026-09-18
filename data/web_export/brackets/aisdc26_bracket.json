@@ -1,0 +1,232 @@
+{
+  "tournament_name": "AISDC 2026 | Welcome to AIS Debating Championship 2026",
+  "tournament_slug": "aisdc26",
+  "total_elimination_stages": 3,
+  "champion": {
+    "team": "RC A",
+    "institution": "Royal College"
+  },
+  "runner_up": {
+    "team": "AC A",
+    "institution": "Ananda College"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 7,
+      "motion": "THP the unification of Up Country and Eelam Tamils into a singular Sri Lankan pan-Tamil political identity over individual community identities",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 503,
+          "venue": "Quarter Finals @ 4",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Nevan Serasundera , Husnaa Imtiaz 💢 , Sarah Warnakalasuriya)"
+          ]
+        },
+        {
+          "debate_id": 505,
+          "venue": "Quarter Finals @ 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Abdullah Yusoof , Thithira Jayakody)"
+          ]
+        },
+        {
+          "debate_id": 507,
+          "venue": "Quarter Finals @ 2",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "DS A",
+            "winner_institution": "D. S. Senanayake College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Chirathi , Akindu Athauda , Mabroor Ahmed)"
+          ]
+        },
+        {
+          "debate_id": 509,
+          "venue": "Quarter Finals @ 3",
+          "proposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "CIS A",
+            "institution": "Colombo International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "Moir A",
+            "winner_institution": "Elizabeth Moir School",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Adam Dhilshan , Senuka Seneviratne 💢 , Suchith Tissera)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 8,
+      "motion": "TH, as the Chinese Communist Party, would allow farmers in rural areas to freely sell their homes and land.",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 511,
+          "venue": "Semi Finals @ 1",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Thithira Jayakody 💢 , Aliza , Husnaa Imtiaz , Jayageeth Bassnayake 💢 , Shakeeb Mohideen)"
+          ]
+        },
+        {
+          "debate_id": 513,
+          "venue": "Semi Finals @ 2",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , Mabroor Ahmed , Rudhesh Ram)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 9,
+      "motion": "THBT the Re:Write should be used",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 515,
+          "venue": "Grand Final @ 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Husnaa Imtiaz , Abdullah Yusoof 💢 , Nevan Serasundera , Suchith Tissera 💢 , Thithira Jayakody)"
+          ]
+        }
+      ]
+    }
+  ]
+}

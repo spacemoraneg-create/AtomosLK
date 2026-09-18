@@ -1,0 +1,349 @@
+{
+  "tournament_name": "VVIDC 2026 | Welcome to Visakha Vidyalaya Interschool Debating Championship 2026",
+  "tournament_slug": "vvidc2026",
+  "total_elimination_stages": 4,
+  "champion": {
+    "team": "AC A",
+    "institution": "Ananda College"
+  },
+  "runner_up": {
+    "team": "RC A",
+    "institution": "Royal College"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Partial Octos",
+      "round_number": 6,
+      "motion": "THP Moral Relativism to Moral Absolutism",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 1763,
+          "venue": "Partial Octos @ 3",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BSC A",
+            "institution": "The British School in Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sarah Warnakulasuriya)"
+          ]
+        },
+        {
+          "debate_id": 1765,
+          "venue": "Partial Octos @ 4",
+          "proposition": {
+            "team_name": "CIS A",
+            "institution": "Colombo International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC B",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "LC B",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Visura , Kaveesha Mallawarachchi , Senuka Seneviratne)"
+          ]
+        },
+        {
+          "debate_id": 1767,
+          "venue": "Partial Octos @ 2",
+          "proposition": {
+            "team_name": "AC B",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "SBC A",
+            "institution": "St. Bridget's Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC B",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Adam Dhilshan)"
+          ]
+        },
+        {
+          "debate_id": 1769,
+          "venue": "Partial Octos @ 1",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu , Mevindu , Yasindu)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarters",
+      "round_number": 7,
+      "motion": "THW REMOVE LUST FROM THE LIST OF SEVEN DEADLY SINS. THE SEVEN DEADLY SINS ARE PRIDE, GREED, WRATH, ENVY, GLUTTONY, LUST AND SLOTH.",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 1585,
+          "venue": "Quarters @ 2",
+          "proposition": {
+            "team_name": "LC B",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Mevindu , Nethma Madawela , Yasindu)"
+          ]
+        },
+        {
+          "debate_id": 1587,
+          "venue": "Quarters @ 4",
+          "proposition": {
+            "team_name": "AC B",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "LC A",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Visura , Adam Dhilshan)"
+          ]
+        },
+        {
+          "debate_id": 1589,
+          "venue": "Quarters @ 1",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sarah Warnakulasuriya , Kaveesha Mallawarachchi)"
+          ]
+        },
+        {
+          "debate_id": 1591,
+          "venue": "Quarters @ 3",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Abdullah Yusoof , Amnah , Senuka Seneviratne)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 8,
+      "motion": "THBT governments should systematically use subconscious manipulation to nudge citizens towards socially desirable choices",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 1779,
+          "venue": "Semifinals @ 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sanithma Jayasooriya 💢 , Adam Dhilshan , Senuka Seneviratne)"
+          ]
+        },
+        {
+          "debate_id": 1781,
+          "venue": "Semifinals @ 2",
+          "proposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shakeeb Mohideen , Akindu , Rachel Cramer , Sarah Warnakulasuriya)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 9,
+      "motion": "This house would allow individuals to access the Two-Lives Technology",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 1783,
+          "venue": "Grand Finals @ 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sandil , Akindu , Sanithma Jayasooriya)"
+          ]
+        }
+      ]
+    }
+  ]
+}

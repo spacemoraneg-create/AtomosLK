@@ -1,0 +1,39 @@
+__pycache__/
+*.py[cod]
+*.class
+*.so
+.Python
+env/
+venv/
+.venv/
+.env
+
+# Ignore raw scraped HTML pages and backups
+data/raw/
+data/*.bak
+data/circuit_report_2026.md
+data/database.sqlite
+data/debates.db
+atomos.db
+*.zip
+
+# Ignore screenshot dumps
+*.png
+*.jpg
+*.raw
+web/extracted/
+web/*.png
+test_snap.png
+screen_*.png
+view_*.png
+
+# Keep necessary web assets
+!web/assets/**
+
+# Ensure database and precomputed caches are tracked
+!data/atomos.db
+!data/web_export/**
+
+.idea/
+.vscode/
+.DS_Store

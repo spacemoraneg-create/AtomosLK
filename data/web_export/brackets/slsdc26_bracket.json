@@ -1,0 +1,457 @@
+{
+  "tournament_name": "SLSDC 2026 | Welcome to Sri Lanka Schools Debating Championship 2026",
+  "tournament_slug": "slsdc26",
+  "total_elimination_stages": 4,
+  "champion": {
+    "team": "RC B",
+    "institution": "Royal College"
+  },
+  "runner_up": {
+    "team": "RC A",
+    "institution": "Royal College"
+  },
+  "is_same_institution_closeout": true,
+  "stages": [
+    {
+      "stage_name": "Octofinals",
+      "round_number": 8,
+      "motion": "This House believes that American frontier AI firms should cease all cooperation with the US military.",
+      "info_slide": null,
+      "matches_count": 8,
+      "matchups": [
+        {
+          "debate_id": 1151,
+          "venue": "Octofinals @ Room 6",
+          "proposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "CIS A",
+            "institution": "Colombo International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Savith Wijesundara)"
+          ]
+        },
+        {
+          "debate_id": 1153,
+          "venue": "Octofinals @ Room 7",
+          "proposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Thithira Jayakody)"
+          ]
+        },
+        {
+          "debate_id": 1155,
+          "venue": "Octofinals @ Room 1",
+          "proposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "STC A",
+            "winner_institution": "S. Thomas' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shalem Sumanthiran)"
+          ]
+        },
+        {
+          "debate_id": 1157,
+          "venue": "Octofinals @ Room 2",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS B",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Aliza Hussain)"
+          ]
+        },
+        {
+          "debate_id": 1159,
+          "venue": "Octofinals @ Room 8",
+          "proposition": {
+            "team_name": "SBC A",
+            "institution": "St. Bridget's Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "SBC A",
+            "winner_institution": "St. Bridget's Convent",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sarah Warnakulasuriya)"
+          ]
+        },
+        {
+          "debate_id": 1161,
+          "venue": "Octofinals @ Room 3",
+          "proposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "GCC A",
+            "institution": "Gateway College Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Jayageeth Basnayake , Amnah Jiffrey , Nethula Hettihewage)"
+          ]
+        },
+        {
+          "debate_id": 1163,
+          "venue": "Octofinals @ Room 5",
+          "proposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "TCK A",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Adam Dhilshan , Kaveesha Mallawaarachchi , Yasindu Edussuriya)"
+          ]
+        },
+        {
+          "debate_id": 1165,
+          "venue": "Octofinals @ Room 4",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , Navidi Perera , Shaluka Herath)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 9,
+      "motion": "This House believes that local communities should have a veto over the construction of large scale infrastructure projects (e.g. data centers, pipelines, etc.)in their areas.",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 1167,
+          "venue": "Quarterfinals @ Room 4",
+          "proposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , Chanidu Rathnayake , Kaveesha Mallawaarachchi)"
+          ]
+        },
+        {
+          "debate_id": 1169,
+          "venue": "Quarterfinals @ Room 2",
+          "proposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "SBC A",
+            "institution": "St. Bridget's Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "SBC A",
+            "winner_institution": "St. Bridget's Convent",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shalem Sumanthiran , Husnaa Imtiaz , Yasindu Edussuriya)"
+          ]
+        },
+        {
+          "debate_id": 1171,
+          "venue": "Quarterfinals @ Room 1",
+          "proposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shakeeb Mohideen , Nethma Madawala , Nethula Hettihewage)"
+          ]
+        },
+        {
+          "debate_id": 1173,
+          "venue": "Quarterfinals @ Room 3",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Naika Gooneratne , Sandil Ranasinghe , Shaluka Herath)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 10,
+      "motion": "This House predicts that the political gender gap will widen rather than shrink over the next 50 years.",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 1175,
+          "venue": "Semifinals @ Room 1",
+          "proposition": {
+            "team_name": "SBC A",
+            "institution": "St. Bridget's Convent",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , Chanidu Rathnayake , Sandil Ranasinghe)"
+          ]
+        },
+        {
+          "debate_id": 1177,
+          "venue": "Semifinals @ Room 2",
+          "proposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shalem Sumanthiran , Nethma Madawala , Savith Wijesundara)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 11,
+      "motion": "This House believes that lighter sentences and earlier release times should be implemented to combat the issue of overcrowding",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 1179,
+          "venue": "Grand Final @ Room 1",
+          "proposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)"
+          ]
+        }
+      ]
+    }
+  ]
+}
