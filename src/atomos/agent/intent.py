@@ -203,11 +203,19 @@ def classify_intent(query: str) -> Tuple[AgentIntent, Dict[str, Any]]:
         return AgentIntent.SPEAKER_RANKINGS, {"limit": limit}
 
 
+    # Guard: Comparative or complex questions about institutions/championships
+    if any(k in q_lower for k in [
+        "which institution", "which school", "which college", "won the most",
+        "most championships", "championships this year", "most titles", "who won"
+    ]):
+        return AgentIntent.UNKNOWN, {"query": q}
+
     # 15. Institution Dossier (Look for school names/keywords)
     if any(k in q_lower for k in ["school", "college", "convent", "academy", "institution", "squad depth"]):
         name_match = re.search(r'(?:about|for|school|college|convent|institution)\s+([A-Za-z\s\.\']+?)(?:\?|$)', q, re.IGNORECASE)
         inst_query = clean_entity_name(name_match.group(1)) if name_match else clean_entity_name(q)
-        return AgentIntent.INSTITUTION_DOSSIER, {"school": inst_query}
+        if not any(w in inst_query.lower() for w in ["which", "what", "how", "has won", "most", "championship", "fun facts"]):
+            return AgentIntent.INSTITUTION_DOSSIER, {"school": inst_query}
 
     # 16. Single Person / Debater Dossier
     # Explicit Person/Debater ID (e.g. "#42", "debater 42", "person 42", "id 42")
@@ -217,16 +225,19 @@ def classify_intent(query: str) -> Tuple[AgentIntent, Dict[str, Any]]:
 
     if any(q_lower.startswith(p) for p in ["who is", "tell me about", "profile of", "stats for", "debater", "scout"]):
         clean_target = clean_entity_name(q)
-        if clean_target:
+        if clean_target and not any(w in clean_target.lower() for w in ["which", "what", "fun facts"]):
             return AgentIntent.DEBATER_DOSSIER, {"identifier": clean_target}
 
     # If it's a short 1-4 word query of alphabetic words not matching any known commands, treat as entity lookup
+    # BUT only if it doesn't contain interrogative question words or analytical terms
+    non_name_indicators = {"which", "what", "where", "when", "why", "how", "tell", "fun", "facts", "tournament", "round", "speech", "speeches"}
     clean_target = clean_entity_name(q)
     if (
         clean_target
         and re.match(r'^[A-Za-z\s\.\'\-]+$', clean_target)
         and len(clean_target.split()) <= 4
         and not any(t in greeting_words for t in tokens)
+        and not any(t in non_name_indicators for t in tokens)
     ):
         return AgentIntent.DEBATER_DOSSIER, {"identifier": clean_target}
 

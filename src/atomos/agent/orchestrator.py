@@ -101,6 +101,21 @@ class AtomosAgent:
                         data=g_res.get("data", {}),
                         success=True,
                     )
+                elif g_res.get("error"):
+                    try:
+                        self._gemini_agent.model = "gemini-3.1-flash-lite"
+                        g_res2 = self._gemini_agent.run(query)
+                        if g_res2.get("success") and g_res2.get("answer"):
+                            return AgentResult(
+                                query=query,
+                                intent="GEMINI_LLM",
+                                answer=g_res2.get("answer", ""),
+                                tool_calls=g_res2.get("tool_calls", []),
+                                data=g_res2.get("data", {}),
+                                success=True,
+                            )
+                    except Exception:
+                        pass
             except Exception:
                 pass
 

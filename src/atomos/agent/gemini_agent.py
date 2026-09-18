@@ -142,19 +142,36 @@ SYSTEM_INSTRUCTION = """You are Atomos, a deeply knowledgeable, human-like debat
   * Across all 5 tournaments she debated in, Ananya's total preliminary rounds is exactly 26 (SLSDC: 7, Chap's: 5, APIIT: 5, AISDC: 5, Vijis: 4). Her 53 rows in `speech_performances` are 26 substantives + 25 replies + 2 panel ballots!
 
 ================================================================================
-7. NATIONAL LEVEL IN ALL DEBATER LEADERBOARDS (MANDATORY LAW):
+7. NATIONAL TEAM STATUS & DEBATER LEADERBOARDS (CRITICAL DOMAIN LAW):
 ================================================================================
-- Whenever presenting, describing, or rendering ANY debater leaderboard (e.g. Master Speaker Tab, Prelims Volume, Debates Volume, Critical Stats, Reply Tab, DPI, or custom SQL debater tables):
-  * You MUST ALWAYS include a column for 'National Status' / 'Nat Status' (or include the status next to the debater's name).
-  * For debaters with a national status, display their exact designation: `Nat Trials`, `Nat Pool, Trialed`, or `Nat Pool, Direct`.
-  * For debaters without a national status, display `-` (or `Unlisted`).
-  * Example Leaderboard Format:
-    | Rank | Debater | Nat Status | Institution | Prelim Rounds |
-    | :--- | :--- | :--- | :--- | :--- |
-    | 1 | Abeesha Wickramasinghe | - | Trinity College Kandy | 36 |
-    | 2 | Balishta Wijesinghe | Nat Trials | D. S. Senanayake College | 36 |
-    | 3 | Kaveesha De Silva | Nat Pool, Direct | Royal College | 36 |
-    | 4 | Sadew Muthuhetti | Nat Pool, Trialed | D. S. Senanayake College | 36 |
+- There are THREE distinct official National Squad designations in the Sri Lankan Circuit:
+  1. `Trials`: Debaters who only competed in the National Selection Trials (did NOT qualify for the National Pool).
+  2. `Nat Pool, Trialed`: Debaters who earned entry into the National Pool by qualifying through the selection trials.
+  3. `Nat Pool, Direct`: Debaters who were admitted into the National Pool directly.
+- Whenever presenting, describing, or rendering ANY debater leaderboard, speaker ranking, or position breakdown (including 1st speakers, 2nd speakers, top averages, or custom SQL debater tables):
+  * You MUST ALWAYS include a column for 'Nat Status' / 'National Status' AND 'Institution'.
+  * For debaters with a national status, display their exact designation: `Trials`, `Nat Pool, Trialed`, or `Nat Pool, Direct`.
+  * For debaters without a national status, display `-`.
+  * MANDATORY FOR SQL QUERIES: When writing custom SQL (`execute_sql`) for any speaker breakdown or ranking:
+    YOU MUST ALWAYS SELECT `p.national_level` AND `i.name AS institution` in your query by joining `persons p` and `institutions i`!
+    Example:
+      SELECT p.canonical_name, p.national_level, i.name AS institution,
+             AVG(sp.total_score) AS avg_score, COUNT(*) AS count
+      FROM speech_performances sp
+      JOIN persons p ON sp.person_id = p.id
+      LEFT JOIN (
+          SELECT tm.person_id, t.institution_id
+          FROM team_members tm
+          JOIN teams t ON tm.team_id = t.id
+          GROUP BY tm.person_id
+      ) primary_inst ON p.id = primary_inst.person_id
+      LEFT JOIN institutions i ON primary_inst.institution_id = i.id
+      WHERE sp.speech_type = 'SUBSTANTIVE' ...
+    NEVER leave out `p.national_level` or `i.name` from your SQL query, and NEVER write `-` for debaters who hold a status in `atomos.db`!
+  * Verified Reference Registry:
+    - `Nat Pool, Direct`: Adithi Vitharanage (Visakha), Apoorva Jinadasa (Hillwood), Dithira De Silva (Royal), Kaveesha De Silva (Royal), Nimuthu Pathiraja (Trinity), Ra'ed Cader (AIS), Safiya Bakeer Markar (Bishop's), Thahira Saheed (Ladies'), Vidath Marasinghe (D. S. Senanayake).
+    - `Nat Pool, Trialed`: Didumika Peiris (D. S. Senanayake), Druvin Vitharanage (Royal), Gagana Prabhashwara (Ananda), Nuhan Gunasekara (D. S. Senanayake), Sadew Muthuhetti (D. S. Senanayake), Salma Khalid (Ladies'), Savithru Liyanapathirana (Royal), Sonalki Dharmawansa (Ladies'), Tharuli Silva (Hillwood).
+    - `Trials`: Arshalya Gomez (Holy Family Convent), Balishta Wijesinghe (D. S. Senanayake), Binara Kulasekara (Royal), Khanavee Suthaharan (Ladies'), Salma Lafir (St. Bridget's), Selvendra Jathuran (Gateway Dehiwala), Senithi Wijesooriya (Hillwood), Theruni Abeysinghe (Bishop's), Yasir Shuhail (D. S. Senanayake).
 
 ================================================================================
 8. FULL DEBATE BALLOTS & ROUND LINEUPS (CRITICAL DOMAIN LAW):
@@ -312,7 +329,7 @@ class GeminiAgent:
 
         headers = {"Content-Type": "application/json"}
         candidate_models = [self.model]
-        for fallback in ["gemini-2.5-flash", "gemini-3.1-flash-lite", "gemini-flash-lite-latest"]:
+        for fallback in ["gemini-3.6-flash", "gemini-3.1-flash-lite", "gemini-flash-lite-latest"]:
             if fallback not in candidate_models:
                 candidate_models.append(fallback)
 
@@ -352,7 +369,8 @@ class GeminiAgent:
             resp = None
             last_err = ""
 
-            for m in candidate_models:
+            models_to_try = [active_model] + [m for m in candidate_models if m != active_model]
+            for m in models_to_try:
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"
                 try:
                     r = requests.post(url, headers=headers, json=payload, timeout=15)

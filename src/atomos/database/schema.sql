@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS institutions (
 CREATE TABLE IF NOT EXISTS persons (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     canonical_name TEXT NOT NULL,
-    national_level TEXT CHECK(national_level IN ('Nat Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct', NULL)),
+    national_level TEXT CHECK(national_level IN ('Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct', NULL)),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

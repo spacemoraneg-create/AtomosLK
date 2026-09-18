@@ -115,7 +115,7 @@ class DebaterProfile:
     avg_of_avgs: Optional[float] = None     # Legacy regulation: average of tournament averages
 
     # National Team Status
-    national_level: Optional[str] = None    # 'Nat Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct', or None
+    national_level: Optional[str] = None    # 'Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct', or None
 
     # Chronological Trajectory
     trajectory: Optional[List[Dict[str, Any]]] = None  # Chronological tournament progression

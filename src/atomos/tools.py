@@ -130,7 +130,7 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
         "type": "function",
         "function": {
             "name": "get_speaker_leaderboard",
-            "description": "Retrieve official national debater leaderboards and rankings across multiple metrics: 'prelims' (most preliminary rounds debated, max 36 in circuit), 'debates' (most total debates participated in), 'master_tab' (highest overall substantive average on Master Tab), 'critical_stats' (top ranked on national Critical Stats), or 'replies' (highest reply speech average). Every returned debater includes their name, school, national level ('Nat Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct', or null), and performance metrics.",
+            "description": "Retrieve official national debater leaderboards and rankings across multiple metrics: 'prelims' (most preliminary rounds debated, max 36 in circuit), 'debates' (most total debates participated in), 'master_tab' (highest overall substantive average on Master Tab), 'critical_stats' (top ranked on national Critical Stats), or 'replies' (highest reply speech average). Every returned debater includes their name, school, national level ('Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct', or null), and performance metrics.",
             "parameters": {
                 "type": "object",
                 "properties": {
@@ -290,13 +290,13 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
         "type": "function",
         "function": {
             "name": "get_national_pool",
-            "description": "Retrieve debaters with National Team designations ('Nat Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct'), including their school, Master Tab ranking, and substantive average. Use this whenever the user asks about the National Pool, National Trials, or which debaters reached national levels.",
+            "description": "Retrieve debaters with National Team designations ('Trials', 'Nat Pool, Trialed', 'Nat Pool, Direct'), including their school, Master Tab ranking, and substantive average. Use this whenever the user asks about the National Pool, National Trials, or which debaters reached national levels.",
             "parameters": {
                 "type": "object",
                 "properties": {
                     "status": {
                         "type": "string",
-                        "description": "Optional filter: 'Nat Trials', 'Nat Pool, Trialed', or 'Nat Pool, Direct'. If omitted, returns all debaters in national pool and trials."
+                        "description": "Optional filter: 'Trials', 'Nat Pool, Trialed', or 'Nat Pool, Direct'. If omitted, returns all debaters in national pool and trials."
                     }
                 }
             }

@@ -41,16 +41,16 @@
 
   // Helper: National Status Tag HTML
   function getNatStatusTag(level) {
-    if (!level) return '<span class="nat-tag nat-none">-</span>';
+    if (!level || level === '-' || level === 'null') return '<span class="nat-tag nat-none">-</span>';
     const l = level.toLowerCase();
     if (l.includes('direct')) {
-      return '<span class="nat-tag nat-direct">Nat Direct</span>';
+      return '<span class="nat-tag nat-direct">Nat Pool, Direct</span>';
     } else if (l.includes('trialed')) {
-      return '<span class="nat-tag nat-trialed">Nat Trialed</span>';
-    } else if (l.includes('trials')) {
+      return '<span class="nat-tag nat-trialed">Nat Pool, Trialed</span>';
+    } else if (l.includes('trials') || l === 'trials') {
       return '<span class="nat-tag nat-trials">Trials</span>';
     }
-    return `<span class="nat-tag nat-trials">${level}</span>`;
+    return `<span class="nat-tag nat-trials">${escapeHtml(level)}</span>`;
   }
 
   // Helper: Rank Badge HTML
