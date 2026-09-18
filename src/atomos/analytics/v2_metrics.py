@@ -25,6 +25,7 @@ Implements the V2 Radical Overhaul mathematical specifications:
 
 import math
 import sqlite3
+from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple
 
 from atomos.analytics.tournaments import OFFICIAL_TOURNAMENT_DATES, CLEAN_TOURNAMENT_NAMES
@@ -84,24 +85,6 @@ class V2MetricsEngine:
         min_rounds = 12 if tier in ("tab", "homepage") else 5
         cur = self.conn.cursor()
 
-        # Primary speaker roster with distinct preliminary rounds and substantive speech totals
-        cur.execute("""
-            SELECT p.id as person_id,
-                   p.canonical_name as speaker_name,
-                   p.national_level,
-                   COUNT(DISTINCT sp.round_id) as prelims_debated,
-                   COUNT(DISTINCT r.tournament_id) as tournaments_debated
-            FROM speech_performances sp
-            JOIN persons p ON sp.person_id = p.id
-            JOIN rounds r ON sp.round_id = r.id
-            WHERE sp.speech_type = 'SUBSTANTIVE' 
-              AND sp.total_score > 0 
-              AND r.round_type = 'PRELIMINARY'
-            GROUP BY p.id
-            HAVING prelims_debated >= ?
-        """, (min_rounds,))
-        candidates = cur.fetchall()
-
         # Pre-fetch latest host institutions
         cur.execute("""
             SELECT sp.person_id, inst.name as inst_name
@@ -119,57 +102,97 @@ class V2MetricsEngine:
             if pid not in latest_inst and row["inst_name"]:
                 latest_inst[pid] = row["inst_name"]
 
+        # Fetch all preliminary substantive speeches with paneled ballot averaging
+        cur.execute("""
+            SELECT p.id as person_id,
+                   p.canonical_name as speaker_name,
+                   p.national_level,
+                   r.tournament_id,
+                   r.round_number,
+                   sp.debate_id,
+                   sp.position,
+                   AVG(sp.total_score) as round_speech_score
+            FROM speech_performances sp
+            JOIN rounds r ON sp.round_id = r.id
+            JOIN debates d ON sp.debate_id = d.id
+            JOIN persons p ON sp.person_id = p.id
+            WHERE sp.speech_type = 'SUBSTANTIVE'
+              AND r.round_type = 'PRELIMINARY'
+              AND d.is_walkover = 0
+              AND sp.total_score > 0
+            GROUP BY p.id, r.tournament_id, r.round_number, sp.debate_id, sp.position
+            ORDER BY p.id, r.tournament_id, r.round_number
+        """)
+        rows = cur.fetchall()
+
+        # Iron Man resolution: per person -> tournament -> round, take higher substantive score
+        person_rounds: Dict[int, Dict[int, Dict[int, float]]] = defaultdict(lambda: defaultdict(dict))
+        person_meta: Dict[int, Dict[str, Any]] = {}
+
+        for r in rows:
+            pid = r["person_id"]
+            tid = r["tournament_id"]
+            rnum = r["round_number"]
+            score = float(r["round_speech_score"])
+            if pid not in person_meta:
+                person_meta[pid] = {
+                    "name": r["speaker_name"],
+                    "national_level": r["national_level"]
+                }
+            person_rounds[pid][tid][rnum] = max(person_rounds[pid][tid].get(rnum, 0.0), score)
+
+        # Contested debates and win rate (group by debate to avoid panel ballot multiplication)
+        cur.execute("""
+            SELECT sp.person_id, d.id as debate_id,
+                   MAX(CASE WHEN (d.prop_team_id = sp.team_id AND b.winner_side = 'Proposition') OR
+                                 (d.opp_team_id = sp.team_id AND b.winner_side = 'Opposition') OR
+                                 (d.is_walkover = 1 AND d.walkover_winner_id = sp.team_id) THEN 1 ELSE 0 END) as won
+            FROM debates d
+            JOIN speech_performances sp ON d.id = sp.debate_id
+            LEFT JOIN adjudicator_ballots b ON d.id = b.debate_id
+            WHERE sp.speech_type = 'SUBSTANTIVE'
+            GROUP BY sp.person_id, d.id
+        """)
+        deb_rows = cur.fetchall()
+        person_debates: Dict[int, List[int]] = defaultdict(list)
+        for r in deb_rows:
+            person_debates[r["person_id"]].append(r["won"])
+
         speakers: List[Dict[str, Any]] = []
 
-        for row in candidates:
-            pid = row["person_id"]
-            name = row["speaker_name"]
-            nat = row["national_level"]
-            prelims = row["prelims_debated"]
-            tourneys = row["tournaments_debated"]
-            inst = latest_inst.get(pid, "Independent")
+        for pid, tours in person_rounds.items():
+            all_scores: List[float] = []
+            tour_count = len(tours)
+            for tid, r_dict in tours.items():
+                all_scores.extend(r_dict.values())
 
-            # All substantive speech scores for Universal Rule Mean and Stdev
-            cur.execute("""
-                SELECT total_score
-                FROM speech_performances
-                WHERE person_id = ? AND speech_type = 'SUBSTANTIVE' AND total_score > 0
-            """, (pid,))
-            scores = [float(r["total_score"]) for r in cur.fetchall()]
-            if not scores:
+            speech_count = len(all_scores)
+            if speech_count < min_rounds:
                 continue
 
-            speech_count = len(scores)
-            mean_score = sum(scores) / speech_count
-            stdev = calc_sample_stdev(scores)
+            mean_score = sum(all_scores) / speech_count
+            stdev = calc_sample_stdev(all_scores)
 
-            # Contested debates and win rate (group by debate to avoid panel ballot multiplication)
-            cur.execute("""
-                SELECT d.id,
-                       MAX(CASE WHEN (d.prop_team_id = sp.team_id AND b.winner_side = 'Proposition') OR
-                                     (d.opp_team_id = sp.team_id AND b.winner_side = 'Opposition') OR
-                                     (d.is_walkover = 1 AND d.walkover_winner_id = sp.team_id) THEN 1 ELSE 0 END) as won
-                FROM debates d
-                JOIN speech_performances sp ON d.id = sp.debate_id
-                LEFT JOIN adjudicator_ballots b ON d.id = b.debate_id
-                WHERE sp.person_id = ? AND sp.speech_type = 'SUBSTANTIVE'
-                GROUP BY d.id
-            """, (pid,))
-            deb_rows = cur.fetchall()
-            debates = len(deb_rows)
-            wins = sum(r["won"] for r in deb_rows if r["won"])
+            name = person_meta[pid]["name"]
+            nat = person_meta[pid]["national_level"]
+            inst = latest_inst.get(pid, "Independent")
+
+            deb_list = person_debates.get(pid, [])
+            debates = len(deb_list)
+            wins = sum(deb_list)
             win_pct = round((wins / debates * 100.0), 1) if debates > 0 else 0.0
 
             speakers.append({
                 "person_id": pid,
+                "name": name,
                 "speaker_name": name,
                 "institution": inst,
                 "national_level": nat,
                 "speaker_score": round(mean_score, 5),
                 "win_percentage": win_pct,
                 "stdev": stdev,
-                "prelims_debated": prelims,
-                "tournaments_debated": tourneys,
+                "prelims_debated": speech_count,
+                "tournaments_debated": tour_count,
                 "total_substantive_speeches": speech_count,
                 "total_debates": debates,
                 "total_wins": wins,
@@ -1188,28 +1211,39 @@ class V2MetricsEngine:
         tm_r = cur.fetchone()
         most_debated_team = tm_r["team_name"] if tm_r else "Unknown"
 
-        # All substantive speech scores for Universal Rule Mean and Stdev
+        # Preliminary substantive speech scores with paneled ballot averaging and Iron Man resolution
         cur.execute("""
-            SELECT total_score, position
-            FROM speech_performances
-            WHERE person_id = ? AND speech_type = 'SUBSTANTIVE' AND total_score > 0
-        """, (pid,))
-        sub_rows = cur.fetchall()
-        sub_scores = [float(r["total_score"]) for r in sub_rows]
-        spk_avg = round(sum(sub_scores) / len(sub_scores), 5) if sub_scores else 0.0
-        stdev = calc_sample_stdev(sub_scores)
-
-        # Distinct prelims and tournaments
-        cur.execute("""
-            SELECT COUNT(DISTINCT sp.round_id) as prelims_cnt,
-                   COUNT(DISTINCT r.tournament_id) as tourneys_cnt
+            SELECT r.tournament_id,
+                   r.round_number,
+                   AVG(sp.total_score) as round_speech_score
             FROM speech_performances sp
             JOIN rounds r ON sp.round_id = r.id
-            WHERE sp.person_id = ? AND r.round_type = 'PRELIMINARY'
+            JOIN debates d ON sp.debate_id = d.id
+            WHERE sp.person_id = ?
+              AND sp.speech_type = 'SUBSTANTIVE'
+              AND r.round_type = 'PRELIMINARY'
+              AND d.is_walkover = 0
+              AND sp.total_score > 0
+            GROUP BY r.tournament_id, r.round_number, sp.debate_id, sp.position
+            ORDER BY r.tournament_id, r.round_number
         """, (pid,))
-        cnt_r = cur.fetchone()
-        prelims_cnt = cnt_r["prelims_cnt"] or 0
-        tourneys_cnt = cnt_r["tourneys_cnt"] or 0
+        p_rows = cur.fetchall()
+
+        tour_dict: Dict[int, Dict[int, float]] = defaultdict(dict)
+        for pr in p_rows:
+            tid = pr["tournament_id"]
+            rnum = pr["round_number"]
+            score = float(pr["round_speech_score"])
+            tour_dict[tid][rnum] = max(tour_dict[tid].get(rnum, 0.0), score)
+
+        sub_scores = []
+        for tid, r_dict in tour_dict.items():
+            sub_scores.extend(r_dict.values())
+
+        spk_avg = round(sum(sub_scores) / len(sub_scores), 5) if sub_scores else 0.0
+        stdev = calc_sample_stdev(sub_scores)
+        prelims_cnt = len(sub_scores)
+        tourneys_cnt = len(tour_dict)
 
         # Debates won and total debates (group by debate to avoid panel duplication)
         cur.execute("""

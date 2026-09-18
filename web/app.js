@@ -262,10 +262,11 @@
 
       // Filter by search
       if (searchQuery) {
-        list = list.filter((s) =>
-          (s.name && s.name.toLowerCase().includes(searchQuery)) ||
-          (s.institution && s.institution.toLowerCase().includes(searchQuery))
-        );
+        list = list.filter((s) => {
+          const debaterName = s.speaker_name || s.name || '';
+          return debaterName.toLowerCase().includes(searchQuery) ||
+                 (s.institution && s.institution.toLowerCase().includes(searchQuery));
+        });
       }
 
       if (list.length === 0) {
@@ -275,11 +276,12 @@
 
       tbody.innerHTML = list.map((s, idx) => {
         const rank = idx + 1;
+        const debaterName = s.speaker_name || s.name || '';
         return `
           <tr>
             <td style="text-align: center;">${getRankBadge(rank)}</td>
             <td>
-              <a class="table-link" href="bio.html?debater=${encodeURIComponent(s.name)}">${escapeHtml(s.name)}</a>
+              <a class="table-link" href="bio.html?debater=${encodeURIComponent(debaterName)}">${escapeHtml(debaterName)}</a>
             </td>
             <td>
               <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
@@ -496,10 +498,11 @@
       }
 
       if (searchQuery) {
-        list = list.filter((s) =>
-          (s.name && s.name.toLowerCase().includes(searchQuery)) ||
-          (s.institution && s.institution.toLowerCase().includes(searchQuery))
-        );
+        list = list.filter((s) => {
+          const debaterName = s.speaker_name || s.name || '';
+          return debaterName.toLowerCase().includes(searchQuery) ||
+                 (s.institution && s.institution.toLowerCase().includes(searchQuery));
+        });
       }
 
       if (list.length === 0) {
@@ -524,11 +527,13 @@
               </tr>
             </thead>
             <tbody>
-              ${list.map((s, idx) => `
+              ${list.map((s, idx) => {
+                const debaterName = s.speaker_name || s.name || '';
+                return `
                 <tr>
                   <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
                   <td>
-                    <a class="table-link" href="bio.html?debater=${encodeURIComponent(s.name)}">${escapeHtml(s.name)}</a>
+                    <a class="table-link" href="bio.html?debater=${encodeURIComponent(debaterName)}">${escapeHtml(debaterName)}</a>
                   </td>
                   <td>
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
@@ -540,7 +545,8 @@
                   <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${s.tournaments_debated}</td>
                   <td>${getNatStatusTag(s.national_level)}</td>
                 </tr>
-              `).join('')}
+              `;
+              }).join('')}
             </tbody>
           </table>
         </div>
