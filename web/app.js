@@ -354,6 +354,18 @@
           else if (activeCategory === 'tournaments') activeMetric = 'atss';
           else if (activeCategory === 'adjudicators') activeMetric = 'debates';
 
+          // For Tournaments & Adjudicators, there is no General Tab - just Tab
+          const generalBtn = tierSwitcher ? tierSwitcher.querySelector('[data-tier="general"]') : null;
+          const tabBtn = tierSwitcher ? tierSwitcher.querySelector('[data-tier="tab"]') : null;
+          if (activeCategory === 'tournaments' || activeCategory === 'adjudicators') {
+            if (generalBtn) generalBtn.style.display = 'none';
+            activeTier = 'tab';
+            if (tabBtn) tabBtn.classList.add('active');
+            if (generalBtn) generalBtn.classList.remove('active');
+          } else {
+            if (generalBtn) generalBtn.style.display = '';
+          }
+
           updateMetricPills();
           renderLeaderboard();
         });
@@ -388,9 +400,9 @@
       } else if (activeCategory === 'institutions') {
         tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 3 TOURNAMENTS' : 'GENERAL TAB // MIN 2 TOURNAMENTS';
       } else if (activeCategory === 'tournaments') {
-        tierBadge.textContent = 'CIRCUIT TOURNAMENTS // 8 EVENTS';
+        tierBadge.textContent = 'TAB // 8 CIRCUIT TOURNAMENTS';
       } else if (activeCategory === 'adjudicators') {
-        tierBadge.textContent = 'CIRCUIT ADJUDICATORS // TRIBUNAL';
+        tierBadge.textContent = 'TAB // CIRCUIT ADJUDICATORS';
       }
     }
 
@@ -835,7 +847,7 @@
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aass' ? '800; color: #38bdf8;' : '600;'}">${fmt(j.aass, 2)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aatss' ? '800; color: #38bdf8;' : '600;'}">${fmt(j.aatss, 2)}</td>
                   <td style="text-align: center; font-family: var(--font-mono); font-size: 11px;">
-                    <span style="color: #38bdf8; font-weight: 700;">${j.prop_bias_pct}% P</span> / <span style="color: #f43f5e; font-weight: 700;">${(100 - j.prop_bias_pct).toFixed(1)}% O</span>
+                    <span style="color: #38bdf8; font-weight: 700;">${fmt(j.prop_bias_pct)}% P</span> / <span style="color: #f43f5e; font-weight: 700;">${fmt(j.opp_bias_pct)}% O</span>
                   </td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'debates' ? '800; color: #38bdf8;' : '600;'}">${j.prelims_adjudicated}</td>
                   <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${j.tournaments_adjudicated}</td>
@@ -1266,9 +1278,14 @@
 
       // Top 5 break achievements
       const tourBreakdown = bio.tournament_breakdown || [];
-      const achievements = tourBreakdown
-        .filter((t) => t.highest_break && t.highest_break !== 'Preliminary Rounds')
-        .slice(0, 5);
+      const achievements = (bio.top_break_achievements && bio.top_break_achievements.length > 0)
+        ? bio.top_break_achievements
+        : tourBreakdown
+            .filter((t) => {
+              const brk = t.highest_break || t.highest_stage;
+              return brk && brk !== 'Preliminary Rounds' && brk !== 'Unranked';
+            })
+            .slice(0, 5);
 
       container.innerHTML = `
         <!-- Team Header Card -->
@@ -1325,10 +1342,10 @@
               <div>
                 <strong style="color: #ffffff;">${escapeHtml(a.tournament_name)}</strong>
                 <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-                  Tournament ATSS: ${fmt(a.tournament_atss, 2)}
+                  Tournament ATSS: ${fmt(a.tournament_atss !== undefined ? a.tournament_atss : a.atss, 2)}
                 </div>
               </div>
-              <div>${getBreakBadge(a.highest_break)}</div>
+              <div>${getBreakBadge(a.highest_break || a.highest_stage)}</div>
             </div>
           `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No elimination break stages recorded.</div>`}
         </div>
@@ -1395,35 +1412,38 @@
               <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
                 <div>
                   <strong style="color: #ffffff; font-size: 14px;">${escapeHtml(t.tournament_name)}</strong>
-                  <span style="margin-left: 8px;">${getBreakBadge(t.highest_break)}</span>
+                  <span style="margin-left: 8px;">${getBreakBadge(t.highest_break || t.highest_stage)}</span>
                 </div>
                 <div style="font-family: var(--font-mono); font-size: 13px; color: #38bdf8; font-weight: 700;">
-                  Event ATSS: ${fmt(t.tournament_atss, 2)} pts (${t.debates_count} debates)
+                  Event ATSS: ${fmt(t.tournament_atss !== undefined ? t.tournament_atss : t.atss, 2)} pts (${t.debates_count || (t.debates || t.rounds || []).length} debates)
                 </div>
               </div>
               <div class="score-pills">
-                ${(t.debates || []).map((d) => `
-                  <div class="round-hover-trigger">
-                    <span class="score-pill" style="color: ${d.won ? '#34d399' : '#f87171'}; border-color: ${d.won ? 'rgba(52, 211, 153, 0.4)' : 'rgba(248, 113, 113, 0.4)'};">
-                      ${d.won ? 'WIN' : 'LOSS'} ${fmt(d.team_score, 1)}
-                    </span>
-                    <div class="round-tooltip">
-                      <div class="tooltip-title">${escapeHtml(d.round_name)}</div>
-                      <div class="tooltip-row">
-                        <span class="tooltip-label">OPPONENT:</span>
-                        <span style="font-weight: 600;">${escapeHtml(d.opponent)}</span>
-                      </div>
-                      <div class="tooltip-row">
-                        <span class="tooltip-label">SCORE:</span>
-                        <span style="font-weight: 700; color: #38bdf8;">${fmt(d.team_score, 1)}</span>
-                      </div>
-                      <div class="tooltip-row">
-                        <span class="tooltip-label">SIDE:</span>
-                        <span>${escapeHtml(d.side)}</span>
+                ${(t.debates || t.rounds || []).map((d) => {
+                  const isWon = d.won !== undefined ? Boolean(d.won) : (d.result === 'Win' || d.result === 'WIN');
+                  return `
+                    <div class="round-hover-trigger">
+                      <span class="score-pill" style="color: ${isWon ? '#34d399' : '#f87171'}; border-color: ${isWon ? 'rgba(52, 211, 153, 0.4)' : 'rgba(248, 113, 113, 0.4)'};">
+                        ${isWon ? 'WIN' : 'LOSS'} ${fmt(d.team_score, 1)}
+                      </span>
+                      <div class="round-tooltip">
+                        <div class="tooltip-title">${escapeHtml(d.round_name)}</div>
+                        <div class="tooltip-row">
+                          <span class="tooltip-label">OPPONENT:</span>
+                          <span style="font-weight: 600;">${escapeHtml(d.opponent)}</span>
+                        </div>
+                        <div class="tooltip-row">
+                          <span class="tooltip-label">SCORE:</span>
+                          <span style="font-weight: 700; color: #38bdf8;">${fmt(d.team_score, 1)}</span>
+                        </div>
+                        <div class="tooltip-row">
+                          <span class="tooltip-label">SIDE:</span>
+                          <span>${escapeHtml(d.side)}</span>
+                        </div>
                       </div>
                     </div>
-                  </div>
-                `).join('')}
+                  `;
+                }).join('')}
               </div>
             </div>
           `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
@@ -1788,8 +1808,10 @@
       if (input) input.value = bio.adjudicator_name;
       if (clearBtn) clearBtn.classList.remove('hidden');
 
-      const propPct = bio.prop_bias_pct || 50.0;
-      const oppPct = (100.0 - propPct).toFixed(1);
+      const propPct = bio.prop_bias_pct !== undefined && bio.prop_bias_pct !== null ? bio.prop_bias_pct : 50.0;
+      const oppPct = bio.opp_bias_pct !== undefined && bio.opp_bias_pct !== null ? bio.opp_bias_pct : (100.0 - propPct);
+      const propPctStr = fmt(propPct);
+      const oppPctStr = fmt(oppPct);
 
       container.innerHTML = `
         <!-- Adjudicator Header Card -->
@@ -1818,7 +1840,7 @@
             <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Average Awarded Team Speaker Score</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPct}% P / ${oppPct}% O</div>
+            <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
             <div class="bio-stat-lbl">PROP / OPP WIN BIAS</div>
             <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Ballot Decision Rate</div>
           </div>
@@ -1842,8 +1864,8 @@
         <div class="roster-box" style="margin-bottom: 24px;">
           <div class="bias-container">
             <div class="bias-labels">
-              <span style="color: #38bdf8; font-weight: 700;">PROPOSITION: ${propPct}% (${bio.prop_wins || 0} wins)</span>
-              <span style="color: #f43f5e; font-weight: 700;">OPPOSITION: ${oppPct}% (${bio.opp_wins || 0} wins)</span>
+              <span style="color: #38bdf8; font-weight: 700;">PROPOSITION: ${propPctStr}% (${bio.prop_wins || 0} wins)</span>
+              <span style="color: #f43f5e; font-weight: 700;">OPPOSITION: ${oppPctStr}% (${bio.opp_wins || 0} wins)</span>
             </div>
             <div class="bias-bar-wrap">
               <div class="bias-bar-prop" style="width: ${propPct}%;"></div>
