@@ -51,6 +51,24 @@ CLEAN_TOURNAMENT_NAMES = {
 }
 
 
+def truncate_3(val: Optional[float]) -> Optional[float]:
+    """Universal Rule: Do not round up. Up to 3 decimal places if exist."""
+    if val is None:
+        return None
+    try:
+        f = float(val)
+        if f.is_integer():
+            return int(f)
+        s = f"{f:.8f}"
+        parts = s.split(".")
+        truncated = parts[0] + "." + parts[1][:3].rstrip("0")
+        if truncated.endswith("."):
+            return int(parts[0])
+        return float(truncated)
+    except Exception:
+        return val
+
+
 class TournamentRankingsEngine:
     """Computes tournament quality and participation rankings based on APTTSS."""
 
@@ -186,11 +204,11 @@ class TournamentRankingsEngine:
                     team_atss[team_id] = sum(scores) / len(scores)
 
             all_team_atss = list(team_atss.values())
-            apttss = round(sum(all_team_atss) / len(all_team_atss), 2) if all_team_atss else 0.0
+            apttss = truncate_3(sum(all_team_atss) / len(all_team_atss)) if all_team_atss else 0.0
 
             # APTTSS of breaking teams only
             breaking_atss = [team_atss[t_id] for t_id in breaking_team_ids if t_id in team_atss]
-            apttss_breaking = round(sum(breaking_atss) / len(breaking_atss), 2) if breaking_atss else 0.0
+            apttss_breaking = truncate_3(sum(breaking_atss) / len(breaking_atss)) if breaking_atss else 0.0
 
             rankings.append({
                 "tournament_id": tid,

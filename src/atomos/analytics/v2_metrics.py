@@ -28,7 +28,11 @@ import sqlite3
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple
 
-from atomos.analytics.tournaments import OFFICIAL_TOURNAMENT_DATES, CLEAN_TOURNAMENT_NAMES
+from atomos.analytics.tournaments import (
+    OFFICIAL_TOURNAMENT_DATES,
+    CLEAN_TOURNAMENT_NAMES,
+    CHRONOLOGICAL_TOURNAMENT_ORDER,
+)
 
 
 ACHIEVEMENT_ORDER = {
@@ -44,6 +48,21 @@ ACHIEVEMENT_ORDER = {
     "Unranked": 9,
 }
 
+CANONICAL_TEAM_ALIASES = {
+    "Trinity A": "TCK A",
+    "Trinity B": "TCK B",
+    "EMS A": "Moir A",
+    "Nalanda A": "NC A",
+    "Nalanda B": "NC B",
+    "Anula A": "AV A",
+    "Anula B": "AV B",
+    "MC A": "Metho A",
+    "SJOC A": "SJCJ A",
+    "SGC A": "SGCK A",
+    "EC A": "EIK A",
+    "EC B": "EIK B",
+}
+
 
 def calc_sample_stdev(values: List[float]) -> float:
     """Calculate sample standard deviation. Returns 0.0 if fewer than 2 values."""
@@ -51,7 +70,7 @@ def calc_sample_stdev(values: List[float]) -> float:
         return 0.0
     mean = sum(values) / len(values)
     variance = sum((x - mean) ** 2 for x in values) / (len(values) - 1)
-    return round(math.sqrt(variance), 4)
+    return truncate_3(math.sqrt(variance)) or 0.0
 
 
 def truncate_3(val: Optional[float]) -> Optional[float]:
@@ -78,6 +97,103 @@ class V2MetricsEngine:
     def __init__(self, conn: sqlite3.Connection):
         self.conn = conn
         self.conn.row_factory = sqlite3.Row
+
+    def _get_all_team_and_debater_achievements(self) -> Tuple[Dict[int, str], Dict[str, str], Dict[int, str]]:
+        """
+        Compute forensic knockout stage achievements for:
+        1. raw team_id -> achievement
+        2. canonical_team_name -> achievement
+        3. person_id -> achievement
+        """
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT r.tournament_id, r.round_number, COUNT(d.id) as deb_count, r.id as round_id
+            FROM rounds r
+            JOIN debates d ON r.id = d.round_id
+            WHERE r.round_type = 'ELIMINATION'
+            GROUP BY r.id
+            ORDER BY r.tournament_id, r.round_number DESC
+        """)
+        elim_round_rows = cur.fetchall()
+        tour_rounds: Dict[int, List[Tuple[int, int, int]]] = {}
+        for r in elim_round_rows:
+            tour_rounds.setdefault(r["tournament_id"], []).append((r["round_number"], r["deb_count"], r["round_id"]))
+        for tid in tour_rounds:
+            tour_rounds[tid].sort(key=lambda x: x[0], reverse=True)
+
+        cur.execute("""
+            SELECT d.id, r.tournament_id, r.round_number, d.prop_team_id, d.opp_team_id,
+                   SUM(CASE WHEN b.winner_side = 'Proposition' THEN 1 ELSE 0 END) as p_bal,
+                   SUM(CASE WHEN b.winner_side = 'Opposition' THEN 1 ELSE 0 END) as o_bal
+            FROM debates d
+            JOIN rounds r ON d.round_id = r.id
+            LEFT JOIN adjudicator_ballots b ON d.id = b.debate_id
+            WHERE r.round_type = 'ELIMINATION'
+            GROUP BY d.id
+        """)
+        debates = cur.fetchall()
+
+        def better_ach(a: Optional[str], b: Optional[str]) -> str:
+            if not a:
+                return b or "Preliminary Rounds"
+            if not b:
+                return a
+            return a if ACHIEVEMENT_ORDER.get(a, 9) <= ACHIEVEMENT_ORDER.get(b, 9) else b
+
+        raw_team_ach: Dict[int, str] = {}
+        for d in debates:
+            tid = d["tournament_id"]
+            rnum = d["round_number"]
+            p_tid = d["prop_team_id"]
+            o_tid = d["opp_team_id"]
+            p_bal = d["p_bal"] or 0
+            o_bal = d["o_bal"] or 0
+
+            t_elims = tour_rounds.get(tid, [])
+            gf_round = next((r for r in t_elims if r[1] == 1), t_elims[0] if t_elims else None)
+
+            if gf_round and rnum == gf_round[0]:
+                if p_bal > o_bal:
+                    p_ach, o_ach = "Champion", "Finalist"
+                else:
+                    p_ach, o_ach = "Finalist", "Champion"
+            else:
+                match_r = next((r for r in t_elims if r[0] == rnum), None)
+                cnt = match_r[1] if match_r else 0
+                if cnt == 2:
+                    stage = "Semifinalist"
+                elif cnt == 4:
+                    stage = "Quarterfinalist"
+                elif cnt == 8:
+                    stage = "Octofinalist"
+                else:
+                    stage = "Partial Octofinalist"
+                p_ach, o_ach = stage, stage
+
+            if p_tid:
+                raw_team_ach[p_tid] = better_ach(raw_team_ach.get(p_tid), p_ach)
+            if o_tid:
+                raw_team_ach[o_tid] = better_ach(raw_team_ach.get(o_tid), o_ach)
+
+        # Canonical team achievements
+        cur.execute("SELECT id, name FROM teams WHERE name NOT LIKE '%Swing%'")
+        canonical_team_ach: Dict[str, str] = {}
+        for r in cur.fetchall():
+            cname = CANONICAL_TEAM_ALIASES.get(r["name"], r["name"])
+            tid = r["id"]
+            if tid in raw_team_ach:
+                canonical_team_ach[cname] = better_ach(canonical_team_ach.get(cname), raw_team_ach[tid])
+
+        # Person achievements
+        cur.execute("SELECT DISTINCT person_id, team_id FROM speech_performances WHERE team_id IS NOT NULL")
+        person_ach: Dict[int, str] = {}
+        for r in cur.fetchall():
+            pid = r["person_id"]
+            tid = r["team_id"]
+            if tid in raw_team_ach:
+                person_ach[pid] = better_ach(person_ach.get(pid), raw_team_ach[tid])
+
+        return raw_team_ach, canonical_team_ach, person_ach
 
     # =========================================================================
     # 1. MULTI-PURPOSE INDIVIDUAL (DEBATER) LEADERBOARD
@@ -176,6 +292,7 @@ class V2MetricsEngine:
         for r in deb_rows:
             person_debates[r["person_id"]].append(r["won"])
 
+        _, _, person_ach = self._get_all_team_and_debater_achievements()
         speakers: List[Dict[str, Any]] = []
 
         for pid, tours in person_rounds.items():
@@ -198,7 +315,7 @@ class V2MetricsEngine:
             deb_list = person_debates.get(pid, [])
             debates = len(deb_list)
             wins = sum(deb_list)
-            win_pct = round((wins / debates * 100.0), 1) if debates > 0 else 0.0
+            win_pct = truncate_3(wins / debates * 100.0) if debates > 0 else 0.0
 
             speakers.append({
                 "person_id": pid,
@@ -206,7 +323,7 @@ class V2MetricsEngine:
                 "speaker_name": name,
                 "institution": inst,
                 "national_level": nat,
-                "speaker_score": round(mean_score, 5),
+                "speaker_score": truncate_3(mean_score),
                 "win_percentage": win_pct,
                 "stdev": stdev,
                 "prelims_debated": speech_count,
@@ -214,6 +331,7 @@ class V2MetricsEngine:
                 "total_substantive_speeches": speech_count,
                 "total_debates": debates,
                 "total_wins": wins,
+                "highest_achievement": person_ach.get(pid, "Preliminary Rounds"),
             })
 
         # Apply multi-metric sorting
@@ -230,15 +348,17 @@ class V2MetricsEngine:
             return 4
 
         if sort_by in ("win_pct", "win_percentage", "win_rate"):
-            speakers.sort(key=lambda s: (-s["win_percentage"], -s["speaker_score"], -s["prelims_debated"]))
+            speakers.sort(key=lambda s: (-s["win_percentage"], -(s["speaker_score"] or 0), -s["prelims_debated"]))
         elif sort_by in ("stdev", "std", "consistency"):
-            speakers.sort(key=lambda s: (s["stdev"], -s["speaker_score"]))
+            speakers.sort(key=lambda s: (s["stdev"] if s["stdev"] is not None else 999, -(s["speaker_score"] or 0)))
         elif sort_by in ("prelims", "prelims_debated"):
-            speakers.sort(key=lambda s: (-s["prelims_debated"], -s["speaker_score"]))
+            speakers.sort(key=lambda s: (-s["prelims_debated"], -(s["speaker_score"] or 0)))
         elif sort_by in ("nat_status", "national_level", "nat_pool"):
-            speakers.sort(key=lambda s: (nat_rank(s["national_level"]), -s["speaker_score"]))
+            speakers.sort(key=lambda s: (nat_rank(s["national_level"]), -(s["speaker_score"] or 0)))
+        elif sort_by in ("achievement", "highest_achievement"):
+            speakers.sort(key=lambda s: (ACHIEVEMENT_ORDER.get(s["highest_achievement"], 9), -(s["speaker_score"] or 0)))
         else:  # default 'speaker_score'
-            speakers.sort(key=lambda s: (-s["speaker_score"], -s["win_percentage"], s["stdev"]))
+            speakers.sort(key=lambda s: (-(s["speaker_score"] or 0), -s["win_percentage"], s["stdev"] if s["stdev"] is not None else 999))
 
         for idx, s in enumerate(speakers, start=1):
             s["rank"] = idx
@@ -259,7 +379,7 @@ class V2MetricsEngine:
           - 'tab' (Default): >= 3 tournaments
           - 'general': >= 2 tournaments
         sort_by:
-          - 'atss' (Default): Average Total Speaker Score
+          - 'atss' (Default): Average Total Speaker Score (Avg of avgs)
           - 'win_pct': Team win rate
           - 'awpt': Average wins per tournament
           - 'achievement': Highest achievement in knockouts
@@ -267,32 +387,39 @@ class V2MetricsEngine:
         min_tourneys = 3 if tier == "tab" else 2
         cur = self.conn.cursor()
 
-        # Query all distinct teams that participated in tournaments
+        raw_team_ach, canonical_team_ach, _ = self._get_all_team_and_debater_achievements()
+
+        # Query all teams with canonical alias mapping
         cur.execute("""
-            SELECT t.name as team_name,
-                   i.name as institution_name,
-                   COUNT(DISTINCT t.tournament_id) as tournaments_debated,
-                   GROUP_CONCAT(DISTINCT t.id) as team_ids_str
+            SELECT t.id, t.name, t.tournament_id, i.name as institution_name
             FROM teams t
             JOIN institutions i ON t.institution_id = i.id
             WHERE t.name NOT LIKE '%Swing%'
-            GROUP BY t.name
-            HAVING tournaments_debated >= ?
-        """, (min_tourneys,))
-        team_rows = cur.fetchall()
+        """)
+        all_teams = cur.fetchall()
+
+        # Group team IDs by (canonical_name, institution_name)
+        grouped_teams: Dict[Tuple[str, str], Dict[str, Any]] = defaultdict(lambda: {"team_ids": [], "tournaments": set()})
+        for tr in all_teams:
+            cname = CANONICAL_TEAM_ALIASES.get(tr["name"], tr["name"])
+            key = (cname, tr["institution_name"])
+            grouped_teams[key]["team_ids"].append(tr["id"])
+            grouped_teams[key]["tournaments"].add(tr["tournament_id"])
 
         teams_res: List[Dict[str, Any]] = []
 
-        for tr in team_rows:
-            team_name = tr["team_name"]
-            inst_name = tr["institution_name"]
-            tourneys_debated = tr["tournaments_debated"]
-            team_ids = [int(x) for x in tr["team_ids_str"].split(",") if x]
+        for (cname, inst_name), tdata in grouped_teams.items():
+            tourneys_debated = len(tdata["tournaments"])
+            if tourneys_debated < min_tourneys:
+                continue
 
-            # Fetch all prelim debates contested by this team
+            team_ids = tdata["team_ids"]
             placeholders = ",".join("?" * len(team_ids))
+
+            # Fetch all prelim debates contested by this team across tournaments
             cur.execute(f"""
                 SELECT d.id as debate_id,
+                       r.tournament_id,
                        d.round_id,
                        d.prop_team_id,
                        d.opp_team_id,
@@ -313,15 +440,21 @@ class V2MetricsEngine:
             if not debates:
                 continue
 
-            match_scores: List[float] = []
+            # Group match scores by tournament for "Avg of avgs" ATSS calculation
+            tour_scores: Dict[int, List[float]] = defaultdict(list)
+            all_match_scores: List[float] = []
             total_wins = 0
             prelims_debated = len(debates)
 
             for deb in debates:
                 is_prop = deb["prop_team_id"] in team_ids
                 score = deb["prop_avg_score"] if is_prop else deb["opp_avg_score"]
+                tid = deb["tournament_id"]
+
                 if score and score > 0:
-                    match_scores.append(float(score))
+                    fscore = float(score)
+                    all_match_scores.append(fscore)
+                    tour_scores[tid].append(fscore)
 
                 # Check win
                 won = False
@@ -332,66 +465,19 @@ class V2MetricsEngine:
                 if won:
                     total_wins += 1
 
-            atss = round(sum(match_scores) / len(match_scores), 2) if match_scores else 0.0
-            stdev = calc_sample_stdev(match_scores)
-            win_pct = round((total_wins / prelims_debated * 100.0), 1) if prelims_debated else 0.0
-            awpt = round(total_wins / tourneys_debated, 2) if tourneys_debated else 0.0
-            wins_per_prelim = round(total_wins / prelims_debated, 2) if prelims_debated else 0.0
+            # ATSS per tournament, then average across tournaments ("Avg of avgs")
+            tour_atsses = [sum(sc) / len(sc) for sc in tour_scores.values() if sc]
+            atss = truncate_3(sum(tour_atsses) / len(tour_atsses)) if tour_atsses else 0.0
 
-            # Determine highest break achievement across all tournaments
-            cur.execute(f"""
-                SELECT r.round_number, r.name as round_name, t.slug as tournament_slug
-                FROM debates d
-                JOIN rounds r ON d.round_id = r.id
-                JOIN tournaments t ON r.tournament_id = t.id
-                WHERE r.round_type = 'ELIMINATION'
-                  AND (d.prop_team_id IN ({placeholders}) OR d.opp_team_id IN ({placeholders}))
-                ORDER BY r.round_number DESC
-            """, team_ids + team_ids)
-            elim_debates = cur.fetchall()
+            stdev = calc_sample_stdev(all_match_scores)
+            win_pct = truncate_3(total_wins / prelims_debated * 100.0) if prelims_debated else 0.0
+            awpt = truncate_3(total_wins / tourneys_debated) if tourneys_debated else 0.0
+            wins_per_prelim = truncate_3(total_wins / prelims_debated) if prelims_debated else 0.0
 
-            highest_achieve = "Preliminary Rounds"
-            if elim_debates:
-                max_elim = elim_debates[0]
-                r_name = (max_elim["round_name"] or "").lower()
-                r_num = max_elim["round_number"]
-
-                # Check if they won the Grand Final
-                is_champ = False
-                for ed in elim_debates:
-                    ed_name = (ed["round_name"] or "").lower()
-                    if "final" in ed_name or "round 10" in ed_name or "round 11" in ed_name or "round 12" in ed_name:
-                        cur.execute("""
-                            SELECT b.winner_side, d.prop_team_id, d.opp_team_id
-                            FROM adjudicator_ballots b
-                            JOIN debates d ON b.debate_id = d.id
-                            JOIN rounds r ON d.round_id = r.id
-                            WHERE r.tournament_id = (SELECT id FROM tournaments WHERE slug = ?)
-                              AND r.round_type = 'ELIMINATION'
-                            ORDER BY r.round_number DESC LIMIT 1
-                        """, (ed["tournament_slug"],))
-                        gf = cur.fetchone()
-                        if gf:
-                            winner_team_id = gf["prop_team_id"] if gf["winner_side"] == "Proposition" else gf["opp_team_id"]
-                            if winner_team_id in team_ids:
-                                is_champ = True
-                                break
-
-                if is_champ:
-                    highest_achieve = "Champion"
-                elif "final" in r_name or r_num >= 10:
-                    highest_achieve = "Finalist"
-                elif "semi" in r_name or r_num >= 8:
-                    highest_achieve = "Semifinalist"
-                elif "quarter" in r_name or r_num >= 7:
-                    highest_achieve = "Quarterfinalist"
-                elif "octo" in r_name or r_num >= 6:
-                    highest_achieve = "Octofinalist"
-                else:
-                    highest_achieve = "Elimination Outrounds"
+            highest_achieve = canonical_team_ach.get(cname, "Preliminary Rounds")
 
             teams_res.append({
-                "team_name": team_name,
+                "team_name": cname,
                 "institution": inst_name,
                 "atss": atss,
                 "win_percentage": win_pct,
@@ -406,14 +492,14 @@ class V2MetricsEngine:
             })
 
         # Multi-metric sorting
-        if sort_by == "win_pct":
-            teams_res.sort(key=lambda t: (-t["win_percentage"], -t["atss"]))
-        elif sort_by == "awpt":
-            teams_res.sort(key=lambda t: (-t["awpt"], -t["atss"]))
-        elif sort_by == "achievement":
-            teams_res.sort(key=lambda t: (t["achievement_rank"], -t["atss"]))
+        if sort_by in ("win_pct", "win_percentage", "win_rate"):
+            teams_res.sort(key=lambda t: (-t["win_percentage"], -(t["atss"] or 0)))
+        elif sort_by in ("awpt", "wins_per_tournament"):
+            teams_res.sort(key=lambda t: (-t["awpt"], -(t["atss"] or 0)))
+        elif sort_by in ("achievement", "highest_achievement"):
+            teams_res.sort(key=lambda t: (t["achievement_rank"], -(t["atss"] or 0)))
         else:  # default 'atss'
-            teams_res.sort(key=lambda t: (-t["atss"], -t["win_percentage"]))
+            teams_res.sort(key=lambda t: (-(t["atss"] or 0), -t["win_percentage"]))
 
         for idx, t in enumerate(teams_res, start=1):
             t["rank"] = idx
@@ -429,15 +515,21 @@ class V2MetricsEngine:
         lineup combinations and tournament-by-tournament breakdowns.
         """
         cur = self.conn.cursor()
+        raw_name = team_name.strip()
+        canonical_name = CANONICAL_TEAM_ALIASES.get(raw_name, raw_name)
 
-        # Find team records matching name
-        cur.execute("""
+        # Collect all raw alias names matching this canonical team
+        matching_aliases = [k for k, v in CANONICAL_TEAM_ALIASES.items() if v.lower() == canonical_name.lower()]
+        matching_aliases.append(canonical_name)
+
+        cur.execute(f"""
             SELECT t.id, t.name, t.tournament_id, i.name as institution_name
             FROM teams t
             JOIN institutions i ON t.institution_id = i.id
-            WHERE LOWER(t.name) = LOWER(?)
-        """, (team_name.strip(),))
+            WHERE LOWER(t.name) IN ({','.join('LOWER(?)' for _ in matching_aliases)})
+        """, matching_aliases)
         team_instances = cur.fetchall()
+
         if not team_instances:
             # Fuzzy match
             cur.execute("""
@@ -445,17 +537,19 @@ class V2MetricsEngine:
                 FROM teams t
                 JOIN institutions i ON t.institution_id = i.id
                 WHERE t.name LIKE ?
-                LIMIT 5
-            """, (f"%{team_name.strip()}%",))
+                LIMIT 10
+            """, (f"%{raw_name}%",))
             team_instances = cur.fetchall()
 
         if not team_instances:
             return None
 
-        canonical_team_name = team_instances[0]["name"]
+        canonical_team_name = canonical_name
         institution_name = team_instances[0]["institution_name"]
         team_ids = [r["id"] for r in team_instances]
         placeholders = ",".join("?" * len(team_ids))
+
+        raw_team_ach, canonical_team_ach, _ = self._get_all_team_and_debater_achievements()
 
         # Query all debates
         cur.execute(f"""
@@ -497,7 +591,8 @@ class V2MetricsEngine:
         for deb in debates:
             deb_id = deb["debate_id"]
             tour_slug = deb["tournament_slug"]
-            tour_name = CLEAN_TOURNAMENT_NAMES.get(deb["tournament_id"], deb["tournament_name"])
+            tour_id = deb["tournament_id"]
+            tour_name = CLEAN_TOURNAMENT_NAMES.get(tour_id, deb["tournament_name"])
             tournaments_seen.add(tour_slug)
 
             is_prop = deb["prop_team_id"] in team_ids
@@ -517,16 +612,16 @@ class V2MetricsEngine:
             if won:
                 total_wins += 1
 
-            margin = round((my_score - opp_score), 2) if my_score and opp_score else 0.0
+            margin = truncate_3(my_score - opp_score) if my_score and opp_score else 0.0
 
             # Lineup combination for this debate (substantive speakers only)
-            cur.execute("""
+            cur.execute(f"""
                 SELECT DISTINCT p.canonical_name
                 FROM speech_performances sp
                 JOIN persons p ON sp.person_id = p.id
                 WHERE sp.debate_id = ? AND sp.speech_type = 'SUBSTANTIVE'
-                  AND sp.team_id IN ({})
-            """.format(placeholders), [deb_id] + team_ids)
+                  AND sp.team_id IN ({placeholders})
+            """, [deb_id] + team_ids)
             spk_rows = cur.fetchall()
             speakers = sorted([r["canonical_name"] for r in spk_rows if r["canonical_name"]])
 
@@ -543,6 +638,7 @@ class V2MetricsEngine:
             # Add to tournament breakdown
             if tour_slug not in tournament_groups:
                 tournament_groups[tour_slug] = {
+                    "tournament_id": tour_id,
                     "tournament_name": tour_name,
                     "slug": tour_slug,
                     "scores": [],
@@ -565,8 +661,8 @@ class V2MetricsEngine:
                 "round_type": deb["round_type"],
                 "side": my_side,
                 "opponent": opp_name or "TBD",
-                "team_score": round(my_score, 2) if my_score else 0.0,
-                "opp_score": round(opp_score, 2) if opp_score else 0.0,
+                "team_score": truncate_3(my_score) if my_score else 0.0,
+                "opp_score": truncate_3(opp_score) if opp_score else 0.0,
                 "margin": margin,
                 "result": "Win" if won else "Loss",
                 "speakers": speakers,
@@ -577,8 +673,8 @@ class V2MetricsEngine:
         for lk, lv in lineup_tracker.items():
             l_debates = lv["debates"]
             l_wins = lv["wins"]
-            l_win_pct = round((l_wins / l_debates * 100.0), 1) if l_debates else 0.0
-            l_atss = round(sum(lv["scores"]) / len(lv["scores"]), 2) if lv["scores"] else 0.0
+            l_win_pct = truncate_3(l_wins / l_debates * 100.0) if l_debates else 0.0
+            l_atss = truncate_3(sum(lv["scores"]) / len(lv["scores"])) if lv["scores"] else 0.0
             lineup_list.append({
                 "lineup_str": lk,
                 "lineup": lv["speakers"],
@@ -593,20 +689,23 @@ class V2MetricsEngine:
         # Top 5 Win % Lineups (min 2 debates prioritized)
         top_win_lineups = sorted(
             [l for l in lineup_list if l["debates"] >= 2] or lineup_list,
-            key=lambda x: (-x["win_percentage"], -x["debates"], -x["atss"])
+            key=lambda x: (-x["win_percentage"], -x["debates"], -(x["atss"] or 0))
         )[:5]
 
         # Top 5 Highest ATSS Lineups
         top_atss_lineups = sorted(
             [l for l in lineup_list if l["debates"] >= 2] or lineup_list,
-            key=lambda x: (-x["atss"], -x["win_percentage"], -x["debates"])
+            key=lambda x: (-(x["atss"] or 0), -x["win_percentage"], -x["debates"])
         )[:5]
 
-        # Format tournament breakdown list
+        # Format tournament breakdown list (sorted reverse chronologically)
         tour_breakdown = []
-        for tslug, tg in tournament_groups.items():
+        tour_atss_list = []
+        for tslug, tg in sorted(tournament_groups.items(), key=lambda x: CHRONOLOGICAL_TOURNAMENT_ORDER.get(x[1]["tournament_id"], 0), reverse=True):
             t_scores = tg["scores"]
-            t_atss = round(sum(t_scores) / len(t_scores), 2) if t_scores else 0.0
+            t_atss = truncate_3(sum(t_scores) / len(t_scores)) if t_scores else 0.0
+            if t_scores:
+                tour_atss_list.append(sum(t_scores) / len(t_scores))
             # Highest stage in knockouts
             knock_stages = [s for s in tg["stages_reached"] if any(w in s.lower() for w in ["round 6", "round 7", "round 8", "round 9", "round 10", "round 11", "round 12", "final", "semi", "quarter", "octo"])]
             stage_str = knock_stages[-1] if knock_stages else "Preliminary Rounds"
@@ -620,11 +719,12 @@ class V2MetricsEngine:
                 "rounds": tg["rounds"],
             })
 
-        overall_atss = round(sum(match_scores) / len(match_scores), 2) if match_scores else 0.0
+        overall_atss = truncate_3(sum(tour_atss_list) / len(tour_atss_list)) if tour_atss_list else 0.0
         overall_stdev = calc_sample_stdev(match_scores)
         prelims_total = len(match_scores)
-        overall_win_pct = round((total_wins / len(debates) * 100.0), 1) if debates else 0.0
-        awpt = round(total_wins / len(tournaments_seen), 2) if tournaments_seen else 0.0
+        overall_win_pct = truncate_3(total_wins / len(debates) * 100.0) if debates else 0.0
+        awpt = truncate_3(total_wins / len(tournaments_seen)) if tournaments_seen else 0.0
+        highest_achieve = canonical_team_ach.get(canonical_team_name, "Preliminary Rounds")
 
         return {
             "team_name": canonical_team_name,
@@ -637,6 +737,7 @@ class V2MetricsEngine:
             "total_debates": len(debates),
             "total_wins": total_wins,
             "wins_per_tournament": awpt,
+            "highest_achievement": highest_achieve,
             "top_win_lineups": top_win_lineups,
             "top_atss_lineups": top_atss_lineups,
             "tournament_breakdown": tour_breakdown,
@@ -700,44 +801,74 @@ class V2MetricsEngine:
             if unique_tourneys < min_tourneys:
                 continue
 
-            # Identify A team and B team
-            team_names = set(t["name"] for t in teams)
-            a_team_name = next((n for n in team_names if n.endswith(" A")), None) or f"{iname} A"
-            b_team_name = next((n for n in team_names if n.endswith(" B")), None) or f"{iname} B"
+            # Identify A team and B team records
+            a_teams = [t for t in teams if t["name"].endswith(" A") or t["name"].endswith("-A")]
+            b_teams = [t for t in teams if t["name"].endswith(" B") or t["name"].endswith("-B")]
 
-            # Compute A team ATSS
-            cur.execute("""
-                SELECT AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as match_avg
-                FROM debates d
-                JOIN rounds r ON d.round_id = r.id
-                JOIN teams t ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
-                JOIN adjudicator_ballots b ON d.id = b.debate_id
-                WHERE t.institution_id = ? AND t.name = ?
-                  AND r.round_type = 'PRELIMINARY' AND b.prop_total_score > 0
-                GROUP BY d.id
-            """, (iid, a_team_name))
-            a_scores = [float(r["match_avg"]) for r in cur.fetchall() if r["match_avg"]]
-            a_atss = round(sum(a_scores) / len(a_scores), 2) if a_scores else 0.0
+            a_team_ids = [t["id"] for t in a_teams]
+            b_team_ids = [t["id"] for t in b_teams]
 
-            # Compute B team ATSS
-            cur.execute("""
-                SELECT AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as match_avg
-                FROM debates d
-                JOIN rounds r ON d.round_id = r.id
-                JOIN teams t ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
-                JOIN adjudicator_ballots b ON d.id = b.debate_id
-                WHERE t.institution_id = ? AND t.name = ?
-                  AND r.round_type = 'PRELIMINARY' AND b.prop_total_score > 0
-                GROUP BY d.id
-            """, (iid, b_team_name))
-            b_scores = [float(r["match_avg"]) for r in cur.fetchall() if r["match_avg"]]
-            b_atss = round(sum(b_scores) / len(b_scores), 2) if b_scores else None
+            # Primary canonical team names for display/navigation
+            a_team_name = None
+            if a_teams:
+                first_a = a_teams[0]["name"]
+                a_team_name = CANONICAL_TEAM_ALIASES.get(first_a, first_a)
+
+            b_team_name = None
+            if b_teams:
+                first_b = b_teams[0]["name"]
+                b_team_name = CANONICAL_TEAM_ALIASES.get(first_b, first_b)
+
+            # Compute A team ATSS (per-tournament average of averages)
+            a_atss = 0.0
+            if a_team_ids:
+                a_placeholders = ",".join("?" * len(a_team_ids))
+                cur.execute(f"""
+                    SELECT r.tournament_id,
+                           AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as tour_avg
+                    FROM debates d
+                    JOIN rounds r ON d.round_id = r.id
+                    JOIN teams t ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
+                    JOIN adjudicator_ballots b ON d.id = b.debate_id
+                    WHERE t.id IN ({a_placeholders})
+                      AND r.round_type = 'PRELIMINARY' AND b.prop_total_score > 0
+                    GROUP BY r.tournament_id, d.id
+                """, a_team_ids)
+                # Group debate averages by tournament
+                a_tour_debates: Dict[int, List[float]] = defaultdict(list)
+                for row in cur.fetchall():
+                    if row["tour_avg"]:
+                        a_tour_debates[row["tournament_id"]].append(float(row["tour_avg"]))
+                a_tour_atsses = [sum(scores) / len(scores) for scores in a_tour_debates.values() if scores]
+                a_atss = truncate_3(sum(a_tour_atsses) / len(a_tour_atsses)) if a_tour_atsses else 0.0
+
+            # Compute B team ATSS (per-tournament average of averages)
+            b_atss = None
+            if b_team_ids:
+                b_placeholders = ",".join("?" * len(b_team_ids))
+                cur.execute(f"""
+                    SELECT r.tournament_id,
+                           AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as tour_avg
+                    FROM debates d
+                    JOIN rounds r ON d.round_id = r.id
+                    JOIN teams t ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
+                    JOIN adjudicator_ballots b ON d.id = b.debate_id
+                    WHERE t.id IN ({b_placeholders})
+                      AND r.round_type = 'PRELIMINARY' AND b.prop_total_score > 0
+                    GROUP BY r.tournament_id, d.id
+                """, b_team_ids)
+                b_tour_debates: Dict[int, List[float]] = defaultdict(list)
+                for row in cur.fetchall():
+                    if row["tour_avg"]:
+                        b_tour_debates[row["tournament_id"]].append(float(row["tour_avg"]))
+                b_tour_atsses = [sum(scores) / len(scores) for scores in b_tour_debates.values() if scores]
+                b_atss = truncate_3(sum(b_tour_atsses) / len(b_tour_atsses)) if b_tour_atsses else None
 
             # New Delta Formula: (0.8 * A + 1.2 * B) / 2
-            b_val = b_atss if b_atss else 0.0
-            delta = round((0.8 * a_atss + 1.2 * b_val) / 2.0, 2)
+            b_val = b_atss if b_atss is not None else 0.0
+            delta = truncate_3((0.8 * a_atss + 1.2 * b_val) / 2.0)
 
-            net_diff = round(abs(a_atss - b_atss), 2) if b_atss is not None else None
+            net_diff = truncate_3(abs(a_atss - b_atss)) if b_atss is not None else None
 
             # Win % across all teams of this school
             cur.execute("""
@@ -753,29 +884,33 @@ class V2MetricsEngine:
             w_row = cur.fetchone()
             tot_deb = w_row["total_debates"] or 0
             tot_wins = w_row["wins"] or 0
-            win_pct = round((tot_wins / tot_deb * 100.0), 1) if tot_deb else 0.0
+            win_pct = truncate_3(tot_wins / tot_deb * 100.0) if tot_deb else 0.0
 
             # Debater Pool: Count of unique debaters from school eligible at least once (>= 3 prelims in a tournament)
             cur.execute("""
-                SELECT COUNT(DISTINCT sp.person_id) as pool_cnt
-                FROM speech_performances sp
-                JOIN teams t ON sp.team_id = t.id
-                JOIN rounds r ON sp.round_id = r.id
-                WHERE t.institution_id = ? AND r.round_type = 'PRELIMINARY'
-                GROUP BY sp.person_id, r.tournament_id
-                HAVING COUNT(DISTINCT sp.round_id) >= 3
+                SELECT COUNT(DISTINCT e.person_id) as pool_cnt
+                FROM (
+                    SELECT sp.person_id
+                    FROM speech_performances sp
+                    JOIN teams t ON sp.team_id = t.id
+                    JOIN rounds r ON sp.round_id = r.id
+                    WHERE t.institution_id = ? AND r.round_type = 'PRELIMINARY'
+                    GROUP BY sp.person_id, r.tournament_id
+                    HAVING COUNT(DISTINCT sp.round_id) >= 3
+                ) e
             """, (iid,))
-            pool_rows = cur.fetchall()
-            pool_cnt = len(pool_rows)
+            pool_cnt = cur.fetchone()["pool_cnt"] or 0
+
+            team_names = set(t["name"] for t in teams)
 
             institutions.append({
                 "institution_id": iid,
                 "institution_name": iname,
                 "code": icode,
                 "delta": delta,
-                "a_team_name": a_team_name if a_scores else None,
-                "a_atss": a_atss if a_scores else 0.0,
-                "b_team_name": b_team_name if b_scores else None,
+                "a_team_name": a_team_name,
+                "a_atss": a_atss,
+                "b_team_name": b_team_name,
                 "b_atss": b_atss,
                 "net_diff": net_diff,
                 "win_percentage": win_pct,
@@ -787,19 +922,19 @@ class V2MetricsEngine:
 
         # Apply multi-metric sorting
         if sort_by == "a_atss":
-            institutions.sort(key=lambda x: (-x["a_atss"], -x["delta"]))
+            institutions.sort(key=lambda x: (-(x["a_atss"] or 0), -(x["delta"] or 0)))
         elif sort_by == "b_atss":
             # Show institutions with B team first, sorted by B ATSS
-            institutions.sort(key=lambda x: (0 if x["b_atss"] is not None else 1, -(x["b_atss"] or 0), -x["delta"]))
+            institutions.sort(key=lambda x: (0 if x["b_atss"] is not None else 1, -(x["b_atss"] or 0), -(x["delta"] or 0)))
         elif sort_by == "net_diff":
             # Smallest difference first; schools without B team sorted last
             institutions.sort(key=lambda x: (0 if x["net_diff"] is not None else 1, x["net_diff"] if x["net_diff"] is not None else 999))
         elif sort_by == "win_pct":
-            institutions.sort(key=lambda x: (-x["win_percentage"], -x["delta"]))
+            institutions.sort(key=lambda x: (-x["win_percentage"], -(x["delta"] or 0)))
         elif sort_by == "pool":
-            institutions.sort(key=lambda x: (-x["pool_count"], -x["delta"]))
+            institutions.sort(key=lambda x: (-x["pool_count"], -(x["delta"] or 0)))
         else:  # default 'delta'
-            institutions.sort(key=lambda x: (-x["delta"], -x["win_percentage"]))
+            institutions.sort(key=lambda x: (-(x["delta"] or 0), -x["win_percentage"]))
 
         for idx, inst in enumerate(institutions, start=1):
             inst["rank"] = idx
@@ -831,7 +966,7 @@ class V2MetricsEngine:
         mult_insts = self.get_multipurpose_institutions(tier="general", sort_by="delta")
         inst_meta = next((m for m in mult_insts if m["institution_id"] == iid), None)
 
-        # Debater pool details: distinguish veteran debaters (>= 2 tournaments) vs new debaters (1 tournament)
+        # Debater pool details: unique debaters eligible at least once, split into veterans (>= 2 tournaments) vs new (1 tournament)
         cur.execute("""
             SELECT p.id as person_id,
                    p.canonical_name,
@@ -843,9 +978,18 @@ class V2MetricsEngine:
             JOIN teams t ON sp.team_id = t.id
             JOIN rounds r ON sp.round_id = r.id
             WHERE t.institution_id = ? AND r.round_type = 'PRELIMINARY'
+              AND sp.person_id IN (
+                  SELECT sp2.person_id
+                  FROM speech_performances sp2
+                  JOIN teams t2 ON sp2.team_id = t2.id
+                  JOIN rounds r2 ON sp2.round_id = r2.id
+                  WHERE t2.institution_id = ? AND r2.round_type = 'PRELIMINARY'
+                  GROUP BY sp2.person_id, r2.tournament_id
+                  HAVING COUNT(DISTINCT sp2.round_id) >= 3
+              )
             GROUP BY p.id
             ORDER BY tourneys_count DESC, prelims_count DESC
-        """, (iid,))
+        """, (iid, iid))
         debater_rows = cur.fetchall()
 
         veterans = []
@@ -938,7 +1082,7 @@ class V2MetricsEngine:
                   AND sp.speech_type = 'SUBSTANTIVE' AND sp.total_score > 0
             """, (jname,))
             aass_row = cur.fetchone()
-            aass = round(float(aass_row["aass"]), 2) if aass_row and aass_row["aass"] else 71.0
+            aass = truncate_3(float(aass_row["aass"])) if aass_row and aass_row["aass"] else None
 
             # AATSS: Average Awarded Team Speaker Score (mean of (prop_score + opp_score) / 2)
             cur.execute("""
@@ -947,11 +1091,11 @@ class V2MetricsEngine:
                 WHERE adjudicator_raw_name = ? AND prop_total_score > 0 AND opp_total_score > 0
             """, (jname,))
             aatss_row = cur.fetchone()
-            aatss = round(float(aatss_row["aatss"]), 2) if aatss_row and aatss_row["aatss"] else 249.0
+            aatss = truncate_3(float(aatss_row["aatss"])) if aatss_row and aatss_row["aatss"] else None
 
             total_decisions = pwins + owins
-            prop_pct = round((pwins / total_decisions * 100.0), 1) if total_decisions else 50.0
-            opp_pct = round((owins / total_decisions * 100.0), 1) if total_decisions else 50.0
+            prop_pct = truncate_3((pwins / total_decisions * 100.0)) if total_decisions else 0
+            opp_pct = truncate_3((owins / total_decisions * 100.0)) if total_decisions else 0
 
             judges.append({
                 "adjudicator_name": jname,
@@ -998,6 +1142,9 @@ class V2MetricsEngine:
         cur.execute("SELECT id, slug, name FROM tournaments ORDER BY id ASC")
         tourneys = cur.fetchall()
 
+        # Prelim + Open Knockout rounds count per tournament
+        open_knockout_counts = {1: 5, 2: 3, 3: 4, 4: 4, 7: 4, 10: 4, 16: 3, 18: 3}
+
         t_results: List[Dict[str, Any]] = []
 
         for tr in tourneys:
@@ -1006,30 +1153,46 @@ class V2MetricsEngine:
             name = CLEAN_TOURNAMENT_NAMES.get(tid, tr["name"])
             dates = OFFICIAL_TOURNAMENT_DATES.get(tid, "2026")
 
-            # ATSS: average team score of contested prelim rounds
+            # 1. Team prelim debate scores within tournament
             cur.execute("""
-                SELECT AVG(CASE WHEN sp.side = 'Proposition' THEN b.prop_total_score ELSE b.opp_total_score END) as atss
+                SELECT d.id, d.prop_team_id, d.opp_team_id, AVG(b.prop_total_score), AVG(b.opp_total_score)
                 FROM debates d
                 JOIN rounds r ON d.round_id = r.id
                 JOIN adjudicator_ballots b ON d.id = b.debate_id
-                JOIN speech_performances sp ON d.id = sp.debate_id
                 WHERE r.tournament_id = ? AND r.round_type = 'PRELIMINARY' AND b.prop_total_score > 0
+                GROUP BY d.id
             """, (tid,))
-            atss_val = cur.fetchone()[0]
-            atss = round(float(atss_val), 2) if atss_val else 248.0
+            team_scores: Dict[int, List[float]] = {}
+            for did, p_tid, o_tid, p_s, o_s in cur.fetchall():
+                if p_tid and p_s:
+                    team_scores.setdefault(p_tid, []).append(float(p_s))
+                if o_tid and o_s:
+                    team_scores.setdefault(o_tid, []).append(float(o_s))
 
-            # BRK ATSS: average ATSS of teams that broke to knockouts
+            # Team ATSS for each team within tournament
+            team_atss = {t_id: sum(scores) / len(scores) for t_id, scores in team_scores.items() if scores}
+            atss_val = sum(team_atss.values()) / len(team_atss) if team_atss else 0.0
+            atss = truncate_3(atss_val)
+
+            # 2. BRK ATSS: Average ATSS of each team who broke to knockouts in that tournament
             cur.execute("""
-                SELECT AVG(b.prop_total_score)
+                SELECT DISTINCT d.prop_team_id
                 FROM debates d
                 JOIN rounds r ON d.round_id = r.id
-                JOIN adjudicator_ballots b ON d.id = b.debate_id
-                WHERE r.tournament_id = ? AND r.round_type = 'ELIMINATION' AND b.prop_total_score > 0
-            """, (tid,))
-            brk_val = cur.fetchone()[0]
-            brk_atss = round(float(brk_val), 2) if brk_val else atss + 2.5
+                WHERE r.tournament_id = ? AND r.round_type = 'ELIMINATION'
+                UNION
+                SELECT DISTINCT d.opp_team_id
+                FROM debates d
+                JOIN rounds r ON d.round_id = r.id
+                WHERE r.tournament_id = ? AND r.round_type = 'ELIMINATION'
+            """, (tid, tid))
+            breaking_team_ids = [r[0] for r in cur.fetchall() if r[0] is not None]
 
-            # Participating Institutions
+            breaking_atss = [team_atss[t_id] for t_id in breaking_team_ids if t_id in team_atss]
+            brk_atss_val = sum(breaking_atss) / len(breaking_atss) if breaking_atss else 0.0
+            brk_atss = truncate_3(brk_atss_val)
+
+            # 3. Participating Institutions count
             cur.execute("""
                 SELECT COUNT(DISTINCT t.institution_id)
                 FROM teams t
@@ -1039,7 +1202,7 @@ class V2MetricsEngine:
             """, (tid,))
             insts_cnt = cur.fetchone()[0] or 0
 
-            # Participating Teams
+            # 4. Participating Teams count (excluding swing)
             cur.execute("""
                 SELECT COUNT(DISTINCT t.id)
                 FROM teams t
@@ -1049,14 +1212,14 @@ class V2MetricsEngine:
             """, (tid,))
             teams_cnt = cur.fetchone()[0] or 0
 
-            # Prelim rounds and Open Break rounds
+            # 5. Prelims and Open Break rounds count
             cur.execute("SELECT COUNT(*) FROM rounds WHERE tournament_id = ? AND round_type = 'PRELIMINARY'", (tid,))
             prelim_rds = cur.fetchone()[0] or 0
 
-            cur.execute("SELECT COUNT(*) FROM rounds WHERE tournament_id = ? AND round_type = 'ELIMINATION'", (tid,))
-            elim_rds = cur.fetchone()[0] or 0
+            open_knock = open_knockout_counts.get(tid, 0)
+            prelims_plus_knock = prelim_rds + open_knock
 
-            # Speeches count
+            # 6. Speeches count
             cur.execute("""
                 SELECT COUNT(sp.id)
                 FROM speech_performances sp
@@ -1065,7 +1228,7 @@ class V2MetricsEngine:
             """, (tid,))
             speeches_cnt = cur.fetchone()[0] or 0
 
-            # Prelim debates count
+            # 7. Prelim debates count
             cur.execute("""
                 SELECT COUNT(DISTINCT d.id)
                 FROM debates d
@@ -1084,8 +1247,8 @@ class V2MetricsEngine:
                 "participating_institutions": insts_cnt,
                 "participating_teams": teams_cnt,
                 "prelims_count": prelim_rds,
-                "open_knockouts_count": elim_rds,
-                "prelims_plus_knock": prelim_rds + elim_rds,
+                "open_knockouts_count": open_knock,
+                "prelims_plus_knock": prelims_plus_knock,
                 "total_speeches": speeches_cnt,
                 "prelim_debates": prelim_debates_cnt,
             })
@@ -1320,7 +1483,13 @@ class V2MetricsEngine:
 
         tournament_breakdown = []
         if base_prof:
-            for t in base_prof.tournaments:
+            # Reverse chronological order: latest tournament at top (e.g. SLSDC), earliest at bottom (e.g. AISDC)
+            sorted_tournaments = sorted(
+                base_prof.tournaments,
+                key=lambda t: CHRONOLOGICAL_TOURNAMENT_ORDER.get(t.tournament_id, 0),
+                reverse=True
+            )
+            for t in sorted_tournaments:
                 tname = CLEAN_TOURNAMENT_NAMES.get(t.tournament_id, t.tournament_name)
                 sub_scores = t.prelim_substantive_scores
                 t_avg = truncate_3(t.tournament_average) if t.tournament_average is not None else 0.0
@@ -1364,6 +1533,8 @@ class V2MetricsEngine:
                     'rounds': rounds_list
                 })
 
+        _, _, person_ach = self._get_all_team_and_debater_achievements()
+
         return {
             "person_id": pid,
             "canonical_name": cname,
@@ -1378,6 +1549,7 @@ class V2MetricsEngine:
             "tournaments_debated": tourneys_cnt,
             "total_debates": tot_debates,
             "total_wins": wins,
+            "highest_achievement": person_ach.get(pid, "Preliminary Rounds"),
             "position_averages": positions,
             "tournament_breakdown": tournament_breakdown,
         }

@@ -19,7 +19,7 @@ Verifies all requirements from Atomos V2 Upgrade READ_ME.txt:
 import math
 import pytest
 from atomos.database.connection import get_connection
-from atomos.analytics.v2_metrics import V2MetricsEngine, calc_sample_stdev
+from atomos.analytics.v2_metrics import V2MetricsEngine, calc_sample_stdev, truncate_3
 from atomos.server import create_app
 
 
@@ -133,7 +133,7 @@ class TestV2InstitutionAnalytics:
         for i in insts:
             a = i["a_atss"]
             b = i["b_atss"] or 0.0
-            expected = round((0.8 * a + 1.2 * b) / 2.0, 2)
+            expected = truncate_3((0.8 * a + 1.2 * b) / 2.0)
             assert i["delta"] == expected
 
     def test_institution_bio_veterans_split(self, v2):
