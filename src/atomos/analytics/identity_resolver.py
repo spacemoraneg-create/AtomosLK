@@ -2,15 +2,47 @@
 Atomos Identity Resolver & Merger Engine
 
 Provides automated duplicate detection and transactional merging for:
-1. Persons (Debaters & Adjudicators): Handles fuzzy typo matches, single-name expansions,
-   and alias reconciliation with full foreign key cascading.
-2. Teams: Identifies acronym vs full-name variations (e.g. TCK A vs Trinity A, EMS A vs Moir A)
-   and unifies performance records.
+1. Persons (Debaters & Adjudicators): Strictly implementing the user's 3 deterministic rules:
+   - Rule 1: Ignore capitalization (case-insensitive exact match). Different capitalization does not equal different names.
+   - Rule 2: Change of space characters (spacing variations between words, initials, tokens).
+   - Rule 3: 2 character changes away (Levenshtein distance <= 2).
+2. Teams: Identifies duplicates within the same institution and tournament (suffix-preserving, case/space/edit).
 """
 
-from difflib import SequenceMatcher
+import re
 import sqlite3
 from typing import Any, Dict, List, Optional, Tuple
+
+
+def levenshtein_distance_le_2(s1: str, s2: str) -> Optional[int]:
+    """
+    Returns the Levenshtein edit distance between s1 and s2 if <= 2, otherwise None.
+    Handles insertions, deletions, substitutions, and implicit adjacent transpositions.
+    """
+    len1, len2 = len(s1), len(s2)
+    if abs(len1 - len2) > 2:
+        return None
+    if s1 == s2:
+        return 0
+
+    prev = list(range(len2 + 1))
+    for i in range(len1):
+        curr = [i + 1] + [0] * len2
+        for j in range(len2):
+            cost = 0 if s1[i] == s2[j] else 1
+            curr[j + 1] = min(curr[j] + 1, prev[j + 1] + 1, prev[j] + cost)
+        if min(curr) > 2:
+            return None
+        prev = curr
+
+    res = prev[len2]
+    return res if res <= 2 else None
+
+
+def is_placeholder_name(name: str) -> bool:
+    """Filter out synthetic test placeholders and generic slot names."""
+    low = (name or "").strip().lower()
+    return bool(re.match(r"^(speaker\s*\d*|adjudicator\s*\d*|tab|official.*)$", low))
 
 
 class IdentityResolver:
@@ -36,11 +68,11 @@ class IdentityResolver:
         cur.execute("""
             CREATE TABLE IF NOT EXISTS person_aliases (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                person_id INTEGER NOT NULL,
-                alias_name TEXT NOT NULL,
-                source_tournament_id INTEGER,
+                person_id INTEGER NOT NULL REFERENCES persons(id) ON DELETE CASCADE,
+                raw_name TEXT NOT NULL,
+                source_tournament_id INTEGER REFERENCES tournaments(id) ON DELETE SET NULL,
                 created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                FOREIGN KEY (person_id) REFERENCES persons(id)
+                UNIQUE(person_id, raw_name)
             )
         """)
         self.conn.commit()
@@ -54,12 +86,17 @@ class IdentityResolver:
             dismissed.add((r[1], r[0]))
         return dismissed
 
-    def get_person_suggestions(self, min_similarity: float = 0.82) -> List[Dict[str, Any]]:
-        """Find candidate duplicate persons with similarity scores and evidence."""
+    def get_person_suggestions(self) -> List[Dict[str, Any]]:
+        """
+        Find candidate duplicate persons strictly using the 3 deterministic rules:
+        1. Ignore Capitalization: Different capitalization does not equal different names (0 edit distance case-insensitive).
+        2. Spacing / Whitespace Variation: Change of space characters between tokens or initials.
+        3. Edit Distance <= 2: Name is 1 or 2 character changes away from another name (Levenshtein distance <= 2).
+        """
         dismissed = self.get_dismissed_pairs("person")
         cur = self.conn.cursor()
 
-        # Fetch persons with speech counts and latest institution
+        # Fetch persons with speech counts, institution, and tournament activity
         cur.execute("""
             SELECT p.id, p.canonical_name, p.national_level,
                    COUNT(sp.id) as speech_count,
@@ -74,56 +111,89 @@ class IdentityResolver:
             FROM persons p
             LEFT JOIN speech_performances sp ON p.id = sp.person_id
             GROUP BY p.id
-            ORDER BY p.canonical_name
+            ORDER BY p.id
         """)
         persons = [dict(r) for r in cur.fetchall()]
 
         suggestions = []
 
         for i, p1 in enumerate(persons):
-            name1 = p1["canonical_name"].strip()
-            w1 = name1.lower().split()
-            if not w1:
+            n1 = p1["canonical_name"].strip()
+            if is_placeholder_name(n1):
                 continue
+            n1_lower = n1.lower()
+            n1_nospace = "".join(n1_lower.split())
+            w1 = n1_lower.split()
 
             for p2 in persons[i + 1:]:
                 id_a, id_b = p1["id"], p2["id"]
                 if (id_a, id_b) in dismissed:
                     continue
 
-                name2 = p2["canonical_name"].strip()
-                w2 = name2.lower().split()
-                if not w2:
+                n2 = p2["canonical_name"].strip()
+                if is_placeholder_name(n2):
                     continue
+                n2_lower = n2.lower()
+                n2_nospace = "".join(n2_lower.split())
+                w2 = n2_lower.split()
 
-                # Don't match different first names sharing a common last name (e.g. Abeesha vs Aritha)
-                if len(w1) > 1 and len(w2) > 1 and w1[0] != w2[0] and w1[-1] == w2[-1]:
-                    continue
-
-                sim = SequenceMatcher(None, name1.lower(), name2.lower()).ratio()
-                is_single1 = len(w1) == 1
-                is_single2 = len(w2) == 1
-                is_sub = (is_single1 and w1[0] in w2) or (is_single2 and w2[0] in w1)
-
-                is_candidate = False
+                is_match = False
                 match_type = ""
-                confidence = round(sim * 100, 1)
+                reason = ""
+                confidence = 0.0
 
-                if is_sub:
-                    is_candidate = True
-                    match_type = "Single Name Expansion"
-                    confidence = 90.0 if (p1["institution"] and p1["institution"] == p2["institution"]) else 75.0
-                elif sim >= min_similarity:
-                    is_candidate = True
-                    match_type = "Typo / High Fuzzy Match"
-                    confidence = round(sim * 100, 1)
+                # Rule 1: Ignore capitalization (case-insensitive exact match)
+                if n1_lower == n2_lower and n1 != n2:
+                    is_match = True
+                    match_type = "Exact Match (Capitalization Difference)"
+                    reason = f"Identical name with different capitalization: '{n1}' vs '{n2}'"
+                    confidence = 100.0
 
-                if is_candidate:
-                    if len(w1) > len(w2):
+                # Rule 2: Change of space characters (spaces added/removed or different spacing)
+                elif n1_nospace == n2_nospace and n1_lower != n2_lower:
+                    is_match = True
+                    match_type = "Spacing / Whitespace Variation"
+                    reason = f"Identical characters with different spacing: '{n1}' vs '{n2}'"
+                    confidence = 98.0
+
+                # Rule 3: 2 character changes away (Levenshtein distance <= 2)
+                else:
+                    d = levenshtein_distance_le_2(n1_lower, n2_lower)
+                    if d is not None:
+                        # Guardrail: Don't match different first names sharing a common surname (e.g. Binupa Bandara vs Vinuja Bandara)
+                        if len(w1) >= 2 and len(w2) >= 2 and w1[-1] == w2[-1]:
+                            fn_d = levenshtein_distance_le_2(w1[0], w2[0])
+                            if fn_d is None or fn_d > 1:
+                                continue
+
+                        min_len = min(len(n1_lower), len(n2_lower))
+                        if d == 1 and min_len >= 4:
+                            is_match = True
+                            match_type = "1 Character Change Away (Typo / Missing Letter)"
+                            reason = f"Names differ by exactly 1 character change: '{n1}' vs '{n2}'"
+                            confidence = 95.0
+                        elif d == 2 and min_len >= 5:
+                            is_match = True
+                            match_type = "2 Character Changes Away (Transposition / Minor Typo)"
+                            reason = f"Names differ by 2 character changes: '{n1}' vs '{n2}'"
+                            confidence = 90.0
+
+                if is_match:
+                    same_inst = bool(p1["institution"] and p2["institution"] and p1["institution"].lower() == p2["institution"].lower())
+                    if same_inst and confidence < 100.0:
+                        confidence = min(99.0, confidence + 2.0)
+                        reason += f" (Both from {p1['institution']})"
+
+                    # Primary target is the record with more recorded debate activity
+                    if p1["speech_count"] > p2["speech_count"]:
                         primary, dup = p1, p2
-                    elif len(w2) > len(w1):
+                    elif p2["speech_count"] > p1["speech_count"]:
                         primary, dup = p2, p1
-                    elif p1["speech_count"] >= p2["speech_count"]:
+                    elif (p1.get("tour_count") or 0) > (p2.get("tour_count") or 0):
+                        primary, dup = p1, p2
+                    elif (p2.get("tour_count") or 0) > (p1.get("tour_count") or 0):
+                        primary, dup = p2, p1
+                    elif p1["id"] < p2["id"]:
                         primary, dup = p1, p2
                     else:
                         primary, dup = p2, p1
@@ -131,21 +201,22 @@ class IdentityResolver:
                     suggestions.append({
                         "type": "person",
                         "match_type": match_type,
+                        "reason": reason,
                         "confidence": confidence,
                         "primary": primary,
                         "duplicate": dup,
                     })
 
-        suggestions.sort(key=lambda s: -s["confidence"])
-        return suggestions[:60]
+        suggestions.sort(key=lambda s: (-s["confidence"], s["primary"]["canonical_name"]))
+        return suggestions
 
     def get_team_suggestions(self) -> List[Dict[str, Any]]:
-        """Find candidate duplicate teams (e.g. acronyms vs full names within same school)."""
+        """Find candidate duplicate teams strictly within the same tournament and institution."""
         dismissed = self.get_dismissed_pairs("team")
         cur = self.conn.cursor()
 
         cur.execute("""
-            SELECT t.id, t.name, t.canonical_name, t.tournament_id,
+            SELECT t.id, t.name, t.canonical_name, t.tournament_id, t.institution_id,
                    tour.name as tournament_name, i.name as institution_name,
                    (SELECT COUNT(*) FROM speech_performances sp WHERE sp.team_id = t.id) as speech_count
             FROM teams t
@@ -155,36 +226,76 @@ class IdentityResolver:
         """)
         teams = [dict(r) for r in cur.fetchall()]
 
-        known_acronyms = [
-            ("tck", "trinity"),
-            ("ems", "moir"),
-            ("av", "anula"),
-            ("nc", "nalanda"),
-            ("mc", "metho"),
-            ("sjcj", "sjoc"),
-            ("sgck", "sgc"),
-            ("eik", "ec"),
-        ]
-
         suggestions = []
         for i, t1 in enumerate(teams):
-            n1 = t1["name"].lower().strip()
+            n1 = (t1["name"] or "").strip()
+            if not n1:
+                continue
+            n1_lower = n1.lower()
+            n1_nospace = "".join(n1_lower.split())
+            m1 = re.search(r"\b([a-d]|1|2|3|vi|vii|viii|ix|x)\b$", n1_lower)
+            suf1 = m1.group(1) if m1 else None
+
             for t2 in teams[i + 1:]:
                 id_a, id_b = t1["id"], t2["id"]
                 if (id_a, id_b) in dismissed:
                     continue
 
-                n2 = t2["name"].lower().strip()
-                is_match = False
-                for acr, full in known_acronyms:
-                    if (acr in n1 and full in n2) or (acr in n2 and full in n1):
-                        is_match = True
-                        break
+                n2 = (t2["name"] or "").strip()
+                if not n2:
+                    continue
+                n2_lower = n2.lower()
+                n2_nospace = "".join(n2_lower.split())
+                m2 = re.search(r"\b([a-d]|1|2|3|vi|vii|viii|ix|x)\b$", n2_lower)
+                suf2 = m2.group(1) if m2 else None
 
-                if not is_match:
-                    sim = SequenceMatcher(None, n1, n2).ratio()
-                    if sim > 0.85 and n1 != n2:
+                # Suffix must match: NEVER suggest merging Team A with Team B or Team VI with Team VII!
+                if suf1 and suf2 and suf1 != suf2:
+                    continue
+
+                # Must belong to the same institution
+                same_inst = (t1["institution_id"] is not None and t1["institution_id"] == t2["institution_id"]) or (
+                    t1["institution_name"] and t1["institution_name"] == t2["institution_name"]
+                )
+                if not same_inst:
+                    continue
+
+                # Must belong to the same tournament
+                if t1["tournament_id"] != t2["tournament_id"]:
+                    continue
+
+                is_match = False
+                match_type = ""
+                reason = ""
+                confidence = 0.0
+
+                # Rule 1: Capitalization
+                if n1_lower == n2_lower and n1 != n2:
+                    is_match = True
+                    match_type = "Exact Match (Capitalization Difference)"
+                    reason = f"Identical team name with different capitalization: '{n1}' vs '{n2}'"
+                    confidence = 100.0
+
+                # Rule 2: Spacing
+                elif n1_nospace == n2_nospace and n1_lower != n2_lower:
+                    is_match = True
+                    match_type = "Spacing / Whitespace Variation"
+                    reason = f"Identical team characters with different spacing: '{n1}' vs '{n2}'"
+                    confidence = 98.0
+
+                # Rule 3: 1-2 edits away
+                else:
+                    d = levenshtein_distance_le_2(n1_lower, n2_lower)
+                    if d == 1 and min(len(n1_lower), len(n2_lower)) >= 3:
                         is_match = True
+                        match_type = "1 Character Change Away (Typo / Missing Letter)"
+                        reason = f"Team names differ by 1 character change: '{n1}' vs '{n2}'"
+                        confidence = 95.0
+                    elif d == 2 and min(len(n1_lower), len(n2_lower)) >= 4:
+                        is_match = True
+                        match_type = "2 Character Changes Away (Transposition / Minor Typo)"
+                        reason = f"Team names differ by 2 character changes: '{n1}' vs '{n2}'"
+                        confidence = 90.0
 
                 if is_match:
                     if t1["speech_count"] >= t2["speech_count"]:
@@ -194,51 +305,37 @@ class IdentityResolver:
 
                     suggestions.append({
                         "type": "team",
-                        "match_type": "Team Acronym / Variant",
-                        "confidence": 92.0,
+                        "match_type": match_type,
+                        "reason": reason,
+                        "confidence": confidence,
                         "primary": primary,
                         "duplicate": dup,
                     })
 
         suggestions.sort(key=lambda s: -s["confidence"])
-        return suggestions[:40]
+        return suggestions
 
     def execute_person_merge(self, primary_id: int, duplicate_id: int) -> Dict[str, Any]:
         """Merge duplicate person into primary person, cascading all records."""
         if primary_id == duplicate_id:
             raise ValueError("Cannot merge a person into themselves.")
 
+        from atomos.normalizer.identity_merger import IdentityMerger as NormalizerMerger
+        merger = NormalizerMerger(self.conn)
+        success = merger.merge_persons(canonical_id=primary_id, duplicate_id=duplicate_id)
+        if not success:
+            raise RuntimeError(f"Failed to merge person {duplicate_id} into {primary_id}")
+
         cur = self.conn.cursor()
-        cur.execute("SELECT id, canonical_name FROM persons WHERE id = ?", (primary_id,))
-        p1 = cur.fetchone()
-        cur.execute("SELECT id, canonical_name FROM persons WHERE id = ?", (duplicate_id,))
-        p2 = cur.fetchone()
+        cur.execute("SELECT canonical_name FROM persons WHERE id = ?", (primary_id,))
+        row = cur.fetchone()
+        pname = row["canonical_name"] if row else f"#{primary_id}"
 
-        if not p1 or not p2:
-            raise ValueError(f"One or both person IDs ({primary_id}, {duplicate_id}) not found.")
-
-        try:
-            cur.execute("UPDATE speech_performances SET person_id = ? WHERE person_id = ?", (primary_id, duplicate_id))
-            cur.execute("UPDATE team_members SET person_id = ? WHERE person_id = ?", (primary_id, duplicate_id))
-            cur.execute("UPDATE adjudicator_ballots SET adjudicator_person_id = ? WHERE adjudicator_person_id = ?", (primary_id, duplicate_id))
-            cur.execute("UPDATE adjudicator_assignments SET person_id = ? WHERE person_id = ?", (primary_id, duplicate_id))
-
-            cur.execute("""
-                INSERT INTO person_aliases (person_id, alias_name)
-                VALUES (?, ?)
-            """, (primary_id, p2["canonical_name"]))
-
-            cur.execute("DELETE FROM persons WHERE id = ?", (duplicate_id,))
-            self.conn.commit()
-
-            return {
-                "success": True,
-                "message": f"Successfully merged '{p2['canonical_name']}' (ID {duplicate_id}) into '{p1['canonical_name']}' (ID {primary_id}).",
-                "primary_name": p1["canonical_name"],
-            }
-        except Exception as e:
-            self.conn.rollback()
-            raise RuntimeError(f"Database error during person merge: {str(e)}")
+        return {
+            "success": True,
+            "message": f"Successfully merged person ID {duplicate_id} into '{pname}' (ID {primary_id}).",
+            "primary_name": pname,
+        }
 
     def execute_team_merge(self, primary_id: int, duplicate_id: int) -> Dict[str, Any]:
         """Merge duplicate team into primary team."""

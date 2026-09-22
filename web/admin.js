@@ -952,9 +952,12 @@
       return `
         <div class="merge-card" id="mergeCard_${s.type}_${p.id}_${d.id}">
           <div class="merge-card-header">
-            <div class="merge-card-type">
-              <span class="badge-count" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${escapeHtml(s.type.toUpperCase())}</span>
-              <span style="font-weight: 600; color: #fff; font-size: 13px;">${escapeHtml(s.match_type)}</span>
+            <div>
+              <div class="merge-card-type">
+                <span class="badge-count" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${escapeHtml(s.type.toUpperCase())}</span>
+                <span style="font-weight: 600; color: #fff; font-size: 13px;">${escapeHtml(s.match_type)}</span>
+              </div>
+              ${s.reason ? `<div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">${escapeHtml(s.reason)}</div>` : ''}
             </div>
             <div class="merge-card-conf" style="font-family: var(--font-mono); font-size: 11.5px; color: #34d399; font-weight: 700;">
               ${s.confidence}% MATCH
