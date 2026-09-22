@@ -37,22 +37,13 @@
       "rank_in_tier": 4
     },
     {
-      "person_id": 436,
-      "name": "Ra'ed Cader",
-      "institution": "Asian International School",
-      "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.17,
-      "score_source": "Critical Tab",
-      "rank_in_tier": 5
-    },
-    {
       "person_id": 333,
       "name": "Dithira De Silva",
       "institution": "Royal College",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.14,
       "score_source": "Critical Tab",
-      "rank_in_tier": 6
+      "rank_in_tier": 5
     },
     {
       "person_id": 23,
@@ -61,7 +52,7 @@
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.07,
       "score_source": "Critical Tab",
-      "rank_in_tier": 7
+      "rank_in_tier": 6
     },
     {
       "person_id": 19,
@@ -70,7 +61,7 @@
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.04,
       "score_source": "Critical Tab",
-      "rank_in_tier": 8
+      "rank_in_tier": 7
     },
     {
       "person_id": 332,
@@ -79,7 +70,7 @@
       "national_level": "Nat Pool, Direct",
       "speaker_score": 71.97,
       "score_source": "Critical Tab",
-      "rank_in_tier": 9
+      "rank_in_tier": 8
     }
   ],
   "nat_pool_trialed": [
@@ -230,23 +221,14 @@
       "rank_in_tier": 7
     },
     {
-      "person_id": 461,
-      "name": "Arshalya gomez",
-      "institution": "Holy Family Convent",
-      "national_level": "Trials",
-      "speaker_score": 70.96,
-      "score_source": "Critical Tab",
-      "rank_in_tier": 8
-    },
-    {
       "person_id": 43,
       "name": "Yasir Shuhail",
       "institution": "D. S. Senanayake College",
       "national_level": "Trials",
       "speaker_score": 70.46,
       "score_source": "Critical Tab",
-      "rank_in_tier": 9
+      "rank_in_tier": 8
     }
   ],
-  "total_count": 27
+  "total_count": 25
 }

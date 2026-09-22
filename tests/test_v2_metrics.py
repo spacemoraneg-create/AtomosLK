@@ -175,10 +175,10 @@ class TestV2AdjudicatorsAndTournaments:
         assert "nat_pool_direct" in pool
         assert "nat_pool_trialed" in pool
         assert "trials" in pool
-        assert len(pool["nat_pool_direct"]) == 9
+        assert len(pool["nat_pool_direct"]) == 8
         assert len(pool["nat_pool_trialed"]) == 9
-        assert len(pool["trials"]) == 9
-        assert pool["total_count"] == 27
+        assert len(pool["trials"]) == 8
+        assert pool["total_count"] == 25
 
 
 class TestV2RestApi:
@@ -212,7 +212,7 @@ class TestV2RestApi:
     def test_api_pool(self, client):
         r = client.get("/api/v2/pool")
         assert r.status_code == 200
-        assert r.get_json()["total_count"] == 27
+        assert r.get_json()["total_count"] == 25
 
     def test_api_bios(self, client):
         r = client.get("/api/v2/debaters/Vidath%20Marasinghe/bio")

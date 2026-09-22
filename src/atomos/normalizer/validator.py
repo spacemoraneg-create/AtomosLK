@@ -102,7 +102,7 @@ class IntegrityValidator:
         if unlinked_teams:
             critical_errors.append(f"Found {len(unlinked_teams)} non-swing teams without an institution link")
 
-        # Check roster sizes
+        # Check roster sizes (Standard WSDC regulations allow 3 to 5 debaters per team)
         cur.execute(f"""
             SELECT t.id, t.name, tour.slug, COUNT(tm.person_id) as roster_size
             FROM teams t
@@ -114,8 +114,8 @@ class IntegrityValidator:
         """, t_params)
         for r in cur.fetchall():
             sz = r[3]
-            if sz < 3 or sz > 4:
-                domain_anomalies.append(f"Team '{r[1]}' in '{r[2]}' has unusual roster size: {sz} debaters")
+            if sz < 3 or sz > 5:
+                domain_anomalies.append(f"Team '{r[1]}' in '{r[2]}' has unusual roster size: {sz} debaters (expected 3-5)")
 
         # 4. Check Debates & Team Linkages
         if tournament_id:
@@ -183,7 +183,7 @@ class IntegrityValidator:
             domain_anomalies.append(f"Found {len(zero_scores)} placeholder 0.0 speech scores (administrative forfeit / walkover)")
 
         if non_standard_rubrics:
-            domain_anomalies.append(f"Found {len(non_standard_rubrics)} speeches with non-standard judge component splits (flagged is_valid_rubric=0)")
+            domain_anomalies.append(f"Notice: {len(non_standard_rubrics)} speeches have verified total scores with non-standard judge component splits (flagged is_valid_rubric=0)")
 
         # 6. Check Adjudicator Ballot Totals
         cur.execute("""

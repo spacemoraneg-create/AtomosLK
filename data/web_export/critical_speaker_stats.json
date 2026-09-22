@@ -110,11 +110,11 @@
     "rank": 5
   },
   {
-    "person_id": 436,
-    "speaker_name": "Ra'ed Cader",
+    "person_id": 433,
+    "speaker_name": "Ra'ed Abdul Cader",
     "institution": "Asian International School",
     "institution_name": "Asian International School",
-    "national_level": "Nat Pool, Direct",
+    "national_level": null,
     "speaker_avg": 72.17,
     "win_percentage": 75.9,
     "prelims": 29,
@@ -330,6 +330,28 @@
     "rank": 15
   },
   {
+    "person_id": 57,
+    "speaker_name": "Ananya Nandakumar",
+    "institution": "Elizabeth Moir School",
+    "institution_name": "Elizabeth Moir School",
+    "national_level": null,
+    "speaker_avg": 71.74,
+    "win_percentage": 71.0,
+    "prelims": 31,
+    "break_percentage": 83.3,
+    "tournaments": 6,
+    "avg": 71.74462,
+    "speech_avg": 71.74462,
+    "cumulative_speech_avg": 71.74462,
+    "avg_of_avgs": 71.70694,
+    "regulation": "new",
+    "avg_of_deviations": 0.91525,
+    "win_rate_debated": 70.96774,
+    "prelim_rounds_debated": 31,
+    "eligible_tournaments": 6,
+    "rank": 16
+  },
+  {
     "person_id": 6,
     "speaker_name": "Didumika Peiris",
     "institution": "D. S. Senanayake College",
@@ -349,7 +371,7 @@
     "win_rate_debated": 86.11111,
     "prelim_rounds_debated": 36,
     "eligible_tournaments": 7,
-    "rank": 16
+    "rank": 17
   },
   {
     "person_id": 46,
@@ -371,7 +393,7 @@
     "win_rate_debated": 68.75,
     "prelim_rounds_debated": 32,
     "eligible_tournaments": 6,
-    "rank": 17
+    "rank": 18
   },
   {
     "person_id": 11,
@@ -392,28 +414,6 @@
     "avg_of_deviations": 0.77565,
     "win_rate_debated": 85.71429,
     "prelim_rounds_debated": 21,
-    "eligible_tournaments": 5,
-    "rank": 18
-  },
-  {
-    "person_id": 57,
-    "speaker_name": "Ananya Nandakumar",
-    "institution": "Elizabeth Moir School",
-    "institution_name": "Elizabeth Moir School",
-    "national_level": null,
-    "speaker_avg": 71.66,
-    "win_percentage": 69.2,
-    "prelims": 26,
-    "break_percentage": 80.0,
-    "tournaments": 5,
-    "avg": 71.66346,
-    "speech_avg": 71.66346,
-    "cumulative_speech_avg": 71.66346,
-    "avg_of_avgs": 71.615,
-    "regulation": "new",
-    "avg_of_deviations": 0.97006,
-    "win_rate_debated": 69.23077,
-    "prelim_rounds_debated": 26,
     "eligible_tournaments": 5,
     "rank": 19
   },
@@ -924,28 +924,6 @@
     "rank": 42
   },
   {
-    "person_id": 461,
-    "speaker_name": "Arshalya gomez",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
-    "national_level": "Trials",
-    "speaker_avg": 70.96,
-    "win_percentage": 50.0,
-    "prelims": 14,
-    "break_percentage": 0.0,
-    "tournaments": 3,
-    "avg": 70.96429,
-    "speech_avg": 70.96429,
-    "cumulative_speech_avg": 70.96429,
-    "avg_of_avgs": 71.04167,
-    "regulation": "new",
-    "avg_of_deviations": 0.89237,
-    "win_rate_debated": 50.0,
-    "prelim_rounds_debated": 14,
-    "eligible_tournaments": 3,
-    "rank": 43
-  },
-  {
     "person_id": 28,
     "speaker_name": "Shahrukh Fairooz",
     "institution": "Trinity College Kandy",
@@ -965,7 +943,7 @@
     "win_rate_debated": 69.56522,
     "prelim_rounds_debated": 23,
     "eligible_tournaments": 5,
-    "rank": 44
+    "rank": 43
   },
   {
     "person_id": 364,
@@ -987,7 +965,7 @@
     "win_rate_debated": 56.25,
     "prelim_rounds_debated": 32,
     "eligible_tournaments": 6,
-    "rank": 45
+    "rank": 44
   },
   {
     "person_id": 15,
@@ -1009,7 +987,7 @@
     "win_rate_debated": 67.74194,
     "prelim_rounds_debated": 31,
     "eligible_tournaments": 6,
-    "rank": 46
+    "rank": 45
   },
   {
     "person_id": 24,
@@ -1031,7 +1009,7 @@
     "win_rate_debated": 65.78947,
     "prelim_rounds_debated": 38,
     "eligible_tournaments": 7,
-    "rank": 47
+    "rank": 46
   },
   {
     "person_id": 1,
@@ -1053,29 +1031,29 @@
     "win_rate_debated": 72.5,
     "prelim_rounds_debated": 40,
     "eligible_tournaments": 8,
-    "rank": 48
+    "rank": 47
   },
   {
     "person_id": 370,
-    "speaker_name": "Mikaela Schooman",
+    "speaker_name": "Mikaela Schoorman",
     "institution": "Ladies' College",
     "institution_name": "Ladies' College",
     "national_level": null,
     "speaker_avg": 70.88,
-    "win_percentage": 60.9,
-    "prelims": 23,
-    "break_percentage": 60.0,
-    "tournaments": 5,
-    "avg": 70.88043,
-    "speech_avg": 70.88043,
-    "cumulative_speech_avg": 70.88043,
-    "avg_of_avgs": 70.87,
+    "win_percentage": 61.1,
+    "prelims": 36,
+    "break_percentage": 57.1,
+    "tournaments": 7,
+    "avg": 70.88194,
+    "speech_avg": 70.88194,
+    "cumulative_speech_avg": 70.88194,
+    "avg_of_avgs": 70.88929,
     "regulation": "new",
-    "avg_of_deviations": 0.97104,
-    "win_rate_debated": 60.86957,
-    "prelim_rounds_debated": 23,
-    "eligible_tournaments": 5,
-    "rank": 49
+    "avg_of_deviations": 0.90367,
+    "win_rate_debated": 61.11111,
+    "prelim_rounds_debated": 36,
+    "eligible_tournaments": 7,
+    "rank": 48
   },
   {
     "person_id": 838,
@@ -1097,7 +1075,7 @@
     "win_rate_debated": 60.0,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 50
+    "rank": 49
   },
   {
     "person_id": 589,
@@ -1119,7 +1097,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 51
+    "rank": 50
   },
   {
     "person_id": 26,
@@ -1141,7 +1119,7 @@
     "win_rate_debated": 61.53846,
     "prelim_rounds_debated": 13,
     "eligible_tournaments": 3,
-    "rank": 52
+    "rank": 51
   },
   {
     "person_id": 70,
@@ -1163,6 +1141,28 @@
     "win_rate_debated": 58.82353,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 3,
+    "rank": 52
+  },
+  {
+    "person_id": 883,
+    "speaker_name": "Arshalya Gomes",
+    "institution": "Holy Family Convent",
+    "institution_name": "Holy Family Convent",
+    "national_level": null,
+    "speaker_avg": 70.65,
+    "win_percentage": 48.1,
+    "prelims": 27,
+    "break_percentage": 20.0,
+    "tournaments": 5,
+    "avg": 70.64815,
+    "speech_avg": 70.64815,
+    "cumulative_speech_avg": 70.64815,
+    "avg_of_avgs": 70.71143,
+    "regulation": "new",
+    "avg_of_deviations": 0.9202,
+    "win_rate_debated": 48.14815,
+    "prelim_rounds_debated": 27,
+    "eligible_tournaments": 5,
     "rank": 53
   },
   {
@@ -1562,6 +1562,28 @@
     "rank": 71
   },
   {
+    "person_id": 84,
+    "speaker_name": "Kumal Seniru Premathunga",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
+    "national_level": null,
+    "speaker_avg": 70.0,
+    "win_percentage": 51.6,
+    "prelims": 31,
+    "break_percentage": 33.3,
+    "tournaments": 6,
+    "avg": 70.0,
+    "speech_avg": 70.0,
+    "cumulative_speech_avg": 70.0,
+    "avg_of_avgs": 69.99444,
+    "regulation": "new",
+    "avg_of_deviations": 1.11034,
+    "win_rate_debated": 51.6129,
+    "prelim_rounds_debated": 31,
+    "eligible_tournaments": 6,
+    "rank": 72
+  },
+  {
     "person_id": 69,
     "speaker_name": "Chaniel Obeyesekere",
     "institution": "S. Thomas' College",
@@ -1581,7 +1603,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 72
+    "rank": 73
   },
   {
     "person_id": 63,
@@ -1603,7 +1625,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 30,
     "eligible_tournaments": 6,
-    "rank": 73
+    "rank": 74
   },
   {
     "person_id": 148,
@@ -1625,7 +1647,7 @@
     "win_rate_debated": 61.11111,
     "prelim_rounds_debated": 36,
     "eligible_tournaments": 7,
-    "rank": 74
+    "rank": 75
   },
   {
     "person_id": 72,
@@ -1647,7 +1669,7 @@
     "win_rate_debated": 58.82353,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 4,
-    "rank": 75
+    "rank": 76
   },
   {
     "person_id": 144,
@@ -1669,7 +1691,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 38,
     "eligible_tournaments": 9,
-    "rank": 76
+    "rank": 77
   },
   {
     "person_id": 725,
@@ -1691,7 +1713,7 @@
     "win_rate_debated": 33.33333,
     "prelim_rounds_debated": 9,
     "eligible_tournaments": 3,
-    "rank": 77
+    "rank": 78
   },
   {
     "person_id": 139,
@@ -1713,7 +1735,7 @@
     "win_rate_debated": 46.66667,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 78
+    "rank": 79
   },
   {
     "person_id": 61,
@@ -1735,7 +1757,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 79
+    "rank": 80
   },
   {
     "person_id": 87,
@@ -1757,7 +1779,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 80
+    "rank": 81
   },
   {
     "person_id": 402,
@@ -1779,7 +1801,7 @@
     "win_rate_debated": 43.75,
     "prelim_rounds_debated": 32,
     "eligible_tournaments": 6,
-    "rank": 81
+    "rank": 82
   },
   {
     "person_id": 146,
@@ -1801,7 +1823,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 82
+    "rank": 83
   },
   {
     "person_id": 619,
@@ -1823,7 +1845,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 83
+    "rank": 84
   },
   {
     "person_id": 31,
@@ -1845,7 +1867,7 @@
     "win_rate_debated": 63.63636,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 4,
-    "rank": 84
+    "rank": 85
   },
   {
     "person_id": 99,
@@ -1867,7 +1889,7 @@
     "win_rate_debated": 47.82609,
     "prelim_rounds_debated": 23,
     "eligible_tournaments": 5,
-    "rank": 85
+    "rank": 86
   },
   {
     "person_id": 126,
@@ -1889,7 +1911,7 @@
     "win_rate_debated": 35.71429,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 86
+    "rank": 87
   },
   {
     "person_id": 590,
@@ -1911,7 +1933,7 @@
     "win_rate_debated": 62.96296,
     "prelim_rounds_debated": 27,
     "eligible_tournaments": 6,
-    "rank": 87
+    "rank": 88
   },
   {
     "person_id": 469,
@@ -1933,28 +1955,6 @@
     "win_rate_debated": 41.93548,
     "prelim_rounds_debated": 31,
     "eligible_tournaments": 6,
-    "rank": 88
-  },
-  {
-    "person_id": 84,
-    "speaker_name": "Kumal Seniru Premathunga",
-    "institution": "Isipathana College",
-    "institution_name": "Isipathana College",
-    "national_level": null,
-    "speaker_avg": 69.67,
-    "win_percentage": 50.0,
-    "prelims": 20,
-    "break_percentage": 25.0,
-    "tournaments": 4,
-    "avg": 69.675,
-    "speech_avg": 69.675,
-    "cumulative_speech_avg": 69.675,
-    "avg_of_avgs": 69.69792,
-    "regulation": "new",
-    "avg_of_deviations": 1.25185,
-    "win_rate_debated": 50.0,
-    "prelim_rounds_debated": 20,
-    "eligible_tournaments": 4,
     "rank": 89
   },
   {
@@ -1980,6 +1980,28 @@
     "rank": 90
   },
   {
+    "person_id": 82,
+    "speaker_name": "Sanuka Semitha Godagedara",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
+    "national_level": null,
+    "speaker_avg": 69.65,
+    "win_percentage": 51.6,
+    "prelims": 31,
+    "break_percentage": 33.3,
+    "tournaments": 6,
+    "avg": 69.64516,
+    "speech_avg": 69.64516,
+    "cumulative_speech_avg": 69.64516,
+    "avg_of_avgs": 69.61389,
+    "regulation": "new",
+    "avg_of_deviations": 1.033,
+    "win_rate_debated": 51.6129,
+    "prelim_rounds_debated": 31,
+    "eligible_tournaments": 6,
+    "rank": 91
+  },
+  {
     "person_id": 137,
     "speaker_name": "Riham Riyal",
     "institution": "St. Anthony's College Kandy",
@@ -1999,7 +2021,7 @@
     "win_rate_debated": 30.76923,
     "prelim_rounds_debated": 13,
     "eligible_tournaments": 3,
-    "rank": 91
+    "rank": 92
   },
   {
     "person_id": 143,
@@ -2021,7 +2043,7 @@
     "win_rate_debated": 40.0,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 92
+    "rank": 93
   },
   {
     "person_id": 45,
@@ -2043,28 +2065,6 @@
     "win_rate_debated": 61.53846,
     "prelim_rounds_debated": 13,
     "eligible_tournaments": 3,
-    "rank": 93
-  },
-  {
-    "person_id": 82,
-    "speaker_name": "Sanuka Semitha Godagedara",
-    "institution": "Isipathana College",
-    "institution_name": "Isipathana College",
-    "national_level": null,
-    "speaker_avg": 69.53,
-    "win_percentage": 50.0,
-    "prelims": 20,
-    "break_percentage": 25.0,
-    "tournaments": 4,
-    "avg": 69.525,
-    "speech_avg": 69.525,
-    "cumulative_speech_avg": 69.525,
-    "avg_of_avgs": 69.46458,
-    "regulation": "new",
-    "avg_of_deviations": 1.10402,
-    "win_rate_debated": 50.0,
-    "prelim_rounds_debated": 20,
-    "eligible_tournaments": 4,
     "rank": 94
   },
   {
@@ -2156,6 +2156,28 @@
     "rank": 98
   },
   {
+    "person_id": 98,
+    "speaker_name": "Navidhi Madawala",
+    "institution": "Holy Family Convent",
+    "institution_name": "Holy Family Convent",
+    "national_level": null,
+    "speaker_avg": 69.49,
+    "win_percentage": 46.7,
+    "prelims": 30,
+    "break_percentage": 0.0,
+    "tournaments": 6,
+    "avg": 69.49167,
+    "speech_avg": 69.49167,
+    "cumulative_speech_avg": 69.49167,
+    "avg_of_avgs": 69.3869,
+    "regulation": "new",
+    "avg_of_deviations": 1.0453,
+    "win_rate_debated": 46.66667,
+    "prelim_rounds_debated": 30,
+    "eligible_tournaments": 6,
+    "rank": 99
+  },
+  {
     "person_id": 118,
     "speaker_name": "Sanuthi Pathiraja",
     "institution": "Hillwood College Kandy",
@@ -2175,7 +2197,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 26,
     "eligible_tournaments": 6,
-    "rank": 99
+    "rank": 100
   },
   {
     "person_id": 618,
@@ -2197,7 +2219,7 @@
     "win_rate_debated": 44.44444,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 100
+    "rank": 101
   },
   {
     "person_id": 142,
@@ -2219,7 +2241,7 @@
     "win_rate_debated": 52.94118,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 4,
-    "rank": 101
+    "rank": 102
   },
   {
     "person_id": 79,
@@ -2241,7 +2263,7 @@
     "win_rate_debated": 53.33333,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 102
+    "rank": 103
   },
   {
     "person_id": 478,
@@ -2263,7 +2285,7 @@
     "win_rate_debated": 53.84615,
     "prelim_rounds_debated": 26,
     "eligible_tournaments": 5,
-    "rank": 103
+    "rank": 104
   },
   {
     "person_id": 75,
@@ -2285,7 +2307,7 @@
     "win_rate_debated": 36.36364,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 5,
-    "rank": 104
+    "rank": 105
   },
   {
     "person_id": 121,
@@ -2307,7 +2329,7 @@
     "win_rate_debated": 31.81818,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 5,
-    "rank": 105
+    "rank": 106
   },
   {
     "person_id": 363,
@@ -2329,7 +2351,7 @@
     "win_rate_debated": 53.33333,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 106
+    "rank": 107
   },
   {
     "person_id": 468,
@@ -2351,7 +2373,7 @@
     "win_rate_debated": 40.0,
     "prelim_rounds_debated": 30,
     "eligible_tournaments": 6,
-    "rank": 107
+    "rank": 108
   },
   {
     "person_id": 616,
@@ -2373,7 +2395,7 @@
     "win_rate_debated": 18.18182,
     "prelim_rounds_debated": 11,
     "eligible_tournaments": 3,
-    "rank": 108
+    "rank": 109
   },
   {
     "person_id": 488,
@@ -2395,7 +2417,7 @@
     "win_rate_debated": 31.25,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 109
+    "rank": 110
   },
   {
     "person_id": 94,
@@ -2417,29 +2439,29 @@
     "win_rate_debated": 40.90909,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 4,
-    "rank": 110
+    "rank": 111
   },
   {
-    "person_id": 98,
-    "speaker_name": "Navidhi Madawela",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
+    "person_id": 110,
+    "speaker_name": "Vihanga Senith Lokuliyana",
+    "institution": "Nalanda College",
+    "institution_name": "Nalanda College",
     "national_level": null,
-    "speaker_avg": 69.26,
-    "win_percentage": 45.5,
-    "prelims": 22,
+    "speaker_avg": 69.17,
+    "win_percentage": 40.6,
+    "prelims": 32,
     "break_percentage": 0.0,
-    "tournaments": 5,
-    "avg": 69.26136,
-    "speech_avg": 69.26136,
-    "cumulative_speech_avg": 69.26136,
-    "avg_of_avgs": 69.205,
+    "tournaments": 6,
+    "avg": 69.17188,
+    "speech_avg": 69.17188,
+    "cumulative_speech_avg": 69.17188,
+    "avg_of_avgs": 69.12143,
     "regulation": "new",
-    "avg_of_deviations": 1.01897,
-    "win_rate_debated": 45.45455,
-    "prelim_rounds_debated": 22,
-    "eligible_tournaments": 5,
-    "rank": 111
+    "avg_of_deviations": 1.28702,
+    "win_rate_debated": 40.625,
+    "prelim_rounds_debated": 32,
+    "eligible_tournaments": 6,
+    "rank": 112
   },
   {
     "person_id": 191,
@@ -2461,28 +2483,6 @@
     "win_rate_debated": 41.66667,
     "prelim_rounds_debated": 12,
     "eligible_tournaments": 3,
-    "rank": 112
-  },
-  {
-    "person_id": 110,
-    "speaker_name": "Vihanga Senith Lokuliyana",
-    "institution": "Nalanda College",
-    "institution_name": "Nalanda College",
-    "national_level": null,
-    "speaker_avg": 69.13,
-    "win_percentage": 36.8,
-    "prelims": 19,
-    "break_percentage": 0.0,
-    "tournaments": 4,
-    "avg": 69.13158,
-    "speech_avg": 69.13158,
-    "cumulative_speech_avg": 69.13158,
-    "avg_of_avgs": 69.10625,
-    "regulation": "new",
-    "avg_of_deviations": 1.18749,
-    "win_rate_debated": 36.84211,
-    "prelim_rounds_debated": 19,
-    "eligible_tournaments": 4,
     "rank": 113
   },
   {
@@ -2552,6 +2552,28 @@
     "rank": 116
   },
   {
+    "person_id": 96,
+    "speaker_name": "Omalya Wathsandi Weerasinghe",
+    "institution": "Devi Balika Vidyalaya",
+    "institution_name": "Devi Balika Vidyalaya",
+    "national_level": null,
+    "speaker_avg": 68.82,
+    "win_percentage": 28.6,
+    "prelims": 14,
+    "break_percentage": 0.0,
+    "tournaments": 4,
+    "avg": 68.82143,
+    "speech_avg": 68.82143,
+    "cumulative_speech_avg": 68.82143,
+    "avg_of_avgs": 68.71875,
+    "regulation": "new",
+    "avg_of_deviations": 0.83275,
+    "win_rate_debated": 28.57143,
+    "prelim_rounds_debated": 14,
+    "eligible_tournaments": 4,
+    "rank": 117
+  },
+  {
     "person_id": 90,
     "speaker_name": "Sethula Senhas",
     "institution": "Ananda College",
@@ -2571,7 +2593,7 @@
     "win_rate_debated": 38.88889,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 117
+    "rank": 118
   },
   {
     "person_id": 489,
@@ -2593,7 +2615,7 @@
     "win_rate_debated": 28.57143,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 118
+    "rank": 119
   },
   {
     "person_id": 77,
@@ -2615,7 +2637,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 24,
     "eligible_tournaments": 5,
-    "rank": 119
+    "rank": 120
   },
   {
     "person_id": 149,
@@ -2637,7 +2659,7 @@
     "win_rate_debated": 28.57143,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 120
+    "rank": 121
   },
   {
     "person_id": 244,
@@ -2659,7 +2681,7 @@
     "win_rate_debated": 26.66667,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 121
+    "rank": 122
   },
   {
     "person_id": 165,
@@ -2680,28 +2702,6 @@
     "avg_of_deviations": 1.54341,
     "win_rate_debated": 33.33333,
     "prelim_rounds_debated": 15,
-    "eligible_tournaments": 3,
-    "rank": 122
-  },
-  {
-    "person_id": 96,
-    "speaker_name": "Omalya Wathsandi Weerasinghe",
-    "institution": "Devi Balika Vidyalaya",
-    "institution_name": "Devi Balika Vidyalaya",
-    "national_level": null,
-    "speaker_avg": 68.4,
-    "win_percentage": 20.0,
-    "prelims": 10,
-    "break_percentage": 0.0,
-    "tournaments": 3,
-    "avg": 68.4,
-    "speech_avg": 68.4,
-    "cumulative_speech_avg": 68.4,
-    "avg_of_avgs": 68.33333,
-    "regulation": "new",
-    "avg_of_deviations": 1.03816,
-    "win_rate_debated": 20.0,
-    "prelim_rounds_debated": 10,
     "eligible_tournaments": 3,
     "rank": 123
   },

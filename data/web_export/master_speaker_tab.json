@@ -664,11 +664,11 @@
     "rank": 9
   },
   {
-    "person_id": 436,
-    "speaker_name": "Ra'ed Cader",
+    "person_id": 433,
+    "speaker_name": "Ra'ed Abdul Cader",
     "institution": "Asian International School",
     "institution_name": "Asian International School",
-    "national_level": "Nat Pool, Direct",
+    "national_level": null,
     "master_score": 72.17241,
     "speaker_avg": 72.17,
     "speech_avg": 72.17,
@@ -765,45 +765,6 @@
       }
     ],
     "rank": 10
-  },
-  {
-    "person_id": 895,
-    "speaker_name": "Ananya nandakumar",
-    "institution": "Elizabeth Moir School",
-    "institution_name": "Elizabeth Moir School",
-    "national_level": null,
-    "master_score": 72.16667,
-    "speaker_avg": 72.17,
-    "speech_avg": 72.17,
-    "speech_average": 72.16667,
-    "cumulative_speech_avg": 72.16667,
-    "avg_of_avgs": 72.16667,
-    "all_speech_average": 72.16667,
-    "regulation": "new",
-    "win_percentage": 80.0,
-    "win_rate": 80.0,
-    "prelims": 5,
-    "total_rounds": 5,
-    "break_percentage": 100.0,
-    "tournaments": 1,
-    "eligible_tournaments": 1,
-    "peak_score": 73.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 44,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 72.16667,
-        "scores": [
-          71.5,
-          73.0,
-          71.5,
-          72.0,
-          72.83333333333333
-        ]
-      }
-    ],
-    "rank": 11
   },
   {
     "person_id": 333,
@@ -920,7 +881,7 @@
         ]
       }
     ],
-    "rank": 12
+    "rank": 11
   },
   {
     "person_id": 330,
@@ -1025,7 +986,7 @@
         ]
       }
     ],
-    "rank": 13
+    "rank": 12
   },
   {
     "person_id": 5,
@@ -1113,7 +1074,7 @@
         ]
       }
     ],
-    "rank": 14
+    "rank": 13
   },
   {
     "person_id": 23,
@@ -1232,7 +1193,7 @@
         ]
       }
     ],
-    "rank": 15
+    "rank": 14
   },
   {
     "person_id": 19,
@@ -1325,7 +1286,7 @@
         ]
       }
     ],
-    "rank": 16
+    "rank": 15
   },
   {
     "person_id": 68,
@@ -1361,7 +1322,7 @@
         ]
       }
     ],
-    "rank": 17
+    "rank": 16
   },
   {
     "person_id": 130,
@@ -1396,7 +1357,7 @@
         ]
       }
     ],
-    "rank": 18
+    "rank": 17
   },
   {
     "person_id": 332,
@@ -1514,7 +1475,7 @@
         ]
       }
     ],
-    "rank": 19
+    "rank": 18
   },
   {
     "person_id": 693,
@@ -1553,7 +1514,7 @@
         ]
       }
     ],
-    "rank": 20
+    "rank": 19
   },
   {
     "person_id": 367,
@@ -1620,7 +1581,7 @@
         ]
       }
     ],
-    "rank": 21
+    "rank": 20
   },
   {
     "person_id": 329,
@@ -1725,7 +1686,7 @@
         ]
       }
     ],
-    "rank": 22
+    "rank": 21
   },
   {
     "person_id": 14,
@@ -1800,6 +1761,111 @@
           71.0,
           72.5,
           72.0
+        ]
+      }
+    ],
+    "rank": 22
+  },
+  {
+    "person_id": 57,
+    "speaker_name": "Ananya Nandakumar",
+    "institution": "Elizabeth Moir School",
+    "institution_name": "Elizabeth Moir School",
+    "national_level": null,
+    "master_score": 71.74462,
+    "speaker_avg": 71.74,
+    "speech_avg": 71.74,
+    "speech_average": 71.74462,
+    "cumulative_speech_avg": 71.74462,
+    "avg_of_avgs": 71.70694,
+    "all_speech_average": 71.74462,
+    "regulation": "new",
+    "win_percentage": 71.0,
+    "win_rate": 71.0,
+    "prelims": 31,
+    "total_rounds": 31,
+    "break_percentage": 83.3,
+    "tournaments": 6,
+    "eligible_tournaments": 6,
+    "peak_score": 75.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 4,
+        "is_eligible": true,
+        "tournament_average": 71.125,
+        "scores": [
+          69.5,
+          72.0,
+          71.5,
+          71.5
+        ]
+      },
+      {
+        "tournament_id": 2,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 72.6,
+        "scores": [
+          71.0,
+          73.0,
+          73.0,
+          71.0,
+          75.0
+        ]
+      },
+      {
+        "tournament_id": 3,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 71.4,
+        "scores": [
+          71.0,
+          70.0,
+          72.0,
+          72.0,
+          72.0
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 7,
+        "is_eligible": true,
+        "tournament_average": 72.0,
+        "scores": [
+          71.5,
+          71.5,
+          73.0,
+          72.0,
+          71.0,
+          71.5,
+          73.5
+        ]
+      },
+      {
+        "tournament_id": 18,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.95,
+        "scores": [
+          71.0,
+          70.0,
+          70.25,
+          72.0,
+          71.5
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 72.16667,
+        "scores": [
+          71.5,
+          73.0,
+          71.5,
+          72.0,
+          72.83333333333333
         ]
       }
     ],
@@ -2162,98 +2228,6 @@
     "rank": 27
   },
   {
-    "person_id": 57,
-    "speaker_name": "Ananya Nandakumar",
-    "institution": "Elizabeth Moir School",
-    "institution_name": "Elizabeth Moir School",
-    "national_level": null,
-    "master_score": 71.66346,
-    "speaker_avg": 71.66,
-    "speech_avg": 71.66,
-    "speech_average": 71.66346,
-    "cumulative_speech_avg": 71.66346,
-    "avg_of_avgs": 71.615,
-    "all_speech_average": 71.66346,
-    "regulation": "new",
-    "win_percentage": 69.2,
-    "win_rate": 69.2,
-    "prelims": 26,
-    "total_rounds": 26,
-    "break_percentage": 80.0,
-    "tournaments": 5,
-    "eligible_tournaments": 5,
-    "peak_score": 75.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 71.125,
-        "scores": [
-          69.5,
-          72.0,
-          71.5,
-          71.5
-        ]
-      },
-      {
-        "tournament_id": 2,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 72.6,
-        "scores": [
-          71.0,
-          73.0,
-          73.0,
-          71.0,
-          75.0
-        ]
-      },
-      {
-        "tournament_id": 3,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 71.4,
-        "scores": [
-          71.0,
-          70.0,
-          72.0,
-          72.0,
-          72.0
-        ]
-      },
-      {
-        "tournament_id": 4,
-        "rounds_debated": 7,
-        "is_eligible": true,
-        "tournament_average": 72.0,
-        "scores": [
-          71.5,
-          71.5,
-          73.0,
-          72.0,
-          71.0,
-          71.5,
-          73.5
-        ]
-      },
-      {
-        "tournament_id": 18,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.95,
-        "scores": [
-          71.0,
-          70.0,
-          70.25,
-          72.0,
-          71.5
-        ]
-      }
-    ],
-    "rank": 28
-  },
-  {
     "person_id": 47,
     "speaker_name": "Salma Lafir",
     "institution": "St. Bridget's Convent",
@@ -2353,7 +2327,7 @@
         ]
       }
     ],
-    "rank": 29
+    "rank": 28
   },
   {
     "person_id": 2,
@@ -2392,7 +2366,7 @@
         ]
       }
     ],
-    "rank": 30
+    "rank": 29
   },
   {
     "person_id": 8,
@@ -2509,7 +2483,7 @@
         ]
       }
     ],
-    "rank": 31
+    "rank": 30
   },
   {
     "person_id": 4,
@@ -2646,7 +2620,7 @@
         ]
       }
     ],
-    "rank": 32
+    "rank": 31
   },
   {
     "person_id": 793,
@@ -2682,7 +2656,7 @@
         ]
       }
     ],
-    "rank": 33
+    "rank": 32
   },
   {
     "person_id": 369,
@@ -2782,7 +2756,7 @@
         ]
       }
     ],
-    "rank": 34
+    "rank": 33
   },
   {
     "person_id": 35,
@@ -2872,7 +2846,7 @@
         ]
       }
     ],
-    "rank": 35
+    "rank": 34
   },
   {
     "person_id": 18,
@@ -3002,7 +2976,7 @@
         ]
       }
     ],
-    "rank": 36
+    "rank": 35
   },
   {
     "person_id": 16,
@@ -3133,7 +3107,7 @@
         ]
       }
     ],
-    "rank": 37
+    "rank": 36
   },
   {
     "person_id": 437,
@@ -3223,7 +3197,7 @@
         ]
       }
     ],
-    "rank": 38
+    "rank": 37
   },
   {
     "person_id": 791,
@@ -3261,7 +3235,7 @@
         ]
       }
     ],
-    "rank": 39
+    "rank": 38
   },
   {
     "person_id": 444,
@@ -3328,7 +3302,7 @@
         ]
       }
     ],
-    "rank": 40
+    "rank": 39
   },
   {
     "person_id": 423,
@@ -3429,7 +3403,7 @@
         ]
       }
     ],
-    "rank": 41
+    "rank": 40
   },
   {
     "person_id": 20,
@@ -3533,7 +3507,7 @@
         ]
       }
     ],
-    "rank": 42
+    "rank": 41
   },
   {
     "person_id": 442,
@@ -3599,7 +3573,7 @@
         ]
       }
     ],
-    "rank": 43
+    "rank": 42
   },
   {
     "person_id": 32,
@@ -3637,7 +3611,7 @@
         ]
       }
     ],
-    "rank": 44
+    "rank": 43
   },
   {
     "person_id": 34,
@@ -3715,7 +3689,7 @@
         ]
       }
     ],
-    "rank": 45
+    "rank": 44
   },
   {
     "person_id": 665,
@@ -3751,7 +3725,7 @@
         ]
       }
     ],
-    "rank": 46
+    "rank": 45
   },
   {
     "person_id": 447,
@@ -3829,7 +3803,7 @@
         ]
       }
     ],
-    "rank": 47
+    "rank": 46
   },
   {
     "person_id": 361,
@@ -3868,7 +3842,7 @@
         ]
       }
     ],
-    "rank": 48
+    "rank": 47
   },
   {
     "person_id": 42,
@@ -3994,7 +3968,7 @@
         ]
       }
     ],
-    "rank": 49
+    "rank": 48
   },
   {
     "person_id": 331,
@@ -4106,7 +4080,7 @@
         ]
       }
     ],
-    "rank": 50
+    "rank": 49
   },
   {
     "person_id": 60,
@@ -4144,7 +4118,7 @@
         ]
       }
     ],
-    "rank": 51
+    "rank": 50
   },
   {
     "person_id": 438,
@@ -4182,7 +4156,7 @@
         ]
       }
     ],
-    "rank": 52
+    "rank": 51
   },
   {
     "person_id": 836,
@@ -4220,7 +4194,7 @@
         ]
       }
     ],
-    "rank": 53
+    "rank": 52
   },
   {
     "person_id": 585,
@@ -4300,7 +4274,7 @@
         ]
       }
     ],
-    "rank": 54
+    "rank": 53
   },
   {
     "person_id": 58,
@@ -4398,7 +4372,7 @@
         ]
       }
     ],
-    "rank": 55
+    "rank": 54
   },
   {
     "person_id": 54,
@@ -4463,7 +4437,7 @@
         ]
       }
     ],
-    "rank": 56
+    "rank": 55
   },
   {
     "person_id": 27,
@@ -4550,7 +4524,7 @@
         ]
       }
     ],
-    "rank": 57
+    "rank": 56
   },
   {
     "person_id": 737,
@@ -4585,7 +4559,7 @@
         ]
       }
     ],
-    "rank": 58
+    "rank": 57
   },
   {
     "person_id": 357,
@@ -4668,7 +4642,7 @@
         ]
       }
     ],
-    "rank": 59
+    "rank": 58
   },
   {
     "person_id": 896,
@@ -4705,7 +4679,7 @@
         ]
       }
     ],
-    "rank": 60
+    "rank": 59
   },
   {
     "person_id": 587,
@@ -4785,7 +4759,7 @@
         ]
       }
     ],
-    "rank": 61
+    "rank": 60
   },
   {
     "person_id": 49,
@@ -4852,71 +4826,7 @@
         ]
       }
     ],
-    "rank": 62
-  },
-  {
-    "person_id": 461,
-    "speaker_name": "Arshalya gomez",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
-    "national_level": "Trials",
-    "master_score": 70.96429,
-    "speaker_avg": 70.96,
-    "speech_avg": 70.96,
-    "speech_average": 70.96429,
-    "cumulative_speech_avg": 70.96429,
-    "avg_of_avgs": 71.04167,
-    "all_speech_average": 70.96429,
-    "regulation": "new",
-    "win_percentage": 50.0,
-    "win_rate": 50.0,
-    "prelims": 14,
-    "total_rounds": 14,
-    "break_percentage": 0.0,
-    "tournaments": 3,
-    "eligible_tournaments": 3,
-    "peak_score": 74.5,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 3,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.1,
-        "scores": [
-          70.0,
-          71.0,
-          69.5,
-          69.5,
-          70.5
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 72.125,
-        "scores": [
-          71.0,
-          72.0,
-          71.0,
-          74.5
-        ]
-      },
-      {
-        "tournament_id": 16,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.9,
-        "scores": [
-          71.0,
-          72.0,
-          71.0,
-          70.5,
-          70.0
-        ]
-      }
-    ],
-    "rank": 63
+    "rank": 61
   },
   {
     "person_id": 28,
@@ -5005,7 +4915,7 @@
         ]
       }
     ],
-    "rank": 64
+    "rank": 62
   },
   {
     "person_id": 364,
@@ -5111,7 +5021,7 @@
         ]
       }
     ],
-    "rank": 65
+    "rank": 63
   },
   {
     "person_id": 15,
@@ -5224,7 +5134,7 @@
         ]
       }
     ],
-    "rank": 66
+    "rank": 64
   },
   {
     "person_id": 24,
@@ -5352,7 +5262,7 @@
         ]
       }
     ],
-    "rank": 67
+    "rank": 65
   },
   {
     "person_id": 1,
@@ -5482,31 +5392,44 @@
         ]
       }
     ],
-    "rank": 68
+    "rank": 66
   },
   {
     "person_id": 370,
-    "speaker_name": "Mikaela Schooman",
+    "speaker_name": "Mikaela Schoorman",
     "institution": "Ladies' College",
     "institution_name": "Ladies' College",
     "national_level": null,
-    "master_score": 70.88043,
+    "master_score": 70.88194,
     "speaker_avg": 70.88,
     "speech_avg": 70.88,
-    "speech_average": 70.88043,
-    "cumulative_speech_avg": 70.88043,
-    "avg_of_avgs": 70.87,
-    "all_speech_average": 70.88043,
+    "speech_average": 70.88194,
+    "cumulative_speech_avg": 70.88194,
+    "avg_of_avgs": 70.88929,
+    "all_speech_average": 70.88194,
     "regulation": "new",
-    "win_percentage": 60.9,
-    "win_rate": 60.9,
-    "prelims": 23,
-    "total_rounds": 23,
-    "break_percentage": 60.0,
-    "tournaments": 5,
-    "eligible_tournaments": 5,
+    "win_percentage": 61.1,
+    "win_rate": 61.1,
+    "prelims": 36,
+    "total_rounds": 36,
+    "break_percentage": 57.1,
+    "tournaments": 7,
+    "eligible_tournaments": 7,
     "peak_score": 73.0,
     "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 71.4,
+        "scores": [
+          72.0,
+          72.0,
+          71.5,
+          71.0,
+          70.5
+        ]
+      },
       {
         "tournament_id": 2,
         "rounds_debated": 5,
@@ -5518,6 +5441,21 @@
           70.0,
           71.0,
           72.0
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 7,
+        "is_eligible": true,
+        "tournament_average": 70.5,
+        "scores": [
+          70.0,
+          69.5,
+          71.0,
+          72.0,
+          71.0,
+          69.0,
+          71.0
         ]
       },
       {
@@ -5535,10 +5473,11 @@
       },
       {
         "tournament_id": 10,
-        "rounds_debated": 4,
+        "rounds_debated": 5,
         "is_eligible": true,
-        "tournament_average": 71.125,
+        "tournament_average": 71.1,
         "scores": [
+          71.0,
           71.5,
           70.0,
           72.0,
@@ -5571,70 +5510,7 @@
         ]
       }
     ],
-    "rank": 69
-  },
-  {
-    "person_id": 893,
-    "speaker_name": "Mikaela Schoorman",
-    "institution": "Ladies' College",
-    "institution_name": "Ladies' College",
-    "national_level": null,
-    "master_score": 70.875,
-    "speaker_avg": 70.88,
-    "speech_avg": 70.88,
-    "speech_average": 70.875,
-    "cumulative_speech_avg": 70.875,
-    "avg_of_avgs": 70.95,
-    "all_speech_average": 70.88462,
-    "regulation": "new",
-    "win_percentage": 61.5,
-    "win_rate": 61.5,
-    "prelims": 13,
-    "total_rounds": 13,
-    "break_percentage": 66.7,
-    "tournaments": 3,
-    "eligible_tournaments": 2,
-    "peak_score": 72.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 71.4,
-        "scores": [
-          72.0,
-          72.0,
-          71.5,
-          71.0,
-          70.5
-        ]
-      },
-      {
-        "tournament_id": 4,
-        "rounds_debated": 7,
-        "is_eligible": true,
-        "tournament_average": 70.5,
-        "scores": [
-          70.0,
-          69.5,
-          71.0,
-          72.0,
-          71.0,
-          69.0,
-          71.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 71.0,
-        "scores": [
-          71.0
-        ]
-      }
-    ],
-    "rank": 70
+    "rank": 67
   },
   {
     "person_id": 379,
@@ -5673,7 +5549,7 @@
         ]
       }
     ],
-    "rank": 71
+    "rank": 68
   },
   {
     "person_id": 614,
@@ -5714,7 +5590,7 @@
         ]
       }
     ],
-    "rank": 72
+    "rank": 69
   },
   {
     "person_id": 644,
@@ -5750,7 +5626,7 @@
         ]
       }
     ],
-    "rank": 73
+    "rank": 70
   },
   {
     "person_id": 838,
@@ -5823,7 +5699,7 @@
         ]
       }
     ],
-    "rank": 74
+    "rank": 71
   },
   {
     "person_id": 589,
@@ -5887,7 +5763,7 @@
         ]
       }
     ],
-    "rank": 75
+    "rank": 72
   },
   {
     "person_id": 612,
@@ -5928,7 +5804,7 @@
         ]
       }
     ],
-    "rank": 76
+    "rank": 73
   },
   {
     "person_id": 359,
@@ -5967,7 +5843,7 @@
         ]
       }
     ],
-    "rank": 77
+    "rank": 74
   },
   {
     "person_id": 92,
@@ -6029,7 +5905,7 @@
         ]
       }
     ],
-    "rank": 78
+    "rank": 75
   },
   {
     "person_id": 565,
@@ -6066,7 +5942,7 @@
         ]
       }
     ],
-    "rank": 79
+    "rank": 76
   },
   {
     "person_id": 26,
@@ -6137,7 +6013,7 @@
         ]
       }
     ],
-    "rank": 80
+    "rank": 77
   },
   {
     "person_id": 70,
@@ -6220,7 +6096,7 @@
         ]
       }
     ],
-    "rank": 81
+    "rank": 78
   },
   {
     "person_id": 592,
@@ -6272,7 +6148,100 @@
         ]
       }
     ],
-    "rank": 82
+    "rank": 79
+  },
+  {
+    "person_id": 883,
+    "speaker_name": "Arshalya Gomes",
+    "institution": "Holy Family Convent",
+    "institution_name": "Holy Family Convent",
+    "national_level": null,
+    "master_score": 70.64815,
+    "speaker_avg": 70.65,
+    "speech_avg": 70.65,
+    "speech_average": 70.64815,
+    "cumulative_speech_avg": 70.64815,
+    "avg_of_avgs": 70.71143,
+    "all_speech_average": 70.64815,
+    "regulation": "new",
+    "win_percentage": 48.1,
+    "win_rate": 48.1,
+    "prelims": 27,
+    "total_rounds": 27,
+    "break_percentage": 20.0,
+    "tournaments": 5,
+    "eligible_tournaments": 5,
+    "peak_score": 74.5,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.6,
+        "scores": [
+          72.5,
+          71.5,
+          69.0,
+          70.0,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 3,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.1,
+        "scores": [
+          70.0,
+          71.0,
+          69.5,
+          69.5,
+          70.5
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 7,
+        "is_eligible": true,
+        "tournament_average": 69.85714,
+        "scores": [
+          68.0,
+          71.0,
+          70.0,
+          70.0,
+          70.0,
+          70.0,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 72.1,
+        "scores": [
+          72.0,
+          71.0,
+          72.0,
+          71.0,
+          74.5
+        ]
+      },
+      {
+        "tournament_id": 16,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.9,
+        "scores": [
+          71.0,
+          72.0,
+          71.0,
+          70.5,
+          70.0
+        ]
+      }
+    ],
+    "rank": 80
   },
   {
     "person_id": 138,
@@ -6370,7 +6339,7 @@
         ]
       }
     ],
-    "rank": 83
+    "rank": 81
   },
   {
     "person_id": 21,
@@ -6484,7 +6453,7 @@
         ]
       }
     ],
-    "rank": 84
+    "rank": 82
   },
   {
     "person_id": 443,
@@ -6549,7 +6518,7 @@
         ]
       }
     ],
-    "rank": 85
+    "rank": 83
   },
   {
     "person_id": 9,
@@ -6642,7 +6611,7 @@
         ]
       }
     ],
-    "rank": 86
+    "rank": 84
   },
   {
     "person_id": 25,
@@ -6733,7 +6702,7 @@
         ]
       }
     ],
-    "rank": 87
+    "rank": 85
   },
   {
     "person_id": 586,
@@ -6782,68 +6751,7 @@
         ]
       }
     ],
-    "rank": 88
-  },
-  {
-    "person_id": 891,
-    "speaker_name": "Kumal Premathunga",
-    "institution": "Isipathana College",
-    "institution_name": "Isipathana College",
-    "national_level": null,
-    "master_score": 70.6,
-    "speaker_avg": 70.6,
-    "speech_avg": 70.6,
-    "speech_average": 70.6,
-    "cumulative_speech_avg": 70.6,
-    "avg_of_avgs": 70.6,
-    "all_speech_average": 70.59091,
-    "regulation": "new",
-    "win_percentage": 54.5,
-    "win_rate": 54.5,
-    "prelims": 11,
-    "total_rounds": 11,
-    "break_percentage": 66.7,
-    "tournaments": 3,
-    "eligible_tournaments": 2,
-    "peak_score": 72.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.9,
-        "scores": [
-          72.0,
-          69.0,
-          72.0,
-          70.0,
-          71.5
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 70.5,
-        "scores": [
-          70.5
-        ]
-      },
-      {
-        "tournament_id": 44,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.3,
-        "scores": [
-          69.5,
-          71.0,
-          70.0,
-          70.0,
-          71.0
-        ]
-      }
-    ],
-    "rank": 89
+    "rank": 86
   },
   {
     "person_id": 441,
@@ -6945,7 +6853,7 @@
         ]
       }
     ],
-    "rank": 90
+    "rank": 87
   },
   {
     "person_id": 792,
@@ -6995,7 +6903,7 @@
         ]
       }
     ],
-    "rank": 91
+    "rank": 88
   },
   {
     "person_id": 97,
@@ -7031,7 +6939,7 @@
         ]
       }
     ],
-    "rank": 92
+    "rank": 89
   },
   {
     "person_id": 890,
@@ -7066,7 +6974,7 @@
         ]
       }
     ],
-    "rank": 93
+    "rank": 90
   },
   {
     "person_id": 38,
@@ -7105,7 +7013,7 @@
         ]
       }
     ],
-    "rank": 94
+    "rank": 91
   },
   {
     "person_id": 452,
@@ -7143,7 +7051,7 @@
         ]
       }
     ],
-    "rank": 95
+    "rank": 92
   },
   {
     "person_id": 366,
@@ -7192,7 +7100,7 @@
         ]
       }
     ],
-    "rank": 96
+    "rank": 93
   },
   {
     "person_id": 606,
@@ -7232,7 +7140,7 @@
         ]
       }
     ],
-    "rank": 97
+    "rank": 94
   },
   {
     "person_id": 898,
@@ -7271,7 +7179,7 @@
         ]
       }
     ],
-    "rank": 98
+    "rank": 95
   },
   {
     "person_id": 456,
@@ -7324,7 +7232,7 @@
         ]
       }
     ],
-    "rank": 99
+    "rank": 96
   },
   {
     "person_id": 745,
@@ -7363,7 +7271,7 @@
         ]
       }
     ],
-    "rank": 100
+    "rank": 97
   },
   {
     "person_id": 536,
@@ -7398,7 +7306,7 @@
         ]
       }
     ],
-    "rank": 101
+    "rank": 98
   },
   {
     "person_id": 897,
@@ -7434,7 +7342,7 @@
         ]
       }
     ],
-    "rank": 102
+    "rank": 99
   },
   {
     "person_id": 446,
@@ -7511,7 +7419,7 @@
         ]
       }
     ],
-    "rank": 103
+    "rank": 100
   },
   {
     "person_id": 43,
@@ -7598,7 +7506,7 @@
         ]
       }
     ],
-    "rank": 104
+    "rank": 101
   },
   {
     "person_id": 382,
@@ -7651,7 +7559,7 @@
         ]
       }
     ],
-    "rank": 105
+    "rank": 102
   },
   {
     "person_id": 30,
@@ -7700,7 +7608,7 @@
         ]
       }
     ],
-    "rank": 106
+    "rank": 103
   },
   {
     "person_id": 50,
@@ -7767,7 +7675,7 @@
         ]
       }
     ],
-    "rank": 107
+    "rank": 104
   },
   {
     "person_id": 81,
@@ -7806,7 +7714,7 @@
         ]
       }
     ],
-    "rank": 108
+    "rank": 105
   },
   {
     "person_id": 450,
@@ -7845,7 +7753,7 @@
         ]
       }
     ],
-    "rank": 109
+    "rank": 106
   },
   {
     "person_id": 871,
@@ -7894,7 +7802,7 @@
         ]
       }
     ],
-    "rank": 110
+    "rank": 107
   },
   {
     "person_id": 381,
@@ -7933,7 +7841,7 @@
         ]
       }
     ],
-    "rank": 111
+    "rank": 108
   },
   {
     "person_id": 902,
@@ -7972,7 +7880,7 @@
         ]
       }
     ],
-    "rank": 112
+    "rank": 109
   },
   {
     "person_id": 907,
@@ -8011,7 +7919,7 @@
         ]
       }
     ],
-    "rank": 113
+    "rank": 110
   },
   {
     "person_id": 747,
@@ -8049,7 +7957,7 @@
         ]
       }
     ],
-    "rank": 114
+    "rank": 111
   },
   {
     "person_id": 620,
@@ -8090,7 +7998,7 @@
         ]
       }
     ],
-    "rank": 115
+    "rank": 112
   },
   {
     "person_id": 869,
@@ -8142,7 +8050,7 @@
         ]
       }
     ],
-    "rank": 116
+    "rank": 113
   },
   {
     "person_id": 91,
@@ -8254,7 +8162,7 @@
         ]
       }
     ],
-    "rank": 117
+    "rank": 114
   },
   {
     "person_id": 78,
@@ -8306,7 +8214,7 @@
         ]
       }
     ],
-    "rank": 118
+    "rank": 115
   },
   {
     "person_id": 65,
@@ -8345,7 +8253,7 @@
         ]
       }
     ],
-    "rank": 119
+    "rank": 116
   },
   {
     "person_id": 591,
@@ -8412,7 +8320,7 @@
         ]
       }
     ],
-    "rank": 120
+    "rank": 117
   },
   {
     "person_id": 588,
@@ -8462,7 +8370,7 @@
         ]
       }
     ],
-    "rank": 121
+    "rank": 118
   },
   {
     "person_id": 86,
@@ -8538,7 +8446,7 @@
         ]
       }
     ],
-    "rank": 122
+    "rank": 119
   },
   {
     "person_id": 899,
@@ -8574,7 +8482,7 @@
         ]
       }
     ],
-    "rank": 123
+    "rank": 120
   },
   {
     "person_id": 12,
@@ -8634,7 +8542,7 @@
         ]
       }
     ],
-    "rank": 124
+    "rank": 121
   },
   {
     "person_id": 541,
@@ -8686,7 +8594,7 @@
         ]
       }
     ],
-    "rank": 125
+    "rank": 122
   },
   {
     "person_id": 460,
@@ -8761,7 +8669,7 @@
         ]
       }
     ],
-    "rank": 126
+    "rank": 123
   },
   {
     "person_id": 375,
@@ -8828,7 +8736,7 @@
         ]
       }
     ],
-    "rank": 127
+    "rank": 124
   },
   {
     "person_id": 605,
@@ -8869,7 +8777,7 @@
         ]
       }
     ],
-    "rank": 128
+    "rank": 125
   },
   {
     "person_id": 728,
@@ -8908,7 +8816,7 @@
         ]
       }
     ],
-    "rank": 129
+    "rank": 126
   },
   {
     "person_id": 76,
@@ -8988,7 +8896,7 @@
         ]
       }
     ],
-    "rank": 130
+    "rank": 127
   },
   {
     "person_id": 354,
@@ -9025,7 +8933,7 @@
         ]
       }
     ],
-    "rank": 131
+    "rank": 128
   },
   {
     "person_id": 48,
@@ -9079,70 +8987,7 @@
         ]
       }
     ],
-    "rank": 132
-  },
-  {
-    "person_id": 883,
-    "speaker_name": "Arshalya Gomes",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
-    "national_level": null,
-    "master_score": 70.16667,
-    "speaker_avg": 70.17,
-    "speech_avg": 70.17,
-    "speech_average": 70.16667,
-    "cumulative_speech_avg": 70.16667,
-    "avg_of_avgs": 70.22857,
-    "all_speech_average": 70.30769,
-    "regulation": "new",
-    "win_percentage": 46.2,
-    "win_rate": 46.2,
-    "prelims": 13,
-    "total_rounds": 13,
-    "break_percentage": 33.3,
-    "tournaments": 3,
-    "eligible_tournaments": 2,
-    "peak_score": 72.5,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.6,
-        "scores": [
-          72.5,
-          71.5,
-          69.0,
-          70.0,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 4,
-        "rounds_debated": 7,
-        "is_eligible": true,
-        "tournament_average": 69.85714,
-        "scores": [
-          68.0,
-          71.0,
-          70.0,
-          70.0,
-          70.0,
-          70.0,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 72.0,
-        "scores": [
-          72.0
-        ]
-      }
-    ],
-    "rank": 133
+    "rank": 129
   },
   {
     "person_id": 67,
@@ -9179,7 +9024,7 @@
         ]
       }
     ],
-    "rank": 134
+    "rank": 130
   },
   {
     "person_id": 746,
@@ -9216,7 +9061,7 @@
         ]
       }
     ],
-    "rank": 135
+    "rank": 131
   },
   {
     "person_id": 673,
@@ -9256,7 +9101,7 @@
         ]
       }
     ],
-    "rank": 136
+    "rank": 132
   },
   {
     "person_id": 864,
@@ -9295,7 +9140,7 @@
         ]
       }
     ],
-    "rank": 137
+    "rank": 133
   },
   {
     "person_id": 613,
@@ -9336,7 +9181,7 @@
         ]
       }
     ],
-    "rank": 138
+    "rank": 134
   },
   {
     "person_id": 66,
@@ -9375,7 +9220,7 @@
         ]
       }
     ],
-    "rank": 139
+    "rank": 135
   },
   {
     "person_id": 171,
@@ -9441,7 +9286,7 @@
         ]
       }
     ],
-    "rank": 140
+    "rank": 136
   },
   {
     "person_id": 13,
@@ -9505,57 +9350,7 @@
         ]
       }
     ],
-    "rank": 141
-  },
-  {
-    "person_id": 880,
-    "speaker_name": "Navidhi Madawala",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
-    "national_level": null,
-    "master_score": 70.07143,
-    "speaker_avg": 70.07,
-    "speech_avg": 70.07,
-    "speech_average": 70.07143,
-    "cumulative_speech_avg": 70.07143,
-    "avg_of_avgs": 70.07143,
-    "all_speech_average": 70.125,
-    "regulation": "new",
-    "win_percentage": 50.0,
-    "win_rate": 50.0,
-    "prelims": 8,
-    "total_rounds": 8,
-    "break_percentage": 0.0,
-    "tournaments": 2,
-    "eligible_tournaments": 1,
-    "peak_score": 71.5,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 4,
-        "rounds_debated": 7,
-        "is_eligible": true,
-        "tournament_average": 70.07143,
-        "scores": [
-          71.0,
-          69.5,
-          70.5,
-          69.0,
-          69.0,
-          70.0,
-          71.5
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 70.5,
-        "scores": [
-          70.5
-        ]
-      }
-    ],
-    "rank": 142
+    "rank": 137
   },
   {
     "person_id": 453,
@@ -9605,7 +9400,7 @@
         ]
       }
     ],
-    "rank": 143
+    "rank": 138
   },
   {
     "person_id": 88,
@@ -9654,7 +9449,7 @@
         ]
       }
     ],
-    "rank": 144
+    "rank": 139
   },
   {
     "person_id": 37,
@@ -9729,7 +9524,7 @@
         ]
       }
     ],
-    "rank": 145
+    "rank": 140
   },
   {
     "person_id": 56,
@@ -9775,7 +9570,7 @@
         ]
       }
     ],
-    "rank": 146
+    "rank": 141
   },
   {
     "person_id": 884,
@@ -9810,7 +9605,7 @@
         ]
       }
     ],
-    "rank": 147
+    "rank": 142
   },
   {
     "person_id": 611,
@@ -9847,7 +9642,7 @@
         ]
       }
     ],
-    "rank": 148
+    "rank": 143
   },
   {
     "person_id": 51,
@@ -9899,7 +9694,7 @@
         ]
       }
     ],
-    "rank": 149
+    "rank": 144
   },
   {
     "person_id": 627,
@@ -9938,7 +9733,112 @@
         ]
       }
     ],
-    "rank": 150
+    "rank": 145
+  },
+  {
+    "person_id": 84,
+    "speaker_name": "Kumal Seniru Premathunga",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
+    "national_level": null,
+    "master_score": 70.0,
+    "speaker_avg": 70.0,
+    "speech_avg": 70.0,
+    "speech_average": 70.0,
+    "cumulative_speech_avg": 70.0,
+    "avg_of_avgs": 69.99444,
+    "all_speech_average": 70.0,
+    "regulation": "new",
+    "win_percentage": 51.6,
+    "win_rate": 51.6,
+    "prelims": 31,
+    "total_rounds": 31,
+    "break_percentage": 33.3,
+    "tournaments": 6,
+    "eligible_tournaments": 6,
+    "peak_score": 73.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.9,
+        "scores": [
+          72.0,
+          69.0,
+          72.0,
+          70.0,
+          71.5
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 6,
+        "is_eligible": true,
+        "tournament_average": 70.16667,
+        "scores": [
+          69.0,
+          70.5,
+          71.0,
+          69.0,
+          70.5,
+          71.0
+        ]
+      },
+      {
+        "tournament_id": 7,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 67.9,
+        "scores": [
+          66.5,
+          65.0,
+          69.0,
+          69.0,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.6,
+        "scores": [
+          70.5,
+          70.0,
+          70.0,
+          69.5,
+          73.0
+        ]
+      },
+      {
+        "tournament_id": 16,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.1,
+        "scores": [
+          69.0,
+          69.0,
+          71.0,
+          70.5,
+          71.0
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.3,
+        "scores": [
+          69.5,
+          71.0,
+          70.0,
+          70.0,
+          71.0
+        ]
+      }
+    ],
+    "rank": 146
   },
   {
     "person_id": 465,
@@ -9976,7 +9876,7 @@
         ]
       }
     ],
-    "rank": 151
+    "rank": 147
   },
   {
     "person_id": 622,
@@ -10017,7 +9917,7 @@
         ]
       }
     ],
-    "rank": 152
+    "rank": 148
   },
   {
     "person_id": 380,
@@ -10056,7 +9956,7 @@
         ]
       }
     ],
-    "rank": 153
+    "rank": 149
   },
   {
     "person_id": 642,
@@ -10095,7 +9995,7 @@
         ]
       }
     ],
-    "rank": 154
+    "rank": 150
   },
   {
     "person_id": 133,
@@ -10133,7 +10033,7 @@
         ]
       }
     ],
-    "rank": 155
+    "rank": 151
   },
   {
     "person_id": 886,
@@ -10168,7 +10068,7 @@
         ]
       }
     ],
-    "rank": 156
+    "rank": 152
   },
   {
     "person_id": 888,
@@ -10203,7 +10103,7 @@
         ]
       }
     ],
-    "rank": 157
+    "rank": 153
   },
   {
     "person_id": 69,
@@ -10267,7 +10167,7 @@
         ]
       }
     ],
-    "rank": 158
+    "rank": 154
   },
   {
     "person_id": 63,
@@ -10371,7 +10271,7 @@
         ]
       }
     ],
-    "rank": 159
+    "rank": 155
   },
   {
     "person_id": 148,
@@ -10489,7 +10389,7 @@
         ]
       }
     ],
-    "rank": 160
+    "rank": 156
   },
   {
     "person_id": 72,
@@ -10564,7 +10464,7 @@
         ]
       }
     ],
-    "rank": 161
+    "rank": 157
   },
   {
     "person_id": 144,
@@ -10700,7 +10600,7 @@
         ]
       }
     ],
-    "rank": 162
+    "rank": 158
   },
   {
     "person_id": 725,
@@ -10759,7 +10659,7 @@
         ]
       }
     ],
-    "rank": 163
+    "rank": 159
   },
   {
     "person_id": 139,
@@ -10824,7 +10724,7 @@
         ]
       }
     ],
-    "rank": 164
+    "rank": 160
   },
   {
     "person_id": 356,
@@ -10873,7 +10773,7 @@
         ]
       }
     ],
-    "rank": 165
+    "rank": 161
   },
   {
     "person_id": 73,
@@ -10936,7 +10836,7 @@
         ]
       }
     ],
-    "rank": 166
+    "rank": 162
   },
   {
     "person_id": 649,
@@ -10976,7 +10876,7 @@
         ]
       }
     ],
-    "rank": 167
+    "rank": 163
   },
   {
     "person_id": 61,
@@ -11042,7 +10942,7 @@
         ]
       }
     ],
-    "rank": 168
+    "rank": 164
   },
   {
     "person_id": 108,
@@ -11081,7 +10981,7 @@
         ]
       }
     ],
-    "rank": 169
+    "rank": 165
   },
   {
     "person_id": 64,
@@ -11140,7 +11040,7 @@
         ]
       }
     ],
-    "rank": 170
+    "rank": 166
   },
   {
     "person_id": 383,
@@ -11179,7 +11079,7 @@
         ]
       }
     ],
-    "rank": 171
+    "rank": 167
   },
   {
     "person_id": 371,
@@ -11217,7 +11117,7 @@
         ]
       }
     ],
-    "rank": 172
+    "rank": 168
   },
   {
     "person_id": 790,
@@ -11255,7 +11155,7 @@
         ]
       }
     ],
-    "rank": 173
+    "rank": 169
   },
   {
     "person_id": 834,
@@ -11293,45 +11193,7 @@
         ]
       }
     ],
-    "rank": 174
-  },
-  {
-    "person_id": 908,
-    "speaker_name": "Omalya Wathsandi",
-    "institution": "Devi Balika Vidyalaya",
-    "institution_name": "Devi Balika Vidyalaya",
-    "national_level": null,
-    "master_score": 69.875,
-    "speaker_avg": 69.88,
-    "speech_avg": 69.88,
-    "speech_average": 69.875,
-    "cumulative_speech_avg": 69.875,
-    "avg_of_avgs": 69.875,
-    "all_speech_average": 69.875,
-    "regulation": "new",
-    "win_percentage": 50.0,
-    "win_rate": 50.0,
-    "prelims": 4,
-    "total_rounds": 4,
-    "break_percentage": 0.0,
-    "tournaments": 1,
-    "eligible_tournaments": 1,
-    "peak_score": 70.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 44,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 69.875,
-        "scores": [
-          70.0,
-          69.5,
-          70.0,
-          70.0
-        ]
-      }
-    ],
-    "rank": 175
+    "rank": 170
   },
   {
     "person_id": 593,
@@ -11372,7 +11234,7 @@
         ]
       }
     ],
-    "rank": 176
+    "rank": 171
   },
   {
     "person_id": 602,
@@ -11413,7 +11275,7 @@
         ]
       }
     ],
-    "rank": 177
+    "rank": 172
   },
   {
     "person_id": 87,
@@ -11489,7 +11351,7 @@
         ]
       }
     ],
-    "rank": 178
+    "rank": 173
   },
   {
     "person_id": 449,
@@ -11551,68 +11413,7 @@
         ]
       }
     ],
-    "rank": 179
-  },
-  {
-    "person_id": 892,
-    "speaker_name": "Sanuka Godagedara",
-    "institution": "Isipathana College",
-    "institution_name": "Isipathana College",
-    "national_level": null,
-    "master_score": 69.85,
-    "speaker_avg": 69.85,
-    "speech_avg": 69.85,
-    "speech_average": 69.85,
-    "cumulative_speech_avg": 69.85,
-    "avg_of_avgs": 69.85,
-    "all_speech_average": 69.86364,
-    "regulation": "new",
-    "win_percentage": 54.5,
-    "win_rate": 54.5,
-    "prelims": 11,
-    "total_rounds": 11,
-    "break_percentage": 66.7,
-    "tournaments": 3,
-    "eligible_tournaments": 2,
-    "peak_score": 71.5,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 69.3,
-        "scores": [
-          71.0,
-          67.5,
-          69.0,
-          69.0,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 70.0,
-        "scores": [
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 44,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.4,
-        "scores": [
-          70.0,
-          70.0,
-          70.0,
-          70.5,
-          71.5
-        ]
-      }
-    ],
-    "rank": 180
+    "rank": 174
   },
   {
     "person_id": 402,
@@ -11726,7 +11527,7 @@
         ]
       }
     ],
-    "rank": 181
+    "rank": 175
   },
   {
     "person_id": 912,
@@ -11763,7 +11564,7 @@
         ]
       }
     ],
-    "rank": 182
+    "rank": 176
   },
   {
     "person_id": 55,
@@ -11821,7 +11622,7 @@
         ]
       }
     ],
-    "rank": 183
+    "rank": 177
   },
   {
     "person_id": 635,
@@ -11858,7 +11659,7 @@
         ]
       }
     ],
-    "rank": 184
+    "rank": 178
   },
   {
     "person_id": 667,
@@ -11895,7 +11696,7 @@
         ]
       }
     ],
-    "rank": 185
+    "rank": 179
   },
   {
     "person_id": 59,
@@ -11954,7 +11755,7 @@
         ]
       }
     ],
-    "rank": 186
+    "rank": 180
   },
   {
     "person_id": 146,
@@ -12020,7 +11821,7 @@
         ]
       }
     ],
-    "rank": 187
+    "rank": 181
   },
   {
     "person_id": 619,
@@ -12096,7 +11897,7 @@
         ]
       }
     ],
-    "rank": 188
+    "rank": 182
   },
   {
     "person_id": 900,
@@ -12135,7 +11936,7 @@
         ]
       }
     ],
-    "rank": 189
+    "rank": 183
   },
   {
     "person_id": 326,
@@ -12174,7 +11975,7 @@
         ]
       }
     ],
-    "rank": 190
+    "rank": 184
   },
   {
     "person_id": 643,
@@ -12213,7 +12014,7 @@
         ]
       }
     ],
-    "rank": 191
+    "rank": 185
   },
   {
     "person_id": 31,
@@ -12301,7 +12102,7 @@
         ]
       }
     ],
-    "rank": 192
+    "rank": 186
   },
   {
     "person_id": 637,
@@ -12342,7 +12143,7 @@
         ]
       }
     ],
-    "rank": 193
+    "rank": 187
   },
   {
     "person_id": 99,
@@ -12431,7 +12232,7 @@
         ]
       }
     ],
-    "rank": 194
+    "rank": 188
   },
   {
     "person_id": 107,
@@ -12469,7 +12270,7 @@
         ]
       }
     ],
-    "rank": 195
+    "rank": 189
   },
   {
     "person_id": 167,
@@ -12507,7 +12308,7 @@
         ]
       }
     ],
-    "rank": 196
+    "rank": 190
   },
   {
     "person_id": 485,
@@ -12545,7 +12346,7 @@
         ]
       }
     ],
-    "rank": 197
+    "rank": 191
   },
   {
     "person_id": 126,
@@ -12617,7 +12418,7 @@
         ]
       }
     ],
-    "rank": 198
+    "rank": 192
   },
   {
     "person_id": 662,
@@ -12653,7 +12454,7 @@
         ]
       }
     ],
-    "rank": 199
+    "rank": 193
   },
   {
     "person_id": 910,
@@ -12689,7 +12490,7 @@
         ]
       }
     ],
-    "rank": 200
+    "rank": 194
   },
   {
     "person_id": 924,
@@ -12725,7 +12526,7 @@
         ]
       }
     ],
-    "rank": 201
+    "rank": 195
   },
   {
     "person_id": 590,
@@ -12826,7 +12627,7 @@
         ]
       }
     ],
-    "rank": 202
+    "rank": 196
   },
   {
     "person_id": 40,
@@ -12865,7 +12666,7 @@
         ]
       }
     ],
-    "rank": 203
+    "rank": 197
   },
   {
     "person_id": 915,
@@ -12904,7 +12705,7 @@
         ]
       }
     ],
-    "rank": 204
+    "rank": 198
   },
   {
     "person_id": 179,
@@ -12952,7 +12753,7 @@
         ]
       }
     ],
-    "rank": 205
+    "rank": 199
   },
   {
     "person_id": 469,
@@ -13057,85 +12858,7 @@
         ]
       }
     ],
-    "rank": 206
-  },
-  {
-    "person_id": 84,
-    "speaker_name": "Kumal Seniru Premathunga",
-    "institution": "Isipathana College",
-    "institution_name": "Isipathana College",
-    "national_level": null,
-    "master_score": 69.675,
-    "speaker_avg": 69.67,
-    "speech_avg": 69.67,
-    "speech_average": 69.675,
-    "cumulative_speech_avg": 69.675,
-    "avg_of_avgs": 69.69792,
-    "all_speech_average": 69.675,
-    "regulation": "new",
-    "win_percentage": 50.0,
-    "win_rate": 50.0,
-    "prelims": 20,
-    "total_rounds": 20,
-    "break_percentage": 25.0,
-    "tournaments": 4,
-    "eligible_tournaments": 4,
-    "peak_score": 73.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 4,
-        "rounds_debated": 6,
-        "is_eligible": true,
-        "tournament_average": 70.16667,
-        "scores": [
-          69.0,
-          70.5,
-          71.0,
-          69.0,
-          70.5,
-          71.0
-        ]
-      },
-      {
-        "tournament_id": 7,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 67.9,
-        "scores": [
-          66.5,
-          65.0,
-          69.0,
-          69.0,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 70.625,
-        "scores": [
-          70.0,
-          70.0,
-          69.5,
-          73.0
-        ]
-      },
-      {
-        "tournament_id": 16,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.1,
-        "scores": [
-          69.0,
-          69.0,
-          71.0,
-          70.5,
-          71.0
-        ]
-      }
-    ],
-    "rank": 207
+    "rank": 200
   },
   {
     "person_id": 455,
@@ -13197,7 +12920,7 @@
         ]
       }
     ],
-    "rank": 208
+    "rank": 201
   },
   {
     "person_id": 127,
@@ -13234,7 +12957,7 @@
         ]
       }
     ],
-    "rank": 209
+    "rank": 202
   },
   {
     "person_id": 626,
@@ -13271,7 +12994,7 @@
         ]
       }
     ],
-    "rank": 210
+    "rank": 203
   },
   {
     "person_id": 651,
@@ -13311,7 +13034,112 @@
         ]
       }
     ],
-    "rank": 211
+    "rank": 204
+  },
+  {
+    "person_id": 82,
+    "speaker_name": "Sanuka Semitha Godagedara",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
+    "national_level": null,
+    "master_score": 69.64516,
+    "speaker_avg": 69.65,
+    "speech_avg": 69.65,
+    "speech_average": 69.64516,
+    "cumulative_speech_avg": 69.64516,
+    "avg_of_avgs": 69.61389,
+    "all_speech_average": 69.64516,
+    "regulation": "new",
+    "win_percentage": 51.6,
+    "win_rate": 51.6,
+    "prelims": 31,
+    "total_rounds": 31,
+    "break_percentage": 33.3,
+    "tournaments": 6,
+    "eligible_tournaments": 6,
+    "peak_score": 72.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 69.3,
+        "scores": [
+          71.0,
+          67.5,
+          69.0,
+          69.0,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 6,
+        "is_eligible": true,
+        "tournament_average": 70.58333,
+        "scores": [
+          70.0,
+          71.5,
+          70.5,
+          71.0,
+          70.0,
+          70.5
+        ]
+      },
+      {
+        "tournament_id": 7,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 67.5,
+        "scores": [
+          65.0,
+          64.0,
+          68.0,
+          70.5,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 69.5,
+        "scores": [
+          70.0,
+          69.5,
+          70.0,
+          69.0,
+          69.0
+        ]
+      },
+      {
+        "tournament_id": 16,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.4,
+        "scores": [
+          69.5,
+          70.0,
+          70.0,
+          70.5,
+          72.0
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.4,
+        "scores": [
+          70.0,
+          70.0,
+          70.0,
+          70.5,
+          71.5
+        ]
+      }
+    ],
+    "rank": 205
   },
   {
     "person_id": 603,
@@ -13352,7 +13180,7 @@
         ]
       }
     ],
-    "rank": 212
+    "rank": 206
   },
   {
     "person_id": 595,
@@ -13405,7 +13233,7 @@
         ]
       }
     ],
-    "rank": 213
+    "rank": 207
   },
   {
     "person_id": 601,
@@ -13459,7 +13287,7 @@
         ]
       }
     ],
-    "rank": 214
+    "rank": 208
   },
   {
     "person_id": 170,
@@ -13497,7 +13325,7 @@
         ]
       }
     ],
-    "rank": 215
+    "rank": 209
   },
   {
     "person_id": 650,
@@ -13535,7 +13363,7 @@
         ]
       }
     ],
-    "rank": 216
+    "rank": 210
   },
   {
     "person_id": 607,
@@ -13594,7 +13422,7 @@
         ]
       }
     ],
-    "rank": 217
+    "rank": 211
   },
   {
     "person_id": 131,
@@ -13633,7 +13461,7 @@
         ]
       }
     ],
-    "rank": 218
+    "rank": 212
   },
   {
     "person_id": 735,
@@ -13672,7 +13500,7 @@
         ]
       }
     ],
-    "rank": 219
+    "rank": 213
   },
   {
     "person_id": 806,
@@ -13711,7 +13539,7 @@
         ]
       }
     ],
-    "rank": 220
+    "rank": 214
   },
   {
     "person_id": 137,
@@ -13774,7 +13602,7 @@
         ]
       }
     ],
-    "rank": 221
+    "rank": 215
   },
   {
     "person_id": 156,
@@ -13826,7 +13654,7 @@
         ]
       }
     ],
-    "rank": 222
+    "rank": 216
   },
   {
     "person_id": 143,
@@ -13891,7 +13719,7 @@
         ]
       }
     ],
-    "rank": 223
+    "rank": 217
   },
   {
     "person_id": 45,
@@ -13954,85 +13782,7 @@
         ]
       }
     ],
-    "rank": 224
-  },
-  {
-    "person_id": 82,
-    "speaker_name": "Sanuka Semitha Godagedara",
-    "institution": "Isipathana College",
-    "institution_name": "Isipathana College",
-    "national_level": null,
-    "master_score": 69.525,
-    "speaker_avg": 69.53,
-    "speech_avg": 69.53,
-    "speech_average": 69.525,
-    "cumulative_speech_avg": 69.525,
-    "avg_of_avgs": 69.46458,
-    "all_speech_average": 69.525,
-    "regulation": "new",
-    "win_percentage": 50.0,
-    "win_rate": 50.0,
-    "prelims": 20,
-    "total_rounds": 20,
-    "break_percentage": 25.0,
-    "tournaments": 4,
-    "eligible_tournaments": 4,
-    "peak_score": 72.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 4,
-        "rounds_debated": 6,
-        "is_eligible": true,
-        "tournament_average": 70.58333,
-        "scores": [
-          70.0,
-          71.5,
-          70.5,
-          71.0,
-          70.0,
-          70.5
-        ]
-      },
-      {
-        "tournament_id": 7,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 67.5,
-        "scores": [
-          65.0,
-          64.0,
-          68.0,
-          70.5,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 69.375,
-        "scores": [
-          69.5,
-          70.0,
-          69.0,
-          69.0
-        ]
-      },
-      {
-        "tournament_id": 16,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.4,
-        "scores": [
-          69.5,
-          70.0,
-          70.0,
-          70.5,
-          72.0
-        ]
-      }
-    ],
-    "rank": 225
+    "rank": 218
   },
   {
     "person_id": 879,
@@ -14067,7 +13817,7 @@
         ]
       }
     ],
-    "rank": 226
+    "rank": 219
   },
   {
     "person_id": 376,
@@ -14114,7 +13864,7 @@
         ]
       }
     ],
-    "rank": 227
+    "rank": 220
   },
   {
     "person_id": 807,
@@ -14163,7 +13913,7 @@
         ]
       }
     ],
-    "rank": 228
+    "rank": 221
   },
   {
     "person_id": 609,
@@ -14204,7 +13954,7 @@
         ]
       }
     ],
-    "rank": 229
+    "rank": 222
   },
   {
     "person_id": 83,
@@ -14303,7 +14053,7 @@
         ]
       }
     ],
-    "rank": 230
+    "rank": 223
   },
   {
     "person_id": 140,
@@ -14391,7 +14141,7 @@
         ]
       }
     ],
-    "rank": 231
+    "rank": 224
   },
   {
     "person_id": 129,
@@ -14427,7 +14177,7 @@
         ]
       }
     ],
-    "rank": 232
+    "rank": 225
   },
   {
     "person_id": 724,
@@ -14465,7 +14215,7 @@
         ]
       }
     ],
-    "rank": 233
+    "rank": 226
   },
   {
     "person_id": 214,
@@ -14552,7 +14302,7 @@
         ]
       }
     ],
-    "rank": 234
+    "rank": 227
   },
   {
     "person_id": 477,
@@ -14601,7 +14351,7 @@
         ]
       }
     ],
-    "rank": 235
+    "rank": 228
   },
   {
     "person_id": 111,
@@ -14707,7 +14457,7 @@
         ]
       }
     ],
-    "rank": 236
+    "rank": 229
   },
   {
     "person_id": 922,
@@ -14744,7 +14494,7 @@
         ]
       }
     ],
-    "rank": 237
+    "rank": 230
   },
   {
     "person_id": 539,
@@ -14779,7 +14529,111 @@
         ]
       }
     ],
-    "rank": 238
+    "rank": 231
+  },
+  {
+    "person_id": 98,
+    "speaker_name": "Navidhi Madawala",
+    "institution": "Holy Family Convent",
+    "institution_name": "Holy Family Convent",
+    "national_level": null,
+    "master_score": 69.49167,
+    "speaker_avg": 69.49,
+    "speech_avg": 69.49,
+    "speech_average": 69.49167,
+    "cumulative_speech_avg": 69.49167,
+    "avg_of_avgs": 69.3869,
+    "all_speech_average": 69.49167,
+    "regulation": "new",
+    "win_percentage": 46.7,
+    "win_rate": 46.7,
+    "prelims": 30,
+    "total_rounds": 30,
+    "break_percentage": 0.0,
+    "tournaments": 6,
+    "eligible_tournaments": 6,
+    "peak_score": 71.5,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 68.6,
+        "scores": [
+          69.0,
+          68.0,
+          66.0,
+          70.0,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 7,
+        "is_eligible": true,
+        "tournament_average": 70.07143,
+        "scores": [
+          71.0,
+          69.5,
+          70.5,
+          69.0,
+          69.0,
+          70.0,
+          71.5
+        ]
+      },
+      {
+        "tournament_id": 7,
+        "rounds_debated": 3,
+        "is_eligible": true,
+        "tournament_average": 68.5,
+        "scores": [
+          67.0,
+          68.0,
+          70.5
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 69.6,
+        "scores": [
+          70.5,
+          69.5,
+          69.5,
+          69.0,
+          69.5
+        ]
+      },
+      {
+        "tournament_id": 16,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.1,
+        "scores": [
+          69.5,
+          71.0,
+          70.5,
+          69.5,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 69.45,
+        "scores": [
+          69.5,
+          67.5,
+          68.5,
+          71.0,
+          70.75
+        ]
+      }
+    ],
+    "rank": 232
   },
   {
     "person_id": 583,
@@ -14830,7 +14684,7 @@
         ]
       }
     ],
-    "rank": 239
+    "rank": 233
   },
   {
     "person_id": 118,
@@ -14930,7 +14784,7 @@
         ]
       }
     ],
-    "rank": 240
+    "rank": 234
   },
   {
     "person_id": 470,
@@ -14969,7 +14823,7 @@
         ]
       }
     ],
-    "rank": 241
+    "rank": 235
   },
   {
     "person_id": 618,
@@ -15045,7 +14899,7 @@
         ]
       }
     ],
-    "rank": 242
+    "rank": 236
   },
   {
     "person_id": 142,
@@ -15120,7 +14974,7 @@
         ]
       }
     ],
-    "rank": 243
+    "rank": 237
   },
   {
     "person_id": 486,
@@ -15170,7 +15024,7 @@
         ]
       }
     ],
-    "rank": 244
+    "rank": 238
   },
   {
     "person_id": 79,
@@ -15235,7 +15089,7 @@
         ]
       }
     ],
-    "rank": 245
+    "rank": 239
   },
   {
     "person_id": 608,
@@ -15276,70 +15130,7 @@
         ]
       }
     ],
-    "rank": 246
-  },
-  {
-    "person_id": 877,
-    "speaker_name": "Vihanga Lokuliyana",
-    "institution": "Nalanda College",
-    "institution_name": "Nalanda College",
-    "national_level": null,
-    "master_score": 69.41667,
-    "speaker_avg": 69.42,
-    "speech_avg": 69.42,
-    "speech_average": 69.41667,
-    "cumulative_speech_avg": 69.41667,
-    "avg_of_avgs": 69.31429,
-    "all_speech_average": 69.23077,
-    "regulation": "new",
-    "win_percentage": 46.2,
-    "win_rate": 46.2,
-    "prelims": 13,
-    "total_rounds": 13,
-    "break_percentage": 0.0,
-    "tournaments": 3,
-    "eligible_tournaments": 2,
-    "peak_score": 71.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 68.7,
-        "scores": [
-          70.0,
-          71.0,
-          69.5,
-          67.0,
-          66.0
-        ]
-      },
-      {
-        "tournament_id": 4,
-        "rounds_debated": 7,
-        "is_eligible": true,
-        "tournament_average": 69.92857,
-        "scores": [
-          71.0,
-          70.0,
-          70.0,
-          69.0,
-          71.0,
-          68.5,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 67.0,
-        "scores": [
-          67.0
-        ]
-      }
-    ],
-    "rank": 247
+    "rank": 240
   },
   {
     "person_id": 478,
@@ -15431,7 +15222,7 @@
         ]
       }
     ],
-    "rank": 248
+    "rank": 241
   },
   {
     "person_id": 39,
@@ -15470,7 +15261,7 @@
         ]
       }
     ],
-    "rank": 249
+    "rank": 242
   },
   {
     "person_id": 600,
@@ -15531,7 +15322,7 @@
         ]
       }
     ],
-    "rank": 250
+    "rank": 243
   },
   {
     "person_id": 29,
@@ -15589,7 +15380,7 @@
         ]
       }
     ],
-    "rank": 251
+    "rank": 244
   },
   {
     "person_id": 132,
@@ -15628,7 +15419,7 @@
         ]
       }
     ],
-    "rank": 252
+    "rank": 245
   },
   {
     "person_id": 387,
@@ -15667,7 +15458,7 @@
         ]
       }
     ],
-    "rank": 253
+    "rank": 246
   },
   {
     "person_id": 804,
@@ -15706,7 +15497,7 @@
         ]
       }
     ],
-    "rank": 254
+    "rank": 247
   },
   {
     "person_id": 906,
@@ -15745,7 +15536,7 @@
         ]
       }
     ],
-    "rank": 255
+    "rank": 248
   },
   {
     "person_id": 75,
@@ -15833,7 +15624,7 @@
         ]
       }
     ],
-    "rank": 256
+    "rank": 249
   },
   {
     "person_id": 105,
@@ -15871,7 +15662,7 @@
         ]
       }
     ],
-    "rank": 257
+    "rank": 250
   },
   {
     "person_id": 464,
@@ -15909,7 +15700,7 @@
         ]
       }
     ],
-    "rank": 258
+    "rank": 251
   },
   {
     "person_id": 473,
@@ -15945,7 +15736,7 @@
         ]
       }
     ],
-    "rank": 259
+    "rank": 252
   },
   {
     "person_id": 661,
@@ -15983,7 +15774,7 @@
         ]
       }
     ],
-    "rank": 260
+    "rank": 253
   },
   {
     "person_id": 903,
@@ -16021,7 +15812,7 @@
         ]
       }
     ],
-    "rank": 261
+    "rank": 254
   },
   {
     "person_id": 121,
@@ -16117,7 +15908,7 @@
         ]
       }
     ],
-    "rank": 262
+    "rank": 255
   },
   {
     "person_id": 628,
@@ -16155,7 +15946,7 @@
         ]
       }
     ],
-    "rank": 263
+    "rank": 256
   },
   {
     "person_id": 363,
@@ -16220,7 +16011,7 @@
         ]
       }
     ],
-    "rank": 264
+    "rank": 257
   },
   {
     "person_id": 632,
@@ -16273,7 +16064,7 @@
         ]
       }
     ],
-    "rank": 265
+    "rank": 258
   },
   {
     "person_id": 468,
@@ -16377,7 +16168,7 @@
         ]
       }
     ],
-    "rank": 266
+    "rank": 259
   },
   {
     "person_id": 666,
@@ -16414,7 +16205,7 @@
         ]
       }
     ],
-    "rank": 267
+    "rank": 260
   },
   {
     "person_id": 616,
@@ -16475,7 +16266,7 @@
         ]
       }
     ],
-    "rank": 268
+    "rank": 261
   },
   {
     "person_id": 488,
@@ -16541,7 +16332,7 @@
         ]
       }
     ],
-    "rank": 269
+    "rank": 262
   },
   {
     "person_id": 80,
@@ -16593,7 +16384,7 @@
         ]
       }
     ],
-    "rank": 270
+    "rank": 263
   },
   {
     "person_id": 173,
@@ -16632,7 +16423,7 @@
         ]
       }
     ],
-    "rank": 271
+    "rank": 264
   },
   {
     "person_id": 448,
@@ -16683,7 +16474,7 @@
         ]
       }
     ],
-    "rank": 272
+    "rank": 265
   },
   {
     "person_id": 94,
@@ -16763,95 +16554,7 @@
         ]
       }
     ],
-    "rank": 273
-  },
-  {
-    "person_id": 98,
-    "speaker_name": "Navidhi Madawela",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
-    "national_level": null,
-    "master_score": 69.26136,
-    "speaker_avg": 69.26,
-    "speech_avg": 69.26,
-    "speech_average": 69.26136,
-    "cumulative_speech_avg": 69.26136,
-    "avg_of_avgs": 69.205,
-    "all_speech_average": 69.26136,
-    "regulation": "new",
-    "win_percentage": 45.5,
-    "win_rate": 45.5,
-    "prelims": 22,
-    "total_rounds": 22,
-    "break_percentage": 0.0,
-    "tournaments": 5,
-    "eligible_tournaments": 5,
-    "peak_score": 71.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 68.6,
-        "scores": [
-          69.0,
-          68.0,
-          66.0,
-          70.0,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 7,
-        "rounds_debated": 3,
-        "is_eligible": true,
-        "tournament_average": 68.5,
-        "scores": [
-          67.0,
-          68.0,
-          70.5
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 69.375,
-        "scores": [
-          69.5,
-          69.5,
-          69.0,
-          69.5
-        ]
-      },
-      {
-        "tournament_id": 16,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.1,
-        "scores": [
-          69.5,
-          71.0,
-          70.5,
-          69.5,
-          70.0
-        ]
-      },
-      {
-        "tournament_id": 44,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 69.45,
-        "scores": [
-          69.5,
-          67.5,
-          68.5,
-          71.0,
-          70.75
-        ]
-      }
-    ],
-    "rank": 274
+    "rank": 266
   },
   {
     "person_id": 44,
@@ -16887,7 +16590,7 @@
         ]
       }
     ],
-    "rank": 275
+    "rank": 267
   },
   {
     "person_id": 220,
@@ -16923,7 +16626,7 @@
         ]
       }
     ],
-    "rank": 276
+    "rank": 268
   },
   {
     "person_id": 388,
@@ -16959,7 +16662,7 @@
         ]
       }
     ],
-    "rank": 277
+    "rank": 269
   },
   {
     "person_id": 462,
@@ -16997,7 +16700,7 @@
         ]
       }
     ],
-    "rank": 278
+    "rank": 270
   },
   {
     "person_id": 652,
@@ -17037,7 +16740,7 @@
         ]
       }
     ],
-    "rank": 279
+    "rank": 271
   },
   {
     "person_id": 398,
@@ -17076,7 +16779,7 @@
         ]
       }
     ],
-    "rank": 280
+    "rank": 272
   },
   {
     "person_id": 645,
@@ -17124,7 +16827,7 @@
         ]
       }
     ],
-    "rank": 281
+    "rank": 273
   },
   {
     "person_id": 732,
@@ -17175,7 +16878,7 @@
         ]
       }
     ],
-    "rank": 282
+    "rank": 274
   },
   {
     "person_id": 476,
@@ -17214,7 +16917,113 @@
         ]
       }
     ],
-    "rank": 283
+    "rank": 275
+  },
+  {
+    "person_id": 110,
+    "speaker_name": "Vihanga Senith Lokuliyana",
+    "institution": "Nalanda College",
+    "institution_name": "Nalanda College",
+    "national_level": null,
+    "master_score": 69.17188,
+    "speaker_avg": 69.17,
+    "speech_avg": 69.17,
+    "speech_average": 69.17188,
+    "cumulative_speech_avg": 69.17188,
+    "avg_of_avgs": 69.12143,
+    "all_speech_average": 69.17188,
+    "regulation": "new",
+    "win_percentage": 40.6,
+    "win_rate": 40.6,
+    "prelims": 32,
+    "total_rounds": 32,
+    "break_percentage": 0.0,
+    "tournaments": 6,
+    "eligible_tournaments": 6,
+    "peak_score": 72.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 68.7,
+        "scores": [
+          70.0,
+          71.0,
+          69.5,
+          67.0,
+          66.0
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 7,
+        "is_eligible": true,
+        "tournament_average": 69.92857,
+        "scores": [
+          71.0,
+          70.0,
+          70.0,
+          69.0,
+          71.0,
+          68.5,
+          70.0
+        ]
+      },
+      {
+        "tournament_id": 7,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 69.1,
+        "scores": [
+          72.0,
+          68.5,
+          70.0,
+          67.0,
+          68.0
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 68.3,
+        "scores": [
+          67.0,
+          68.0,
+          69.5,
+          69.0,
+          68.0
+        ]
+      },
+      {
+        "tournament_id": 18,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 70.1,
+        "scores": [
+          68.5,
+          71.0,
+          70.5,
+          70.0,
+          70.5
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 68.6,
+        "scores": [
+          66.0,
+          68.0,
+          69.0,
+          70.0,
+          70.0
+        ]
+      }
+    ],
+    "rank": 276
   },
   {
     "person_id": 191,
@@ -17276,7 +17085,7 @@
         ]
       }
     ],
-    "rank": 284
+    "rank": 277
   },
   {
     "person_id": 621,
@@ -17317,7 +17126,7 @@
         ]
       }
     ],
-    "rank": 285
+    "rank": 278
   },
   {
     "person_id": 658,
@@ -17368,84 +17177,7 @@
         ]
       }
     ],
-    "rank": 286
-  },
-  {
-    "person_id": 110,
-    "speaker_name": "Vihanga Senith Lokuliyana",
-    "institution": "Nalanda College",
-    "institution_name": "Nalanda College",
-    "national_level": null,
-    "master_score": 69.13158,
-    "speaker_avg": 69.13,
-    "speech_avg": 69.13,
-    "speech_average": 69.13158,
-    "cumulative_speech_avg": 69.13158,
-    "avg_of_avgs": 69.10625,
-    "all_speech_average": 69.13158,
-    "regulation": "new",
-    "win_percentage": 36.8,
-    "win_rate": 36.8,
-    "prelims": 19,
-    "total_rounds": 19,
-    "break_percentage": 0.0,
-    "tournaments": 4,
-    "eligible_tournaments": 4,
-    "peak_score": 72.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 7,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 69.1,
-        "scores": [
-          72.0,
-          68.5,
-          70.0,
-          67.0,
-          68.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 68.625,
-        "scores": [
-          68.0,
-          69.5,
-          69.0,
-          68.0
-        ]
-      },
-      {
-        "tournament_id": 18,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 70.1,
-        "scores": [
-          68.5,
-          71.0,
-          70.5,
-          70.0,
-          70.5
-        ]
-      },
-      {
-        "tournament_id": 44,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 68.6,
-        "scores": [
-          66.0,
-          68.0,
-          69.0,
-          70.0,
-          70.0
-        ]
-      }
-    ],
-    "rank": 287
+    "rank": 279
   },
   {
     "person_id": 520,
@@ -17483,7 +17215,7 @@
         ]
       }
     ],
-    "rank": 288
+    "rank": 280
   },
   {
     "person_id": 629,
@@ -17545,7 +17277,7 @@
         ]
       }
     ],
-    "rank": 289
+    "rank": 281
   },
   {
     "person_id": 103,
@@ -17597,7 +17329,7 @@
         ]
       }
     ],
-    "rank": 290
+    "rank": 282
   },
   {
     "person_id": 397,
@@ -17649,7 +17381,7 @@
         ]
       }
     ],
-    "rank": 291
+    "rank": 283
   },
   {
     "person_id": 916,
@@ -17688,7 +17420,7 @@
         ]
       }
     ],
-    "rank": 292
+    "rank": 284
   },
   {
     "person_id": 919,
@@ -17727,7 +17459,7 @@
         ]
       }
     ],
-    "rank": 293
+    "rank": 285
   },
   {
     "person_id": 925,
@@ -17766,55 +17498,7 @@
         ]
       }
     ],
-    "rank": 294
-  },
-  {
-    "person_id": 889,
-    "speaker_name": "Jayden George",
-    "institution": "St. Joseph's College",
-    "institution_name": "St. Joseph's College",
-    "national_level": null,
-    "master_score": 69.1,
-    "speaker_avg": 69.1,
-    "speech_avg": 69.1,
-    "speech_average": 69.1,
-    "cumulative_speech_avg": 69.1,
-    "avg_of_avgs": 69.1,
-    "all_speech_average": 68.91667,
-    "regulation": "new",
-    "win_percentage": 16.7,
-    "win_rate": 16.7,
-    "prelims": 6,
-    "total_rounds": 6,
-    "break_percentage": 0.0,
-    "tournaments": 2,
-    "eligible_tournaments": 1,
-    "peak_score": 70.5,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 10,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 68.0,
-        "scores": [
-          68.0
-        ]
-      },
-      {
-        "tournament_id": 44,
-        "rounds_debated": 5,
-        "is_eligible": true,
-        "tournament_average": 69.1,
-        "scores": [
-          66.5,
-          70.5,
-          69.5,
-          70.0,
-          69.0
-        ]
-      }
-    ],
-    "rank": 295
+    "rank": 286
   },
   {
     "person_id": 672,
@@ -17866,7 +17550,7 @@
         ]
       }
     ],
-    "rank": 296
+    "rank": 287
   },
   {
     "person_id": 939,
@@ -17905,7 +17589,7 @@
         ]
       }
     ],
-    "rank": 297
+    "rank": 288
   },
   {
     "person_id": 161,
@@ -17956,7 +17640,7 @@
         ]
       }
     ],
-    "rank": 298
+    "rank": 289
   },
   {
     "person_id": 597,
@@ -17991,7 +17675,7 @@
         ]
       }
     ],
-    "rank": 299
+    "rank": 290
   },
   {
     "person_id": 887,
@@ -18026,7 +17710,7 @@
         ]
       }
     ],
-    "rank": 300
+    "rank": 291
   },
   {
     "person_id": 904,
@@ -18061,53 +17745,7 @@
         ]
       }
     ],
-    "rank": 301
-  },
-  {
-    "person_id": 733,
-    "speaker_name": "Jayden Matthew George",
-    "institution": "St. Joseph's College",
-    "institution_name": "St. Joseph's College",
-    "national_level": null,
-    "master_score": 69.0,
-    "speaker_avg": 69.0,
-    "speech_avg": 69.0,
-    "speech_average": 69.0,
-    "cumulative_speech_avg": 69.0,
-    "avg_of_avgs": 0.0,
-    "all_speech_average": 69.0,
-    "regulation": "new",
-    "win_percentage": 50.0,
-    "win_rate": 50.0,
-    "prelims": 4,
-    "total_rounds": 4,
-    "break_percentage": 0.0,
-    "tournaments": 2,
-    "eligible_tournaments": 0,
-    "peak_score": 71.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 7,
-        "rounds_debated": 2,
-        "is_eligible": false,
-        "tournament_average": 69.5,
-        "scores": [
-          68.0,
-          71.0
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 2,
-        "is_eligible": false,
-        "tournament_average": 68.5,
-        "scores": [
-          70.0,
-          67.0
-        ]
-      }
-    ],
-    "rank": 302
+    "rank": 292
   },
   {
     "person_id": 160,
@@ -18146,7 +17784,7 @@
         ]
       }
     ],
-    "rank": 303
+    "rank": 293
   },
   {
     "person_id": 481,
@@ -18185,7 +17823,7 @@
         ]
       }
     ],
-    "rank": 304
+    "rank": 294
   },
   {
     "person_id": 386,
@@ -18222,7 +17860,7 @@
         ]
       }
     ],
-    "rank": 305
+    "rank": 295
   },
   {
     "person_id": 905,
@@ -18259,7 +17897,7 @@
         ]
       }
     ],
-    "rank": 306
+    "rank": 296
   },
   {
     "person_id": 207,
@@ -18298,7 +17936,7 @@
         ]
       }
     ],
-    "rank": 307
+    "rank": 297
   },
   {
     "person_id": 401,
@@ -18337,43 +17975,7 @@
         ]
       }
     ],
-    "rank": 308
-  },
-  {
-    "person_id": 17,
-    "speaker_name": "Aaron Trevin",
-    "institution": "Ananda College",
-    "institution_name": "Ananda College",
-    "national_level": null,
-    "master_score": 69.0,
-    "speaker_avg": 69.0,
-    "speech_avg": 69.0,
-    "speech_average": 69.0,
-    "cumulative_speech_avg": 69.0,
-    "avg_of_avgs": 0.0,
-    "all_speech_average": 69.0,
-    "regulation": "new",
-    "win_percentage": 0.0,
-    "win_rate": 0.0,
-    "prelims": 2,
-    "total_rounds": 2,
-    "break_percentage": 0.0,
-    "tournaments": 1,
-    "eligible_tournaments": 0,
-    "peak_score": 72.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 10,
-        "rounds_debated": 2,
-        "is_eligible": false,
-        "tournament_average": 69.0,
-        "scores": [
-          72.0,
-          66.0
-        ]
-      }
-    ],
-    "rank": 309
+    "rank": 298
   },
   {
     "person_id": 516,
@@ -18409,7 +18011,7 @@
         ]
       }
     ],
-    "rank": 310
+    "rank": 299
   },
   {
     "person_id": 795,
@@ -18444,7 +18046,7 @@
         ]
       }
     ],
-    "rank": 311
+    "rank": 300
   },
   {
     "person_id": 480,
@@ -18506,7 +18108,7 @@
         ]
       }
     ],
-    "rank": 312
+    "rank": 301
   },
   {
     "person_id": 445,
@@ -18560,7 +18162,7 @@
         ]
       }
     ],
-    "rank": 313
+    "rank": 302
   },
   {
     "person_id": 147,
@@ -18599,7 +18201,7 @@
         ]
       }
     ],
-    "rank": 314
+    "rank": 303
   },
   {
     "person_id": 911,
@@ -18638,7 +18240,7 @@
         ]
       }
     ],
-    "rank": 315
+    "rank": 304
   },
   {
     "person_id": 920,
@@ -18677,7 +18279,7 @@
         ]
       }
     ],
-    "rank": 316
+    "rank": 305
   },
   {
     "person_id": 669,
@@ -18716,7 +18318,7 @@
         ]
       }
     ],
-    "rank": 317
+    "rank": 306
   },
   {
     "person_id": 119,
@@ -18793,7 +18395,7 @@
         ]
       }
     ],
-    "rank": 318
+    "rank": 307
   },
   {
     "person_id": 496,
@@ -18831,7 +18433,7 @@
         ]
       }
     ],
-    "rank": 319
+    "rank": 308
   },
   {
     "person_id": 158,
@@ -18881,7 +18483,7 @@
         ]
       }
     ],
-    "rank": 320
+    "rank": 309
   },
   {
     "person_id": 215,
@@ -18968,7 +18570,7 @@
         ]
       }
     ],
-    "rank": 321
+    "rank": 310
   },
   {
     "person_id": 95,
@@ -19048,7 +18650,7 @@
         ]
       }
     ],
-    "rank": 322
+    "rank": 311
   },
   {
     "person_id": 679,
@@ -19085,7 +18687,79 @@
         ]
       }
     ],
-    "rank": 323
+    "rank": 312
+  },
+  {
+    "person_id": 96,
+    "speaker_name": "Omalya Wathsandi Weerasinghe",
+    "institution": "Devi Balika Vidyalaya",
+    "institution_name": "Devi Balika Vidyalaya",
+    "national_level": null,
+    "master_score": 68.82143,
+    "speaker_avg": 68.82,
+    "speech_avg": 68.82,
+    "speech_average": 68.82143,
+    "cumulative_speech_avg": 68.82143,
+    "avg_of_avgs": 68.71875,
+    "all_speech_average": 68.82143,
+    "regulation": "new",
+    "win_percentage": 28.6,
+    "win_rate": 28.6,
+    "prelims": 14,
+    "total_rounds": 14,
+    "break_percentage": 0.0,
+    "tournaments": 4,
+    "eligible_tournaments": 4,
+    "peak_score": 70.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 1,
+        "rounds_debated": 3,
+        "is_eligible": true,
+        "tournament_average": 68.5,
+        "scores": [
+          66.5,
+          70.0,
+          69.0
+        ]
+      },
+      {
+        "tournament_id": 4,
+        "rounds_debated": 4,
+        "is_eligible": true,
+        "tournament_average": 69.0,
+        "scores": [
+          70.0,
+          69.5,
+          69.0,
+          67.5
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 3,
+        "is_eligible": true,
+        "tournament_average": 67.5,
+        "scores": [
+          68.5,
+          67.0,
+          67.0
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 4,
+        "is_eligible": true,
+        "tournament_average": 69.875,
+        "scores": [
+          70.0,
+          69.5,
+          70.0,
+          70.0
+        ]
+      }
+    ],
+    "rank": 313
   },
   {
     "person_id": 655,
@@ -19135,7 +18809,67 @@
         ]
       }
     ],
-    "rank": 324
+    "rank": 314
+  },
+  {
+    "person_id": 733,
+    "speaker_name": "Jayden Matthew George",
+    "institution": "St. Joseph's College",
+    "institution_name": "St. Joseph's College",
+    "national_level": null,
+    "master_score": 68.8125,
+    "speaker_avg": 68.81,
+    "speech_avg": 68.81,
+    "speech_average": 68.8125,
+    "cumulative_speech_avg": 68.8125,
+    "avg_of_avgs": 68.71667,
+    "all_speech_average": 68.95,
+    "regulation": "new",
+    "win_percentage": 30.0,
+    "win_rate": 30.0,
+    "prelims": 10,
+    "total_rounds": 10,
+    "break_percentage": 0.0,
+    "tournaments": 3,
+    "eligible_tournaments": 2,
+    "peak_score": 71.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 7,
+        "rounds_debated": 2,
+        "is_eligible": false,
+        "tournament_average": 69.5,
+        "scores": [
+          68.0,
+          71.0
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 3,
+        "is_eligible": true,
+        "tournament_average": 68.33333,
+        "scores": [
+          68.0,
+          70.0,
+          67.0
+        ]
+      },
+      {
+        "tournament_id": 44,
+        "rounds_debated": 5,
+        "is_eligible": true,
+        "tournament_average": 69.1,
+        "scores": [
+          66.5,
+          70.5,
+          69.5,
+          70.0,
+          69.0
+        ]
+      }
+    ],
+    "rank": 315
   },
   {
     "person_id": 166,
@@ -19185,7 +18919,7 @@
         ]
       }
     ],
-    "rank": 325
+    "rank": 316
   },
   {
     "person_id": 172,
@@ -19224,7 +18958,7 @@
         ]
       }
     ],
-    "rank": 326
+    "rank": 317
   },
   {
     "person_id": 730,
@@ -19263,7 +18997,7 @@
         ]
       }
     ],
-    "rank": 327
+    "rank": 318
   },
   {
     "person_id": 648,
@@ -19302,7 +19036,7 @@
         ]
       }
     ],
-    "rank": 328
+    "rank": 319
   },
   {
     "person_id": 157,
@@ -19354,7 +19088,7 @@
         ]
       }
     ],
-    "rank": 329
+    "rank": 320
   },
   {
     "person_id": 115,
@@ -19392,7 +19126,7 @@
         ]
       }
     ],
-    "rank": 330
+    "rank": 321
   },
   {
     "person_id": 484,
@@ -19430,7 +19164,7 @@
         ]
       }
     ],
-    "rank": 331
+    "rank": 322
   },
   {
     "person_id": 510,
@@ -19466,7 +19200,7 @@
         ]
       }
     ],
-    "rank": 332
+    "rank": 323
   },
   {
     "person_id": 90,
@@ -19542,7 +19276,7 @@
         ]
       }
     ],
-    "rank": 333
+    "rank": 324
   },
   {
     "person_id": 511,
@@ -19580,7 +19314,7 @@
         ]
       }
     ],
-    "rank": 334
+    "rank": 325
   },
   {
     "person_id": 734,
@@ -19618,7 +19352,7 @@
         ]
       }
     ],
-    "rank": 335
+    "rank": 326
   },
   {
     "person_id": 509,
@@ -19654,7 +19388,7 @@
         ]
       }
     ],
-    "rank": 336
+    "rank": 327
   },
   {
     "person_id": 842,
@@ -19692,7 +19426,7 @@
         ]
       }
     ],
-    "rank": 337
+    "rank": 328
   },
   {
     "person_id": 489,
@@ -19756,7 +19490,7 @@
         ]
       }
     ],
-    "rank": 338
+    "rank": 329
   },
   {
     "person_id": 394,
@@ -19805,7 +19539,7 @@
         ]
       }
     ],
-    "rank": 339
+    "rank": 330
   },
   {
     "person_id": 475,
@@ -19844,7 +19578,7 @@
         ]
       }
     ],
-    "rank": 340
+    "rank": 331
   },
   {
     "person_id": 482,
@@ -19883,7 +19617,7 @@
         ]
       }
     ],
-    "rank": 341
+    "rank": 332
   },
   {
     "person_id": 116,
@@ -19943,7 +19677,7 @@
         ]
       }
     ],
-    "rank": 342
+    "rank": 333
   },
   {
     "person_id": 77,
@@ -20041,7 +19775,7 @@
         ]
       }
     ],
-    "rank": 343
+    "rank": 334
   },
   {
     "person_id": 152,
@@ -20088,7 +19822,7 @@
         ]
       }
     ],
-    "rank": 344
+    "rank": 335
   },
   {
     "person_id": 392,
@@ -20125,7 +19859,7 @@
         ]
       }
     ],
-    "rank": 345
+    "rank": 336
   },
   {
     "person_id": 154,
@@ -20173,7 +19907,7 @@
         ]
       }
     ],
-    "rank": 346
+    "rank": 337
   },
   {
     "person_id": 681,
@@ -20210,7 +19944,7 @@
         ]
       }
     ],
-    "rank": 347
+    "rank": 338
   },
   {
     "person_id": 471,
@@ -20249,7 +19983,7 @@
         ]
       }
     ],
-    "rank": 348
+    "rank": 339
   },
   {
     "person_id": 472,
@@ -20288,7 +20022,7 @@
         ]
       }
     ],
-    "rank": 349
+    "rank": 340
   },
   {
     "person_id": 149,
@@ -20352,7 +20086,7 @@
         ]
       }
     ],
-    "rank": 350
+    "rank": 341
   },
   {
     "person_id": 670,
@@ -20393,7 +20127,7 @@
         ]
       }
     ],
-    "rank": 351
+    "rank": 342
   },
   {
     "person_id": 492,
@@ -20431,7 +20165,7 @@
         ]
       }
     ],
-    "rank": 352
+    "rank": 343
   },
   {
     "person_id": 153,
@@ -20470,7 +20204,7 @@
         ]
       }
     ],
-    "rank": 353
+    "rank": 344
   },
   {
     "person_id": 515,
@@ -20509,7 +20243,7 @@
         ]
       }
     ],
-    "rank": 354
+    "rank": 345
   },
   {
     "person_id": 636,
@@ -20549,7 +20283,7 @@
         ]
       }
     ],
-    "rank": 355
+    "rank": 346
   },
   {
     "person_id": 457,
@@ -20607,7 +20341,7 @@
         ]
       }
     ],
-    "rank": 356
+    "rank": 347
   },
   {
     "person_id": 671,
@@ -20648,7 +20382,7 @@
         ]
       }
     ],
-    "rank": 357
+    "rank": 348
   },
   {
     "person_id": 244,
@@ -20713,7 +20447,7 @@
         ]
       }
     ],
-    "rank": 358
+    "rank": 349
   },
   {
     "person_id": 123,
@@ -20750,7 +20484,7 @@
         ]
       }
     ],
-    "rank": 359
+    "rank": 350
   },
   {
     "person_id": 610,
@@ -20788,7 +20522,7 @@
         ]
       }
     ],
-    "rank": 360
+    "rank": 351
   },
   {
     "person_id": 917,
@@ -20827,7 +20561,7 @@
         ]
       }
     ],
-    "rank": 361
+    "rank": 352
   },
   {
     "person_id": 525,
@@ -20864,7 +20598,7 @@
         ]
       }
     ],
-    "rank": 362
+    "rank": 353
   },
   {
     "person_id": 913,
@@ -20901,7 +20635,7 @@
         ]
       }
     ],
-    "rank": 363
+    "rank": 354
   },
   {
     "person_id": 483,
@@ -20939,7 +20673,7 @@
         ]
       }
     ],
-    "rank": 364
+    "rank": 355
   },
   {
     "person_id": 136,
@@ -20990,7 +20724,7 @@
         ]
       }
     ],
-    "rank": 365
+    "rank": 356
   },
   {
     "person_id": 206,
@@ -21029,7 +20763,7 @@
         ]
       }
     ],
-    "rank": 366
+    "rank": 357
   },
   {
     "person_id": 513,
@@ -21068,7 +20802,7 @@
         ]
       }
     ],
-    "rank": 367
+    "rank": 358
   },
   {
     "person_id": 163,
@@ -21115,7 +20849,53 @@
         ]
       }
     ],
-    "rank": 368
+    "rank": 359
+  },
+  {
+    "person_id": 479,
+    "speaker_name": "Aaron Trevin Mahagamage",
+    "institution": "Ananda College",
+    "institution_name": "Ananda College",
+    "national_level": null,
+    "master_score": 68.5,
+    "speaker_avg": 68.5,
+    "speech_avg": 68.5,
+    "speech_average": 68.5,
+    "cumulative_speech_avg": 68.5,
+    "avg_of_avgs": 0.0,
+    "all_speech_average": 68.5,
+    "regulation": "new",
+    "win_percentage": 0.0,
+    "win_rate": 0.0,
+    "prelims": 4,
+    "total_rounds": 4,
+    "break_percentage": 0.0,
+    "tournaments": 2,
+    "eligible_tournaments": 0,
+    "peak_score": 72.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 3,
+        "rounds_debated": 2,
+        "is_eligible": false,
+        "tournament_average": 68.0,
+        "scores": [
+          69.0,
+          67.0
+        ]
+      },
+      {
+        "tournament_id": 10,
+        "rounds_debated": 2,
+        "is_eligible": false,
+        "tournament_average": 69.0,
+        "scores": [
+          72.0,
+          66.0
+        ]
+      }
+    ],
+    "rank": 360
   },
   {
     "person_id": 231,
@@ -21152,7 +20932,7 @@
         ]
       }
     ],
-    "rank": 369
+    "rank": 361
   },
   {
     "person_id": 249,
@@ -21188,7 +20968,7 @@
         ]
       }
     ],
-    "rank": 370
+    "rank": 362
   },
   {
     "person_id": 680,
@@ -21224,7 +21004,7 @@
         ]
       }
     ],
-    "rank": 371
+    "rank": 363
   },
   {
     "person_id": 933,
@@ -21259,7 +21039,7 @@
         ]
       }
     ],
-    "rank": 372
+    "rank": 364
   },
   {
     "person_id": 938,
@@ -21298,7 +21078,7 @@
         ]
       }
     ],
-    "rank": 373
+    "rank": 365
   },
   {
     "person_id": 941,
@@ -21333,7 +21113,7 @@
         ]
       }
     ],
-    "rank": 374
+    "rank": 366
   },
   {
     "person_id": 165,
@@ -21398,7 +21178,7 @@
         ]
       }
     ],
-    "rank": 375
+    "rank": 367
   },
   {
     "person_id": 653,
@@ -21439,7 +21219,7 @@
         ]
       }
     ],
-    "rank": 376
+    "rank": 368
   },
   {
     "person_id": 631,
@@ -21487,7 +21267,7 @@
         ]
       }
     ],
-    "rank": 377
+    "rank": 369
   },
   {
     "person_id": 729,
@@ -21526,67 +21306,7 @@
         ]
       }
     ],
-    "rank": 378
-  },
-  {
-    "person_id": 96,
-    "speaker_name": "Omalya Wathsandi Weerasinghe",
-    "institution": "Devi Balika Vidyalaya",
-    "institution_name": "Devi Balika Vidyalaya",
-    "national_level": null,
-    "master_score": 68.4,
-    "speaker_avg": 68.4,
-    "speech_avg": 68.4,
-    "speech_average": 68.4,
-    "cumulative_speech_avg": 68.4,
-    "avg_of_avgs": 68.33333,
-    "all_speech_average": 68.4,
-    "regulation": "new",
-    "win_percentage": 20.0,
-    "win_rate": 20.0,
-    "prelims": 10,
-    "total_rounds": 10,
-    "break_percentage": 0.0,
-    "tournaments": 3,
-    "eligible_tournaments": 3,
-    "peak_score": 70.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 1,
-        "rounds_debated": 3,
-        "is_eligible": true,
-        "tournament_average": 68.5,
-        "scores": [
-          66.5,
-          70.0,
-          69.0
-        ]
-      },
-      {
-        "tournament_id": 4,
-        "rounds_debated": 4,
-        "is_eligible": true,
-        "tournament_average": 69.0,
-        "scores": [
-          70.0,
-          69.5,
-          69.0,
-          67.5
-        ]
-      },
-      {
-        "tournament_id": 10,
-        "rounds_debated": 3,
-        "is_eligible": true,
-        "tournament_average": 67.5,
-        "scores": [
-          68.5,
-          67.0,
-          67.0
-        ]
-      }
-    ],
-    "rank": 379
+    "rank": 370
   },
   {
     "person_id": 239,
@@ -21625,7 +21345,7 @@
         ]
       }
     ],
-    "rank": 380
+    "rank": 371
   },
   {
     "person_id": 630,
@@ -21676,7 +21396,7 @@
         ]
       }
     ],
-    "rank": 381
+    "rank": 372
   },
   {
     "person_id": 164,
@@ -21726,7 +21446,7 @@
         ]
       }
     ],
-    "rank": 382
+    "rank": 373
   },
   {
     "person_id": 604,
@@ -21780,7 +21500,7 @@
         ]
       }
     ],
-    "rank": 383
+    "rank": 374
   },
   {
     "person_id": 168,
@@ -21817,7 +21537,7 @@
         ]
       }
     ],
-    "rank": 384
+    "rank": 375
   },
   {
     "person_id": 508,
@@ -21854,7 +21574,7 @@
         ]
       }
     ],
-    "rank": 385
+    "rank": 376
   },
   {
     "person_id": 754,
@@ -21905,7 +21625,7 @@
         ]
       }
     ],
-    "rank": 386
+    "rank": 377
   },
   {
     "person_id": 870,
@@ -21943,7 +21663,7 @@
         ]
       }
     ],
-    "rank": 387
+    "rank": 378
   },
   {
     "person_id": 102,
@@ -21982,7 +21702,7 @@
         ]
       }
     ],
-    "rank": 388
+    "rank": 379
   },
   {
     "person_id": 640,
@@ -22018,7 +21738,7 @@
         ]
       }
     ],
-    "rank": 389
+    "rank": 380
   },
   {
     "person_id": 190,
@@ -22064,7 +21784,7 @@
         ]
       }
     ],
-    "rank": 390
+    "rank": 381
   },
   {
     "person_id": 106,
@@ -22102,7 +21822,7 @@
         ]
       }
     ],
-    "rank": 391
+    "rank": 382
   },
   {
     "person_id": 835,
@@ -22140,7 +21860,7 @@
         ]
       }
     ],
-    "rank": 392
+    "rank": 383
   },
   {
     "person_id": 467,
@@ -22212,7 +21932,7 @@
         ]
       }
     ],
-    "rank": 393
+    "rank": 384
   },
   {
     "person_id": 135,
@@ -22262,7 +21982,7 @@
         ]
       }
     ],
-    "rank": 394
+    "rank": 385
   },
   {
     "person_id": 169,
@@ -22300,7 +22020,7 @@
         ]
       }
     ],
-    "rank": 395
+    "rank": 386
   },
   {
     "person_id": 594,
@@ -22336,7 +22056,7 @@
         ]
       }
     ],
-    "rank": 396
+    "rank": 387
   },
   {
     "person_id": 847,
@@ -22372,7 +22092,7 @@
         ]
       }
     ],
-    "rank": 397
+    "rank": 388
   },
   {
     "person_id": 151,
@@ -22446,7 +22166,7 @@
         ]
       }
     ],
-    "rank": 398
+    "rank": 389
   },
   {
     "person_id": 683,
@@ -22487,7 +22207,7 @@
         ]
       }
     ],
-    "rank": 399
+    "rank": 390
   },
   {
     "person_id": 406,
@@ -22549,7 +22269,7 @@
         ]
       }
     ],
-    "rank": 400
+    "rank": 391
   },
   {
     "person_id": 210,
@@ -22588,7 +22308,7 @@
         ]
       }
     ],
-    "rank": 401
+    "rank": 392
   },
   {
     "person_id": 212,
@@ -22627,7 +22347,7 @@
         ]
       }
     ],
-    "rank": 402
+    "rank": 393
   },
   {
     "person_id": 682,
@@ -22666,7 +22386,7 @@
         ]
       }
     ],
-    "rank": 403
+    "rank": 394
   },
   {
     "person_id": 799,
@@ -22703,7 +22423,7 @@
         ]
       }
     ],
-    "rank": 404
+    "rank": 395
   },
   {
     "person_id": 162,
@@ -22749,7 +22469,7 @@
         ]
       }
     ],
-    "rank": 405
+    "rank": 396
   },
   {
     "person_id": 395,
@@ -22796,7 +22516,7 @@
         ]
       }
     ],
-    "rank": 406
+    "rank": 397
   },
   {
     "person_id": 393,
@@ -22846,7 +22566,7 @@
         ]
       }
     ],
-    "rank": 407
+    "rank": 398
   },
   {
     "person_id": 183,
@@ -22884,7 +22604,7 @@
         ]
       }
     ],
-    "rank": 408
+    "rank": 399
   },
   {
     "person_id": 660,
@@ -22922,7 +22642,7 @@
         ]
       }
     ],
-    "rank": 409
+    "rank": 400
   },
   {
     "person_id": 174,
@@ -22961,7 +22681,7 @@
         ]
       }
     ],
-    "rank": 410
+    "rank": 401
   },
   {
     "person_id": 929,
@@ -23000,7 +22720,7 @@
         ]
       }
     ],
-    "rank": 411
+    "rank": 402
   },
   {
     "person_id": 934,
@@ -23039,7 +22759,7 @@
         ]
       }
     ],
-    "rank": 412
+    "rank": 403
   },
   {
     "person_id": 548,
@@ -23088,7 +22808,7 @@
         ]
       }
     ],
-    "rank": 413
+    "rank": 404
   },
   {
     "person_id": 256,
@@ -23127,7 +22847,7 @@
         ]
       }
     ],
-    "rank": 414
+    "rank": 405
   },
   {
     "person_id": 150,
@@ -23188,7 +22908,7 @@
         ]
       }
     ],
-    "rank": 415
+    "rank": 406
   },
   {
     "person_id": 491,
@@ -23239,7 +22959,7 @@
         ]
       }
     ],
-    "rank": 416
+    "rank": 407
   },
   {
     "person_id": 235,
@@ -23274,7 +22994,7 @@
         ]
       }
     ],
-    "rank": 417
+    "rank": 408
   },
   {
     "person_id": 22,
@@ -23342,7 +23062,7 @@
         ]
       }
     ],
-    "rank": 418
+    "rank": 409
   },
   {
     "person_id": 748,
@@ -23378,7 +23098,7 @@
         ]
       }
     ],
-    "rank": 419
+    "rank": 410
   },
   {
     "person_id": 403,
@@ -23415,7 +23135,7 @@
         ]
       }
     ],
-    "rank": 420
+    "rank": 411
   },
   {
     "person_id": 494,
@@ -23452,7 +23172,7 @@
         ]
       }
     ],
-    "rank": 421
+    "rank": 412
   },
   {
     "person_id": 514,
@@ -23489,7 +23209,7 @@
         ]
       }
     ],
-    "rank": 422
+    "rank": 413
   },
   {
     "person_id": 647,
@@ -23529,7 +23249,7 @@
         ]
       }
     ],
-    "rank": 423
+    "rank": 414
   },
   {
     "person_id": 851,
@@ -23578,7 +23298,7 @@
         ]
       }
     ],
-    "rank": 424
+    "rank": 415
   },
   {
     "person_id": 740,
@@ -23616,7 +23336,7 @@
         ]
       }
     ],
-    "rank": 425
+    "rank": 416
   },
   {
     "person_id": 145,
@@ -23655,7 +23375,7 @@
         ]
       }
     ],
-    "rank": 426
+    "rank": 417
   },
   {
     "person_id": 251,
@@ -23691,7 +23411,7 @@
         ]
       }
     ],
-    "rank": 427
+    "rank": 418
   },
   {
     "person_id": 451,
@@ -23726,43 +23446,7 @@
         ]
       }
     ],
-    "rank": 428
-  },
-  {
-    "person_id": 479,
-    "speaker_name": "Aaron Trevin Mahagamage",
-    "institution": "Ananda College",
-    "institution_name": "Ananda College",
-    "national_level": null,
-    "master_score": 68.0,
-    "speaker_avg": 68.0,
-    "speech_avg": 68.0,
-    "speech_average": 68.0,
-    "cumulative_speech_avg": 68.0,
-    "avg_of_avgs": 0.0,
-    "all_speech_average": 68.0,
-    "regulation": "new",
-    "win_percentage": 0.0,
-    "win_rate": 0.0,
-    "prelims": 2,
-    "total_rounds": 2,
-    "break_percentage": 0.0,
-    "tournaments": 1,
-    "eligible_tournaments": 0,
-    "peak_score": 69.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 3,
-        "rounds_debated": 2,
-        "is_eligible": false,
-        "tournament_average": 68.0,
-        "scores": [
-          69.0,
-          67.0
-        ]
-      }
-    ],
-    "rank": 429
+    "rank": 419
   },
   {
     "person_id": 495,
@@ -23797,7 +23481,7 @@
         ]
       }
     ],
-    "rank": 430
+    "rank": 420
   },
   {
     "person_id": 843,
@@ -23835,7 +23519,7 @@
         ]
       }
     ],
-    "rank": 431
+    "rank": 421
   },
   {
     "person_id": 113,
@@ -23907,7 +23591,7 @@
         ]
       }
     ],
-    "rank": 432
+    "rank": 422
   },
   {
     "person_id": 474,
@@ -23944,7 +23628,7 @@
         ]
       }
     ],
-    "rank": 433
+    "rank": 423
   },
   {
     "person_id": 85,
@@ -23999,11 +23683,11 @@
         ]
       }
     ],
-    "rank": 434
+    "rank": 424
   },
   {
-    "person_id": 738,
-    "speaker_name": "Hanaa Azaam",
+    "person_id": 668,
+    "speaker_name": "Hanaa Azaam Ishak",
     "institution": "Muslim Ladies' College",
     "institution_name": "Muslim Ladies' College",
     "national_level": null,
@@ -24013,17 +23697,26 @@
     "speech_average": 67.9,
     "cumulative_speech_avg": 67.9,
     "avg_of_avgs": 67.9,
-    "all_speech_average": 67.9,
+    "all_speech_average": 67.58333,
     "regulation": "new",
-    "win_percentage": 40.0,
-    "win_rate": 40.0,
-    "prelims": 5,
-    "total_rounds": 5,
+    "win_percentage": 33.3,
+    "win_rate": 33.3,
+    "prelims": 6,
+    "total_rounds": 6,
     "break_percentage": 0.0,
-    "tournaments": 1,
+    "tournaments": 2,
     "eligible_tournaments": 1,
     "peak_score": 69.0,
     "tournament_breakdown": [
+      {
+        "tournament_id": 4,
+        "rounds_debated": 1,
+        "is_eligible": false,
+        "tournament_average": 66.0,
+        "scores": [
+          66.0
+        ]
+      },
       {
         "tournament_id": 7,
         "rounds_debated": 5,
@@ -24038,7 +23731,7 @@
         ]
       }
     ],
-    "rank": 435
+    "rank": 425
   },
   {
     "person_id": 255,
@@ -24077,7 +23770,7 @@
         ]
       }
     ],
-    "rank": 436
+    "rank": 426
   },
   {
     "person_id": 810,
@@ -24115,7 +23808,7 @@
         ]
       }
     ],
-    "rank": 437
+    "rank": 427
   },
   {
     "person_id": 845,
@@ -24154,7 +23847,7 @@
         ]
       }
     ],
-    "rank": 438
+    "rank": 428
   },
   {
     "person_id": 185,
@@ -24191,7 +23884,7 @@
         ]
       }
     ],
-    "rank": 439
+    "rank": 429
   },
   {
     "person_id": 927,
@@ -24228,7 +23921,7 @@
         ]
       }
     ],
-    "rank": 440
+    "rank": 430
   },
   {
     "person_id": 182,
@@ -24265,7 +23958,7 @@
         ]
       }
     ],
-    "rank": 441
+    "rank": 431
   },
   {
     "person_id": 196,
@@ -24315,7 +24008,7 @@
         ]
       }
     ],
-    "rank": 442
+    "rank": 432
   },
   {
     "person_id": 868,
@@ -24366,7 +24059,7 @@
         ]
       }
     ],
-    "rank": 443
+    "rank": 433
   },
   {
     "person_id": 221,
@@ -24405,7 +24098,7 @@
         ]
       }
     ],
-    "rank": 444
+    "rank": 434
   },
   {
     "person_id": 928,
@@ -24444,7 +24137,7 @@
         ]
       }
     ],
-    "rank": 445
+    "rank": 435
   },
   {
     "person_id": 633,
@@ -24498,7 +24191,7 @@
         ]
       }
     ],
-    "rank": 446
+    "rank": 436
   },
   {
     "person_id": 109,
@@ -24534,7 +24227,7 @@
         ]
       }
     ],
-    "rank": 447
+    "rank": 437
   },
   {
     "person_id": 504,
@@ -24595,7 +24288,7 @@
         ]
       }
     ],
-    "rank": 448
+    "rank": 438
   },
   {
     "person_id": 501,
@@ -24633,7 +24326,7 @@
         ]
       }
     ],
-    "rank": 449
+    "rank": 439
   },
   {
     "person_id": 521,
@@ -24671,7 +24364,7 @@
         ]
       }
     ],
-    "rank": 450
+    "rank": 440
   },
   {
     "person_id": 676,
@@ -24711,7 +24404,7 @@
         ]
       }
     ],
-    "rank": 451
+    "rank": 441
   },
   {
     "person_id": 739,
@@ -24750,7 +24443,7 @@
         ]
       }
     ],
-    "rank": 452
+    "rank": 442
   },
   {
     "person_id": 223,
@@ -24789,7 +24482,7 @@
         ]
       }
     ],
-    "rank": 453
+    "rank": 443
   },
   {
     "person_id": 155,
@@ -24855,7 +24548,7 @@
         ]
       }
     ],
-    "rank": 454
+    "rank": 444
   },
   {
     "person_id": 499,
@@ -24902,7 +24595,7 @@
         ]
       }
     ],
-    "rank": 455
+    "rank": 445
   },
   {
     "person_id": 811,
@@ -24939,7 +24632,7 @@
         ]
       }
     ],
-    "rank": 456
+    "rank": 446
   },
   {
     "person_id": 497,
@@ -24977,7 +24670,7 @@
         ]
       }
     ],
-    "rank": 457
+    "rank": 447
   },
   {
     "person_id": 818,
@@ -25027,7 +24720,7 @@
         ]
       }
     ],
-    "rank": 458
+    "rank": 448
   },
   {
     "person_id": 518,
@@ -25066,7 +24759,7 @@
         ]
       }
     ],
-    "rank": 459
+    "rank": 449
   },
   {
     "person_id": 848,
@@ -25105,7 +24798,7 @@
         ]
       }
     ],
-    "rank": 460
+    "rank": 450
   },
   {
     "person_id": 926,
@@ -25144,7 +24837,7 @@
         ]
       }
     ],
-    "rank": 461
+    "rank": 451
   },
   {
     "person_id": 254,
@@ -25183,7 +24876,7 @@
         ]
       }
     ],
-    "rank": 462
+    "rank": 452
   },
   {
     "person_id": 505,
@@ -25219,7 +24912,7 @@
         ]
       }
     ],
-    "rank": 463
+    "rank": 453
   },
   {
     "person_id": 756,
@@ -25255,7 +24948,7 @@
         ]
       }
     ],
-    "rank": 464
+    "rank": 454
   },
   {
     "person_id": 507,
@@ -25294,7 +24987,7 @@
         ]
       }
     ],
-    "rank": 465
+    "rank": 455
   },
   {
     "person_id": 216,
@@ -25376,7 +25069,7 @@
         ]
       }
     ],
-    "rank": 466
+    "rank": 456
   },
   {
     "person_id": 840,
@@ -25427,7 +25120,7 @@
         ]
       }
     ],
-    "rank": 467
+    "rank": 457
   },
   {
     "person_id": 211,
@@ -25466,7 +25159,7 @@
         ]
       }
     ],
-    "rank": 468
+    "rank": 458
   },
   {
     "person_id": 930,
@@ -25505,7 +25198,7 @@
         ]
       }
     ],
-    "rank": 469
+    "rank": 459
   },
   {
     "person_id": 250,
@@ -25541,7 +25234,7 @@
         ]
       }
     ],
-    "rank": 470
+    "rank": 460
   },
   {
     "person_id": 405,
@@ -25579,7 +25272,7 @@
         ]
       }
     ],
-    "rank": 471
+    "rank": 461
   },
   {
     "person_id": 502,
@@ -25616,7 +25309,7 @@
         ]
       }
     ],
-    "rank": 472
+    "rank": 462
   },
   {
     "person_id": 538,
@@ -25651,7 +25344,7 @@
         ]
       }
     ],
-    "rank": 473
+    "rank": 463
   },
   {
     "person_id": 659,
@@ -25715,7 +25408,7 @@
         ]
       }
     ],
-    "rank": 474
+    "rank": 464
   },
   {
     "person_id": 524,
@@ -25753,7 +25446,7 @@
         ]
       }
     ],
-    "rank": 475
+    "rank": 465
   },
   {
     "person_id": 122,
@@ -25792,7 +25485,7 @@
         ]
       }
     ],
-    "rank": 476
+    "rank": 466
   },
   {
     "person_id": 742,
@@ -25831,7 +25524,7 @@
         ]
       }
     ],
-    "rank": 477
+    "rank": 467
   },
   {
     "person_id": 753,
@@ -25906,7 +25599,7 @@
         ]
       }
     ],
-    "rank": 478
+    "rank": 468
   },
   {
     "person_id": 224,
@@ -25945,7 +25638,7 @@
         ]
       }
     ],
-    "rank": 479
+    "rank": 469
   },
   {
     "person_id": 817,
@@ -25984,7 +25677,7 @@
         ]
       }
     ],
-    "rank": 480
+    "rank": 470
   },
   {
     "person_id": 935,
@@ -26022,7 +25715,7 @@
         ]
       }
     ],
-    "rank": 481
+    "rank": 471
   },
   {
     "person_id": 624,
@@ -26083,7 +25776,7 @@
         ]
       }
     ],
-    "rank": 482
+    "rank": 472
   },
   {
     "person_id": 52,
@@ -26123,7 +25816,7 @@
         ]
       }
     ],
-    "rank": 483
+    "rank": 473
   },
   {
     "person_id": 230,
@@ -26160,7 +25853,7 @@
         ]
       }
     ],
-    "rank": 484
+    "rank": 474
   },
   {
     "person_id": 195,
@@ -26207,7 +25900,7 @@
         ]
       }
     ],
-    "rank": 485
+    "rank": 475
   },
   {
     "person_id": 180,
@@ -26261,7 +25954,7 @@
         ]
       }
     ],
-    "rank": 486
+    "rank": 476
   },
   {
     "person_id": 209,
@@ -26300,7 +25993,7 @@
         ]
       }
     ],
-    "rank": 487
+    "rank": 477
   },
   {
     "person_id": 547,
@@ -26349,7 +26042,7 @@
         ]
       }
     ],
-    "rank": 488
+    "rank": 478
   },
   {
     "person_id": 664,
@@ -26389,7 +26082,7 @@
         ]
       }
     ],
-    "rank": 489
+    "rank": 479
   },
   {
     "person_id": 656,
@@ -26451,7 +26144,7 @@
         ]
       }
     ],
-    "rank": 490
+    "rank": 480
   },
   {
     "person_id": 225,
@@ -26503,7 +26196,7 @@
         ]
       }
     ],
-    "rank": 491
+    "rank": 481
   },
   {
     "person_id": 159,
@@ -26539,7 +26232,7 @@
         ]
       }
     ],
-    "rank": 492
+    "rank": 482
   },
   {
     "person_id": 923,
@@ -26575,7 +26268,7 @@
         ]
       }
     ],
-    "rank": 493
+    "rank": 483
   },
   {
     "person_id": 194,
@@ -26624,7 +26317,7 @@
         ]
       }
     ],
-    "rank": 494
+    "rank": 484
   },
   {
     "person_id": 663,
@@ -26664,7 +26357,7 @@
         ]
       }
     ],
-    "rank": 495
+    "rank": 485
   },
   {
     "person_id": 260,
@@ -26701,7 +26394,7 @@
         ]
       }
     ],
-    "rank": 496
+    "rank": 486
   },
   {
     "person_id": 751,
@@ -26738,7 +26431,7 @@
         ]
       }
     ],
-    "rank": 497
+    "rank": 487
   },
   {
     "person_id": 246,
@@ -26785,7 +26478,7 @@
         ]
       }
     ],
-    "rank": 498
+    "rank": 488
   },
   {
     "person_id": 112,
@@ -26836,7 +26529,7 @@
         ]
       }
     ],
-    "rank": 499
+    "rank": 489
   },
   {
     "person_id": 506,
@@ -26875,7 +26568,7 @@
         ]
       }
     ],
-    "rank": 500
+    "rank": 490
   },
   {
     "person_id": 812,
@@ -26914,7 +26607,7 @@
         ]
       }
     ],
-    "rank": 501
+    "rank": 491
   },
   {
     "person_id": 466,
@@ -26949,42 +26642,7 @@
         ]
       }
     ],
-    "rank": 502
-  },
-  {
-    "person_id": 677,
-    "speaker_name": "Jeremiah Calvin",
-    "institution": "Independent / Composite",
-    "institution_name": "Independent / Composite",
-    "national_level": null,
-    "master_score": 67.0,
-    "speaker_avg": 67.0,
-    "speech_avg": 67.0,
-    "speech_average": 67.0,
-    "cumulative_speech_avg": 67.0,
-    "avg_of_avgs": 0.0,
-    "all_speech_average": 67.0,
-    "regulation": "new",
-    "win_percentage": 100.0,
-    "win_rate": 100.0,
-    "prelims": 1,
-    "total_rounds": 1,
-    "break_percentage": 0.0,
-    "tournaments": 1,
-    "eligible_tournaments": 0,
-    "peak_score": 67.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 4,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 67.0,
-        "scores": [
-          67.0
-        ]
-      }
-    ],
-    "rank": 503
+    "rank": 492
   },
   {
     "person_id": 876,
@@ -27019,7 +26677,7 @@
         ]
       }
     ],
-    "rank": 504
+    "rank": 493
   },
   {
     "person_id": 937,
@@ -27054,7 +26712,7 @@
         ]
       }
     ],
-    "rank": 505
+    "rank": 494
   },
   {
     "person_id": 125,
@@ -27091,7 +26749,7 @@
         ]
       }
     ],
-    "rank": 506
+    "rank": 495
   },
   {
     "person_id": 815,
@@ -27130,7 +26788,7 @@
         ]
       }
     ],
-    "rank": 507
+    "rank": 496
   },
   {
     "person_id": 543,
@@ -27166,7 +26824,7 @@
         ]
       }
     ],
-    "rank": 508
+    "rank": 497
   },
   {
     "person_id": 744,
@@ -27203,7 +26861,7 @@
         ]
       }
     ],
-    "rank": 509
+    "rank": 498
   },
   {
     "person_id": 192,
@@ -27254,7 +26912,7 @@
         ]
       }
     ],
-    "rank": 510
+    "rank": 499
   },
   {
     "person_id": 134,
@@ -27302,7 +26960,7 @@
         ]
       }
     ],
-    "rank": 511
+    "rank": 500
   },
   {
     "person_id": 409,
@@ -27341,7 +26999,7 @@
         ]
       }
     ],
-    "rank": 512
+    "rank": 501
   },
   {
     "person_id": 526,
@@ -27379,7 +27037,7 @@
         ]
       }
     ],
-    "rank": 513
+    "rank": 502
   },
   {
     "person_id": 850,
@@ -27418,7 +27076,7 @@
         ]
       }
     ],
-    "rank": 514
+    "rank": 503
   },
   {
     "person_id": 528,
@@ -27455,7 +27113,7 @@
         ]
       }
     ],
-    "rank": 515
+    "rank": 504
   },
   {
     "person_id": 198,
@@ -27492,7 +27150,7 @@
         ]
       }
     ],
-    "rank": 516
+    "rank": 505
   },
   {
     "person_id": 229,
@@ -27531,7 +27189,7 @@
         ]
       }
     ],
-    "rank": 517
+    "rank": 506
   },
   {
     "person_id": 936,
@@ -27570,7 +27228,7 @@
         ]
       }
     ],
-    "rank": 518
+    "rank": 507
   },
   {
     "person_id": 117,
@@ -27616,7 +27274,7 @@
         ]
       }
     ],
-    "rank": 519
+    "rank": 508
   },
   {
     "person_id": 654,
@@ -27652,7 +27310,7 @@
         ]
       }
     ],
-    "rank": 520
+    "rank": 509
   },
   {
     "person_id": 181,
@@ -27701,7 +27359,7 @@
         ]
       }
     ],
-    "rank": 521
+    "rank": 510
   },
   {
     "person_id": 849,
@@ -27738,7 +27396,7 @@
         ]
       }
     ],
-    "rank": 522
+    "rank": 511
   },
   {
     "person_id": 914,
@@ -27775,7 +27433,7 @@
         ]
       }
     ],
-    "rank": 523
+    "rank": 512
   },
   {
     "person_id": 931,
@@ -27813,7 +27471,7 @@
         ]
       }
     ],
-    "rank": 524
+    "rank": 513
   },
   {
     "person_id": 228,
@@ -27861,7 +27519,7 @@
         ]
       }
     ],
-    "rank": 525
+    "rank": 514
   },
   {
     "person_id": 517,
@@ -27900,7 +27558,7 @@
         ]
       }
     ],
-    "rank": 526
+    "rank": 515
   },
   {
     "person_id": 932,
@@ -27939,7 +27597,7 @@
         ]
       }
     ],
-    "rank": 527
+    "rank": 516
   },
   {
     "person_id": 233,
@@ -27974,7 +27632,7 @@
         ]
       }
     ],
-    "rank": 528
+    "rank": 517
   },
   {
     "person_id": 234,
@@ -28009,7 +27667,7 @@
         ]
       }
     ],
-    "rank": 529
+    "rank": 518
   },
   {
     "person_id": 184,
@@ -28045,7 +27703,43 @@
         ]
       }
     ],
-    "rank": 530
+    "rank": 519
+  },
+  {
+    "person_id": 646,
+    "speaker_name": "Vijayenthiran Jeremiah Calvin",
+    "institution": "St. John's College Jaffna",
+    "institution_name": "St. John's College Jaffna",
+    "national_level": null,
+    "master_score": 66.5,
+    "speaker_avg": 66.5,
+    "speech_avg": 66.5,
+    "speech_average": 66.5,
+    "cumulative_speech_avg": 66.5,
+    "avg_of_avgs": 0.0,
+    "all_speech_average": 66.5,
+    "regulation": "new",
+    "win_percentage": 50.0,
+    "win_rate": 50.0,
+    "prelims": 2,
+    "total_rounds": 2,
+    "break_percentage": 0.0,
+    "tournaments": 1,
+    "eligible_tournaments": 0,
+    "peak_score": 67.0,
+    "tournament_breakdown": [
+      {
+        "tournament_id": 4,
+        "rounds_debated": 2,
+        "is_eligible": false,
+        "tournament_average": 66.5,
+        "scores": [
+          67.0,
+          66.0
+        ]
+      }
+    ],
+    "rank": 520
   },
   {
     "person_id": 523,
@@ -28083,7 +27777,7 @@
         ]
       }
     ],
-    "rank": 531
+    "rank": 521
   },
   {
     "person_id": 259,
@@ -28121,7 +27815,7 @@
         ]
       }
     ],
-    "rank": 532
+    "rank": 522
   },
   {
     "person_id": 684,
@@ -28160,7 +27854,7 @@
         ]
       }
     ],
-    "rank": 533
+    "rank": 523
   },
   {
     "person_id": 530,
@@ -28198,7 +27892,7 @@
         ]
       }
     ],
-    "rank": 534
+    "rank": 524
   },
   {
     "person_id": 237,
@@ -28235,7 +27929,7 @@
         ]
       }
     ],
-    "rank": 535
+    "rank": 525
   },
   {
     "person_id": 755,
@@ -28294,7 +27988,7 @@
         ]
       }
     ],
-    "rank": 536
+    "rank": 526
   },
   {
     "person_id": 205,
@@ -28333,7 +28027,7 @@
         ]
       }
     ],
-    "rank": 537
+    "rank": 527
   },
   {
     "person_id": 204,
@@ -28369,7 +28063,7 @@
         ]
       }
     ],
-    "rank": 538
+    "rank": 528
   },
   {
     "person_id": 396,
@@ -28405,7 +28099,7 @@
         ]
       }
     ],
-    "rank": 539
+    "rank": 529
   },
   {
     "person_id": 226,
@@ -28455,7 +28149,7 @@
         ]
       }
     ],
-    "rank": 540
+    "rank": 530
   },
   {
     "person_id": 188,
@@ -28506,7 +28200,7 @@
         ]
       }
     ],
-    "rank": 541
+    "rank": 531
   },
   {
     "person_id": 390,
@@ -28545,7 +28239,7 @@
         ]
       }
     ],
-    "rank": 542
+    "rank": 532
   },
   {
     "person_id": 93,
@@ -28584,7 +28278,7 @@
         ]
       }
     ],
-    "rank": 543
+    "rank": 533
   },
   {
     "person_id": 846,
@@ -28621,7 +28315,7 @@
         ]
       }
     ],
-    "rank": 544
+    "rank": 534
   },
   {
     "person_id": 852,
@@ -28671,7 +28365,7 @@
         ]
       }
     ],
-    "rank": 545
+    "rank": 535
   },
   {
     "person_id": 197,
@@ -28709,7 +28403,7 @@
         ]
       }
     ],
-    "rank": 546
+    "rank": 536
   },
   {
     "person_id": 544,
@@ -28746,77 +28440,7 @@
         ]
       }
     ],
-    "rank": 547
-  },
-  {
-    "person_id": 646,
-    "speaker_name": "Vijayenthiran Jeremiah Calvin",
-    "institution": "St. John's College Jaffna",
-    "institution_name": "St. John's College Jaffna",
-    "national_level": null,
-    "master_score": 66.0,
-    "speaker_avg": 66.0,
-    "speech_avg": 66.0,
-    "speech_average": 66.0,
-    "cumulative_speech_avg": 66.0,
-    "avg_of_avgs": 0.0,
-    "all_speech_average": 66.0,
-    "regulation": "new",
-    "win_percentage": 0.0,
-    "win_rate": 0.0,
-    "prelims": 1,
-    "total_rounds": 1,
-    "break_percentage": 0.0,
-    "tournaments": 1,
-    "eligible_tournaments": 0,
-    "peak_score": 66.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 4,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 66.0,
-        "scores": [
-          66.0
-        ]
-      }
-    ],
-    "rank": 548
-  },
-  {
-    "person_id": 668,
-    "speaker_name": "Hanaa Azaam Ishak",
-    "institution": "Muslim Ladies' College",
-    "institution_name": "Muslim Ladies' College",
-    "national_level": null,
-    "master_score": 66.0,
-    "speaker_avg": 66.0,
-    "speech_avg": 66.0,
-    "speech_average": 66.0,
-    "cumulative_speech_avg": 66.0,
-    "avg_of_avgs": 0.0,
-    "all_speech_average": 66.0,
-    "regulation": "new",
-    "win_percentage": 0.0,
-    "win_rate": 0.0,
-    "prelims": 1,
-    "total_rounds": 1,
-    "break_percentage": 0.0,
-    "tournaments": 1,
-    "eligible_tournaments": 0,
-    "peak_score": 66.0,
-    "tournament_breakdown": [
-      {
-        "tournament_id": 4,
-        "rounds_debated": 1,
-        "is_eligible": false,
-        "tournament_average": 66.0,
-        "scores": [
-          66.0
-        ]
-      }
-    ],
-    "rank": 549
+    "rank": 537
   },
   {
     "person_id": 674,
@@ -28865,7 +28489,7 @@
         ]
       }
     ],
-    "rank": 550
+    "rank": 538
   },
   {
     "person_id": 124,
@@ -28903,7 +28527,7 @@
         ]
       }
     ],
-    "rank": 551
+    "rank": 539
   },
   {
     "person_id": 202,
@@ -28955,7 +28579,7 @@
         ]
       }
     ],
-    "rank": 552
+    "rank": 540
   },
   {
     "person_id": 219,
@@ -28992,7 +28616,7 @@
         ]
       }
     ],
-    "rank": 553
+    "rank": 541
   },
   {
     "person_id": 232,
@@ -29030,7 +28654,7 @@
         ]
       }
     ],
-    "rank": 554
+    "rank": 542
   },
   {
     "person_id": 546,
@@ -29067,7 +28691,7 @@
         ]
       }
     ],
-    "rank": 555
+    "rank": 543
   },
   {
     "person_id": 227,
@@ -29119,7 +28743,7 @@
         ]
       }
     ],
-    "rank": 556
+    "rank": 544
   },
   {
     "person_id": 104,
@@ -29154,7 +28778,7 @@
         ]
       }
     ],
-    "rank": 557
+    "rank": 545
   },
   {
     "person_id": 816,
@@ -29190,7 +28814,7 @@
         ]
       }
     ],
-    "rank": 558
+    "rank": 546
   },
   {
     "person_id": 189,
@@ -29228,7 +28852,7 @@
         ]
       }
     ],
-    "rank": 559
+    "rank": 547
   },
   {
     "person_id": 809,
@@ -29263,7 +28887,7 @@
         ]
       }
     ],
-    "rank": 560
+    "rank": 548
   },
   {
     "person_id": 940,
@@ -29301,7 +28925,7 @@
         ]
       }
     ],
-    "rank": 561
+    "rank": 549
   },
   {
     "person_id": 203,
@@ -29351,7 +28975,7 @@
         ]
       }
     ],
-    "rank": 562
+    "rank": 550
   },
   {
     "person_id": 199,
@@ -29388,7 +29012,7 @@
         ]
       }
     ],
-    "rank": 563
+    "rank": 551
   },
   {
     "person_id": 238,
@@ -29425,7 +29049,7 @@
         ]
       }
     ],
-    "rank": 564
+    "rank": 552
   },
   {
     "person_id": 743,
@@ -29471,7 +29095,7 @@
         ]
       }
     ],
-    "rank": 565
+    "rank": 553
   },
   {
     "person_id": 814,
@@ -29508,7 +29132,7 @@
         ]
       }
     ],
-    "rank": 566
+    "rank": 554
   },
   {
     "person_id": 529,
@@ -29546,7 +29170,7 @@
         ]
       }
     ],
-    "rank": 567
+    "rank": 555
   },
   {
     "person_id": 533,
@@ -29584,7 +29208,7 @@
         ]
       }
     ],
-    "rank": 568
+    "rank": 556
   },
   {
     "person_id": 245,
@@ -29623,7 +29247,7 @@
         ]
       }
     ],
-    "rank": 569
+    "rank": 557
   },
   {
     "person_id": 242,
@@ -29659,7 +29283,7 @@
         ]
       }
     ],
-    "rank": 570
+    "rank": 558
   },
   {
     "person_id": 257,
@@ -29698,7 +29322,7 @@
         ]
       }
     ],
-    "rank": 571
+    "rank": 559
   },
   {
     "person_id": 262,
@@ -29734,7 +29358,7 @@
         ]
       }
     ],
-    "rank": 572
+    "rank": 560
   },
   {
     "person_id": 200,
@@ -29771,7 +29395,7 @@
         ]
       }
     ],
-    "rank": 573
+    "rank": 561
   },
   {
     "person_id": 534,
@@ -29807,7 +29431,7 @@
         ]
       }
     ],
-    "rank": 574
+    "rank": 562
   },
   {
     "person_id": 532,
@@ -29845,7 +29469,7 @@
         ]
       }
     ],
-    "rank": 575
+    "rank": 563
   },
   {
     "person_id": 853,
@@ -29883,7 +29507,7 @@
         ]
       }
     ],
-    "rank": 576
+    "rank": 564
   },
   {
     "person_id": 263,
@@ -29927,7 +29551,7 @@
         ]
       }
     ],
-    "rank": 577
+    "rank": 565
   },
   {
     "person_id": 758,
@@ -29965,7 +29589,7 @@
         ]
       }
     ],
-    "rank": 578
+    "rank": 566
   },
   {
     "person_id": 240,
@@ -30003,7 +29627,7 @@
         ]
       }
     ],
-    "rank": 579
+    "rank": 567
   },
   {
     "person_id": 236,
@@ -30038,7 +29662,7 @@
         ]
       }
     ],
-    "rank": 580
+    "rank": 568
   },
   {
     "person_id": 261,
@@ -30074,7 +29698,7 @@
         ]
       }
     ],
-    "rank": 581
+    "rank": 569
   },
   {
     "person_id": 549,
@@ -30110,7 +29734,7 @@
         ]
       }
     ],
-    "rank": 582
+    "rank": 570
   },
   {
     "person_id": 201,
@@ -30147,7 +29771,7 @@
         ]
       }
     ],
-    "rank": 583
+    "rank": 571
   },
   {
     "person_id": 545,
@@ -30184,7 +29808,7 @@
         ]
       }
     ],
-    "rank": 584
+    "rank": 572
   },
   {
     "person_id": 487,
@@ -30219,7 +29843,7 @@
         ]
       }
     ],
-    "rank": 585
+    "rank": 573
   },
   {
     "person_id": 247,
@@ -30254,7 +29878,7 @@
         ]
       }
     ],
-    "rank": 586
+    "rank": 574
   },
   {
     "person_id": 248,
@@ -30289,7 +29913,7 @@
         ]
       }
     ],
-    "rank": 587
+    "rank": 575
   },
   {
     "person_id": 535,
@@ -30325,7 +29949,7 @@
         ]
       }
     ],
-    "rank": 588
+    "rank": 576
   },
   {
     "person_id": 265,
@@ -30360,7 +29984,7 @@
         ]
       }
     ],
-    "rank": 589
+    "rank": 577
   },
   {
     "person_id": 531,
@@ -30395,6 +30019,6 @@
         ]
       }
     ],
-    "rank": 590
+    "rank": 578
   }
 ]

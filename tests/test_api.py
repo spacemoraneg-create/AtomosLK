@@ -166,7 +166,7 @@ class TestAtomosApiEndpoints:
         res = client.get("/api/national-pool")
         assert res.status_code == 200
         data = res.get_json()
-        assert data["total_contingent"] == 27
+        assert data["total_contingent"] == 25
         assert "debaters" in data
 
     def test_debate_ballot_endpoint(self, client):

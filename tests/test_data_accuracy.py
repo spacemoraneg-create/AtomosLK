@@ -188,3 +188,33 @@ def test_gate5_cli_json_outputs():
     assert "motions" in d5
     assert "institutions" in d5
     assert "debaters" in d5
+
+
+def test_gate6_roster_sizes_and_rubric_integrity(db_conn):
+    """Verify all teams adhere to WSDC roster size limits (3-5) and invalid rubric speeches have bounded total scores."""
+    cur = db_conn.cursor()
+
+    # 1. Roster sizes between 3 and 5 debaters
+    cur.execute("""
+        SELECT t.id, t.name, tour.slug, COUNT(tm.person_id) as sz
+        FROM teams t
+        JOIN tournaments tour ON t.tournament_id = tour.id
+        JOIN team_members tm ON t.id = tm.team_id
+        WHERE t.name NOT LIKE '%Swing%' AND t.name NOT LIKE '%BYE%'
+        GROUP BY t.id
+        HAVING sz < 3 OR sz > 5
+    """)
+    invalid_rosters = cur.fetchall()
+    assert len(invalid_rosters) == 0, f"Found teams with invalid roster size: {invalid_rosters}"
+
+    # 2. Speeches flagged is_valid_rubric=0 have valid WSDC total scores
+    cur.execute("""
+        SELECT COUNT(*) FROM speech_performances
+        WHERE is_valid_rubric = 0
+          AND (
+            (speech_type = 'SUBSTANTIVE' AND (total_score < 60 OR total_score > 80))
+            OR (speech_type = 'REPLY' AND (total_score < 30 OR total_score > 40))
+          )
+    """)
+    unbounded_rubric_speeches = cur.fetchone()[0]
+    assert unbounded_rubric_speeches == 0, f"Found non-standard rubric speeches with unbounded total scores: {unbounded_rubric_speeches}"

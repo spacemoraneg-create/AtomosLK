@@ -52,7 +52,7 @@
     "b_atss": 245.971,
     "net_diff": 2.94,
     "win_percentage": 64.583,
-    "pool_count": 16,
+    "pool_count": 15,
     "tournaments_debated": 8,
     "teams_count": 8,
     "teams_list": [
@@ -223,7 +223,7 @@
     "b_atss": 242.8,
     "net_diff": 5.53,
     "win_percentage": 68.888,
-    "pool_count": 10,
+    "pool_count": 9,
     "tournaments_debated": 6,
     "teams_count": 4,
     "teams_list": [
@@ -306,7 +306,7 @@
     "b_atss": 243.742,
     "net_diff": 1.554,
     "win_percentage": 47.142,
-    "pool_count": 14,
+    "pool_count": 12,
     "tournaments_debated": 8,
     "teams_count": 8,
     "teams_list": [
@@ -461,7 +461,7 @@
     "b_atss": 239.133,
     "net_diff": 4.012,
     "win_percentage": 44.736,
-    "pool_count": 10,
+    "pool_count": 8,
     "tournaments_debated": 5,
     "teams_count": 3,
     "teams_list": [
@@ -584,7 +584,7 @@
     "b_atss": 235.6,
     "net_diff": 3.725,
     "win_percentage": 33.962,
-    "pool_count": 13,
+    "pool_count": 12,
     "tournaments_debated": 7,
     "teams_count": 7,
     "teams_list": [
@@ -733,7 +733,7 @@
     "b_atss": null,
     "net_diff": null,
     "win_percentage": 40.74,
-    "pool_count": 7,
+    "pool_count": 6,
     "tournaments_debated": 5,
     "teams_count": 2,
     "teams_list": [

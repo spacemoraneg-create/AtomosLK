@@ -85,11 +85,11 @@
     "rank": 5
   },
   {
-    "person_id": 436,
-    "name": "Ra'ed Cader",
-    "speaker_name": "Ra'ed Cader",
+    "person_id": 433,
+    "name": "Ra'ed Abdul Cader",
+    "speaker_name": "Ra'ed Abdul Cader",
     "institution": "Asian International School",
-    "national_level": "Nat Pool, Direct",
+    "national_level": null,
     "speaker_score": 72.172,
     "win_percentage": 75.862,
     "stdev": 0.71,
@@ -255,6 +255,23 @@
     "rank": 15
   },
   {
+    "person_id": 57,
+    "name": "Ananya Nandakumar",
+    "speaker_name": "Ananya Nandakumar",
+    "institution": "Elizabeth Moir School",
+    "national_level": null,
+    "speaker_score": 71.744,
+    "win_percentage": 70.967,
+    "stdev": 1.128,
+    "prelims_debated": 31,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 31,
+    "total_debates": 31,
+    "total_wins": 22,
+    "highest_achievement": "Semifinalist",
+    "rank": 16
+  },
+  {
     "person_id": 6,
     "name": "Didumika Peiris",
     "speaker_name": "Didumika Peiris",
@@ -269,7 +286,7 @@
     "total_debates": 36,
     "total_wins": 31,
     "highest_achievement": "Champion",
-    "rank": 16
+    "rank": 17
   },
   {
     "person_id": 46,
@@ -286,7 +303,7 @@
     "total_debates": 32,
     "total_wins": 22,
     "highest_achievement": "Semifinalist",
-    "rank": 17
+    "rank": 18
   },
   {
     "person_id": 11,
@@ -303,23 +320,6 @@
     "total_debates": 21,
     "total_wins": 18,
     "highest_achievement": "Finalist",
-    "rank": 18
-  },
-  {
-    "person_id": 57,
-    "name": "Ananya Nandakumar",
-    "speaker_name": "Ananya Nandakumar",
-    "institution": "Elizabeth Moir School",
-    "national_level": null,
-    "speaker_score": 71.663,
-    "win_percentage": 69.23,
-    "stdev": 1.185,
-    "prelims_debated": 26,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 26,
-    "total_debates": 26,
-    "total_wins": 18,
-    "highest_achievement": "Semifinalist",
     "rank": 19
   },
   {
@@ -697,23 +697,6 @@
     "rank": 41
   },
   {
-    "person_id": 461,
-    "name": "Arshalya gomez",
-    "speaker_name": "Arshalya gomez",
-    "institution": "Holy Family Convent",
-    "national_level": "Trials",
-    "speaker_score": 70.964,
-    "win_percentage": 50,
-    "stdev": 1.277,
-    "prelims_debated": 14,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 14,
-    "total_debates": 14,
-    "total_wins": 7,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 42
-  },
-  {
     "person_id": 15,
     "name": "Tharusha Mallawaarachchi",
     "speaker_name": "Tharusha Mallawaarachchi",
@@ -728,7 +711,7 @@
     "total_debates": 31,
     "total_wins": 21,
     "highest_achievement": "Champion",
-    "rank": 43
+    "rank": 42
   },
   {
     "person_id": 24,
@@ -745,7 +728,7 @@
     "total_debates": 38,
     "total_wins": 25,
     "highest_achievement": "Finalist",
-    "rank": 44
+    "rank": 43
   },
   {
     "person_id": 58,
@@ -762,7 +745,7 @@
     "total_debates": 24,
     "total_wins": 17,
     "highest_achievement": "Quarterfinalist",
-    "rank": 45
+    "rank": 44
   },
   {
     "person_id": 28,
@@ -779,7 +762,7 @@
     "total_debates": 23,
     "total_wins": 16,
     "highest_achievement": "Quarterfinalist",
-    "rank": 46
+    "rank": 45
   },
   {
     "person_id": 364,
@@ -796,7 +779,7 @@
     "total_debates": 32,
     "total_wins": 18,
     "highest_achievement": "Quarterfinalist",
-    "rank": 47
+    "rank": 46
   },
   {
     "person_id": 1,
@@ -813,41 +796,24 @@
     "total_debates": 40,
     "total_wins": 29,
     "highest_achievement": "Champion",
-    "rank": 48
+    "rank": 47
   },
   {
-    "person_id": 893,
+    "person_id": 370,
     "name": "Mikaela Schoorman",
     "speaker_name": "Mikaela Schoorman",
     "institution": "Ladies' College",
     "national_level": null,
-    "speaker_score": 70.884,
-    "win_percentage": 61.538,
-    "stdev": 0.938,
-    "prelims_debated": 13,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 13,
-    "total_debates": 13,
-    "total_wins": 8,
+    "speaker_score": 70.881,
+    "win_percentage": 61.111,
+    "stdev": 1.049,
+    "prelims_debated": 36,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 36,
+    "total_debates": 36,
+    "total_wins": 22,
     "highest_achievement": "Quarterfinalist",
-    "rank": 49
-  },
-  {
-    "person_id": 370,
-    "name": "Mikaela Schooman",
-    "speaker_name": "Mikaela Schooman",
-    "institution": "Ladies' College",
-    "national_level": null,
-    "speaker_score": 70.88,
-    "win_percentage": 60.869,
-    "stdev": 1.127,
-    "prelims_debated": 23,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 23,
-    "total_debates": 23,
-    "total_wins": 14,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 50
+    "rank": 48
   },
   {
     "person_id": 838,
@@ -864,7 +830,7 @@
     "total_debates": 15,
     "total_wins": 9,
     "highest_achievement": "Semifinalist",
-    "rank": 51
+    "rank": 49
   },
   {
     "person_id": 589,
@@ -881,7 +847,7 @@
     "total_debates": 14,
     "total_wins": 7,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 52
+    "rank": 50
   },
   {
     "person_id": 26,
@@ -898,7 +864,7 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Quarterfinalist",
-    "rank": 53
+    "rank": 51
   },
   {
     "person_id": 92,
@@ -915,7 +881,7 @@
     "total_debates": 12,
     "total_wins": 7,
     "highest_achievement": "Quarterfinalist",
-    "rank": 54
+    "rank": 52
   },
   {
     "person_id": 21,
@@ -932,7 +898,7 @@
     "total_debates": 32,
     "total_wins": 23,
     "highest_achievement": "Champion",
-    "rank": 55
+    "rank": 53
   },
   {
     "person_id": 138,
@@ -949,7 +915,24 @@
     "total_debates": 24,
     "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
-    "rank": 56
+    "rank": 54
+  },
+  {
+    "person_id": 883,
+    "name": "Arshalya Gomes",
+    "speaker_name": "Arshalya Gomes",
+    "institution": "Holy Family Convent",
+    "national_level": null,
+    "speaker_score": 70.648,
+    "win_percentage": 48.148,
+    "stdev": 1.261,
+    "prelims_debated": 27,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 27,
+    "total_debates": 27,
+    "total_wins": 13,
+    "highest_achievement": "Double Partial Octofinalist",
+    "rank": 55
   },
   {
     "person_id": 443,
@@ -966,7 +949,7 @@
     "total_debates": 15,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 57
+    "rank": 56
   },
   {
     "person_id": 9,
@@ -983,7 +966,7 @@
     "total_debates": 27,
     "total_wins": 18,
     "highest_achievement": "Quarterfinalist",
-    "rank": 58
+    "rank": 57
   },
   {
     "person_id": 25,
@@ -1000,7 +983,7 @@
     "total_debates": 25,
     "total_wins": 17,
     "highest_achievement": "Finalist",
-    "rank": 59
+    "rank": 58
   },
   {
     "person_id": 441,
@@ -1017,7 +1000,7 @@
     "total_debates": 28,
     "total_wins": 18,
     "highest_achievement": "Finalist",
-    "rank": 60
+    "rank": 59
   },
   {
     "person_id": 70,
@@ -1034,7 +1017,7 @@
     "total_debates": 17,
     "total_wins": 10,
     "highest_achievement": "Quarterfinalist",
-    "rank": 61
+    "rank": 60
   },
   {
     "person_id": 446,
@@ -1051,7 +1034,7 @@
     "total_debates": 19,
     "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
-    "rank": 62
+    "rank": 61
   },
   {
     "person_id": 43,
@@ -1068,7 +1051,7 @@
     "total_debates": 21,
     "total_wins": 15,
     "highest_achievement": "Champion",
-    "rank": 63
+    "rank": 62
   },
   {
     "person_id": 50,
@@ -1085,24 +1068,7 @@
     "total_debates": 17,
     "total_wins": 10,
     "highest_achievement": "Octofinalist",
-    "rank": 64
-  },
-  {
-    "person_id": 883,
-    "name": "Arshalya Gomes",
-    "speaker_name": "Arshalya Gomes",
-    "institution": "Holy Family Convent",
-    "national_level": null,
-    "speaker_score": 70.307,
-    "win_percentage": 46.153,
-    "stdev": 1.199,
-    "prelims_debated": 13,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 13,
-    "total_debates": 13,
-    "total_wins": 6,
-    "highest_achievement": "Double Partial Octofinalist",
-    "rank": 65
+    "rank": 63
   },
   {
     "person_id": 591,
@@ -1119,7 +1085,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 66
+    "rank": 64
   },
   {
     "person_id": 86,
@@ -1136,7 +1102,7 @@
     "total_debates": 18,
     "total_wins": 11,
     "highest_achievement": "Finalist",
-    "rank": 67
+    "rank": 65
   },
   {
     "person_id": 91,
@@ -1153,7 +1119,7 @@
     "total_debates": 30,
     "total_wins": 17,
     "highest_achievement": "Quarterfinalist",
-    "rank": 68
+    "rank": 66
   },
   {
     "person_id": 460,
@@ -1170,7 +1136,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 69
+    "rank": 67
   },
   {
     "person_id": 375,
@@ -1187,7 +1153,7 @@
     "total_debates": 17,
     "total_wins": 8,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 70
+    "rank": 68
   },
   {
     "person_id": 76,
@@ -1204,7 +1170,7 @@
     "total_debates": 22,
     "total_wins": 10,
     "highest_achievement": "Quarterfinalist",
-    "rank": 71
+    "rank": 69
   },
   {
     "person_id": 48,
@@ -1221,7 +1187,7 @@
     "total_debates": 12,
     "total_wins": 6,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 72
+    "rank": 70
   },
   {
     "person_id": 37,
@@ -1238,7 +1204,7 @@
     "total_debates": 17,
     "total_wins": 11,
     "highest_achievement": "Quarterfinalist",
-    "rank": 73
+    "rank": 71
   },
   {
     "person_id": 171,
@@ -1255,7 +1221,7 @@
     "total_debates": 16,
     "total_wins": 10,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 74
+    "rank": 72
   },
   {
     "person_id": 13,
@@ -1272,7 +1238,7 @@
     "total_debates": 14,
     "total_wins": 10,
     "highest_achievement": "Semifinalist",
-    "rank": 75
+    "rank": 73
   },
   {
     "person_id": 73,
@@ -1289,7 +1255,24 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Octofinalist",
-    "rank": 76
+    "rank": 74
+  },
+  {
+    "person_id": 84,
+    "name": "Kumal Seniru Premathunga",
+    "speaker_name": "Kumal Seniru Premathunga",
+    "institution": "Isipathana College",
+    "national_level": null,
+    "speaker_score": 70,
+    "win_percentage": 51.612,
+    "stdev": 1.538,
+    "prelims_debated": 31,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 31,
+    "total_debates": 31,
+    "total_wins": 16,
+    "highest_achievement": "Octofinalist",
+    "rank": 75
   },
   {
     "person_id": 69,
@@ -1306,7 +1289,7 @@
     "total_debates": 14,
     "total_wins": 7,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 77
+    "rank": 76
   },
   {
     "person_id": 63,
@@ -1323,7 +1306,7 @@
     "total_debates": 30,
     "total_wins": 15,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 78
+    "rank": 77
   },
   {
     "person_id": 148,
@@ -1340,7 +1323,7 @@
     "total_debates": 36,
     "total_wins": 22,
     "highest_achievement": "Semifinalist",
-    "rank": 79
+    "rank": 78
   },
   {
     "person_id": 72,
@@ -1357,7 +1340,7 @@
     "total_debates": 17,
     "total_wins": 10,
     "highest_achievement": "Quarterfinalist",
-    "rank": 80
+    "rank": 79
   },
   {
     "person_id": 144,
@@ -1374,7 +1357,7 @@
     "total_debates": 38,
     "total_wins": 19,
     "highest_achievement": "Quarterfinalist",
-    "rank": 81
+    "rank": 80
   },
   {
     "person_id": 139,
@@ -1391,7 +1374,7 @@
     "total_debates": 15,
     "total_wins": 7,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 82
+    "rank": 81
   },
   {
     "person_id": 449,
@@ -1408,7 +1391,7 @@
     "total_debates": 12,
     "total_wins": 7,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 83
+    "rank": 82
   },
   {
     "person_id": 61,
@@ -1425,7 +1408,7 @@
     "total_debates": 16,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 84
+    "rank": 83
   },
   {
     "person_id": 87,
@@ -1442,7 +1425,7 @@
     "total_debates": 18,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 85
+    "rank": 84
   },
   {
     "person_id": 146,
@@ -1459,7 +1442,7 @@
     "total_debates": 16,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 86
+    "rank": 85
   },
   {
     "person_id": 619,
@@ -1476,7 +1459,7 @@
     "total_debates": 18,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 87
+    "rank": 86
   },
   {
     "person_id": 31,
@@ -1493,7 +1476,7 @@
     "total_debates": 22,
     "total_wins": 14,
     "highest_achievement": "Quarterfinalist",
-    "rank": 88
+    "rank": 87
   },
   {
     "person_id": 99,
@@ -1510,7 +1493,7 @@
     "total_debates": 23,
     "total_wins": 11,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 89
+    "rank": 88
   },
   {
     "person_id": 126,
@@ -1527,7 +1510,7 @@
     "total_debates": 14,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 90
+    "rank": 89
   },
   {
     "person_id": 402,
@@ -1544,7 +1527,7 @@
     "total_debates": 32,
     "total_wins": 14,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 91
+    "rank": 90
   },
   {
     "person_id": 590,
@@ -1561,7 +1544,7 @@
     "total_debates": 27,
     "total_wins": 17,
     "highest_achievement": "Finalist",
-    "rank": 92
+    "rank": 91
   },
   {
     "person_id": 469,
@@ -1578,24 +1561,7 @@
     "total_debates": 31,
     "total_wins": 13,
     "highest_achievement": "Semifinalist",
-    "rank": 93
-  },
-  {
-    "person_id": 84,
-    "name": "Kumal Seniru Premathunga",
-    "speaker_name": "Kumal Seniru Premathunga",
-    "institution": "Isipathana College",
-    "national_level": null,
-    "speaker_score": 69.675,
-    "win_percentage": 50,
-    "stdev": 1.703,
-    "prelims_debated": 20,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 20,
-    "total_debates": 20,
-    "total_wins": 10,
-    "highest_achievement": "Octofinalist",
-    "rank": 94
+    "rank": 92
   },
   {
     "person_id": 455,
@@ -1612,7 +1578,24 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 95
+    "rank": 93
+  },
+  {
+    "person_id": 82,
+    "name": "Sanuka Semitha Godagedara",
+    "speaker_name": "Sanuka Semitha Godagedara",
+    "institution": "Isipathana College",
+    "national_level": null,
+    "speaker_score": 69.645,
+    "win_percentage": 51.612,
+    "stdev": 1.669,
+    "prelims_debated": 31,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 31,
+    "total_debates": 31,
+    "total_wins": 16,
+    "highest_achievement": "Octofinalist",
+    "rank": 94
   },
   {
     "person_id": 601,
@@ -1629,7 +1612,7 @@
     "total_debates": 12,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 96
+    "rank": 95
   },
   {
     "person_id": 137,
@@ -1646,7 +1629,7 @@
     "total_debates": 13,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 97
+    "rank": 96
   },
   {
     "person_id": 143,
@@ -1663,7 +1646,7 @@
     "total_debates": 15,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 98
+    "rank": 97
   },
   {
     "person_id": 45,
@@ -1680,24 +1663,7 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 99
-  },
-  {
-    "person_id": 82,
-    "name": "Sanuka Semitha Godagedara",
-    "speaker_name": "Sanuka Semitha Godagedara",
-    "institution": "Isipathana College",
-    "national_level": null,
-    "speaker_score": 69.525,
-    "win_percentage": 50,
-    "stdev": 1.936,
-    "prelims_debated": 20,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 20,
-    "total_debates": 20,
-    "total_wins": 10,
-    "highest_achievement": "Octofinalist",
-    "rank": 100
+    "rank": 98
   },
   {
     "person_id": 83,
@@ -1714,7 +1680,7 @@
     "total_debates": 25,
     "total_wins": 13,
     "highest_achievement": "Octofinalist",
-    "rank": 101
+    "rank": 99
   },
   {
     "person_id": 111,
@@ -1731,7 +1697,24 @@
     "total_debates": 32,
     "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 102
+    "rank": 100
+  },
+  {
+    "person_id": 98,
+    "name": "Navidhi Madawala",
+    "speaker_name": "Navidhi Madawala",
+    "institution": "Holy Family Convent",
+    "national_level": null,
+    "speaker_score": 69.491,
+    "win_percentage": 46.666,
+    "stdev": 1.263,
+    "prelims_debated": 30,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 30,
+    "total_debates": 30,
+    "total_wins": 14,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 101
   },
   {
     "person_id": 118,
@@ -1748,7 +1731,7 @@
     "total_debates": 26,
     "total_wins": 13,
     "highest_achievement": "Quarterfinalist",
-    "rank": 103
+    "rank": 102
   },
   {
     "person_id": 121,
@@ -1765,7 +1748,7 @@
     "total_debates": 22,
     "total_wins": 7,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 104
+    "rank": 103
   },
   {
     "person_id": 618,
@@ -1782,7 +1765,7 @@
     "total_debates": 18,
     "total_wins": 8,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 105
+    "rank": 104
   },
   {
     "person_id": 142,
@@ -1799,7 +1782,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 106
+    "rank": 105
   },
   {
     "person_id": 79,
@@ -1816,7 +1799,7 @@
     "total_debates": 15,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 107
+    "rank": 106
   },
   {
     "person_id": 478,
@@ -1833,7 +1816,7 @@
     "total_debates": 26,
     "total_wins": 14,
     "highest_achievement": "Octofinalist",
-    "rank": 108
+    "rank": 107
   },
   {
     "person_id": 75,
@@ -1850,7 +1833,7 @@
     "total_debates": 22,
     "total_wins": 8,
     "highest_achievement": "Quarterfinalist",
-    "rank": 109
+    "rank": 108
   },
   {
     "person_id": 363,
@@ -1867,7 +1850,7 @@
     "total_debates": 15,
     "total_wins": 8,
     "highest_achievement": "Octofinalist",
-    "rank": 110
+    "rank": 109
   },
   {
     "person_id": 140,
@@ -1884,7 +1867,7 @@
     "total_debates": 22,
     "total_wins": 11,
     "highest_achievement": "Quarterfinalist",
-    "rank": 111
+    "rank": 110
   },
   {
     "person_id": 468,
@@ -1901,7 +1884,7 @@
     "total_debates": 30,
     "total_wins": 12,
     "highest_achievement": "Semifinalist",
-    "rank": 112
+    "rank": 111
   },
   {
     "person_id": 488,
@@ -1918,7 +1901,7 @@
     "total_debates": 16,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 113
+    "rank": 112
   },
   {
     "person_id": 214,
@@ -1935,7 +1918,7 @@
     "total_debates": 21,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 114
+    "rank": 113
   },
   {
     "person_id": 94,
@@ -1952,41 +1935,24 @@
     "total_debates": 22,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 115
+    "rank": 114
   },
   {
-    "person_id": 98,
-    "name": "Navidhi Madawela",
-    "speaker_name": "Navidhi Madawela",
-    "institution": "Holy Family Convent",
-    "national_level": null,
-    "speaker_score": 69.261,
-    "win_percentage": 45.454,
-    "stdev": 1.31,
-    "prelims_debated": 22,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 22,
-    "total_debates": 22,
-    "total_wins": 10,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 116
-  },
-  {
-    "person_id": 877,
-    "name": "Vihanga Lokuliyana",
-    "speaker_name": "Vihanga Lokuliyana",
+    "person_id": 110,
+    "name": "Vihanga Senith Lokuliyana",
+    "speaker_name": "Vihanga Senith Lokuliyana",
     "institution": "Nalanda College",
     "national_level": null,
-    "speaker_score": 69.23,
-    "win_percentage": 46.153,
-    "stdev": 1.653,
-    "prelims_debated": 13,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 13,
-    "total_debates": 13,
-    "total_wins": 6,
+    "speaker_score": 69.171,
+    "win_percentage": 40.625,
+    "stdev": 1.521,
+    "prelims_debated": 32,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 32,
+    "total_debates": 32,
+    "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 117
+    "rank": 115
   },
   {
     "person_id": 191,
@@ -2003,24 +1969,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 118
-  },
-  {
-    "person_id": 110,
-    "name": "Vihanga Senith Lokuliyana",
-    "speaker_name": "Vihanga Senith Lokuliyana",
-    "institution": "Nalanda College",
-    "national_level": null,
-    "speaker_score": 69.131,
-    "win_percentage": 36.842,
-    "stdev": 1.47,
-    "prelims_debated": 19,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 19,
-    "total_debates": 19,
-    "total_wins": 7,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 119
+    "rank": 116
   },
   {
     "person_id": 480,
@@ -2037,7 +1986,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 120
+    "rank": 117
   },
   {
     "person_id": 629,
@@ -2054,7 +2003,7 @@
     "total_debates": 12,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 121
+    "rank": 118
   },
   {
     "person_id": 445,
@@ -2071,7 +2020,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 122
+    "rank": 119
   },
   {
     "person_id": 119,
@@ -2088,7 +2037,7 @@
     "total_debates": 19,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 123
+    "rank": 120
   },
   {
     "person_id": 95,
@@ -2105,7 +2054,24 @@
     "total_debates": 22,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 124
+    "rank": 121
+  },
+  {
+    "person_id": 96,
+    "name": "Omalya Wathsandi Weerasinghe",
+    "speaker_name": "Omalya Wathsandi Weerasinghe",
+    "institution": "Devi Balika Vidyalaya",
+    "national_level": null,
+    "speaker_score": 68.821,
+    "win_percentage": 28.571,
+    "stdev": 1.295,
+    "prelims_debated": 14,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 14,
+    "total_debates": 14,
+    "total_wins": 4,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 122
   },
   {
     "person_id": 215,
@@ -2122,7 +2088,7 @@
     "total_debates": 21,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 125
+    "rank": 123
   },
   {
     "person_id": 90,
@@ -2139,7 +2105,7 @@
     "total_debates": 18,
     "total_wins": 7,
     "highest_achievement": "Quarterfinalist",
-    "rank": 126
+    "rank": 124
   },
   {
     "person_id": 489,
@@ -2156,7 +2122,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 127
+    "rank": 125
   },
   {
     "person_id": 77,
@@ -2173,7 +2139,7 @@
     "total_debates": 24,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 128
+    "rank": 126
   },
   {
     "person_id": 149,
@@ -2190,7 +2156,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 129
+    "rank": 127
   },
   {
     "person_id": 244,
@@ -2207,7 +2173,7 @@
     "total_debates": 15,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 130
+    "rank": 128
   },
   {
     "person_id": 467,
@@ -2224,7 +2190,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Semifinalist",
-    "rank": 131
+    "rank": 129
   },
   {
     "person_id": 165,
@@ -2241,7 +2207,7 @@
     "total_debates": 15,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 132
+    "rank": 130
   },
   {
     "person_id": 406,
@@ -2258,7 +2224,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 133
+    "rank": 131
   },
   {
     "person_id": 604,
@@ -2275,7 +2241,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 134
+    "rank": 132
   },
   {
     "person_id": 151,
@@ -2292,7 +2258,7 @@
     "total_debates": 16,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 135
+    "rank": 133
   },
   {
     "person_id": 113,
@@ -2309,7 +2275,7 @@
     "total_debates": 14,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 136
+    "rank": 134
   },
   {
     "person_id": 216,
@@ -2326,7 +2292,7 @@
     "total_debates": 16,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 137
+    "rank": 135
   },
   {
     "person_id": 633,
@@ -2343,7 +2309,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 138
+    "rank": 136
   },
   {
     "person_id": 155,
@@ -2360,7 +2326,7 @@
     "total_debates": 16,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 139
+    "rank": 137
   },
   {
     "person_id": 753,
@@ -2377,7 +2343,7 @@
     "total_debates": 17,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 140
+    "rank": 138
   },
   {
     "person_id": 659,
@@ -2394,7 +2360,7 @@
     "total_debates": 14,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 141
+    "rank": 139
   },
   {
     "person_id": 180,
@@ -2411,7 +2377,7 @@
     "total_debates": 12,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 142
+    "rank": 140
   },
   {
     "person_id": 656,
@@ -2428,6 +2394,6 @@
     "total_debates": 12,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 143
+    "rank": 141
   }
 ]
