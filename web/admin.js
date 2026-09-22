@@ -1,7 +1,7 @@
 /**
  * Atomos Administrative Command Console
  * 
- * Secure management portal for database vitals, debater data confirmation,
+ * Secure management portal for database metrics, debater data confirmation,
  * tournament ingestion/deletion, and automated integrity testing.
  */
 
@@ -396,7 +396,7 @@
 
     container.innerHTML = `
       <div style="text-align: center; padding: 40px; color: #38bdf8; font-family: var(--font-mono);">
-        Loading live career dossier & ballot breakdown for ${escapeHtml(name)}...
+        Loading career profile and ballot breakdown for ${escapeHtml(name)}...
       </div>
     `;
 
@@ -606,7 +606,7 @@
         showStatusBox(
           importStatusBox,
           'loading',
-          `[PIPELINE ACTIVE] Ingesting '${target}' (Extraction -> Normalization -> Reconciliation -> Integrity Gatekeeper)...`
+          `[PIPELINE ACTIVE] Ingesting '${target}' (Extract -> Normalize -> Reconcile -> Validate)...`
         );
 
         try {
@@ -771,7 +771,7 @@
       badge.textContent = 'RUNNING...';
     }
     if (term) {
-      term.textContent = `[COMMAND] Initializing test suite '${suite}'...\n[SYSTEM] Executing forensic analysis against active SQLite connection...\n`;
+      term.textContent = `[COMMAND] Initializing test suite '${suite}'...\n[SYSTEM] Running diagnostic tests against active database...\n`;
     }
 
     // Disable all test buttons during execution
@@ -1395,7 +1395,7 @@
             ${tn.is_merged ? `
               <div class="inst-merged-into-box">
                 <div>
-                  <span style="color: rgba(255,255,255,0.6);">Unified Under:</span>
+                  <span style="color: rgba(255,255,255,0.6);">Merged Under:</span>
                   <strong style="color: #38bdf8; margin-left: 6px;">${escapeHtml(tn.merged_into)}</strong>
                 </div>
                 <button class="admin-btn admin-btn-outline admin-btn-sm btn-inst-unmerge" data-variant-name="${escapeHtml(tn.name)}" style="padding: 4px 10px; font-size: 11px;">
@@ -1542,7 +1542,7 @@
           }
         } else {
           confirmMergeBtn.disabled = true;
-          confirmMergeBtn.textContent = 'CONFIRM & UNIFY TEAM NAMES';
+          confirmMergeBtn.textContent = 'CONFIRM & MERGE TEAM NAMES';
         }
       }
     }

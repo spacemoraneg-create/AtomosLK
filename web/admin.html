@@ -278,7 +278,7 @@
           <div class="admin-box">
             <div class="admin-box-title">IMPORT / INGEST TOURNAMENT</div>
             <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
-              Provide a public Tabbycat URL or a local raw directory slug to trigger the 4-stage automated ingestion pipeline (Extraction, Normalization, Reconciliation with 0 fake positions, and Integrity Validation).
+              Enter a public Tabbycat URL or local folder name to run the ingestion pipeline (Extract, Normalize, Reconcile, and Validate).
             </p>
 
             <div class="admin-form-group">
@@ -336,14 +336,14 @@
       <div id="paneTests" class="admin-tab-pane">
         
         <div class="admin-box" style="margin-bottom: 20px;">
-          <div class="admin-box-title">AUTOMATED DIAGNOSTIC SUITE & INTEGRITY RUNNER</div>
+          <div class="admin-box-title">DIAGNOSTIC TESTS & INTEGRITY RUNNER</div>
           <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
-            Execute live diagnostic tests against the active SQLite database to verify relational foreign keys, speaker score rubric boundaries (60-80), winner margins, and ranking math consistency.
+            Run diagnostic tests against the active database to verify foreign keys, score boundaries (60-80), winner margins, and ranking consistency.
           </p>
 
           <div class="admin-btn-row">
             <button id="btnRunIntegrity" class="admin-btn admin-btn-primary">
-              RUN INTEGRITY GATEKEEPER
+              RUN INTEGRITY CHECK
             </button>
             <button id="btnRunAccuracy" class="admin-btn admin-btn-secondary">
               RUN DATA ACCURACY TESTS
@@ -482,7 +482,7 @@
           <!-- Confirmed Merges Audit Section -->
           <div id="instConfirmedMergesSection" class="hidden" style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.1);">
             <div style="font-size: 12px; font-weight: 700; font-family: var(--font-mono); color: #34d399; letter-spacing: 0.05em; margin-bottom: 10px;">
-              CONFIRMED NAME UNIFICATIONS & AUDIT TRAIL
+              CONFIRMED NAME MERGES
             </div>
             <div id="instConfirmedMergesList"></div>
           </div>
@@ -576,7 +576,7 @@
       <div class="admin-modal-card" style="border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 189, 248, 0.2); max-width: 520px;">
         <div class="admin-modal-title" style="color: #38bdf8;">CONFIRM TEAM IDENTITY MERGE</div>
         <p id="instTeamMergeModalMessage" class="admin-modal-text">
-          Review the canonical unification details below before executing this permanent relational merge.
+          Review the canonical merge details below before executing this relational merge.
         </p>
         <div class="admin-box" style="margin-bottom: 16px; background: rgba(2, 6, 23, 0.7); padding: 14px;">
           <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
@@ -586,7 +586,7 @@
             <strong>Canonical Target (Keep):</strong> <span id="modalTargetName" style="color: #34d399; font-weight: 700;">--</span>
           </div>
           <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
-            <strong>Variant to Unify (Merge):</strong> <span id="modalVariantName" style="color: #f87171; font-weight: 700;">--</span>
+            <strong>Variant to Merge:</strong> <span id="modalVariantName" style="color: #f87171; font-weight: 700;">--</span>
           </div>
           <div style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4;">
             <strong>Affected Tournaments:</strong> <span id="modalAffectedTours" class="monospace" style="color: #cbd5e1;">--</span>

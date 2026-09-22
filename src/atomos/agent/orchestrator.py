@@ -54,7 +54,7 @@ class AgentResult:
 
 class AtomosAgent:
     """
-    Autonomous AI debate analyst grounded in the Atomos forensic database.
+    AI debate analyst grounded in the Atomos database.
     """
 
     def __init__(self, conn: Optional[sqlite3.Connection] = None, use_llm: Optional[bool] = None):
@@ -231,7 +231,7 @@ class AtomosAgent:
 
         answer = (
             f"### About Atomos\n\n"
-            f"**Atomos** is a forensic historical debate knowledge and intelligence engine designed specifically for the Sri Lankan Schools Debating Circuit.\n\n"
+            f"**Atomos** is a debate analytics and knowledge engine designed specifically for the Sri Lankan Schools Debating Circuit.\n\n"
             f"#### Live Database Scope:\n"
             f"- **Tournaments**: {n_t} national championships\n"
             f"- **Debaters**: {n_p} debaters and adjudicators\n"
@@ -864,7 +864,7 @@ class AtomosAgent:
         ])
 
         answer = (
-            f"### Institution Dossier: **{inst_prof.name}** ({inst_prof.code or 'N/A'})\n\n"
+            f"### Institution Profile: **{inst_prof.name}** ({inst_prof.code or 'N/A'})\n\n"
             f"- **National IPI Score**: **{fmt_val(inst_prof.ipi_score)}** (National Rank: #{inst_prof.ipi_rank or 'N/A'}, Tier: `{inst_prof.tier}`)\n"
             f"- **Circuit Win Rate**: **{fmt_val(inst_prof.win_rate)}%** ({inst_prof.wins} / {inst_prof.total_debates} debates)\n"
             f"- **Outround Break Rate**: **{fmt_val(inst_prof.break_rate)}%** ({inst_prof.total_breaks} breaks across {inst_prof.tournaments_entered} tournaments)\n"
@@ -910,7 +910,7 @@ class AtomosAgent:
         tourn_md = "\n".join(tourn_rows)
 
         answer = (
-            f"### Debater Dossier: **{name}** (Person ID: `#{pid}`)\n\n"
+            f"### Debater Profile: **{name}** (Person ID: `#{pid}`)\n\n"
             f"- **Institution / School**: {inst}\n"
             f"- **Teams Fielded**: {', '.join(data.get('teams_debated', [])) or 'None'}\n"
             f"- **Master Tab Rank**: **{mt_rank}** (Critical Stats Rank: **{cs_rank}**)\n"

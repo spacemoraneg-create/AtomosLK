@@ -340,7 +340,7 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
         "type": "function",
         "function": {
             "name": "get_judge_profile",
-            "description": "Retrieve a comprehensive forensic adjudicator dossier for a debate judge by name or person ID, including their side bias (Prop vs Opp win %), scoring strictness/harshness index relative to circuit benchmark (71.2 pts), average win margin, outround records, and recent debates officiated.",
+            "description": "Retrieve an adjudicator profile for a debate judge by name or person ID, including their side bias (Prop vs Opp win %), scoring strictness index relative to circuit benchmark (71.2 pts), average win margin, outround records, and recent debates officiated.",
             "parameters": {
                 "type": "object",
                 "properties": {

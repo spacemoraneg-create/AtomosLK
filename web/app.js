@@ -2546,7 +2546,7 @@
         if (messages) {
           messages.innerHTML = `
             <div class="chat-bubble bot">
-              <strong>Atomos AI:</strong> Session reset. What would you like to explore about the circuit?
+              <strong>Atomos:</strong> Session reset. What would you like to explore about the circuit?
             </div>
           `;
         }
@@ -2590,7 +2590,7 @@
 
     const botMsg = document.createElement('div');
     botMsg.className = 'chat-bubble bot';
-    botMsg.innerHTML = `<em>Thinking... querying Gemini 3.6 Flash & atomos.db...</em>`;
+    botMsg.innerHTML = `<em>Analyzing circuit data...</em>`;
     messages.appendChild(botMsg);
     messages.scrollTop = messages.scrollHeight;
 
