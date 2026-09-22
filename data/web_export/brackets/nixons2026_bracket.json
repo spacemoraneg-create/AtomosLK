@@ -1,0 +1,313 @@
+{
+  "tournament_name": "Nixon's 2026 | Welcome to Lillian Nixon's Memorial Debating Championship 2026",
+  "tournament_slug": "nixons2026",
+  "total_elimination_stages": 3,
+  "champion": {
+    "team": "RC B",
+    "institution": "Royal College"
+  },
+  "runner_up": {
+    "team": "TCK Red",
+    "institution": "Trinity College Kandy"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Partial Octofinals",
+      "round_number": 6,
+      "motion": null,
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 9799,
+          "venue": "Octofinals @ Room 01",
+          "proposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AIS A",
+            "winner_institution": "Asian International School",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Saara Zubair , Indeevari De Silva)"
+          ]
+        },
+        {
+          "debate_id": 9801,
+          "venue": "Octofinals @ Room 03",
+          "proposition": {
+            "team_name": "GCC A",
+            "institution": "Gateway College Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Kaveesha Mallawaarachchi , Methira Padeniya)"
+          ]
+        },
+        {
+          "debate_id": 9803,
+          "venue": "Octofinals @ Room 02",
+          "proposition": {
+            "team_name": "BSC",
+            "institution": "The British School in Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "Moir",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BSC",
+            "winner_institution": "The British School in Colombo",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sarah Warnakulasuriya , Khanavee)"
+          ]
+        },
+        {
+          "debate_id": 9805,
+          "venue": "Octofinals @ Room 04",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "DS A",
+            "winner_institution": "D. S. Senanayake College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne , Amnah Jiffrey)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 7,
+      "motion": null,
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 9807,
+          "venue": "Quarterfinals @ Room 03",
+          "proposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Thithira Jayakody)"
+          ]
+        },
+        {
+          "debate_id": 9809,
+          "venue": "Quarterfinals @ Room 02",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne , Kaveesha Mallawaarachchi , Rachel Cramer)"
+          ]
+        },
+        {
+          "debate_id": 9811,
+          "venue": "Quarterfinals @ Room 04",
+          "proposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK Red",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "TCK Red",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Gavin Senaratne , Indeevari De Silva , Methira Padeniya)"
+          ]
+        },
+        {
+          "debate_id": 9813,
+          "venue": "Quarterfinals @ Room 01",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BSC",
+            "institution": "The British School in Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Chirathi Perera , Amnah Jiffrey , Saara Zubair)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 8,
+      "motion": null,
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 9815,
+          "venue": "Semifinals @ Room 01",
+          "proposition": {
+            "team_name": "RC B",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK Red",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC B",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Chirathi Perera , Rachel Cramer , Shakeeb Mohideen)"
+          ]
+        },
+        {
+          "debate_id": 9817,
+          "venue": "Semifinals @ Room 02",
+          "proposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BC A",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)"
+          ]
+        }
+      ]
+    }
+  ]
+}

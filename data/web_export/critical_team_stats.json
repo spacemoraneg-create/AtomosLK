@@ -2,21 +2,21 @@
   {
     "team_name": "RC A",
     "institution": "Royal College",
-    "tournaments_count": 7,
-    "tournaments_debated": 7,
+    "tournaments_count": 8,
+    "tournaments_debated": 8,
     "break_percentage": 100.0,
-    "win_percentage": 84.21053,
+    "win_percentage": 82.8125,
     "opp_prop_split": {
-      "prop_win_percentage": 89.28571,
-      "opp_win_percentage": 79.31034
+      "prop_win_percentage": 87.09677,
+      "opp_win_percentage": 78.78788
     },
-    "rounds_debated": 57,
-    "break_rounds_debated": 20,
-    "atss": 251.68919,
-    "avg_margins": 6.77941,
-    "avg_win_margin": 6.77941,
-    "avg_loss_margin": 1.33333,
-    "net_margin": 4.93243,
+    "rounds_debated": 64,
+    "break_rounds_debated": 22,
+    "atss": 251.66667,
+    "avg_margins": 6.94737,
+    "avg_win_margin": 6.94737,
+    "avg_loss_margin": 1.5,
+    "net_margin": 5.09524,
     "highest_achievement": "Champion",
     "highest_break": "Champion",
     "rank": 1
@@ -24,21 +24,21 @@
   {
     "team_name": "DS A",
     "institution": "D. S. Senanayake College",
-    "tournaments_count": 8,
-    "tournaments_debated": 8,
+    "tournaments_count": 9,
+    "tournaments_debated": 9,
     "break_percentage": 100.0,
-    "win_percentage": 80.70175,
+    "win_percentage": 78.125,
     "opp_prop_split": {
-      "prop_win_percentage": 83.33333,
-      "opp_win_percentage": 78.78788
+      "prop_win_percentage": 77.77778,
+      "opp_win_percentage": 78.37838
     },
-    "rounds_debated": 57,
-    "break_rounds_debated": 15,
-    "atss": 251.4881,
-    "avg_margins": 6.13288,
-    "avg_win_margin": 6.13288,
-    "avg_loss_margin": 3.1,
-    "net_margin": 4.9623,
+    "rounds_debated": 64,
+    "break_rounds_debated": 17,
+    "atss": 251.27305,
+    "avg_margins": 6.09792,
+    "avg_win_margin": 6.09792,
+    "avg_loss_margin": 2.97619,
+    "net_margin": 4.68262,
     "highest_achievement": "Champion",
     "highest_break": "Champion",
     "rank": 2
@@ -46,46 +46,24 @@
   {
     "team_name": "RC B",
     "institution": "Royal College",
-    "tournaments_count": 5,
-    "tournaments_debated": 5,
-    "break_percentage": 60.0,
-    "win_percentage": 72.22222,
+    "tournaments_count": 6,
+    "tournaments_debated": 6,
+    "break_percentage": 66.66667,
+    "win_percentage": 74.4186,
     "opp_prop_split": {
-      "prop_win_percentage": 76.47059,
-      "opp_win_percentage": 68.42105
+      "prop_win_percentage": 76.19048,
+      "opp_win_percentage": 72.72727
     },
-    "rounds_debated": 36,
-    "break_rounds_debated": 9,
-    "atss": 250.11111,
-    "avg_margins": 6.625,
-    "avg_win_margin": 6.625,
-    "avg_loss_margin": 1.35714,
-    "net_margin": 4.33333,
+    "rounds_debated": 43,
+    "break_rounds_debated": 11,
+    "atss": 250.26562,
+    "avg_margins": 6.89583,
+    "avg_win_margin": 6.89583,
+    "avg_loss_margin": 1.4375,
+    "net_margin": 4.625,
     "highest_achievement": "Champion",
     "highest_break": "Champion",
     "rank": 3
-  },
-  {
-    "team_name": "HCK A",
-    "institution": "Hillwood College Kandy",
-    "tournaments_count": 6,
-    "tournaments_debated": 6,
-    "break_percentage": 83.33333,
-    "win_percentage": 70.45455,
-    "opp_prop_split": {
-      "prop_win_percentage": 76.19048,
-      "opp_win_percentage": 65.21739
-    },
-    "rounds_debated": 44,
-    "break_rounds_debated": 12,
-    "atss": 249.84375,
-    "avg_margins": 4.96,
-    "avg_win_margin": 4.96,
-    "avg_loss_margin": 4.14286,
-    "net_margin": 2.84375,
-    "highest_achievement": "Finalist",
-    "highest_break": "Finalist",
-    "rank": 4
   },
   {
     "team_name": "LC A",
@@ -107,7 +85,7 @@
     "net_margin": 4.03571,
     "highest_achievement": "Semifinalist",
     "highest_break": "Semifinalist",
-    "rank": 5
+    "rank": 4
   },
   {
     "team_name": "TCK A",
@@ -129,29 +107,73 @@
     "net_margin": 4.2561,
     "highest_achievement": "Champion",
     "highest_break": "Champion",
+    "rank": 5
+  },
+  {
+    "team_name": "HCK A",
+    "institution": "Hillwood College Kandy",
+    "tournaments_count": 7,
+    "tournaments_debated": 7,
+    "break_percentage": 71.42857,
+    "win_percentage": 69.38776,
+    "opp_prop_split": {
+      "prop_win_percentage": 79.16667,
+      "opp_win_percentage": 60.0
+    },
+    "rounds_debated": 49,
+    "break_rounds_debated": 12,
+    "atss": 249.21622,
+    "avg_margins": 4.96429,
+    "avg_win_margin": 4.96429,
+    "avg_loss_margin": 3.66667,
+    "net_margin": 2.75676,
+    "highest_achievement": "Finalist",
+    "highest_break": "Finalist",
     "rank": 6
   },
   {
     "team_name": "AC A",
     "institution": "Ananda College",
-    "tournaments_count": 8,
-    "tournaments_debated": 8,
-    "break_percentage": 87.5,
-    "win_percentage": 61.40351,
+    "tournaments_count": 9,
+    "tournaments_debated": 9,
+    "break_percentage": 88.88889,
+    "win_percentage": 60.31746,
     "opp_prop_split": {
-      "prop_win_percentage": 56.25,
-      "opp_win_percentage": 68.0
+      "prop_win_percentage": 55.55556,
+      "opp_win_percentage": 66.66667
     },
-    "rounds_debated": 57,
-    "break_rounds_debated": 15,
-    "atss": 249.01984,
-    "avg_margins": 8.75926,
-    "avg_win_margin": 8.75926,
-    "avg_loss_margin": 2.34444,
-    "net_margin": 4.79365,
+    "rounds_debated": 63,
+    "break_rounds_debated": 16,
+    "atss": 249.08865,
+    "avg_margins": 8.56667,
+    "avg_win_margin": 8.56667,
+    "avg_loss_margin": 2.18627,
+    "net_margin": 4.6773,
     "highest_achievement": "Champion",
     "highest_break": "Champion",
     "rank": 7
+  },
+  {
+    "team_name": "BC A",
+    "institution": "Bishop's College",
+    "tournaments_count": 7,
+    "tournaments_debated": 7,
+    "break_percentage": 100.0,
+    "win_percentage": 70.58824,
+    "opp_prop_split": {
+      "prop_win_percentage": 84.0,
+      "opp_win_percentage": 57.69231
+    },
+    "rounds_debated": 51,
+    "break_rounds_debated": 14,
+    "atss": 248.61712,
+    "avg_margins": 5.73214,
+    "avg_win_margin": 5.73214,
+    "avg_loss_margin": 2.72222,
+    "net_margin": 3.08108,
+    "highest_achievement": "Finalist",
+    "highest_break": "Finalist",
+    "rank": 8
   },
   {
     "team_name": "CIS A",
@@ -173,29 +195,29 @@
     "net_margin": 3.46296,
     "highest_achievement": "Quarterfinalist",
     "highest_break": "Quarterfinalist",
-    "rank": 8
+    "rank": 9
   },
   {
-    "team_name": "SBC A",
-    "institution": "St. Bridget's Convent",
-    "tournaments_count": 6,
-    "tournaments_debated": 6,
-    "break_percentage": 83.33333,
-    "win_percentage": 60.0,
+    "team_name": "GCC A",
+    "institution": "Gateway College Colombo",
+    "tournaments_count": 3,
+    "tournaments_debated": 3,
+    "break_percentage": 100.0,
+    "win_percentage": 55.0,
     "opp_prop_split": {
-      "prop_win_percentage": 60.0,
-      "opp_win_percentage": 60.0
+      "prop_win_percentage": 45.45455,
+      "opp_win_percentage": 66.66667
     },
-    "rounds_debated": 40,
-    "break_rounds_debated": 8,
-    "atss": 248.42188,
-    "avg_margins": 7.30952,
-    "avg_win_margin": 7.30952,
-    "avg_loss_margin": 3.68182,
-    "net_margin": 3.53125,
-    "highest_achievement": "Semifinalist",
-    "highest_break": "Semifinalist",
-    "rank": 9
+    "rounds_debated": 20,
+    "break_rounds_debated": 3,
+    "atss": 248.52941,
+    "avg_margins": 6.27273,
+    "avg_win_margin": 6.27273,
+    "avg_loss_margin": 2.75,
+    "net_margin": 3.08824,
+    "highest_achievement": "Octofinalist",
+    "highest_break": "Octofinalist",
+    "rank": 10
   },
   {
     "team_name": "Moir A",
@@ -217,29 +239,29 @@
     "net_margin": 2.46296,
     "highest_achievement": "Semifinalist",
     "highest_break": "Semifinalist",
-    "rank": 10
+    "rank": 11
   },
   {
-    "team_name": "BC A",
-    "institution": "Bishop's College",
-    "tournaments_count": 6,
-    "tournaments_debated": 6,
-    "break_percentage": 100.0,
-    "win_percentage": 65.90909,
+    "team_name": "SBC A",
+    "institution": "St. Bridget's Convent",
+    "tournaments_count": 7,
+    "tournaments_debated": 7,
+    "break_percentage": 71.42857,
+    "win_percentage": 60.0,
     "opp_prop_split": {
-      "prop_win_percentage": 80.95238,
-      "opp_win_percentage": 52.17391
+      "prop_win_percentage": 60.86957,
+      "opp_win_percentage": 59.09091
     },
-    "rounds_debated": 44,
-    "break_rounds_debated": 12,
-    "atss": 248.30729,
-    "avg_margins": 6.04348,
-    "avg_win_margin": 6.04348,
-    "avg_loss_margin": 2.72222,
-    "net_margin": 2.89062,
+    "rounds_debated": 45,
+    "break_rounds_debated": 8,
+    "atss": 248.22973,
+    "avg_margins": 6.6875,
+    "avg_win_margin": 6.6875,
+    "avg_loss_margin": 3.38462,
+    "net_margin": 3.14865,
     "highest_achievement": "Semifinalist",
     "highest_break": "Semifinalist",
-    "rank": 11
+    "rank": 12
   },
   {
     "team_name": "VV A",
@@ -261,29 +283,29 @@
     "net_margin": 2.5991,
     "highest_achievement": "Finalist",
     "highest_break": "Finalist",
-    "rank": 12
+    "rank": 13
   },
   {
     "team_name": "AIS A",
     "institution": "Asian International School",
-    "tournaments_count": 6,
-    "tournaments_debated": 6,
-    "break_percentage": 83.33333,
-    "win_percentage": 65.85366,
+    "tournaments_count": 7,
+    "tournaments_debated": 7,
+    "break_percentage": 85.71429,
+    "win_percentage": 66.66667,
     "opp_prop_split": {
-      "prop_win_percentage": 58.82353,
-      "opp_win_percentage": 70.83333
+      "prop_win_percentage": 61.90476,
+      "opp_win_percentage": 70.37037
     },
-    "rounds_debated": 41,
-    "break_rounds_debated": 9,
-    "atss": 247.60938,
-    "avg_margins": 7.59091,
-    "avg_win_margin": 7.59091,
-    "avg_loss_margin": 5.3,
-    "net_margin": 3.03125,
+    "rounds_debated": 48,
+    "break_rounds_debated": 11,
+    "atss": 248.04054,
+    "avg_margins": 7.98077,
+    "avg_win_margin": 7.98077,
+    "avg_loss_margin": 4.90909,
+    "net_margin": 3.68919,
     "highest_achievement": "Champion",
     "highest_break": "Champion",
-    "rank": 13
+    "rank": 14
   },
   {
     "team_name": "BSC A",
@@ -305,7 +327,29 @@
     "net_margin": 3.20588,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 14
+    "rank": 15
+  },
+  {
+    "team_name": "STC A",
+    "institution": "S. Thomas' College",
+    "tournaments_count": 6,
+    "tournaments_debated": 6,
+    "break_percentage": 66.66667,
+    "win_percentage": 58.97436,
+    "opp_prop_split": {
+      "prop_win_percentage": 50.0,
+      "opp_win_percentage": 65.21739
+    },
+    "rounds_debated": 39,
+    "break_rounds_debated": 7,
+    "atss": 247.13542,
+    "avg_margins": 7.3,
+    "avg_win_margin": 7.3,
+    "avg_loss_margin": 3.34722,
+    "net_margin": 3.30729,
+    "highest_achievement": "Quarterfinalist",
+    "highest_break": "Quarterfinalist",
+    "rank": 16
   },
   {
     "team_name": "SACK A",
@@ -327,29 +371,7 @@
     "net_margin": 3.23529,
     "highest_achievement": "Quarterfinalist",
     "highest_break": "Quarterfinalist",
-    "rank": 15
-  },
-  {
-    "team_name": "STC A",
-    "institution": "S. Thomas' College",
-    "tournaments_count": 5,
-    "tournaments_debated": 5,
-    "break_percentage": 60.0,
-    "win_percentage": 60.60606,
-    "opp_prop_split": {
-      "prop_win_percentage": 50.0,
-      "opp_win_percentage": 68.42105
-    },
-    "rounds_debated": 33,
-    "break_rounds_debated": 6,
-    "atss": 246.90123,
-    "avg_margins": 6.97059,
-    "avg_win_margin": 6.97059,
-    "avg_loss_margin": 3.81667,
-    "net_margin": 2.97531,
-    "highest_achievement": "Quarterfinalist",
-    "highest_break": "Quarterfinalist",
-    "rank": 16
+    "rank": 17
   },
   {
     "team_name": "LC B",
@@ -371,7 +393,7 @@
     "net_margin": 0.46154,
     "highest_achievement": "Quarterfinalist",
     "highest_break": "Quarterfinalist",
-    "rank": 17
+    "rank": 18
   },
   {
     "team_name": "HFC B",
@@ -393,7 +415,7 @@
     "net_margin": 2.47727,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 18
+    "rank": 19
   },
   {
     "team_name": "DS B",
@@ -415,7 +437,7 @@
     "net_margin": 0.58108,
     "highest_achievement": "Finalist",
     "highest_break": "Finalist",
-    "rank": 19
+    "rank": 20
   },
   {
     "team_name": "GCD A",
@@ -437,29 +459,29 @@
     "net_margin": 0.10417,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 20
+    "rank": 21
   },
   {
     "team_name": "STC B",
     "institution": "S. Thomas' College",
-    "tournaments_count": 3,
-    "tournaments_debated": 3,
-    "break_percentage": 33.33333,
-    "win_percentage": 52.63158,
+    "tournaments_count": 4,
+    "tournaments_debated": 4,
+    "break_percentage": 25.0,
+    "win_percentage": 54.16667,
     "opp_prop_split": {
-      "prop_win_percentage": 45.45455,
-      "opp_win_percentage": 62.5
+      "prop_win_percentage": 46.15385,
+      "opp_win_percentage": 63.63636
     },
-    "rounds_debated": 19,
+    "rounds_debated": 24,
     "break_rounds_debated": 2,
-    "atss": 244.25,
-    "avg_margins": 5.8125,
-    "avg_win_margin": 5.8125,
-    "avg_loss_margin": 4.25,
-    "net_margin": 0.78125,
+    "atss": 244.33333,
+    "avg_margins": 5.04545,
+    "avg_win_margin": 5.04545,
+    "avg_loss_margin": 4.75,
+    "net_margin": 0.38095,
     "highest_achievement": "Quarterfinalist",
     "highest_break": "Quarterfinalist",
-    "rank": 21
+    "rank": 22
   },
   {
     "team_name": "TCK B",
@@ -481,7 +503,7 @@
     "net_margin": -0.99324,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 22
+    "rank": 23
   },
   {
     "team_name": "IC A",
@@ -503,7 +525,29 @@
     "net_margin": 1.70192,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 23
+    "rank": 24
+  },
+  {
+    "team_name": "BC B",
+    "institution": "Bishop's College",
+    "tournaments_count": 5,
+    "tournaments_debated": 5,
+    "break_percentage": 20.0,
+    "win_percentage": 46.42857,
+    "opp_prop_split": {
+      "prop_win_percentage": 46.15385,
+      "opp_win_percentage": 46.66667
+    },
+    "rounds_debated": 28,
+    "break_rounds_debated": 1,
+    "atss": 243.37037,
+    "avg_margins": 4.23077,
+    "avg_win_margin": 4.23077,
+    "avg_loss_margin": 5.35714,
+    "net_margin": -0.74074,
+    "highest_achievement": "Octofinalist",
+    "highest_break": "Octofinalist",
+    "rank": 25
   },
   {
     "team_name": "SPC A",
@@ -525,7 +569,7 @@
     "net_margin": -0.09091,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 24
+    "rank": 26
   },
   {
     "team_name": "HFC A",
@@ -547,7 +591,7 @@
     "net_margin": 0.22973,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 25
+    "rank": 27
   },
   {
     "team_name": "VV B",
@@ -569,51 +613,29 @@
     "net_margin": -0.90625,
     "highest_achievement": "Quarterfinalist",
     "highest_break": "Quarterfinalist",
-    "rank": 26
-  },
-  {
-    "team_name": "BC B",
-    "institution": "Bishop's College",
-    "tournaments_count": 4,
-    "tournaments_debated": 4,
-    "break_percentage": 25.0,
-    "win_percentage": 43.47826,
-    "opp_prop_split": {
-      "prop_win_percentage": 45.45455,
-      "opp_win_percentage": 41.66667
-    },
-    "rounds_debated": 23,
-    "break_rounds_debated": 1,
-    "atss": 243.09091,
-    "avg_margins": 3.25,
-    "avg_win_margin": 3.25,
-    "avg_loss_margin": 4.91667,
-    "net_margin": -1.20455,
-    "highest_achievement": "Octofinalist",
-    "highest_break": "Octofinalist",
-    "rank": 27
+    "rank": 28
   },
   {
     "team_name": "AC B",
     "institution": "Ananda College",
-    "tournaments_count": 6,
-    "tournaments_debated": 6,
-    "break_percentage": 33.33333,
-    "win_percentage": 48.64865,
+    "tournaments_count": 7,
+    "tournaments_debated": 7,
+    "break_percentage": 28.57143,
+    "win_percentage": 47.61905,
     "opp_prop_split": {
-      "prop_win_percentage": 43.75,
-      "opp_win_percentage": 52.38095
+      "prop_win_percentage": 44.44444,
+      "opp_win_percentage": 50.0
     },
-    "rounds_debated": 37,
+    "rounds_debated": 42,
     "break_rounds_debated": 5,
-    "atss": 242.84946,
-    "avg_margins": 6.19048,
-    "avg_win_margin": 6.19048,
-    "avg_loss_margin": 5.79412,
-    "net_margin": -0.25269,
+    "atss": 242.91204,
+    "avg_margins": 6.76042,
+    "avg_win_margin": 6.76042,
+    "avg_loss_margin": 5.875,
+    "net_margin": -0.14815,
     "highest_achievement": "Quarterfinalist",
     "highest_break": "Quarterfinalist",
-    "rank": 28
+    "rank": 29
   },
   {
     "team_name": "MC A",
@@ -635,7 +657,7 @@
     "net_margin": 0.31818,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 29
+    "rank": 30
   },
   {
     "team_name": "Swing",
@@ -657,7 +679,7 @@
     "net_margin": -0.06522,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 30
+    "rank": 31
   },
   {
     "team_name": "SJC A",
@@ -679,7 +701,7 @@
     "net_margin": -1.62,
     "highest_achievement": "Octofinalist",
     "highest_break": "Octofinalist",
-    "rank": 31
+    "rank": 32
   },
   {
     "team_name": "AC C",
@@ -701,29 +723,29 @@
     "net_margin": -2.32353,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 32
+    "rank": 33
   },
   {
     "team_name": "AIS B",
     "institution": "Asian International School",
-    "tournaments_count": 5,
-    "tournaments_debated": 5,
-    "break_percentage": 20.0,
-    "win_percentage": 39.28571,
+    "tournaments_count": 6,
+    "tournaments_debated": 6,
+    "break_percentage": 0.0,
+    "win_percentage": 39.39394,
     "opp_prop_split": {
-      "prop_win_percentage": 40.0,
-      "opp_win_percentage": 38.46154
+      "prop_win_percentage": 44.44444,
+      "opp_win_percentage": 33.33333
     },
-    "rounds_debated": 28,
-    "break_rounds_debated": 1,
-    "atss": 240.9537,
-    "avg_margins": 4.8,
-    "avg_win_margin": 4.8,
-    "avg_loss_margin": 6.52941,
-    "net_margin": -2.33333,
+    "rounds_debated": 33,
+    "break_rounds_debated": 0,
+    "atss": 241.00781,
+    "avg_margins": 6.08333,
+    "avg_win_margin": 6.08333,
+    "avg_loss_margin": 6.825,
+    "net_margin": -1.98438,
     "highest_achievement": "Novice Finalist",
     "highest_break": "Novice Finalist",
-    "rank": 33
+    "rank": 34
   },
   {
     "team_name": "HIS A",
@@ -743,28 +765,6 @@
     "avg_win_margin": 5.5,
     "avg_loss_margin": 6.92857,
     "net_margin": -1.75,
-    "highest_achievement": "-",
-    "highest_break": "-",
-    "rank": 34
-  },
-  {
-    "team_name": "HCK B",
-    "institution": "Hillwood College Kandy",
-    "tournaments_count": 5,
-    "tournaments_debated": 5,
-    "break_percentage": 0.0,
-    "win_percentage": 33.33333,
-    "opp_prop_split": {
-      "prop_win_percentage": 33.33333,
-      "opp_win_percentage": 33.33333
-    },
-    "rounds_debated": 27,
-    "break_rounds_debated": 0,
-    "atss": 240.57407,
-    "avg_margins": 5.77778,
-    "avg_win_margin": 5.77778,
-    "avg_loss_margin": 4.47222,
-    "net_margin": -1.05556,
     "highest_achievement": "-",
     "highest_break": "-",
     "rank": 35
@@ -858,6 +858,28 @@
     "rank": 39
   },
   {
+    "team_name": "HCK B",
+    "institution": "Hillwood College Kandy",
+    "tournaments_count": 6,
+    "tournaments_debated": 6,
+    "break_percentage": 0.0,
+    "win_percentage": 31.25,
+    "opp_prop_split": {
+      "prop_win_percentage": 27.77778,
+      "opp_win_percentage": 35.71429
+    },
+    "rounds_debated": 32,
+    "break_rounds_debated": 0,
+    "atss": 239.78125,
+    "avg_margins": 5.75,
+    "avg_win_margin": 5.75,
+    "avg_loss_margin": 4.88636,
+    "net_margin": -1.5625,
+    "highest_achievement": "-",
+    "highest_break": "-",
+    "rank": 40
+  },
+  {
     "team_name": "SACK B",
     "institution": "St. Anthony's College Kandy",
     "tournaments_count": 3,
@@ -877,7 +899,7 @@
     "net_margin": -2.93333,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 40
+    "rank": 41
   },
   {
     "team_name": "VV C",
@@ -899,7 +921,7 @@
     "net_margin": -3.56667,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 41
+    "rank": 42
   },
   {
     "team_name": "NC B",
@@ -921,7 +943,7 @@
     "net_margin": -6.17647,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 42
+    "rank": 43
   },
   {
     "team_name": "DIS A",
@@ -943,7 +965,7 @@
     "net_margin": -9.16667,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 43
+    "rank": 44
   },
   {
     "team_name": "HC A",
@@ -965,6 +987,6 @@
     "net_margin": -10.39286,
     "highest_achievement": "-",
     "highest_break": "-",
-    "rank": 44
+    "rank": 45
   }
 ]

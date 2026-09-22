@@ -17,8 +17,8 @@ def test_tournament_rankings(conn):
     engine = TournamentRankingsEngine(conn)
     rankings = engine.get_tournament_rankings()
 
-    # Exactly 8 active contested tournaments
-    assert len(rankings) == 8
+    # Exactly 9 active contested tournaments
+    assert len(rankings) == 9
 
     # Strictly non-increasing APTTSS
     apttss_scores = [r["apttss"] for r in rankings]
@@ -75,5 +75,5 @@ def test_query_facade(conn):
     t_rankings = query.get_tournament_rankings()
     act_lb = query.get_activity_leaderboard()
 
-    assert len(t_rankings) == 8
+    assert len(t_rankings) == 9
     assert len(act_lb) >= 500

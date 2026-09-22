@@ -17,14 +17,14 @@
   {
     "team_name": "RC A",
     "institution": "Royal College",
-    "atss": 251.606,
-    "win_percentage": 91.891,
-    "awpt": 4.857,
-    "wins_per_prelim": 0.918,
-    "stdev": 2.167,
-    "tournaments_debated": 7,
-    "prelims_debated": 37,
-    "total_wins": 34,
+    "atss": 251.592,
+    "win_percentage": 90.476,
+    "awpt": 4.75,
+    "wins_per_prelim": 0.904,
+    "stdev": 2.065,
+    "tournaments_debated": 8,
+    "prelims_debated": 42,
+    "total_wins": 38,
     "highest_achievement": "Champion",
     "achievement_rank": 1,
     "rank": 2
@@ -32,14 +32,14 @@
   {
     "team_name": "DS A",
     "institution": "D. S. Senanayake College",
-    "atss": 251.537,
-    "win_percentage": 88.095,
-    "awpt": 4.625,
-    "wins_per_prelim": 0.88,
-    "stdev": 3.422,
-    "tournaments_debated": 8,
-    "prelims_debated": 42,
-    "total_wins": 37,
+    "atss": 251.307,
+    "win_percentage": 85.106,
+    "awpt": 4.444,
+    "wins_per_prelim": 0.851,
+    "stdev": 3.323,
+    "tournaments_debated": 9,
+    "prelims_debated": 47,
+    "total_wins": 40,
     "highest_achievement": "Champion",
     "achievement_rank": 1,
     "rank": 3
@@ -47,14 +47,14 @@
   {
     "team_name": "RC B",
     "institution": "Royal College",
-    "atss": 250.091,
-    "win_percentage": 74.074,
+    "atss": 250.259,
+    "win_percentage": 75,
     "awpt": 4,
-    "wins_per_prelim": 0.74,
-    "stdev": 2.431,
-    "tournaments_debated": 5,
-    "prelims_debated": 27,
-    "total_wins": 20,
+    "wins_per_prelim": 0.75,
+    "stdev": 2.558,
+    "tournaments_debated": 6,
+    "prelims_debated": 32,
+    "total_wins": 24,
     "highest_achievement": "Champion",
     "achievement_rank": 1,
     "rank": 4
@@ -75,21 +75,6 @@
     "rank": 5
   },
   {
-    "team_name": "HCK A",
-    "institution": "Hillwood College Kandy",
-    "atss": 249.16,
-    "win_percentage": 77.777,
-    "awpt": 4.2,
-    "wins_per_prelim": 0.777,
-    "stdev": 2.603,
-    "tournaments_debated": 5,
-    "prelims_debated": 27,
-    "total_wins": 21,
-    "highest_achievement": "Finalist",
-    "achievement_rank": 2,
-    "rank": 6
-  },
-  {
     "team_name": "VV A",
     "institution": "Visakha Vidyalaya",
     "atss": 249.105,
@@ -102,22 +87,22 @@
     "total_wins": 22,
     "highest_achievement": "Finalist",
     "achievement_rank": 2,
-    "rank": 7
+    "rank": 6
   },
   {
     "team_name": "AC A",
     "institution": "Ananda College",
-    "atss": 248.999,
-    "win_percentage": 64.285,
-    "awpt": 3.375,
-    "wins_per_prelim": 0.642,
-    "stdev": 3.029,
-    "tournaments_debated": 8,
-    "prelims_debated": 42,
-    "total_wins": 27,
+    "atss": 249.073,
+    "win_percentage": 63.829,
+    "awpt": 3.333,
+    "wins_per_prelim": 0.638,
+    "stdev": 2.95,
+    "tournaments_debated": 9,
+    "prelims_debated": 47,
+    "total_wins": 30,
     "highest_achievement": "Champion",
     "achievement_rank": 1,
-    "rank": 8
+    "rank": 7
   },
   {
     "team_name": "LC A",
@@ -132,22 +117,52 @@
     "total_wins": 18,
     "highest_achievement": "Quarterfinalist",
     "achievement_rank": 4,
+    "rank": 8
+  },
+  {
+    "team_name": "BC A",
+    "institution": "Bishop's College",
+    "atss": 248.9,
+    "win_percentage": 80,
+    "awpt": 4,
+    "wins_per_prelim": 0.8,
+    "stdev": 2.797,
+    "tournaments_debated": 3,
+    "prelims_debated": 15,
+    "total_wins": 12,
+    "highest_achievement": "Champion",
+    "achievement_rank": 1,
     "rank": 9
   },
   {
-    "team_name": "SBC A",
-    "institution": "St. Bridget's Convent",
-    "atss": 248.411,
-    "win_percentage": 65.625,
-    "awpt": 3.5,
-    "wins_per_prelim": 0.656,
-    "stdev": 3.36,
+    "team_name": "GCC A",
+    "institution": "Gateway College Colombo",
+    "atss": 248.542,
+    "win_percentage": 64.705,
+    "awpt": 3.666,
+    "wins_per_prelim": 0.647,
+    "stdev": 2.706,
+    "tournaments_debated": 3,
+    "prelims_debated": 17,
+    "total_wins": 11,
+    "highest_achievement": "Quarterfinalist",
+    "achievement_rank": 4,
+    "rank": 10
+  },
+  {
+    "team_name": "HCK A",
+    "institution": "Hillwood College Kandy",
+    "atss": 248.5,
+    "win_percentage": 75,
+    "awpt": 4,
+    "wins_per_prelim": 0.75,
+    "stdev": 2.855,
     "tournaments_debated": 6,
     "prelims_debated": 32,
-    "total_wins": 21,
-    "highest_achievement": "Semifinalist",
-    "achievement_rank": 3,
-    "rank": 10
+    "total_wins": 24,
+    "highest_achievement": "Finalist",
+    "achievement_rank": 2,
+    "rank": 11
   },
   {
     "team_name": "Moir A",
@@ -162,34 +177,19 @@
     "total_wins": 19,
     "highest_achievement": "Semifinalist",
     "achievement_rank": 3,
-    "rank": 11
-  },
-  {
-    "team_name": "GCC A",
-    "institution": "Gateway College Colombo",
-    "atss": 248.214,
-    "win_percentage": 66.666,
-    "awpt": 4,
-    "wins_per_prelim": 0.666,
-    "stdev": 1.876,
-    "tournaments_debated": 2,
-    "prelims_debated": 12,
-    "total_wins": 8,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
     "rank": 12
   },
   {
-    "team_name": "BC A",
-    "institution": "Bishop's College",
-    "atss": 248.05,
-    "win_percentage": 70,
-    "awpt": 3.5,
-    "wins_per_prelim": 0.7,
-    "stdev": 2.29,
-    "tournaments_debated": 2,
-    "prelims_debated": 10,
-    "total_wins": 7,
+    "team_name": "SBC A",
+    "institution": "St. Bridget's Convent",
+    "atss": 248.21,
+    "win_percentage": 64.864,
+    "awpt": 3.428,
+    "wins_per_prelim": 0.648,
+    "stdev": 3.239,
+    "tournaments_debated": 7,
+    "prelims_debated": 37,
+    "total_wins": 24,
     "highest_achievement": "Semifinalist",
     "achievement_rank": 3,
     "rank": 13
@@ -220,8 +220,8 @@
     "tournaments_debated": 4,
     "prelims_debated": 22,
     "total_wins": 13,
-    "highest_achievement": "Quarterfinalist",
-    "achievement_rank": 4,
+    "highest_achievement": "Partial Octofinalist",
+    "achievement_rank": 5,
     "rank": 15
   },
   {
@@ -235,9 +235,24 @@
     "tournaments_debated": 3,
     "prelims_debated": 17,
     "total_wins": 11,
-    "highest_achievement": "Quarterfinalist",
-    "achievement_rank": 4,
+    "highest_achievement": "Partial Octofinalist",
+    "achievement_rank": 5,
     "rank": 16
+  },
+  {
+    "team_name": "AIS A",
+    "institution": "Asian International School",
+    "atss": 247.32,
+    "win_percentage": 72,
+    "awpt": 3.6,
+    "wins_per_prelim": 0.72,
+    "stdev": 7.025,
+    "tournaments_debated": 5,
+    "prelims_debated": 25,
+    "total_wins": 18,
+    "highest_achievement": "Champion",
+    "achievement_rank": 1,
+    "rank": 17
   },
   {
     "team_name": "SACK A",
@@ -252,7 +267,22 @@
     "total_wins": 10,
     "highest_achievement": "Octofinalist",
     "achievement_rank": 6,
-    "rank": 17
+    "rank": 18
+  },
+  {
+    "team_name": "STC A",
+    "institution": "S. Thomas' College",
+    "atss": 246.963,
+    "win_percentage": 62.5,
+    "awpt": 3.333,
+    "wins_per_prelim": 0.625,
+    "stdev": 3.408,
+    "tournaments_debated": 6,
+    "prelims_debated": 32,
+    "total_wins": 20,
+    "highest_achievement": "Quarterfinalist",
+    "achievement_rank": 4,
+    "rank": 19
   },
   {
     "team_name": "LC White",
@@ -267,36 +297,6 @@
     "total_wins": 6,
     "highest_achievement": "Quarterfinalist",
     "achievement_rank": 4,
-    "rank": 18
-  },
-  {
-    "team_name": "STC A",
-    "institution": "S. Thomas' College",
-    "atss": 246.676,
-    "win_percentage": 62.962,
-    "awpt": 3.4,
-    "wins_per_prelim": 0.629,
-    "stdev": 3.486,
-    "tournaments_debated": 5,
-    "prelims_debated": 27,
-    "total_wins": 17,
-    "highest_achievement": "Quarterfinalist",
-    "achievement_rank": 4,
-    "rank": 19
-  },
-  {
-    "team_name": "AIS A",
-    "institution": "Asian International School",
-    "atss": 246.45,
-    "win_percentage": 70,
-    "awpt": 3.5,
-    "wins_per_prelim": 0.7,
-    "stdev": 7.606,
-    "tournaments_debated": 4,
-    "prelims_debated": 20,
-    "total_wins": 14,
-    "highest_achievement": "Champion",
-    "achievement_rank": 1,
     "rank": 20
   },
   {
@@ -315,6 +315,21 @@
     "rank": 21
   },
   {
+    "team_name": "SIS",
+    "institution": "Stafford International School",
+    "atss": 245.75,
+    "win_percentage": 55.555,
+    "awpt": 2.5,
+    "wins_per_prelim": 0.555,
+    "stdev": 4.248,
+    "tournaments_debated": 2,
+    "prelims_debated": 9,
+    "total_wins": 5,
+    "highest_achievement": "Quarterfinalist",
+    "achievement_rank": 4,
+    "rank": 22
+  },
+  {
     "team_name": "DS B",
     "institution": "D. S. Senanayake College",
     "atss": 245.105,
@@ -327,7 +342,7 @@
     "total_wins": 21,
     "highest_achievement": "Finalist",
     "achievement_rank": 2,
-    "rank": 22
+    "rank": 23
   },
   {
     "team_name": "GCD A",
@@ -342,22 +357,37 @@
     "total_wins": 17,
     "highest_achievement": "Semifinalist",
     "achievement_rank": 3,
-    "rank": 23
+    "rank": 24
   },
   {
     "team_name": "STC B",
     "institution": "S. Thomas' College",
-    "atss": 244.133,
-    "win_percentage": 52.941,
+    "atss": 244.25,
+    "win_percentage": 54.545,
     "awpt": 3,
-    "wins_per_prelim": 0.529,
-    "stdev": 4.351,
-    "tournaments_debated": 3,
-    "prelims_debated": 17,
-    "total_wins": 9,
+    "wins_per_prelim": 0.545,
+    "stdev": 4.973,
+    "tournaments_debated": 4,
+    "prelims_debated": 22,
+    "total_wins": 12,
     "highest_achievement": "Octofinalist",
     "achievement_rank": 6,
-    "rank": 24
+    "rank": 25
+  },
+  {
+    "team_name": "BC B",
+    "institution": "Bishop's College",
+    "atss": 244.2,
+    "win_percentage": 50,
+    "awpt": 2.5,
+    "wins_per_prelim": 0.5,
+    "stdev": 5.083,
+    "tournaments_debated": 2,
+    "prelims_debated": 10,
+    "total_wins": 5,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 26
   },
   {
     "team_name": "HFC B",
@@ -372,7 +402,7 @@
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 25
+    "rank": 27
   },
   {
     "team_name": "VV B",
@@ -387,7 +417,7 @@
     "total_wins": 12,
     "highest_achievement": "Quarterfinalist",
     "achievement_rank": 4,
-    "rank": 26
+    "rank": 28
   },
   {
     "team_name": "TCK B",
@@ -402,7 +432,7 @@
     "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 27
+    "rank": 29
   },
   {
     "team_name": "SBC B",
@@ -417,7 +447,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 28
+    "rank": 30
   },
   {
     "team_name": "SPC A",
@@ -430,9 +460,24 @@
     "tournaments_debated": 4,
     "prelims_debated": 22,
     "total_wins": 12,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
-    "rank": 29
+    "highest_achievement": "Double Partial Octofinalist",
+    "achievement_rank": 7,
+    "rank": 31
+  },
+  {
+    "team_name": "Metho A",
+    "institution": "Methodist College",
+    "atss": 243.245,
+    "win_percentage": 44.444,
+    "awpt": 2.4,
+    "wins_per_prelim": 0.444,
+    "stdev": 4.666,
+    "tournaments_debated": 5,
+    "prelims_debated": 27,
+    "total_wins": 12,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 32
   },
   {
     "team_name": "IC A",
@@ -447,7 +492,7 @@
     "total_wins": 11,
     "highest_achievement": "Octofinalist",
     "achievement_rank": 6,
-    "rank": 30
+    "rank": 33
   },
   {
     "team_name": "BC Purple",
@@ -462,7 +507,22 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 31
+    "rank": 34
+  },
+  {
+    "team_name": "AC B",
+    "institution": "Ananda College",
+    "atss": 242.464,
+    "win_percentage": 43.75,
+    "awpt": 2.333,
+    "wins_per_prelim": 0.437,
+    "stdev": 5.772,
+    "tournaments_debated": 6,
+    "prelims_debated": 32,
+    "total_wins": 14,
+    "highest_achievement": "Quarterfinalist",
+    "achievement_rank": 4,
+    "rank": 35
   },
   {
     "team_name": "NC Maroon",
@@ -477,37 +537,7 @@
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 32
-  },
-  {
-    "team_name": "Metho A",
-    "institution": "Methodist College",
-    "atss": 242.307,
-    "win_percentage": 40.909,
-    "awpt": 2.25,
-    "wins_per_prelim": 0.409,
-    "stdev": 4.638,
-    "tournaments_debated": 4,
-    "prelims_debated": 22,
-    "total_wins": 9,
-    "highest_achievement": "Preliminary Rounds",
-    "achievement_rank": 8,
-    "rank": 33
-  },
-  {
-    "team_name": "AC B",
-    "institution": "Ananda College",
-    "atss": 242.297,
-    "win_percentage": 44.444,
-    "awpt": 2.4,
-    "wins_per_prelim": 0.444,
-    "stdev": 6.038,
-    "tournaments_debated": 5,
-    "prelims_debated": 27,
-    "total_wins": 12,
-    "highest_achievement": "Quarterfinalist",
-    "achievement_rank": 4,
-    "rank": 34
+    "rank": 36
   },
   {
     "team_name": "HFC A",
@@ -520,9 +550,9 @@
     "tournaments_debated": 5,
     "prelims_debated": 27,
     "total_wins": 13,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
-    "rank": 35
+    "highest_achievement": "Double Partial Octofinalist",
+    "achievement_rank": 7,
+    "rank": 37
   },
   {
     "team_name": "IIGS A",
@@ -537,7 +567,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 36
+    "rank": 38
   },
   {
     "team_name": "GCD B",
@@ -552,7 +582,7 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 37
+    "rank": 39
   },
   {
     "team_name": "AV A",
@@ -567,7 +597,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 38
+    "rank": 40
   },
   {
     "team_name": "MLC A",
@@ -582,7 +612,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 39
+    "rank": 41
   },
   {
     "team_name": "SJC A",
@@ -595,9 +625,24 @@
     "tournaments_debated": 5,
     "prelims_debated": 27,
     "total_wins": 12,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
-    "rank": 40
+    "highest_achievement": "Double Partial Octofinalist",
+    "achievement_rank": 7,
+    "rank": 42
+  },
+  {
+    "team_name": "GCC B",
+    "institution": "Gateway College Colombo",
+    "atss": 240.457,
+    "win_percentage": 33.333,
+    "awpt": 2,
+    "wins_per_prelim": 0.333,
+    "stdev": 4.337,
+    "tournaments_debated": 2,
+    "prelims_debated": 12,
+    "total_wins": 4,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 43
   },
   {
     "team_name": "DBV A",
@@ -612,22 +657,7 @@
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 41
-  },
-  {
-    "team_name": "HCK B",
-    "institution": "Hillwood College Kandy",
-    "atss": 240.2,
-    "win_percentage": 31.818,
-    "awpt": 1.75,
-    "wins_per_prelim": 0.318,
-    "stdev": 6.227,
-    "tournaments_debated": 4,
-    "prelims_debated": 22,
-    "total_wins": 7,
-    "highest_achievement": "Preliminary Rounds",
-    "achievement_rank": 8,
-    "rank": 42
+    "rank": 44
   },
   {
     "team_name": "RC C",
@@ -642,7 +672,7 @@
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 43
+    "rank": 45
   },
   {
     "team_name": "SACK B",
@@ -657,7 +687,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 44
+    "rank": 46
   },
   {
     "team_name": "AC C",
@@ -672,7 +702,7 @@
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 45
+    "rank": 47
   },
   {
     "team_name": "EIK A",
@@ -687,7 +717,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 46
+    "rank": 48
   },
   {
     "team_name": "DIS B",
@@ -702,7 +732,7 @@
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 47
+    "rank": 49
   },
   {
     "team_name": "SJCJ A",
@@ -717,7 +747,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 48
+    "rank": 50
   },
   {
     "team_name": "VV C",
@@ -732,7 +762,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 49
+    "rank": 51
   },
   {
     "team_name": "AV B",
@@ -747,7 +777,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 50
+    "rank": 52
   },
   {
     "team_name": "NC A",
@@ -762,7 +792,22 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 51
+    "rank": 53
+  },
+  {
+    "team_name": "HCK B",
+    "institution": "Hillwood College Kandy",
+    "atss": 239.26,
+    "win_percentage": 29.629,
+    "awpt": 1.6,
+    "wins_per_prelim": 0.296,
+    "stdev": 6.174,
+    "tournaments_debated": 5,
+    "prelims_debated": 27,
+    "total_wins": 8,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 54
   },
   {
     "team_name": "IC B",
@@ -777,7 +822,7 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 52
+    "rank": 55
   },
   {
     "team_name": "SPC B",
@@ -792,7 +837,22 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 53
+    "rank": 56
+  },
+  {
+    "team_name": "NC",
+    "institution": "Nalanda College",
+    "atss": 239,
+    "win_percentage": 40,
+    "awpt": 2,
+    "wins_per_prelim": 0.4,
+    "stdev": 4.496,
+    "tournaments_debated": 2,
+    "prelims_debated": 10,
+    "total_wins": 4,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 57
   },
   {
     "team_name": "TCK C",
@@ -807,22 +867,22 @@
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 54
+    "rank": 58
   },
   {
     "team_name": "AIS B",
     "institution": "Asian International School",
-    "atss": 238.016,
-    "win_percentage": 33.333,
-    "awpt": 1.666,
-    "wins_per_prelim": 0.333,
-    "stdev": 5.407,
-    "tournaments_debated": 3,
-    "prelims_debated": 15,
-    "total_wins": 5,
+    "atss": 238.837,
+    "win_percentage": 35,
+    "awpt": 1.75,
+    "wins_per_prelim": 0.35,
+    "stdev": 5.193,
+    "tournaments_debated": 4,
+    "prelims_debated": 20,
+    "total_wins": 7,
     "highest_achievement": "Semifinalist",
     "achievement_rank": 3,
-    "rank": 55
+    "rank": 59
   },
   {
     "team_name": "SCG A",
@@ -837,7 +897,7 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 56
+    "rank": 60
   },
   {
     "team_name": "HIS A",
@@ -852,7 +912,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 57
+    "rank": 61
   },
   {
     "team_name": "NC B",
@@ -867,7 +927,7 @@
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 58
+    "rank": 62
   },
   {
     "team_name": "SGCK A",
@@ -882,7 +942,7 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 59
+    "rank": 63
   },
   {
     "team_name": "DS C",
@@ -897,7 +957,7 @@
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 60
+    "rank": 64
   },
   {
     "team_name": "Logos A",
@@ -912,7 +972,7 @@
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 61
+    "rank": 65
   },
   {
     "team_name": "DIS A",
@@ -927,7 +987,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 62
+    "rank": 66
   },
   {
     "team_name": "HC A",
@@ -942,7 +1002,7 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 63
+    "rank": 67
   },
   {
     "team_name": "SVM A",
@@ -957,6 +1017,21 @@
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 64
+    "rank": 68
+  },
+  {
+    "team_name": "STPS A",
+    "institution": "S. Thomas' Preparatory School",
+    "atss": 223.15,
+    "win_percentage": 0,
+    "awpt": 0,
+    "wins_per_prelim": 0,
+    "stdev": 7.838,
+    "tournaments_debated": 2,
+    "prelims_debated": 8,
+    "total_wins": 0,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 69
   }
 ]

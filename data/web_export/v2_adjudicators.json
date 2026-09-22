@@ -2,104 +2,121 @@
   {
     "adjudicator_name": "Kaveesha Mallawaarachchi",
     "institution": "AC",
-    "aass": 69.686,
-    "aatss": 244.48,
-    "prop_wins": 9,
-    "opp_wins": 16,
-    "prop_opp_bias": "36% Prop / 64% Opp",
-    "prop_bias_pct": 36,
-    "opp_bias_pct": 64,
-    "prelims_adjudicated": 25,
+    "aass": 69.729,
+    "aatss": 244.586,
+    "prop_wins": 10,
+    "opp_wins": 19,
+    "prop_opp_bias": "34.482% Prop / 65.517% Opp",
+    "prop_bias_pct": 34.482,
+    "opp_bias_pct": 65.517,
+    "prelims_adjudicated": 29,
     "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 25,
-    "tournaments_adjudicated": 5,
-    "ballots_count": 25,
+    "total_rounds_adjudicated": 29,
+    "tournaments_adjudicated": 6,
+    "ballots_count": 29,
     "rank": 1
-  },
-  {
-    "adjudicator_name": "Nethma Madawala",
-    "institution": "DS",
-    "aass": 69.646,
-    "aatss": 243.53,
-    "prop_wins": 13,
-    "opp_wins": 12,
-    "prop_opp_bias": "52% Prop / 48% Opp",
-    "prop_bias_pct": 52,
-    "opp_bias_pct": 48,
-    "prelims_adjudicated": 25,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 25,
-    "tournaments_adjudicated": 8,
-    "ballots_count": 25,
-    "rank": 2
   },
   {
     "adjudicator_name": "Sanithma Jayasooriya",
     "institution": "HCK",
-    "aass": 70.489,
-    "aatss": 246.979,
-    "prop_wins": 13,
-    "opp_wins": 11,
-    "prop_opp_bias": "54.166% Prop / 45.833% Opp",
-    "prop_bias_pct": 54.166,
-    "opp_bias_pct": 45.833,
-    "prelims_adjudicated": 24,
+    "aass": 70.482,
+    "aatss": 246.931,
+    "prop_wins": 15,
+    "opp_wins": 14,
+    "prop_opp_bias": "51.724% Prop / 48.275% Opp",
+    "prop_bias_pct": 51.724,
+    "opp_bias_pct": 48.275,
+    "prelims_adjudicated": 29,
     "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 24,
-    "tournaments_adjudicated": 8,
-    "ballots_count": 24,
+    "total_rounds_adjudicated": 29,
+    "tournaments_adjudicated": 9,
+    "ballots_count": 29,
+    "rank": 2
+  },
+  {
+    "adjudicator_name": "Nethma Madawala",
+    "institution": "HFC",
+    "aass": 69.66,
+    "aatss": 243.5,
+    "prop_wins": 13,
+    "opp_wins": 15,
+    "prop_opp_bias": "46.428% Prop / 53.571% Opp",
+    "prop_bias_pct": 46.428,
+    "opp_bias_pct": 53.571,
+    "prelims_adjudicated": 28,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 28,
+    "tournaments_adjudicated": 9,
+    "ballots_count": 28,
     "rank": 3
   },
   {
     "adjudicator_name": "Senuka Seneviratne",
-    "institution": "RC",
-    "aass": 70.162,
-    "aatss": 245.784,
-    "prop_wins": 12,
-    "opp_wins": 10,
-    "prop_opp_bias": "54.545% Prop / 45.454% Opp",
-    "prop_bias_pct": 54.545,
-    "opp_bias_pct": 45.454,
-    "prelims_adjudicated": 22,
+    "institution": "TCK",
+    "aass": 70.234,
+    "aatss": 246,
+    "prop_wins": 16,
+    "opp_wins": 11,
+    "prop_opp_bias": "59.259% Prop / 40.74% Opp",
+    "prop_bias_pct": 59.259,
+    "opp_bias_pct": 40.74,
+    "prelims_adjudicated": 27,
     "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 22,
-    "tournaments_adjudicated": 7,
-    "ballots_count": 22,
+    "total_rounds_adjudicated": 27,
+    "tournaments_adjudicated": 8,
+    "ballots_count": 27,
     "rank": 4
   },
   {
     "adjudicator_name": "Amnah Jiffrey",
-    "institution": "Independent Adjudicator",
-    "aass": 68.693,
-    "aatss": 240.227,
-    "prop_wins": 9,
-    "opp_wins": 13,
-    "prop_opp_bias": "40.909% Prop / 59.09% Opp",
-    "prop_bias_pct": 40.909,
-    "opp_bias_pct": 59.09,
-    "prelims_adjudicated": 22,
+    "institution": "DS",
+    "aass": 68.83,
+    "aatss": 240.788,
+    "prop_wins": 10,
+    "opp_wins": 16,
+    "prop_opp_bias": "38.461% Prop / 61.538% Opp",
+    "prop_bias_pct": 38.461,
+    "opp_bias_pct": 61.538,
+    "prelims_adjudicated": 26,
     "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 22,
-    "tournaments_adjudicated": 6,
-    "ballots_count": 22,
+    "total_rounds_adjudicated": 26,
+    "tournaments_adjudicated": 7,
+    "ballots_count": 26,
     "rank": 5
   },
   {
     "adjudicator_name": "Akindu Athauda",
     "institution": "SJC",
-    "aass": 69.978,
-    "aatss": 244.921,
-    "prop_wins": 10,
-    "opp_wins": 9,
-    "prop_opp_bias": "52.631% Prop / 47.368% Opp",
-    "prop_bias_pct": 52.631,
-    "opp_bias_pct": 47.368,
+    "aass": 70.065,
+    "aatss": 245.166,
+    "prop_wins": 12,
+    "opp_wins": 12,
+    "prop_opp_bias": "50% Prop / 50% Opp",
+    "prop_bias_pct": 50,
+    "opp_bias_pct": 50,
+    "prelims_adjudicated": 24,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 24,
+    "tournaments_adjudicated": 7,
+    "ballots_count": 24,
+    "rank": 6
+  },
+  {
+    "adjudicator_name": "Adam Dhilshan",
+    "institution": "GCD",
+    "aass": 71.035,
+    "aatss": 248.513,
+    "prop_wins": 9,
+    "opp_wins": 10,
+    "prop_opp_bias": "47.368% Prop / 52.631% Opp",
+    "prop_bias_pct": 47.368,
+    "opp_bias_pct": 52.631,
     "prelims_adjudicated": 19,
     "outrounds_adjudicated": 0,
     "total_rounds_adjudicated": 19,
-    "tournaments_adjudicated": 6,
+    "tournaments_adjudicated": 7,
     "ballots_count": 19,
-    "rank": 6
+    "rank": 7
   },
   {
     "adjudicator_name": "Niranya Rathnayake",
@@ -116,23 +133,6 @@
     "total_rounds_adjudicated": 17,
     "tournaments_adjudicated": 4,
     "ballots_count": 17,
-    "rank": 7
-  },
-  {
-    "adjudicator_name": "Adam Dhilshan",
-    "institution": "GCD",
-    "aass": 71.036,
-    "aatss": 248.562,
-    "prop_wins": 8,
-    "opp_wins": 8,
-    "prop_opp_bias": "50% Prop / 50% Opp",
-    "prop_bias_pct": 50,
-    "opp_bias_pct": 50,
-    "prelims_adjudicated": 16,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 16,
-    "tournaments_adjudicated": 6,
-    "ballots_count": 16,
     "rank": 8
   },
   {
@@ -153,6 +153,23 @@
     "rank": 9
   },
   {
+    "adjudicator_name": "Minithi Hewage",
+    "institution": "NC",
+    "aass": 69.655,
+    "aatss": 242.983,
+    "prop_wins": 7,
+    "opp_wins": 8,
+    "prop_opp_bias": "46.666% Prop / 53.333% Opp",
+    "prop_bias_pct": 46.666,
+    "opp_bias_pct": 53.333,
+    "prelims_adjudicated": 15,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 15,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 15,
+    "rank": 10
+  },
+  {
     "adjudicator_name": "Mevindu Asuramanna",
     "institution": "Independent Adjudicator",
     "aass": 70.678,
@@ -167,7 +184,7 @@
     "total_rounds_adjudicated": 14,
     "tournaments_adjudicated": 4,
     "ballots_count": 14,
-    "rank": 10
+    "rank": 11
   },
   {
     "adjudicator_name": "Sarah Warnakulasuriya",
@@ -183,23 +200,6 @@
     "outrounds_adjudicated": 0,
     "total_rounds_adjudicated": 14,
     "tournaments_adjudicated": 6,
-    "ballots_count": 14,
-    "rank": 11
-  },
-  {
-    "adjudicator_name": "Minithi Hewage",
-    "institution": "NC",
-    "aass": 69.726,
-    "aatss": 243.196,
-    "prop_wins": 7,
-    "opp_wins": 7,
-    "prop_opp_bias": "50% Prop / 50% Opp",
-    "prop_bias_pct": 50,
-    "opp_bias_pct": 50,
-    "prelims_adjudicated": 14,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 14,
-    "tournaments_adjudicated": 3,
     "ballots_count": 14,
     "rank": 12
   },
@@ -221,8 +221,42 @@
     "rank": 13
   },
   {
-    "adjudicator_name": "Rudhesh Ram",
+    "adjudicator_name": "Methira Padeniya",
     "institution": "GCD",
+    "aass": 70.027,
+    "aatss": 244.958,
+    "prop_wins": 10,
+    "opp_wins": 2,
+    "prop_opp_bias": "83.333% Prop / 16.666% Opp",
+    "prop_bias_pct": 83.333,
+    "opp_bias_pct": 16.666,
+    "prelims_adjudicated": 12,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 12,
+    "tournaments_adjudicated": 3,
+    "ballots_count": 12,
+    "rank": 14
+  },
+  {
+    "adjudicator_name": "Yasindu Edussuriya",
+    "institution": "GCN",
+    "aass": 69.946,
+    "aatss": 244.886,
+    "prop_wins": 4,
+    "opp_wins": 7,
+    "prop_opp_bias": "36.363% Prop / 63.636% Opp",
+    "prop_bias_pct": 36.363,
+    "opp_bias_pct": 63.636,
+    "prelims_adjudicated": 11,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 11,
+    "tournaments_adjudicated": 3,
+    "ballots_count": 11,
+    "rank": 15
+  },
+  {
+    "adjudicator_name": "Rudhesh Ram",
+    "institution": "CIS",
     "aass": 70.924,
     "aatss": 248.181,
     "prop_wins": 2,
@@ -235,7 +269,7 @@
     "total_rounds_adjudicated": 11,
     "tournaments_adjudicated": 4,
     "ballots_count": 11,
-    "rank": 14
+    "rank": 16
   },
   {
     "adjudicator_name": "Sithma Hewa Waduge",
@@ -252,7 +286,75 @@
     "total_rounds_adjudicated": 11,
     "tournaments_adjudicated": 4,
     "ballots_count": 11,
-    "rank": 15
+    "rank": 17
+  },
+  {
+    "adjudicator_name": "Thithira Jayakody",
+    "institution": "VV",
+    "aass": 70.621,
+    "aatss": 247.181,
+    "prop_wins": 4,
+    "opp_wins": 7,
+    "prop_opp_bias": "36.363% Prop / 63.636% Opp",
+    "prop_bias_pct": 36.363,
+    "opp_bias_pct": 63.636,
+    "prelims_adjudicated": 11,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 11,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 11,
+    "rank": 18
+  },
+  {
+    "adjudicator_name": "Risindu Piyasena",
+    "institution": "MGCK",
+    "aass": 68.216,
+    "aatss": 238.975,
+    "prop_wins": 6,
+    "opp_wins": 4,
+    "prop_opp_bias": "60% Prop / 40% Opp",
+    "prop_bias_pct": 60,
+    "opp_bias_pct": 40,
+    "prelims_adjudicated": 10,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 10,
+    "tournaments_adjudicated": 6,
+    "ballots_count": 10,
+    "rank": 19
+  },
+  {
+    "adjudicator_name": "Gavin Senaratne",
+    "institution": "VV",
+    "aass": 70.833,
+    "aatss": 247.825,
+    "prop_wins": 5,
+    "opp_wins": 5,
+    "prop_opp_bias": "50% Prop / 50% Opp",
+    "prop_bias_pct": 50,
+    "opp_bias_pct": 50,
+    "prelims_adjudicated": 10,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 10,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 10,
+    "rank": 20
+  },
+  {
+    "adjudicator_name": "Shakeeb Mohideen",
+    "institution": "SBC",
+    "aass": 71.275,
+    "aatss": 249.15,
+    "prop_wins": 4,
+    "opp_wins": 6,
+    "prop_opp_bias": "40% Prop / 60% Opp",
+    "prop_bias_pct": 40,
+    "opp_bias_pct": 60,
+    "prelims_adjudicated": 10,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 10,
+    "tournaments_adjudicated": 8,
+    "ballots_count": 10,
+    "rank": 21
   },
   {
     "adjudicator_name": "Zaid Hussain",
@@ -269,24 +371,24 @@
     "total_rounds_adjudicated": 10,
     "tournaments_adjudicated": 3,
     "ballots_count": 10,
-    "rank": 16
+    "rank": 22
   },
   {
-    "adjudicator_name": "Risindu Piyasena",
-    "institution": "MGCK",
-    "aass": 68.314,
-    "aatss": 239.305,
-    "prop_wins": 5,
+    "adjudicator_name": "Sameesha Dissanayake",
+    "institution": "Metho",
+    "aass": 69.9,
+    "aatss": 244.525,
+    "prop_wins": 6,
     "opp_wins": 4,
-    "prop_opp_bias": "55.555% Prop / 44.444% Opp",
-    "prop_bias_pct": 55.555,
-    "opp_bias_pct": 44.444,
-    "prelims_adjudicated": 9,
+    "prop_opp_bias": "60% Prop / 40% Opp",
+    "prop_bias_pct": 60,
+    "opp_bias_pct": 40,
+    "prelims_adjudicated": 10,
     "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 9,
-    "tournaments_adjudicated": 5,
-    "ballots_count": 9,
-    "rank": 17
+    "total_rounds_adjudicated": 10,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 10,
+    "rank": 23
   },
   {
     "adjudicator_name": "Visura Padeniya",
@@ -303,7 +405,24 @@
     "total_rounds_adjudicated": 9,
     "tournaments_adjudicated": 4,
     "ballots_count": 9,
-    "rank": 18
+    "rank": 24
+  },
+  {
+    "adjudicator_name": "Saara Zubair",
+    "institution": "Independent Adjudicator",
+    "aass": 69.24,
+    "aatss": 241.944,
+    "prop_wins": 3,
+    "opp_wins": 6,
+    "prop_opp_bias": "33.333% Prop / 66.666% Opp",
+    "prop_bias_pct": 33.333,
+    "opp_bias_pct": 66.666,
+    "prelims_adjudicated": 9,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 9,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 9,
+    "rank": 25
   },
   {
     "adjudicator_name": "Vihara Fernandopulle",
@@ -320,13 +439,13 @@
     "total_rounds_adjudicated": 9,
     "tournaments_adjudicated": 5,
     "ballots_count": 9,
-    "rank": 19
+    "rank": 26
   },
   {
-    "adjudicator_name": "Shakeeb Mohideen",
-    "institution": "SBC",
-    "aass": 71.194,
-    "aatss": 248.888,
+    "adjudicator_name": "Jayageeth Basnayake",
+    "institution": "BC",
+    "aass": 69.777,
+    "aatss": 244.055,
     "prop_wins": 4,
     "opp_wins": 5,
     "prop_opp_bias": "44.444% Prop / 55.555% Opp",
@@ -335,9 +454,9 @@
     "prelims_adjudicated": 9,
     "outrounds_adjudicated": 0,
     "total_rounds_adjudicated": 9,
-    "tournaments_adjudicated": 7,
+    "tournaments_adjudicated": 6,
     "ballots_count": 9,
-    "rank": 20
+    "rank": 27
   },
   {
     "adjudicator_name": "Thishya Mendis",
@@ -354,58 +473,58 @@
     "total_rounds_adjudicated": 9,
     "tournaments_adjudicated": 5,
     "ballots_count": 9,
-    "rank": 21
-  },
-  {
-    "adjudicator_name": "Gavin Senaratne",
-    "institution": "VV",
-    "aass": 70.666,
-    "aatss": 247.281,
-    "prop_wins": 4,
-    "opp_wins": 4,
-    "prop_opp_bias": "50% Prop / 50% Opp",
-    "prop_bias_pct": 50,
-    "opp_bias_pct": 50,
-    "prelims_adjudicated": 8,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 8,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 8,
-    "rank": 22
-  },
-  {
-    "adjudicator_name": "Jayageeth Basnayake",
-    "institution": "BC",
-    "aass": 69.666,
-    "aatss": 243.562,
-    "prop_wins": 4,
-    "opp_wins": 4,
-    "prop_opp_bias": "50% Prop / 50% Opp",
-    "prop_bias_pct": 50,
-    "opp_bias_pct": 50,
-    "prelims_adjudicated": 8,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 8,
-    "tournaments_adjudicated": 5,
-    "ballots_count": 8,
-    "rank": 23
+    "rank": 28
   },
   {
     "adjudicator_name": "Shenaya Rodrigo",
     "institution": "Metho",
-    "aass": 68.843,
-    "aatss": 241.5,
+    "aass": 68.814,
+    "aatss": 241.305,
     "prop_wins": 4,
-    "opp_wins": 4,
-    "prop_opp_bias": "50% Prop / 50% Opp",
-    "prop_bias_pct": 50,
-    "opp_bias_pct": 50,
+    "opp_wins": 5,
+    "prop_opp_bias": "44.444% Prop / 55.555% Opp",
+    "prop_bias_pct": 44.444,
+    "opp_bias_pct": 55.555,
+    "prelims_adjudicated": 9,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 9,
+    "tournaments_adjudicated": 5,
+    "ballots_count": 9,
+    "rank": 29
+  },
+  {
+    "adjudicator_name": "Rachel Cramer",
+    "institution": "BSC",
+    "aass": 70.712,
+    "aatss": 247.194,
+    "prop_wins": 4,
+    "opp_wins": 5,
+    "prop_opp_bias": "44.444% Prop / 55.555% Opp",
+    "prop_bias_pct": 44.444,
+    "opp_bias_pct": 55.555,
+    "prelims_adjudicated": 9,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 9,
+    "tournaments_adjudicated": 2,
+    "ballots_count": 9,
+    "rank": 30
+  },
+  {
+    "adjudicator_name": "Nimansa Jayasundera",
+    "institution": "CIS",
+    "aass": 70.802,
+    "aatss": 246.031,
+    "prop_wins": 3,
+    "opp_wins": 5,
+    "prop_opp_bias": "37.5% Prop / 62.5% Opp",
+    "prop_bias_pct": 37.5,
+    "opp_bias_pct": 62.5,
     "prelims_adjudicated": 8,
     "outrounds_adjudicated": 0,
     "total_rounds_adjudicated": 8,
     "tournaments_adjudicated": 4,
     "ballots_count": 8,
-    "rank": 24
+    "rank": 31
   },
   {
     "adjudicator_name": "Savith Wijesundara",
@@ -422,41 +541,7 @@
     "total_rounds_adjudicated": 8,
     "tournaments_adjudicated": 4,
     "ballots_count": 8,
-    "rank": 25
-  },
-  {
-    "adjudicator_name": "Methira Padeniya",
-    "institution": "GCD",
-    "aass": 70.343,
-    "aatss": 246.312,
-    "prop_wins": 7,
-    "opp_wins": 1,
-    "prop_opp_bias": "87.5% Prop / 12.5% Opp",
-    "prop_bias_pct": 87.5,
-    "opp_bias_pct": 12.5,
-    "prelims_adjudicated": 8,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 8,
-    "tournaments_adjudicated": 2,
-    "ballots_count": 8,
-    "rank": 26
-  },
-  {
-    "adjudicator_name": "Thithira Jayakody",
-    "institution": "GCC",
-    "aass": 70.354,
-    "aatss": 246.343,
-    "prop_wins": 3,
-    "opp_wins": 5,
-    "prop_opp_bias": "37.5% Prop / 62.5% Opp",
-    "prop_bias_pct": 37.5,
-    "opp_bias_pct": 62.5,
-    "prelims_adjudicated": 8,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 8,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 8,
-    "rank": 27
+    "rank": 32
   },
   {
     "adjudicator_name": "Amna Shouqi",
@@ -473,41 +558,24 @@
     "total_rounds_adjudicated": 8,
     "tournaments_adjudicated": 2,
     "ballots_count": 8,
-    "rank": 28
+    "rank": 33
   },
   {
-    "adjudicator_name": "Sameesha Dissanayake",
-    "institution": "Metho",
-    "aass": 69.666,
-    "aatss": 243.718,
-    "prop_wins": 5,
+    "adjudicator_name": "Sandil Ranasinghe",
+    "institution": "Independent Adjudicator",
+    "aass": 70.476,
+    "aatss": 246.321,
+    "prop_wins": 4,
     "opp_wins": 3,
-    "prop_opp_bias": "62.5% Prop / 37.5% Opp",
-    "prop_bias_pct": 62.5,
-    "opp_bias_pct": 37.5,
-    "prelims_adjudicated": 8,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 8,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 8,
-    "rank": 29
-  },
-  {
-    "adjudicator_name": "Yasindu Edussuriya",
-    "institution": "GCN",
-    "aass": 69.773,
-    "aatss": 244.25,
-    "prop_wins": 1,
-    "opp_wins": 6,
-    "prop_opp_bias": "14.285% Prop / 85.714% Opp",
-    "prop_bias_pct": 14.285,
-    "opp_bias_pct": 85.714,
+    "prop_opp_bias": "57.142% Prop / 42.857% Opp",
+    "prop_bias_pct": 57.142,
+    "opp_bias_pct": 42.857,
     "prelims_adjudicated": 7,
     "outrounds_adjudicated": 0,
     "total_rounds_adjudicated": 7,
-    "tournaments_adjudicated": 2,
+    "tournaments_adjudicated": 3,
     "ballots_count": 7,
-    "rank": 30
+    "rank": 34
   },
   {
     "adjudicator_name": "Amiru Gamage",
@@ -524,7 +592,7 @@
     "total_rounds_adjudicated": 7,
     "tournaments_adjudicated": 2,
     "ballots_count": 7,
-    "rank": 31
+    "rank": 35
   },
   {
     "adjudicator_name": "Navidi Perera",
@@ -541,7 +609,7 @@
     "total_rounds_adjudicated": 7,
     "tournaments_adjudicated": 3,
     "ballots_count": 7,
-    "rank": 32
+    "rank": 36
   },
   {
     "adjudicator_name": "Suchith Tissera",
@@ -558,7 +626,24 @@
     "total_rounds_adjudicated": 7,
     "tournaments_adjudicated": 3,
     "ballots_count": 7,
-    "rank": 33
+    "rank": 37
+  },
+  {
+    "adjudicator_name": "Esala Rajapakse",
+    "institution": "LISN",
+    "aass": 69.571,
+    "aatss": 243.5,
+    "prop_wins": 3,
+    "opp_wins": 4,
+    "prop_opp_bias": "42.857% Prop / 57.142% Opp",
+    "prop_bias_pct": 42.857,
+    "opp_bias_pct": 57.142,
+    "prelims_adjudicated": 7,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 7,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 7,
+    "rank": 38
   },
   {
     "adjudicator_name": "Senaya Dissanayake",
@@ -575,7 +660,7 @@
     "total_rounds_adjudicated": 7,
     "tournaments_adjudicated": 4,
     "ballots_count": 7,
-    "rank": 34
+    "rank": 39
   },
   {
     "adjudicator_name": "Anah Cassim",
@@ -592,7 +677,7 @@
     "total_rounds_adjudicated": 7,
     "tournaments_adjudicated": 3,
     "ballots_count": 7,
-    "rank": 35
+    "rank": 40
   },
   {
     "adjudicator_name": "Vojini Rajapaksha",
@@ -609,7 +694,7 @@
     "total_rounds_adjudicated": 7,
     "tournaments_adjudicated": 1,
     "ballots_count": 7,
-    "rank": 36
+    "rank": 41
   },
   {
     "adjudicator_name": "Gimhan Sooriyabandara",
@@ -626,24 +711,7 @@
     "total_rounds_adjudicated": 6,
     "tournaments_adjudicated": 4,
     "ballots_count": 6,
-    "rank": 37
-  },
-  {
-    "adjudicator_name": "Saara Zubair",
-    "institution": "Independent Adjudicator",
-    "aass": 68.916,
-    "aatss": 240.666,
-    "prop_wins": 2,
-    "opp_wins": 4,
-    "prop_opp_bias": "33.333% Prop / 66.666% Opp",
-    "prop_bias_pct": 33.333,
-    "opp_bias_pct": 66.666,
-    "prelims_adjudicated": 6,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 6,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 6,
-    "rank": 38
+    "rank": 42
   },
   {
     "adjudicator_name": "Savidya Akini",
@@ -660,7 +728,24 @@
     "total_rounds_adjudicated": 6,
     "tournaments_adjudicated": 2,
     "ballots_count": 6,
-    "rank": 39
+    "rank": 43
+  },
+  {
+    "adjudicator_name": "Daniel Victor",
+    "institution": "VV",
+    "aass": 70.152,
+    "aatss": 245.833,
+    "prop_wins": 3,
+    "opp_wins": 3,
+    "prop_opp_bias": "50% Prop / 50% Opp",
+    "prop_bias_pct": 50,
+    "opp_bias_pct": 50,
+    "prelims_adjudicated": 6,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 6,
+    "tournaments_adjudicated": 4,
+    "ballots_count": 6,
+    "rank": 44
   },
   {
     "adjudicator_name": "Chrishelle Perera",
@@ -677,7 +762,7 @@
     "total_rounds_adjudicated": 6,
     "tournaments_adjudicated": 3,
     "ballots_count": 6,
-    "rank": 40
+    "rank": 45
   },
   {
     "adjudicator_name": "Okitha Karunadhara",
@@ -694,7 +779,7 @@
     "total_rounds_adjudicated": 6,
     "tournaments_adjudicated": 3,
     "ballots_count": 6,
-    "rank": 41
+    "rank": 46
   },
   {
     "adjudicator_name": "Selina Jayatilake",
@@ -711,7 +796,7 @@
     "total_rounds_adjudicated": 6,
     "tournaments_adjudicated": 2,
     "ballots_count": 6,
-    "rank": 42
+    "rank": 47
   },
   {
     "adjudicator_name": "Cheka Mendis",
@@ -728,41 +813,7 @@
     "total_rounds_adjudicated": 5,
     "tournaments_adjudicated": 3,
     "ballots_count": 5,
-    "rank": 43
-  },
-  {
-    "adjudicator_name": "Nimansa Jayasundera",
-    "institution": "CIS",
-    "aass": 71.15,
-    "aatss": 247.55,
-    "prop_wins": 1,
-    "opp_wins": 4,
-    "prop_opp_bias": "20% Prop / 80% Opp",
-    "prop_bias_pct": 20,
-    "opp_bias_pct": 80,
-    "prelims_adjudicated": 5,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 5,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 5,
-    "rank": 44
-  },
-  {
-    "adjudicator_name": "Esala Rajapakse",
-    "institution": "LISN",
-    "aass": 70.116,
-    "aatss": 245.3,
-    "prop_wins": 1,
-    "opp_wins": 4,
-    "prop_opp_bias": "20% Prop / 80% Opp",
-    "prop_bias_pct": 20,
-    "opp_bias_pct": 80,
-    "prelims_adjudicated": 5,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 5,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 5,
-    "rank": 45
+    "rank": 48
   },
   {
     "adjudicator_name": "Krish Prabaharan",
@@ -779,7 +830,7 @@
     "total_rounds_adjudicated": 5,
     "tournaments_adjudicated": 1,
     "ballots_count": 5,
-    "rank": 46
+    "rank": 49
   },
   {
     "adjudicator_name": "Lehara Edirisinghe",
@@ -796,7 +847,7 @@
     "total_rounds_adjudicated": 5,
     "tournaments_adjudicated": 3,
     "ballots_count": 5,
-    "rank": 47
+    "rank": 50
   },
   {
     "adjudicator_name": "Asna Azver",
@@ -813,7 +864,7 @@
     "total_rounds_adjudicated": 5,
     "tournaments_adjudicated": 1,
     "ballots_count": 5,
-    "rank": 48
+    "rank": 51
   },
   {
     "adjudicator_name": "Amiru Upekh Gamage",
@@ -830,7 +881,7 @@
     "total_rounds_adjudicated": 5,
     "tournaments_adjudicated": 1,
     "ballots_count": 5,
-    "rank": 49
+    "rank": 52
   },
   {
     "adjudicator_name": "Mahiru Fernando",
@@ -847,7 +898,41 @@
     "total_rounds_adjudicated": 5,
     "tournaments_adjudicated": 2,
     "ballots_count": 5,
-    "rank": 50
+    "rank": 53
+  },
+  {
+    "adjudicator_name": "Shahzadi Sujahudeen",
+    "institution": "GCD",
+    "aass": 69.116,
+    "aatss": 242.4,
+    "prop_wins": 2,
+    "opp_wins": 3,
+    "prop_opp_bias": "40% Prop / 60% Opp",
+    "prop_bias_pct": 40,
+    "opp_bias_pct": 60,
+    "prelims_adjudicated": 5,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 5,
+    "tournaments_adjudicated": 2,
+    "ballots_count": 5,
+    "rank": 54
+  },
+  {
+    "adjudicator_name": "Rudhesh ram",
+    "institution": "AIS",
+    "aass": 70.95,
+    "aatss": 248.55,
+    "prop_wins": 2,
+    "opp_wins": 3,
+    "prop_opp_bias": "40% Prop / 60% Opp",
+    "prop_bias_pct": 40,
+    "opp_bias_pct": 60,
+    "prelims_adjudicated": 5,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 5,
+    "tournaments_adjudicated": 1,
+    "ballots_count": 5,
+    "rank": 55
   },
   {
     "adjudicator_name": "Sheema Ramis",
@@ -864,7 +949,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 51
+    "rank": 56
   },
   {
     "adjudicator_name": "Kavodi Kulunumini Ranasinghe",
@@ -881,41 +966,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 52
-  },
-  {
-    "adjudicator_name": "Sandil Ranasinghe",
-    "institution": "Independent Adjudicator",
-    "aass": 70.562,
-    "aatss": 246.5,
-    "prop_wins": 2,
-    "opp_wins": 2,
-    "prop_opp_bias": "50% Prop / 50% Opp",
-    "prop_bias_pct": 50,
-    "opp_bias_pct": 50,
-    "prelims_adjudicated": 4,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 4,
-    "tournaments_adjudicated": 2,
-    "ballots_count": 4,
-    "rank": 53
-  },
-  {
-    "adjudicator_name": "Daniel Victor",
-    "institution": "Independent Adjudicator",
-    "aass": 69.77,
-    "aatss": 244.687,
-    "prop_wins": 3,
-    "opp_wins": 1,
-    "prop_opp_bias": "75% Prop / 25% Opp",
-    "prop_bias_pct": 75,
-    "opp_bias_pct": 25,
-    "prelims_adjudicated": 4,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 4,
-    "tournaments_adjudicated": 3,
-    "ballots_count": 4,
-    "rank": 54
+    "rank": 57
   },
   {
     "adjudicator_name": "Gayathri Ramachandran",
@@ -932,7 +983,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 55
+    "rank": 58
   },
   {
     "adjudicator_name": "Renate Wasala",
@@ -949,7 +1000,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 56
+    "rank": 59
   },
   {
     "adjudicator_name": "Apoorva Wijesinghe",
@@ -966,7 +1017,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 57
+    "rank": 60
   },
   {
     "adjudicator_name": "Shalem Sumanthiran",
@@ -983,7 +1034,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 3,
     "ballots_count": 4,
-    "rank": 58
+    "rank": 61
   },
   {
     "adjudicator_name": "Ra'ed Abdul Cader",
@@ -1000,7 +1051,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 59
+    "rank": 62
   },
   {
     "adjudicator_name": "Himanshu Jayasinghe",
@@ -1017,7 +1068,24 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 60
+    "rank": 63
+  },
+  {
+    "adjudicator_name": "Tharin Rajapakse",
+    "institution": "DBV",
+    "aass": 70.062,
+    "aatss": 244.812,
+    "prop_wins": 3,
+    "opp_wins": 1,
+    "prop_opp_bias": "75% Prop / 25% Opp",
+    "prop_bias_pct": 75,
+    "opp_bias_pct": 25,
+    "prelims_adjudicated": 4,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 4,
+    "tournaments_adjudicated": 3,
+    "ballots_count": 4,
+    "rank": 64
   },
   {
     "adjudicator_name": "Indeevari de Silva",
@@ -1034,7 +1102,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 61
+    "rank": 65
   },
   {
     "adjudicator_name": "Ajmal Amsa",
@@ -1051,7 +1119,24 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 62
+    "rank": 66
+  },
+  {
+    "adjudicator_name": "Thiseni Mapa",
+    "institution": "RISK",
+    "aass": 69.562,
+    "aatss": 243.5,
+    "prop_wins": 1,
+    "opp_wins": 3,
+    "prop_opp_bias": "25% Prop / 75% Opp",
+    "prop_bias_pct": 25,
+    "opp_bias_pct": 75,
+    "prelims_adjudicated": 4,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 4,
+    "tournaments_adjudicated": 2,
+    "ballots_count": 4,
+    "rank": 67
   },
   {
     "adjudicator_name": "Aqeelah Wahid",
@@ -1068,7 +1153,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 63
+    "rank": 68
   },
   {
     "adjudicator_name": "Buthmini Mohotti",
@@ -1085,7 +1170,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 64
+    "rank": 69
   },
   {
     "adjudicator_name": "Nimuthu Pathiraja",
@@ -1102,7 +1187,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 65
+    "rank": 70
   },
   {
     "adjudicator_name": "Vakeesh Rupan",
@@ -1119,7 +1204,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 66
+    "rank": 71
   },
   {
     "adjudicator_name": "Muaaza Ifsal",
@@ -1136,24 +1221,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 2,
     "ballots_count": 4,
-    "rank": 67
-  },
-  {
-    "adjudicator_name": "Rachel Cramer",
-    "institution": "BSC",
-    "aass": 70.27,
-    "aatss": 245.5,
-    "prop_wins": 1,
-    "opp_wins": 3,
-    "prop_opp_bias": "25% Prop / 75% Opp",
-    "prop_bias_pct": 25,
-    "opp_bias_pct": 75,
-    "prelims_adjudicated": 4,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 4,
-    "tournaments_adjudicated": 1,
-    "ballots_count": 4,
-    "rank": 68
+    "rank": 72
   },
   {
     "adjudicator_name": "Chenula Bandara",
@@ -1170,7 +1238,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 69
+    "rank": 73
   },
   {
     "adjudicator_name": "Shaluka Herath",
@@ -1187,7 +1255,7 @@
     "total_rounds_adjudicated": 4,
     "tournaments_adjudicated": 1,
     "ballots_count": 4,
-    "rank": 70
+    "rank": 74
   },
   {
     "adjudicator_name": "Chamodi Bopage",
@@ -1204,7 +1272,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 71
+    "rank": 75
   },
   {
     "adjudicator_name": "Dineth Keragala",
@@ -1221,7 +1289,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 2,
     "ballots_count": 3,
-    "rank": 72
+    "rank": 76
   },
   {
     "adjudicator_name": "Naika Gooneratne",
@@ -1238,7 +1306,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 3,
     "ballots_count": 3,
-    "rank": 73
+    "rank": 77
   },
   {
     "adjudicator_name": "Nevan Serasundera",
@@ -1255,7 +1323,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 74
+    "rank": 78
   },
   {
     "adjudicator_name": "Sarah Mulaffar",
@@ -1272,7 +1340,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 2,
     "ballots_count": 3,
-    "rank": 75
+    "rank": 79
   },
   {
     "adjudicator_name": "Hirupama Bandara",
@@ -1289,7 +1357,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 76
+    "rank": 80
   },
   {
     "adjudicator_name": "Vishwa Kaushalya",
@@ -1306,7 +1374,24 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 77
+    "rank": 81
+  },
+  {
+    "adjudicator_name": "Kaveesha De Silva",
+    "institution": "Independent Adjudicator",
+    "aass": 68.388,
+    "aatss": 239.166,
+    "prop_wins": 2,
+    "opp_wins": 1,
+    "prop_opp_bias": "66.666% Prop / 33.333% Opp",
+    "prop_bias_pct": 66.666,
+    "opp_bias_pct": 33.333,
+    "prelims_adjudicated": 3,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 3,
+    "tournaments_adjudicated": 2,
+    "ballots_count": 3,
+    "rank": 82
   },
   {
     "adjudicator_name": "Sarala Hapugalle",
@@ -1323,7 +1408,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 2,
     "ballots_count": 3,
-    "rank": 78
+    "rank": 83
   },
   {
     "adjudicator_name": "Amani Almeida",
@@ -1340,7 +1425,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 79
+    "rank": 84
   },
   {
     "adjudicator_name": "Shailee Siriwardhana",
@@ -1357,24 +1442,7 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 80
-  },
-  {
-    "adjudicator_name": "Shahzadi Sujahudeen",
-    "institution": "GCD",
-    "aass": 69.083,
-    "aatss": 241.916,
-    "prop_wins": 1,
-    "opp_wins": 2,
-    "prop_opp_bias": "33.333% Prop / 66.666% Opp",
-    "prop_bias_pct": 33.333,
-    "opp_bias_pct": 66.666,
-    "prelims_adjudicated": 3,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 3,
-    "tournaments_adjudicated": 1,
-    "ballots_count": 3,
-    "rank": 81
+    "rank": 85
   },
   {
     "adjudicator_name": "Nethula Hettihewage",
@@ -1391,6 +1459,57 @@
     "total_rounds_adjudicated": 3,
     "tournaments_adjudicated": 1,
     "ballots_count": 3,
-    "rank": 82
+    "rank": 86
+  },
+  {
+    "adjudicator_name": "Mohomed Ajmal Amsa",
+    "institution": "Independent Adjudicator",
+    "aass": 69.777,
+    "aatss": 245.333,
+    "prop_wins": 3,
+    "opp_wins": 0,
+    "prop_opp_bias": "100% Prop / 0% Opp",
+    "prop_bias_pct": 100,
+    "opp_bias_pct": 0,
+    "prelims_adjudicated": 3,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 3,
+    "tournaments_adjudicated": 1,
+    "ballots_count": 3,
+    "rank": 87
+  },
+  {
+    "adjudicator_name": "Renishka Fernando",
+    "institution": "GHSK",
+    "aass": 69.5,
+    "aatss": 243.083,
+    "prop_wins": 2,
+    "opp_wins": 1,
+    "prop_opp_bias": "66.666% Prop / 33.333% Opp",
+    "prop_bias_pct": 66.666,
+    "opp_bias_pct": 33.333,
+    "prelims_adjudicated": 3,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 3,
+    "tournaments_adjudicated": 1,
+    "ballots_count": 3,
+    "rank": 88
+  },
+  {
+    "adjudicator_name": "Movinya Katulanda",
+    "institution": "STC",
+    "aass": 69.666,
+    "aatss": 244.25,
+    "prop_wins": 1,
+    "opp_wins": 2,
+    "prop_opp_bias": "33.333% Prop / 66.666% Opp",
+    "prop_bias_pct": 33.333,
+    "opp_bias_pct": 66.666,
+    "prelims_adjudicated": 3,
+    "outrounds_adjudicated": 0,
+    "total_rounds_adjudicated": 3,
+    "tournaments_adjudicated": 1,
+    "ballots_count": 3,
+    "rank": 89
   }
 ]

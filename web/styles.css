@@ -432,19 +432,26 @@ body {
 .filter-input {
   flex: 1;
   min-width: 180px;
-  background: rgba(0, 0, 0, 0.35);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #ffffff;
-  padding: 8px 14px;
+  background: #0d1a2d !important;
+  border: 1px solid rgba(56, 189, 248, 0.35) !important;
+  color: #ffffff !important;
+  padding: 10px 16px;
   border-radius: 12px;
   font-family: var(--font-sans);
-  font-size: 12.5px;
+  font-size: 13px;
   outline: none;
-  transition: border-color 0.2s ease;
+  transition: all 0.2s ease;
+  box-shadow: inset 0 2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.filter-input::placeholder {
+  color: rgba(255, 255, 255, 0.45) !important;
 }
 
 .filter-input:focus {
-  border-color: #38bdf8;
+  border-color: #38bdf8 !important;
+  background: #11223b !important;
+  box-shadow: 0 0 12px rgba(56, 189, 248, 0.3);
 }
 
 .filter-chips {
@@ -2432,24 +2439,25 @@ body {
   text-decoration: none;
   font-weight: 600;
   transition: all 0.15s ease;
-  border-bottom: 1px dotted rgba(56, 189, 248, 0.4);
+  border-bottom: none;
 }
 
 .table-link:hover {
   color: #ffffff;
-  border-bottom-color: #ffffff;
+  text-decoration: underline;
   text-shadow: 0 0 8px rgba(56, 189, 248, 0.6);
 }
 
 .table-link-inst {
   color: rgba(255, 255, 255, 0.85);
   text-decoration: none;
-  border-bottom: 1px dotted rgba(255, 255, 255, 0.3);
+  border-bottom: none;
+  transition: all 0.15s ease;
 }
 
 .table-link-inst:hover {
   color: #38bdf8;
-  border-bottom-color: #38bdf8;
+  text-decoration: underline;
 }
 
 /* Metric pills bar in Leaderboards */

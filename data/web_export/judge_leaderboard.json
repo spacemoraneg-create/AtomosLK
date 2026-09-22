@@ -1,45 +1,87 @@
 [
   {
-    "adjudicator_name": "Senuka Seneviratne",
-    "institution": "Independent / Circuit Adjudicator",
-    "debates_judged": 23,
-    "tournaments_count": 7,
+    "adjudicator_name": "Nethma Madawala",
+    "institution": "HFC",
+    "debates_judged": 28,
+    "tournaments_count": 8,
     "outrounds_judged": 0,
-    "prop_win_pct": 56.5217,
-    "opp_win_pct": 43.4783,
-    "side_bias": "Proposition Leaning (56.5% Prop)",
-    "avg_substantive_score": 70.1123,
-    "strictness_label": "Strict / Low-Scoring (-1.09 pts vs circuit)",
-    "avg_win_margin": 2.1304,
+    "prop_win_pct": 42.8571,
+    "opp_win_pct": 57.1429,
+    "side_bias": "Opposition Leaning (57.1% Opp)",
+    "avg_substantive_score": 69.7976,
+    "strictness_label": "Strict / Low-Scoring (-1.40 pts vs circuit)",
+    "avg_win_margin": -0.0714,
     "rank": 1
   },
   {
     "adjudicator_name": "Sanithma Jayasooriya",
     "institution": "HCK",
-    "debates_judged": 22,
-    "tournaments_count": 7,
+    "debates_judged": 27,
+    "tournaments_count": 8,
     "outrounds_judged": 0,
-    "prop_win_pct": 54.5455,
-    "opp_win_pct": 45.4545,
+    "prop_win_pct": 51.8519,
+    "opp_win_pct": 48.1481,
     "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 70.4773,
-    "strictness_label": "Strict / Low-Scoring (-0.72 pts vs circuit)",
-    "avg_win_margin": -0.7045,
+    "avg_substantive_score": 70.4722,
+    "strictness_label": "Strict / Low-Scoring (-0.73 pts vs circuit)",
+    "avg_win_margin": -1.2407,
     "rank": 2
   },
   {
     "adjudicator_name": "Sanithma Jayasooriya",
     "institution": "HCK",
-    "debates_judged": 22,
-    "tournaments_count": 7,
+    "debates_judged": 27,
+    "tournaments_count": 8,
     "outrounds_judged": 0,
-    "prop_win_pct": 54.5455,
-    "opp_win_pct": 45.4545,
+    "prop_win_pct": 51.8519,
+    "opp_win_pct": 48.1481,
     "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 70.4773,
-    "strictness_label": "Strict / Low-Scoring (-0.72 pts vs circuit)",
-    "avg_win_margin": -0.7045,
+    "avg_substantive_score": 70.4722,
+    "strictness_label": "Strict / Low-Scoring (-0.73 pts vs circuit)",
+    "avg_win_margin": -1.2407,
     "rank": 3
+  },
+  {
+    "adjudicator_name": "Akindu Athauda",
+    "institution": "SJC",
+    "debates_judged": 21,
+    "tournaments_count": 6,
+    "outrounds_judged": 0,
+    "prop_win_pct": 52.381,
+    "opp_win_pct": 47.619,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 70.2341,
+    "strictness_label": "Strict / Low-Scoring (-0.97 pts vs circuit)",
+    "avg_win_margin": -0.0476,
+    "rank": 4
+  },
+  {
+    "adjudicator_name": "Akindu Athauda",
+    "institution": "SJC",
+    "debates_judged": 21,
+    "tournaments_count": 6,
+    "outrounds_judged": 0,
+    "prop_win_pct": 52.381,
+    "opp_win_pct": 47.619,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 70.2341,
+    "strictness_label": "Strict / Low-Scoring (-0.97 pts vs circuit)",
+    "avg_win_margin": -0.0476,
+    "rank": 5
+  },
+  {
+    "adjudicator_name": "Adam Dhilshan",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 20,
+    "tournaments_count": 8,
+    "outrounds_judged": 0,
+    "prop_win_pct": 45.0,
+    "opp_win_pct": 55.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 71.0458,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -1.5,
+    "rank": 6
   },
   {
     "adjudicator_name": "Niranya Rathnayake",
@@ -53,7 +95,7 @@
     "avg_substantive_score": 67.9444,
     "strictness_label": "Strict / Low-Scoring (-3.26 pts vs circuit)",
     "avg_win_margin": -2.9444,
-    "rank": 4
+    "rank": 7
   },
   {
     "adjudicator_name": "Kulith Wickramasinghe",
@@ -67,21 +109,21 @@
     "avg_substantive_score": 69.5781,
     "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
     "avg_win_margin": 2.1562,
-    "rank": 5
+    "rank": 8
   },
   {
     "adjudicator_name": "Minithi Hewage",
     "institution": "NC",
-    "debates_judged": 14,
-    "tournaments_count": 3,
+    "debates_judged": 15,
+    "tournaments_count": 4,
     "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
+    "prop_win_pct": 46.6667,
+    "opp_win_pct": 53.3333,
     "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 69.7262,
-    "strictness_label": "Strict / Low-Scoring (-1.47 pts vs circuit)",
-    "avg_win_margin": 0.0357,
-    "rank": 6
+    "avg_substantive_score": 69.6556,
+    "strictness_label": "Strict / Low-Scoring (-1.54 pts vs circuit)",
+    "avg_win_margin": -0.1,
+    "rank": 9
   },
   {
     "adjudicator_name": "Abdullah Yusoof",
@@ -95,21 +137,21 @@
     "avg_substantive_score": 70.5897,
     "strictness_label": "Strict / Low-Scoring (-0.61 pts vs circuit)",
     "avg_win_margin": -0.6538,
-    "rank": 7
+    "rank": 10
   },
   {
-    "adjudicator_name": "Rudhesh Ram",
-    "institution": "AIS",
-    "debates_judged": 11,
+    "adjudicator_name": "Sameesha Dissanayake",
+    "institution": "GCC",
+    "debates_judged": 10,
     "tournaments_count": 4,
     "outrounds_judged": 0,
-    "prop_win_pct": 18.1818,
-    "opp_win_pct": 81.8182,
-    "side_bias": "Opposition Leaning (81.8% Opp)",
-    "avg_substantive_score": 70.9242,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": -1.7273,
-    "rank": 8
+    "prop_win_pct": 60.0,
+    "opp_win_pct": 40.0,
+    "side_bias": "Proposition Leaning (60.0% Prop)",
+    "avg_substantive_score": 69.9,
+    "strictness_label": "Strict / Low-Scoring (-1.30 pts vs circuit)",
+    "avg_win_margin": -0.35,
+    "rank": 11
   },
   {
     "adjudicator_name": "Zaid Hussain",
@@ -123,7 +165,21 @@
     "avg_substantive_score": 69.7833,
     "strictness_label": "Strict / Low-Scoring (-1.42 pts vs circuit)",
     "avg_win_margin": -2.95,
-    "rank": 9
+    "rank": 12
+  },
+  {
+    "adjudicator_name": "Jayageeth Basnayake",
+    "institution": "BC",
+    "debates_judged": 10,
+    "tournaments_count": 6,
+    "outrounds_judged": 0,
+    "prop_win_pct": 40.0,
+    "opp_win_pct": 60.0,
+    "side_bias": "Opposition Leaning (60.0% Opp)",
+    "avg_substantive_score": 69.9492,
+    "strictness_label": "Strict / Low-Scoring (-1.25 pts vs circuit)",
+    "avg_win_margin": -0.9,
+    "rank": 13
   },
   {
     "adjudicator_name": "Zaid B. Hussain",
@@ -137,7 +193,35 @@
     "avg_substantive_score": 69.7833,
     "strictness_label": "Strict / Low-Scoring (-1.42 pts vs circuit)",
     "avg_win_margin": -2.95,
-    "rank": 10
+    "rank": 14
+  },
+  {
+    "adjudicator_name": "Gavin Seneratne",
+    "institution": "VV",
+    "debates_judged": 10,
+    "tournaments_count": 4,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 70.8333,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -1.65,
+    "rank": 15
+  },
+  {
+    "adjudicator_name": "Yasindu Edussuriya",
+    "institution": "GCC",
+    "debates_judged": 9,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 44.4444,
+    "opp_win_pct": 55.5556,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 70.1019,
+    "strictness_label": "Strict / Low-Scoring (-1.10 pts vs circuit)",
+    "avg_win_margin": 0.9444,
+    "rank": 16
   },
   {
     "adjudicator_name": "Thishya Mendis",
@@ -151,7 +235,21 @@
     "avg_substantive_score": 69.713,
     "strictness_label": "Strict / Low-Scoring (-1.49 pts vs circuit)",
     "avg_win_margin": -1.5556,
-    "rank": 11
+    "rank": 17
+  },
+  {
+    "adjudicator_name": "Yasindu Edussuriya",
+    "institution": "GCC",
+    "debates_judged": 9,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 44.4444,
+    "opp_win_pct": 55.5556,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 70.1019,
+    "strictness_label": "Strict / Low-Scoring (-1.10 pts vs circuit)",
+    "avg_win_margin": 0.9444,
+    "rank": 18
   },
   {
     "adjudicator_name": "Vihara Fernandopulle",
@@ -165,35 +263,35 @@
     "avg_substantive_score": 69.0833,
     "strictness_label": "Strict / Low-Scoring (-2.12 pts vs circuit)",
     "avg_win_margin": -1.375,
-    "rank": 12
+    "rank": 19
   },
   {
-    "adjudicator_name": "Sameesha Dissanayake",
+    "adjudicator_name": "Shenaya Rodrigo",
     "institution": "Metho",
     "debates_judged": 8,
-    "tournaments_count": 3,
+    "tournaments_count": 4,
     "outrounds_judged": 0,
-    "prop_win_pct": 62.5,
-    "opp_win_pct": 37.5,
-    "side_bias": "Proposition Leaning (62.5% Prop)",
-    "avg_substantive_score": 69.6667,
-    "strictness_label": "Strict / Low-Scoring (-1.53 pts vs circuit)",
-    "avg_win_margin": 0.3125,
-    "rank": 13
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.1042,
+    "strictness_label": "Strict / Low-Scoring (-2.10 pts vs circuit)",
+    "avg_win_margin": -1.1875,
+    "rank": 20
   },
   {
-    "adjudicator_name": "Methira Padeniya",
-    "institution": "RC",
+    "adjudicator_name": "Risindu Piyasena",
+    "institution": "Independent / Circuit Adjudicator",
     "debates_judged": 8,
-    "tournaments_count": 2,
+    "tournaments_count": 5,
     "outrounds_judged": 0,
-    "prop_win_pct": 87.5,
-    "opp_win_pct": 12.5,
-    "side_bias": "Proposition Leaning (87.5% Prop)",
-    "avg_substantive_score": 70.3438,
-    "strictness_label": "Strict / Low-Scoring (-0.86 pts vs circuit)",
-    "avg_win_margin": 3.5,
-    "rank": 14
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 68.375,
+    "strictness_label": "Strict / Low-Scoring (-2.83 pts vs circuit)",
+    "avg_win_margin": -3.9375,
+    "rank": 21
   },
   {
     "adjudicator_name": "Amna Shouqi",
@@ -207,7 +305,7 @@
     "avg_substantive_score": 68.8542,
     "strictness_label": "Strict / Low-Scoring (-2.35 pts vs circuit)",
     "avg_win_margin": 4.4375,
-    "rank": 15
+    "rank": 22
   },
   {
     "adjudicator_name": "Suchith Tissera",
@@ -221,35 +319,49 @@
     "avg_substantive_score": 70.0319,
     "strictness_label": "Strict / Low-Scoring (-1.17 pts vs circuit)",
     "avg_win_margin": 0.0625,
-    "rank": 16
+    "rank": 23
   },
   {
-    "adjudicator_name": "Gavin Senaratne",
+    "adjudicator_name": "Nimansa Jayasundera",
+    "institution": "CIS",
+    "debates_judged": 8,
+    "tournaments_count": 4,
+    "outrounds_judged": 0,
+    "prop_win_pct": 37.5,
+    "opp_win_pct": 62.5,
+    "side_bias": "Opposition Leaning (62.5% Opp)",
+    "avg_substantive_score": 70.8021,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -1.5625,
+    "rank": 24
+  },
+  {
+    "adjudicator_name": "Nimansa Jayasundara",
+    "institution": "CIS",
+    "debates_judged": 8,
+    "tournaments_count": 4,
+    "outrounds_judged": 0,
+    "prop_win_pct": 37.5,
+    "opp_win_pct": 62.5,
+    "side_bias": "Opposition Leaning (62.5% Opp)",
+    "avg_substantive_score": 70.8021,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -1.5625,
+    "rank": 25
+  },
+  {
+    "adjudicator_name": "Risindu Piyasena",
     "institution": "Independent / Circuit Adjudicator",
     "debates_judged": 8,
-    "tournaments_count": 3,
+    "tournaments_count": 5,
     "outrounds_judged": 0,
     "prop_win_pct": 50.0,
     "opp_win_pct": 50.0,
     "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 70.6667,
-    "strictness_label": "Strict / Low-Scoring (-0.53 pts vs circuit)",
-    "avg_win_margin": -1.8125,
-    "rank": 17
-  },
-  {
-    "adjudicator_name": "Gavin Seneratne",
-    "institution": "VV",
-    "debates_judged": 8,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
-    "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 70.6667,
-    "strictness_label": "Strict / Low-Scoring (-0.53 pts vs circuit)",
-    "avg_win_margin": -1.8125,
-    "rank": 18
+    "avg_substantive_score": 68.375,
+    "strictness_label": "Strict / Low-Scoring (-2.83 pts vs circuit)",
+    "avg_win_margin": -3.9375,
+    "rank": 26
   },
   {
     "adjudicator_name": "Vojini Rajapaksha",
@@ -263,118 +375,6 @@
     "avg_substantive_score": 70.2976,
     "strictness_label": "Strict / Low-Scoring (-0.90 pts vs circuit)",
     "avg_win_margin": -0.8571,
-    "rank": 19
-  },
-  {
-    "adjudicator_name": "Visura Padeniya",
-    "institution": "RC",
-    "debates_judged": 7,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 42.8571,
-    "opp_win_pct": 57.1429,
-    "side_bias": "Opposition Leaning (57.1% Opp)",
-    "avg_substantive_score": 71.119,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": -1.8571,
-    "rank": 20
-  },
-  {
-    "adjudicator_name": "Sithma Hewa Waduge",
-    "institution": "Independent / Circuit Adjudicator",
-    "debates_judged": 7,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 42.8571,
-    "opp_win_pct": 57.1429,
-    "side_bias": "Opposition Leaning (57.1% Opp)",
-    "avg_substantive_score": 68.6548,
-    "strictness_label": "Strict / Low-Scoring (-2.55 pts vs circuit)",
-    "avg_win_margin": 0.4286,
-    "rank": 21
-  },
-  {
-    "adjudicator_name": "Shenaya Rodrigo",
-    "institution": "Metho",
-    "debates_judged": 7,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 57.1429,
-    "opp_win_pct": 42.8571,
-    "side_bias": "Proposition Leaning (57.1% Prop)",
-    "avg_substantive_score": 69.1786,
-    "strictness_label": "Strict / Low-Scoring (-2.02 pts vs circuit)",
-    "avg_win_margin": -0.8571,
-    "rank": 22
-  },
-  {
-    "adjudicator_name": "Senaya Dissanayake",
-    "institution": "LC",
-    "debates_judged": 7,
-    "tournaments_count": 4,
-    "outrounds_judged": 0,
-    "prop_win_pct": 57.1429,
-    "opp_win_pct": 42.8571,
-    "side_bias": "Proposition Leaning (57.1% Prop)",
-    "avg_substantive_score": 70.0714,
-    "strictness_label": "Strict / Low-Scoring (-1.13 pts vs circuit)",
-    "avg_win_margin": 1.2143,
-    "rank": 23
-  },
-  {
-    "adjudicator_name": "Risindu Piyasena",
-    "institution": "MGCK",
-    "debates_judged": 7,
-    "tournaments_count": 4,
-    "outrounds_judged": 0,
-    "prop_win_pct": 42.8571,
-    "opp_win_pct": 57.1429,
-    "side_bias": "Opposition Leaning (57.1% Opp)",
-    "avg_substantive_score": 68.5238,
-    "strictness_label": "Strict / Low-Scoring (-2.68 pts vs circuit)",
-    "avg_win_margin": -5.3571,
-    "rank": 24
-  },
-  {
-    "adjudicator_name": "Anah Cassim",
-    "institution": "BC",
-    "debates_judged": 7,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 85.7143,
-    "opp_win_pct": 14.2857,
-    "side_bias": "Proposition Leaning (85.7% Prop)",
-    "avg_substantive_score": 70.2976,
-    "strictness_label": "Strict / Low-Scoring (-0.90 pts vs circuit)",
-    "avg_win_margin": 6.1429,
-    "rank": 25
-  },
-  {
-    "adjudicator_name": "Gimhan Sooriyabandara",
-    "institution": "Independent / Circuit Adjudicator",
-    "debates_judged": 7,
-    "tournaments_count": 5,
-    "outrounds_judged": 0,
-    "prop_win_pct": 71.4286,
-    "opp_win_pct": 28.5714,
-    "side_bias": "Proposition Leaning (71.4% Prop)",
-    "avg_substantive_score": 67.3875,
-    "strictness_label": "Strict / Low-Scoring (-3.81 pts vs circuit)",
-    "avg_win_margin": 5.7143,
-    "rank": 26
-  },
-  {
-    "adjudicator_name": "Sithma Hewa Waduge",
-    "institution": "Independent / Circuit Adjudicator",
-    "debates_judged": 7,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 42.8571,
-    "opp_win_pct": 57.1429,
-    "side_bias": "Opposition Leaning (57.1% Opp)",
-    "avg_substantive_score": 68.6548,
-    "strictness_label": "Strict / Low-Scoring (-2.55 pts vs circuit)",
-    "avg_win_margin": 0.4286,
     "rank": 27
   },
   {
@@ -392,18 +392,88 @@
     "rank": 28
   },
   {
-    "adjudicator_name": "Risindu Piyasena",
-    "institution": "MGCK",
+    "adjudicator_name": "Sithma Hewa Waduge",
+    "institution": "Independent / Circuit Adjudicator",
     "debates_judged": 7,
-    "tournaments_count": 4,
+    "tournaments_count": 3,
     "outrounds_judged": 0,
     "prop_win_pct": 42.8571,
     "opp_win_pct": 57.1429,
     "side_bias": "Opposition Leaning (57.1% Opp)",
-    "avg_substantive_score": 68.5238,
-    "strictness_label": "Strict / Low-Scoring (-2.68 pts vs circuit)",
-    "avg_win_margin": -5.3571,
+    "avg_substantive_score": 68.6548,
+    "strictness_label": "Strict / Low-Scoring (-2.55 pts vs circuit)",
+    "avg_win_margin": 0.4286,
     "rank": 29
+  },
+  {
+    "adjudicator_name": "Senaya Dissanayake",
+    "institution": "LC",
+    "debates_judged": 7,
+    "tournaments_count": 4,
+    "outrounds_judged": 0,
+    "prop_win_pct": 57.1429,
+    "opp_win_pct": 42.8571,
+    "side_bias": "Proposition Leaning (57.1% Prop)",
+    "avg_substantive_score": 70.0714,
+    "strictness_label": "Strict / Low-Scoring (-1.13 pts vs circuit)",
+    "avg_win_margin": 1.2143,
+    "rank": 30
+  },
+  {
+    "adjudicator_name": "Anah Cassim",
+    "institution": "BC",
+    "debates_judged": 7,
+    "tournaments_count": 3,
+    "outrounds_judged": 0,
+    "prop_win_pct": 85.7143,
+    "opp_win_pct": 14.2857,
+    "side_bias": "Proposition Leaning (85.7% Prop)",
+    "avg_substantive_score": 70.2976,
+    "strictness_label": "Strict / Low-Scoring (-0.90 pts vs circuit)",
+    "avg_win_margin": 6.1429,
+    "rank": 31
+  },
+  {
+    "adjudicator_name": "Gimhan Sooriyabandara",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 7,
+    "tournaments_count": 5,
+    "outrounds_judged": 0,
+    "prop_win_pct": 71.4286,
+    "opp_win_pct": 28.5714,
+    "side_bias": "Proposition Leaning (71.4% Prop)",
+    "avg_substantive_score": 67.3875,
+    "strictness_label": "Strict / Low-Scoring (-3.81 pts vs circuit)",
+    "avg_win_margin": 5.7143,
+    "rank": 32
+  },
+  {
+    "adjudicator_name": "Sithma Hewa Waduge",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 7,
+    "tournaments_count": 3,
+    "outrounds_judged": 0,
+    "prop_win_pct": 42.8571,
+    "opp_win_pct": 57.1429,
+    "side_bias": "Opposition Leaning (57.1% Opp)",
+    "avg_substantive_score": 68.6548,
+    "strictness_label": "Strict / Low-Scoring (-2.55 pts vs circuit)",
+    "avg_win_margin": 0.4286,
+    "rank": 33
+  },
+  {
+    "adjudicator_name": "Visura Padeniya",
+    "institution": "RC",
+    "debates_judged": 7,
+    "tournaments_count": 3,
+    "outrounds_judged": 0,
+    "prop_win_pct": 42.8571,
+    "opp_win_pct": 57.1429,
+    "side_bias": "Opposition Leaning (57.1% Opp)",
+    "avg_substantive_score": 71.119,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -1.8571,
+    "rank": 34
   },
   {
     "adjudicator_name": "Selina Jayatilake",
@@ -417,7 +487,7 @@
     "avg_substantive_score": 70.5417,
     "strictness_label": "Strict / Low-Scoring (-0.66 pts vs circuit)",
     "avg_win_margin": 4.5833,
-    "rank": 30
+    "rank": 35
   },
   {
     "adjudicator_name": "Official Tab Reconstructed",
@@ -431,7 +501,7 @@
     "avg_substantive_score": 69.9848,
     "strictness_label": "Strict / Low-Scoring (-1.22 pts vs circuit)",
     "avg_win_margin": 4.5833,
-    "rank": 31
+    "rank": 36
   },
   {
     "adjudicator_name": "Amiru Upekh Gamage",
@@ -445,7 +515,63 @@
     "avg_substantive_score": 70.5694,
     "strictness_label": "Strict / Low-Scoring (-0.63 pts vs circuit)",
     "avg_win_margin": 0.8333,
-    "rank": 32
+    "rank": 37
+  },
+  {
+    "adjudicator_name": "Rudhesh ram",
+    "institution": "AIS",
+    "debates_judged": 5,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 40.0,
+    "opp_win_pct": 60.0,
+    "side_bias": "Opposition Leaning (60.0% Opp)",
+    "avg_substantive_score": 70.95,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -4.9,
+    "rank": 38
+  },
+  {
+    "adjudicator_name": "Shahzadi Sujahudeen",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 5,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 40.0,
+    "opp_win_pct": 60.0,
+    "side_bias": "Opposition Leaning (60.0% Opp)",
+    "avg_substantive_score": 69.1167,
+    "strictness_label": "Strict / Low-Scoring (-2.08 pts vs circuit)",
+    "avg_win_margin": -1.2,
+    "rank": 39
+  },
+  {
+    "adjudicator_name": "Sandil Ranasinghe",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 5,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 80.0,
+    "opp_win_pct": 20.0,
+    "side_bias": "Proposition Leaning (80.0% Prop)",
+    "avg_substantive_score": 70.5,
+    "strictness_label": "Strict / Low-Scoring (-0.70 pts vs circuit)",
+    "avg_win_margin": 3.4,
+    "rank": 40
+  },
+  {
+    "adjudicator_name": "Rudhesh ram",
+    "institution": "AIS",
+    "debates_judged": 5,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 40.0,
+    "opp_win_pct": 60.0,
+    "side_bias": "Opposition Leaning (60.0% Opp)",
+    "avg_substantive_score": 70.95,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -4.9,
+    "rank": 41
   },
   {
     "adjudicator_name": "Mahiru Fernando",
@@ -459,7 +585,7 @@
     "avg_substantive_score": 69.1333,
     "strictness_label": "Strict / Low-Scoring (-2.07 pts vs circuit)",
     "avg_win_margin": -1.4,
-    "rank": 33
+    "rank": 42
   },
   {
     "adjudicator_name": "Lehara Edirisinghe",
@@ -473,7 +599,7 @@
     "avg_substantive_score": 70.6333,
     "strictness_label": "Strict / Low-Scoring (-0.57 pts vs circuit)",
     "avg_win_margin": -0.3,
-    "rank": 34
+    "rank": 43
   },
   {
     "adjudicator_name": "Krish Prabaharan",
@@ -487,7 +613,21 @@
     "avg_substantive_score": 70.2667,
     "strictness_label": "Strict / Low-Scoring (-0.93 pts vs circuit)",
     "avg_win_margin": -0.2,
-    "rank": 35
+    "rank": 44
+  },
+  {
+    "adjudicator_name": "Daniel Victor",
+    "institution": "VV",
+    "debates_judged": 5,
+    "tournaments_count": 3,
+    "outrounds_judged": 0,
+    "prop_win_pct": 40.0,
+    "opp_win_pct": 60.0,
+    "side_bias": "Opposition Leaning (60.0% Opp)",
+    "avg_substantive_score": 70.0167,
+    "strictness_label": "Strict / Low-Scoring (-1.18 pts vs circuit)",
+    "avg_win_margin": 4.0,
+    "rank": 45
   },
   {
     "adjudicator_name": "Chrishelle Perera",
@@ -501,7 +641,7 @@
     "avg_substantive_score": 69.6667,
     "strictness_label": "Strict / Low-Scoring (-1.53 pts vs circuit)",
     "avg_win_margin": 6.9,
-    "rank": 36
+    "rank": 46
   },
   {
     "adjudicator_name": "Cheka Mendis",
@@ -515,7 +655,7 @@
     "avg_substantive_score": 69.1833,
     "strictness_label": "Strict / Low-Scoring (-2.02 pts vs circuit)",
     "avg_win_margin": -1.2,
-    "rank": 37
+    "rank": 47
   },
   {
     "adjudicator_name": "Asna Azver",
@@ -529,63 +669,35 @@
     "avg_substantive_score": 66.7,
     "strictness_label": "Strict / Low-Scoring (-4.50 pts vs circuit)",
     "avg_win_margin": -7.9,
-    "rank": 38
+    "rank": 48
   },
   {
-    "adjudicator_name": "Saara Zubair",
-    "institution": "Independent / Circuit Adjudicator",
+    "adjudicator_name": "Thiseni Mapa",
+    "institution": "TC",
     "debates_judged": 5,
-    "tournaments_count": 3,
+    "tournaments_count": 2,
     "outrounds_judged": 0,
     "prop_win_pct": 40.0,
     "opp_win_pct": 60.0,
     "side_bias": "Opposition Leaning (60.0% Opp)",
-    "avg_substantive_score": 68.7333,
-    "strictness_label": "Strict / Low-Scoring (-2.47 pts vs circuit)",
-    "avg_win_margin": 0.3,
-    "rank": 39
+    "avg_substantive_score": 69.6207,
+    "strictness_label": "Strict / Low-Scoring (-1.58 pts vs circuit)",
+    "avg_win_margin": -2.9,
+    "rank": 49
   },
   {
-    "adjudicator_name": "Nimansa Jayasundera",
-    "institution": "CIS",
-    "debates_judged": 5,
-    "tournaments_count": 3,
-    "outrounds_judged": 0,
-    "prop_win_pct": 20.0,
-    "opp_win_pct": 80.0,
-    "side_bias": "Opposition Leaning (80.0% Opp)",
-    "avg_substantive_score": 71.15,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": -3.5,
-    "rank": 40
-  },
-  {
-    "adjudicator_name": "Saara Zubair",
+    "adjudicator_name": "Sandil Ranasinghe",
     "institution": "Independent / Circuit Adjudicator",
     "debates_judged": 5,
-    "tournaments_count": 3,
+    "tournaments_count": 2,
     "outrounds_judged": 0,
-    "prop_win_pct": 40.0,
-    "opp_win_pct": 60.0,
-    "side_bias": "Opposition Leaning (60.0% Opp)",
-    "avg_substantive_score": 68.7333,
-    "strictness_label": "Strict / Low-Scoring (-2.47 pts vs circuit)",
-    "avg_win_margin": 0.3,
-    "rank": 41
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Sarah Warnakulasuriya)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 4,
-    "tournaments_count": 3,
-    "outrounds_judged": 4,
-    "prop_win_pct": 75.0,
-    "opp_win_pct": 25.0,
-    "side_bias": "Proposition Leaning (75.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 42
+    "prop_win_pct": 80.0,
+    "opp_win_pct": 20.0,
+    "side_bias": "Proposition Leaning (80.0% Prop)",
+    "avg_substantive_score": 70.5,
+    "strictness_label": "Strict / Low-Scoring (-0.70 pts vs circuit)",
+    "avg_win_margin": 3.4,
+    "rank": 50
   },
   {
     "adjudicator_name": "Official Panel Decision (Senuka Seneviratne)",
@@ -599,7 +711,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 43
+    "rank": 51
   },
   {
     "adjudicator_name": "Official Panel Decision (Sarah Warnakulasuriya)",
@@ -613,7 +725,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 44
+    "rank": 52
   },
   {
     "adjudicator_name": "Official Panel Decision (Kulith Wickramasinghe)",
@@ -627,7 +739,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 45
+    "rank": 53
   },
   {
     "adjudicator_name": "Official Panel Decision (Adam Dhilshan)",
@@ -641,7 +753,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 46
+    "rank": 54
   },
   {
     "adjudicator_name": "Sheema Ramis",
@@ -655,7 +767,7 @@
     "avg_substantive_score": 69.625,
     "strictness_label": "Strict / Low-Scoring (-1.57 pts vs circuit)",
     "avg_win_margin": 5.0,
-    "rank": 47
+    "rank": 55
   },
   {
     "adjudicator_name": "Renate Wasala",
@@ -669,21 +781,7 @@
     "avg_substantive_score": 70.2917,
     "strictness_label": "Strict / Low-Scoring (-0.91 pts vs circuit)",
     "avg_win_margin": -2.0,
-    "rank": 48
-  },
-  {
-    "adjudicator_name": "Rachel Cramer",
-    "institution": "BSC",
-    "debates_judged": 4,
-    "tournaments_count": 1,
-    "outrounds_judged": 0,
-    "prop_win_pct": 25.0,
-    "opp_win_pct": 75.0,
-    "side_bias": "Opposition Leaning (75.0% Opp)",
-    "avg_substantive_score": 70.2708,
-    "strictness_label": "Strict / Low-Scoring (-0.93 pts vs circuit)",
-    "avg_win_margin": -3.0,
-    "rank": 49
+    "rank": 56
   },
   {
     "adjudicator_name": "Ra&#x27;ed Abdul Cader",
@@ -697,7 +795,7 @@
     "avg_substantive_score": 69.6042,
     "strictness_label": "Strict / Low-Scoring (-1.60 pts vs circuit)",
     "avg_win_margin": -10.5,
-    "rank": 50
+    "rank": 57
   },
   {
     "adjudicator_name": "Nimuthu Pathiraja",
@@ -711,7 +809,7 @@
     "avg_substantive_score": 68.3958,
     "strictness_label": "Strict / Low-Scoring (-2.80 pts vs circuit)",
     "avg_win_margin": -3.25,
-    "rank": 51
+    "rank": 58
   },
   {
     "adjudicator_name": "Muaaza Ifsal",
@@ -725,21 +823,7 @@
     "avg_substantive_score": 69.25,
     "strictness_label": "Strict / Low-Scoring (-1.95 pts vs circuit)",
     "avg_win_margin": 4.375,
-    "rank": 52
-  },
-  {
-    "adjudicator_name": "Indeevari de Silva",
-    "institution": "LC",
-    "debates_judged": 4,
-    "tournaments_count": 2,
-    "outrounds_judged": 0,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
-    "avg_substantive_score": 69.5208,
-    "strictness_label": "Strict / Low-Scoring (-1.68 pts vs circuit)",
-    "avg_win_margin": -8.625,
-    "rank": 53
+    "rank": 59
   },
   {
     "adjudicator_name": "Gayathri Ramachandran",
@@ -753,7 +837,7 @@
     "avg_substantive_score": 68.3125,
     "strictness_label": "Strict / Low-Scoring (-2.89 pts vs circuit)",
     "avg_win_margin": -4.25,
-    "rank": 54
+    "rank": 60
   },
   {
     "adjudicator_name": "Chenula Bandara",
@@ -767,7 +851,7 @@
     "avg_substantive_score": 70.6042,
     "strictness_label": "Strict / Low-Scoring (-0.60 pts vs circuit)",
     "avg_win_margin": -0.875,
-    "rank": 55
+    "rank": 61
   },
   {
     "adjudicator_name": "Aqeelah Wahid",
@@ -781,7 +865,7 @@
     "avg_substantive_score": 66.5208,
     "strictness_label": "Strict / Low-Scoring (-4.68 pts vs circuit)",
     "avg_win_margin": -1.0,
-    "rank": 56
+    "rank": 62
   },
   {
     "adjudicator_name": "Apoorva Wijesinghe",
@@ -795,21 +879,21 @@
     "avg_substantive_score": 68.0208,
     "strictness_label": "Strict / Low-Scoring (-3.18 pts vs circuit)",
     "avg_win_margin": -9.75,
-    "rank": 57
+    "rank": 63
   },
   {
-    "adjudicator_name": "Ajmal Amsa",
-    "institution": "RISK",
+    "adjudicator_name": "Tharin Rajapakshe",
+    "institution": "DBV",
     "debates_judged": 4,
-    "tournaments_count": 1,
+    "tournaments_count": 3,
     "outrounds_judged": 0,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
-    "avg_substantive_score": 67.9792,
-    "strictness_label": "Strict / Low-Scoring (-3.22 pts vs circuit)",
-    "avg_win_margin": -5.75,
-    "rank": 58
+    "prop_win_pct": 75.0,
+    "opp_win_pct": 25.0,
+    "side_bias": "Proposition Leaning (75.0% Prop)",
+    "avg_substantive_score": 70.0625,
+    "strictness_label": "Strict / Low-Scoring (-1.14 pts vs circuit)",
+    "avg_win_margin": 4.375,
+    "rank": 64
   },
   {
     "adjudicator_name": "Buthmini Mohotty",
@@ -823,7 +907,7 @@
     "avg_substantive_score": 66.3958,
     "strictness_label": "Strict / Low-Scoring (-4.80 pts vs circuit)",
     "avg_win_margin": -1.625,
-    "rank": 59
+    "rank": 65
   },
   {
     "adjudicator_name": "Buthmini Mohotti",
@@ -837,7 +921,7 @@
     "avg_substantive_score": 66.3958,
     "strictness_label": "Strict / Low-Scoring (-4.80 pts vs circuit)",
     "avg_win_margin": -1.625,
-    "rank": 60
+    "rank": 66
   },
   {
     "adjudicator_name": "Official Panel Decision (Mevindu Asuramanna)",
@@ -851,7 +935,21 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 61
+    "rank": 67
+  },
+  {
+    "adjudicator_name": "Mohomed Ajmal Amsa",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 3,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 69.7778,
+    "strictness_label": "Strict / Low-Scoring (-1.42 pts vs circuit)",
+    "avg_win_margin": 5.3333,
+    "rank": 68
   },
   {
     "adjudicator_name": "Vishwa Kaushalya",
@@ -865,7 +963,7 @@
     "avg_substantive_score": 69.4444,
     "strictness_label": "Strict / Low-Scoring (-1.76 pts vs circuit)",
     "avg_win_margin": 6.6667,
-    "rank": 62
+    "rank": 69
   },
   {
     "adjudicator_name": "Shailee Siriwardhana",
@@ -879,21 +977,7 @@
     "avg_substantive_score": 69.0833,
     "strictness_label": "Strict / Low-Scoring (-2.12 pts vs circuit)",
     "avg_win_margin": 3.1667,
-    "rank": 63
-  },
-  {
-    "adjudicator_name": "Shahzadi Sujahudeen",
-    "institution": "GCD",
-    "debates_judged": 3,
-    "tournaments_count": 1,
-    "outrounds_judged": 0,
-    "prop_win_pct": 33.3333,
-    "opp_win_pct": 66.6667,
-    "side_bias": "Opposition Leaning (66.7% Opp)",
-    "avg_substantive_score": 69.0833,
-    "strictness_label": "Strict / Low-Scoring (-2.12 pts vs circuit)",
-    "avg_win_margin": -0.5,
-    "rank": 64
+    "rank": 70
   },
   {
     "adjudicator_name": "Savidya Akini",
@@ -907,7 +991,7 @@
     "avg_substantive_score": 69.2222,
     "strictness_label": "Strict / Low-Scoring (-1.98 pts vs circuit)",
     "avg_win_margin": 0.3333,
-    "rank": 65
+    "rank": 71
   },
   {
     "adjudicator_name": "Savidya",
@@ -921,7 +1005,7 @@
     "avg_substantive_score": 69.5556,
     "strictness_label": "Strict / Low-Scoring (-1.64 pts vs circuit)",
     "avg_win_margin": -3.0,
-    "rank": 66
+    "rank": 72
   },
   {
     "adjudicator_name": "Sarala Hapugalle",
@@ -935,7 +1019,7 @@
     "avg_substantive_score": 69.5278,
     "strictness_label": "Strict / Low-Scoring (-1.67 pts vs circuit)",
     "avg_win_margin": 0.3333,
-    "rank": 67
+    "rank": 73
   },
   {
     "adjudicator_name": "Sarah Mulaffar",
@@ -949,7 +1033,49 @@
     "avg_substantive_score": 68.25,
     "strictness_label": "Strict / Low-Scoring (-2.95 pts vs circuit)",
     "avg_win_margin": -2.6667,
-    "rank": 68
+    "rank": 74
+  },
+  {
+    "adjudicator_name": "Renishka Fernando",
+    "institution": "GHSK",
+    "debates_judged": 3,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 66.6667,
+    "opp_win_pct": 33.3333,
+    "side_bias": "Proposition Leaning (66.7% Prop)",
+    "avg_substantive_score": 69.5,
+    "strictness_label": "Strict / Low-Scoring (-1.70 pts vs circuit)",
+    "avg_win_margin": 0.8333,
+    "rank": 75
+  },
+  {
+    "adjudicator_name": "Movinya Katulanda",
+    "institution": "STC",
+    "debates_judged": 3,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 33.3333,
+    "opp_win_pct": 66.6667,
+    "side_bias": "Opposition Leaning (66.7% Opp)",
+    "avg_substantive_score": 69.6667,
+    "strictness_label": "Strict / Low-Scoring (-1.53 pts vs circuit)",
+    "avg_win_margin": -5.5,
+    "rank": 76
+  },
+  {
+    "adjudicator_name": "Mohomed Ajmal Amsa",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 3,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 69.7778,
+    "strictness_label": "Strict / Low-Scoring (-1.42 pts vs circuit)",
+    "avg_win_margin": 5.3333,
+    "rank": 77
   },
   {
     "adjudicator_name": "Hirupama Bandara",
@@ -963,7 +1089,7 @@
     "avg_substantive_score": 69.8611,
     "strictness_label": "Strict / Low-Scoring (-1.34 pts vs circuit)",
     "avg_win_margin": 1.0,
-    "rank": 69
+    "rank": 78
   },
   {
     "adjudicator_name": "Chamodi Bopage",
@@ -977,7 +1103,7 @@
     "avg_substantive_score": 66.4167,
     "strictness_label": "Strict / Low-Scoring (-4.78 pts vs circuit)",
     "avg_win_margin": 3.1667,
-    "rank": 70
+    "rank": 79
   },
   {
     "adjudicator_name": "Amani Almeida",
@@ -991,35 +1117,21 @@
     "avg_substantive_score": 70.25,
     "strictness_label": "Strict / Low-Scoring (-0.95 pts vs circuit)",
     "avg_win_margin": -4.5,
-    "rank": 71
+    "rank": 80
   },
   {
-    "adjudicator_name": "Esala Rajapakshe",
-    "institution": "Independent / Circuit Adjudicator",
-    "debates_judged": 3,
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 2,
     "tournaments_count": 2,
-    "outrounds_judged": 0,
-    "prop_win_pct": 33.3333,
-    "opp_win_pct": 66.6667,
-    "side_bias": "Opposition Leaning (66.7% Opp)",
-    "avg_substantive_score": 70.6667,
-    "strictness_label": "Strict / Low-Scoring (-0.53 pts vs circuit)",
-    "avg_win_margin": -4.6667,
-    "rank": 72
-  },
-  {
-    "adjudicator_name": "Esala Rajapakse",
-    "institution": "LISN",
-    "debates_judged": 3,
-    "tournaments_count": 2,
-    "outrounds_judged": 0,
-    "prop_win_pct": 33.3333,
-    "opp_win_pct": 66.6667,
-    "side_bias": "Opposition Leaning (66.7% Opp)",
-    "avg_substantive_score": 70.6667,
-    "strictness_label": "Strict / Low-Scoring (-0.53 pts vs circuit)",
-    "avg_win_margin": -4.6667,
-    "rank": 73
+    "outrounds_judged": 2,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 81
   },
   {
     "adjudicator_name": "Official Panel Decision (Suchith Tissera)",
@@ -1033,7 +1145,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 74
+    "rank": 82
   },
   {
     "adjudicator_name": "Official Panel Decision (Savith Wijesundara)",
@@ -1047,7 +1159,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 75
+    "rank": 83
   },
   {
     "adjudicator_name": "Virul Abeysuriya",
@@ -1061,7 +1173,7 @@
     "avg_substantive_score": 67.0833,
     "strictness_label": "Strict / Low-Scoring (-4.12 pts vs circuit)",
     "avg_win_margin": 6.0,
-    "rank": 76
+    "rank": 84
   },
   {
     "adjudicator_name": "Shavindi Pieris",
@@ -1075,7 +1187,7 @@
     "avg_substantive_score": 70.8333,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": -4.0,
-    "rank": 77
+    "rank": 85
   },
   {
     "adjudicator_name": "Savindya Thalagahawatte",
@@ -1089,7 +1201,7 @@
     "avg_substantive_score": 70.5417,
     "strictness_label": "Strict / Low-Scoring (-0.66 pts vs circuit)",
     "avg_win_margin": 0.25,
-    "rank": 78
+    "rank": 86
   },
   {
     "adjudicator_name": "Sanumi Gamage",
@@ -1103,7 +1215,21 @@
     "avg_substantive_score": 69.5,
     "strictness_label": "Strict / Low-Scoring (-1.70 pts vs circuit)",
     "avg_win_margin": -15.75,
-    "rank": 79
+    "rank": 87
+  },
+  {
+    "adjudicator_name": "Ranudi Jayasinghe",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 2,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 70.375,
+    "strictness_label": "Strict / Low-Scoring (-0.82 pts vs circuit)",
+    "avg_win_margin": -0.75,
+    "rank": 88
   },
   {
     "adjudicator_name": "Piyavi Randev Sapukotanage",
@@ -1117,7 +1243,7 @@
     "avg_substantive_score": 68.7917,
     "strictness_label": "Strict / Low-Scoring (-2.41 pts vs circuit)",
     "avg_win_margin": -3.25,
-    "rank": 80
+    "rank": 89
   },
   {
     "adjudicator_name": "Oneli de Silva",
@@ -1131,7 +1257,7 @@
     "avg_substantive_score": 68.9167,
     "strictness_label": "Strict / Low-Scoring (-2.28 pts vs circuit)",
     "avg_win_margin": 0.5,
-    "rank": 81
+    "rank": 90
   },
   {
     "adjudicator_name": "Omar Hazari",
@@ -1145,7 +1271,7 @@
     "avg_substantive_score": 69.0,
     "strictness_label": "Strict / Low-Scoring (-2.20 pts vs circuit)",
     "avg_win_margin": 0.0,
-    "rank": 82
+    "rank": 91
   },
   {
     "adjudicator_name": "Official Reconstructed (Vidath Marasinghe)",
@@ -1159,7 +1285,7 @@
     "avg_substantive_score": 69.9091,
     "strictness_label": "Strict / Low-Scoring (-1.29 pts vs circuit)",
     "avg_win_margin": 23.0,
-    "rank": 83
+    "rank": 92
   },
   {
     "adjudicator_name": "Mohammed Aadhil Amhar",
@@ -1173,7 +1299,7 @@
     "avg_substantive_score": 67.6667,
     "strictness_label": "Strict / Low-Scoring (-3.53 pts vs circuit)",
     "avg_win_margin": -2.0,
-    "rank": 84
+    "rank": 93
   },
   {
     "adjudicator_name": "Migara",
@@ -1187,7 +1313,63 @@
     "avg_substantive_score": 68.2083,
     "strictness_label": "Strict / Low-Scoring (-2.99 pts vs circuit)",
     "avg_win_margin": 0.0,
-    "rank": 85
+    "rank": 94
+  },
+  {
+    "adjudicator_name": "Mevindu Asuramana",
+    "institution": "Moir",
+    "debates_judged": 2,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.5833,
+    "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
+    "avg_win_margin": 4.0,
+    "rank": 95
+  },
+  {
+    "adjudicator_name": "Mevindu Asuramana",
+    "institution": "Moir",
+    "debates_judged": 2,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.5833,
+    "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
+    "avg_win_margin": 4.0,
+    "rank": 96
+  },
+  {
+    "adjudicator_name": "Mauli Kularatne",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 2,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 70.25,
+    "strictness_label": "Strict / Low-Scoring (-0.95 pts vs circuit)",
+    "avg_win_margin": 5.0,
+    "rank": 97
+  },
+  {
+    "adjudicator_name": "Marsha Rozarius",
+    "institution": "BC",
+    "debates_judged": 2,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.7083,
+    "strictness_label": "Strict / Low-Scoring (-1.49 pts vs circuit)",
+    "avg_win_margin": 1.75,
+    "rank": 98
   },
   {
     "adjudicator_name": "Kavodi Kulunumini Ranasinghe",
@@ -1201,7 +1383,7 @@
     "avg_substantive_score": 67.5,
     "strictness_label": "Strict / Low-Scoring (-3.70 pts vs circuit)",
     "avg_win_margin": -16.0,
-    "rank": 86
+    "rank": 99
   },
   {
     "adjudicator_name": "Kavodi Kulunumini Ranasinghe",
@@ -1215,10 +1397,10 @@
     "avg_substantive_score": 67.5,
     "strictness_label": "Strict / Low-Scoring (-3.70 pts vs circuit)",
     "avg_win_margin": -16.0,
-    "rank": 87
+    "rank": 100
   },
   {
-    "adjudicator_name": "Kaveesha De Silva",
+    "adjudicator_name": "Jeewantha Induruwa",
     "institution": "Independent / Circuit Adjudicator",
     "debates_judged": 2,
     "tournaments_count": 1,
@@ -1226,10 +1408,10 @@
     "prop_win_pct": 50.0,
     "opp_win_pct": 50.0,
     "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 69.5417,
-    "strictness_label": "Strict / Low-Scoring (-1.66 pts vs circuit)",
-    "avg_win_margin": -0.75,
-    "rank": 88
+    "avg_substantive_score": 68.875,
+    "strictness_label": "Strict / Low-Scoring (-2.33 pts vs circuit)",
+    "avg_win_margin": -4.0,
+    "rank": 101
   },
   {
     "adjudicator_name": "Jayasekara Mudiyanselage Lakshitha Sampath Bandara",
@@ -1243,7 +1425,7 @@
     "avg_substantive_score": 70.7083,
     "strictness_label": "Strict / Low-Scoring (-0.49 pts vs circuit)",
     "avg_win_margin": -4.25,
-    "rank": 89
+    "rank": 102
   },
   {
     "adjudicator_name": "Janidu Jayasekera",
@@ -1257,7 +1439,7 @@
     "avg_substantive_score": 69.4167,
     "strictness_label": "Strict / Low-Scoring (-1.78 pts vs circuit)",
     "avg_win_margin": -13.0,
-    "rank": 90
+    "rank": 103
   },
   {
     "adjudicator_name": "Himaanthri Surendran",
@@ -1271,7 +1453,7 @@
     "avg_substantive_score": 68.5833,
     "strictness_label": "Strict / Low-Scoring (-2.62 pts vs circuit)",
     "avg_win_margin": -2.5,
-    "rank": 91
+    "rank": 104
   },
   {
     "adjudicator_name": "Druvin Vitharanage",
@@ -1285,7 +1467,7 @@
     "avg_substantive_score": 69.0,
     "strictness_label": "Strict / Low-Scoring (-2.20 pts vs circuit)",
     "avg_win_margin": -8.0,
-    "rank": 92
+    "rank": 105
   },
   {
     "adjudicator_name": "Dithira De Silva",
@@ -1299,7 +1481,7 @@
     "avg_substantive_score": 71.0833,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": -3.0,
-    "rank": 93
+    "rank": 106
   },
   {
     "adjudicator_name": "Deenah Sangani",
@@ -1313,7 +1495,7 @@
     "avg_substantive_score": 68.6667,
     "strictness_label": "Strict / Low-Scoring (-2.53 pts vs circuit)",
     "avg_win_margin": 0.5,
-    "rank": 94
+    "rank": 107
   },
   {
     "adjudicator_name": "Chavika Samaraweera",
@@ -1327,7 +1509,7 @@
     "avg_substantive_score": 70.9167,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": -4.0,
-    "rank": 95
+    "rank": 108
   },
   {
     "adjudicator_name": "Chanul Thameesha",
@@ -1341,7 +1523,7 @@
     "avg_substantive_score": 70.6667,
     "strictness_label": "Strict / Low-Scoring (-0.53 pts vs circuit)",
     "avg_win_margin": 4.25,
-    "rank": 96
+    "rank": 109
   },
   {
     "adjudicator_name": "Chamodi Chathurini Bopege",
@@ -1355,7 +1537,7 @@
     "avg_substantive_score": 64.75,
     "strictness_label": "Strict / Low-Scoring (-6.45 pts vs circuit)",
     "avg_win_margin": 3.0,
-    "rank": 97
+    "rank": 110
   },
   {
     "adjudicator_name": "Ahamed Suhaib",
@@ -1369,7 +1551,7 @@
     "avg_substantive_score": 69.5,
     "strictness_label": "Strict / Low-Scoring (-1.70 pts vs circuit)",
     "avg_win_margin": -11.0,
-    "rank": 98
+    "rank": 111
   },
   {
     "adjudicator_name": "Afrah Athahurahman",
@@ -1383,7 +1565,7 @@
     "avg_substantive_score": 70.3333,
     "strictness_label": "Strict / Low-Scoring (-0.87 pts vs circuit)",
     "avg_win_margin": 6.5,
-    "rank": 99
+    "rank": 112
   },
   {
     "adjudicator_name": "Adithi Vitharanage",
@@ -1397,192 +1579,10 @@
     "avg_substantive_score": 68.2083,
     "strictness_label": "Strict / Low-Scoring (-2.99 pts vs circuit)",
     "avg_win_margin": -11.75,
-    "rank": 100
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Akindu Athauda , Chanidu Rathnayake , Kaveesha Mallawaarachchi)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 101
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Nethma Madawala , Savith Wijesundara)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 102
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Jayageeth Basnayake , Amnah Jiffrey , Nethula Hettihewage)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 103
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Adam Dhilshan , Kaveesha Mallawaarachchi , Yasindu Edussuriya)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 104
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Anah Cassim , Mevindu Asuramanna , Shakeeb)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 105
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 106
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Thithira Jayakody)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 107
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Shakeeb Mohideen , Nethma Madawala , Nethula Hettihewage)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 108
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Nethma Madawala , Savith Wijesundara)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 109
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Akindu Athauda , Navidi Perera , Shaluka Herath)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 110
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Visura Padeniya , Amiru Gamage)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 111
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Okitha Karunadhara)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
-    "rank": 112
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 100.0,
-    "opp_win_pct": 0.0,
-    "side_bias": "Proposition Leaning (100.0% Prop)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
     "rank": 113
   },
   {
-    "adjudicator_name": "Official Panel Decision (Jayageeth Basnayake , Amnah Jiffrey , Nethula Hettihewage)",
+    "adjudicator_name": "Official Panel Decision (Senuka Seneviratne , Kaveesha Mallawaarachchi , Rachel Cramer)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1596,21 +1596,21 @@
     "rank": 114
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Husnaa Imtiaz , Yasindu Edussuriya)",
+    "adjudicator_name": "Official Panel Decision (Senuka Seneviratne , Kaveesha Mallawaarachchi , Rachel Cramer)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
     "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
     "rank": 115
   },
   {
-    "adjudicator_name": "Official Panel Decision (Vakeesh Rupan)",
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1624,7 +1624,7 @@
     "rank": 116
   },
   {
-    "adjudicator_name": "Official Panel Decision (Naika Gooneratne , Sandil Ranasinghe , Shaluka Herath)",
+    "adjudicator_name": "Official Panel Decision (Anah Cassim , Mevindu Asuramanna , Shakeeb)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1638,7 +1638,21 @@
     "rank": 117
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
+    "adjudicator_name": "Official Panel Decision (Gavin Senaratne , Indeevari De Silva , Methira Padeniya)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 118
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1649,38 +1663,24 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 118
-  },
-  {
-    "adjudicator_name": "Official Panel Decision (Himanshu Jayasinghe)",
-    "institution": "Tournament Adjudication Core",
-    "debates_judged": 1,
-    "tournaments_count": 1,
-    "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
-    "avg_substantive_score": 71.4286,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": 0.0,
     "rank": 119
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Attauda , Raashid Cassim , Sanithma Jayasooriya , Visura Padeniya)",
+    "adjudicator_name": "Official Panel Decision (Sarah Warnakulasuriya , Khanavee)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
     "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
     "rank": 120
   },
   {
-    "adjudicator_name": "Official Panel Decision (Sarah Warnakulasooriya)",
+    "adjudicator_name": "Official Panel Decision (Chirathi Perera , Rachel Cramer , Shakeeb Mohideen)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1694,21 +1694,21 @@
     "rank": 121
   },
   {
-    "adjudicator_name": "Official Panel Decision (Husnaa Imtiaz , Abdullah Yusoof 💢 , Nevan Serasundera , Suchith Tissera 💢 , Thithira Jayakody)",
+    "adjudicator_name": "Official Panel Decision (Chirathi Perera , Rachel Cramer , Shakeeb Mohideen)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
     "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
     "rank": 122
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shakeeb Mohideen , Nethma Madawala , Nethula Hettihewage)",
+    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Nethma Madawala , Savith Wijesundara)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1722,35 +1722,35 @@
     "rank": 123
   },
   {
-    "adjudicator_name": "Official Panel Decision (Mevindu , Nethma Madawela , Yasindu)",
+    "adjudicator_name": "Official Panel Decision (Chirathi Perera , Amnah Jiffrey , Saara Zubair)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
     "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
     "rank": 124
   },
   {
-    "adjudicator_name": "Official Panel Decision (Visura , Kaveesha Mallawarachchi , Senuka Seneviratne)",
+    "adjudicator_name": "Official Panel Decision (Akindu Athauda , Navidi Perera , Shaluka Herath)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
     "outrounds_judged": 1,
-    "prop_win_pct": 0.0,
-    "opp_win_pct": 100.0,
-    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
     "rank": 125
   },
   {
-    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Daniel Victor , Naika)",
+    "adjudicator_name": "Official Panel Decision (Gavin Senaratne , Indeevari De Silva , Methira Padeniya)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1764,7 +1764,7 @@
     "rank": 126
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
+    "adjudicator_name": "Official Panel Decision (Visura Padeniya , Amiru Gamage)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1778,7 +1778,7 @@
     "rank": 127
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Husnaa Imtiaz , Yasindu Edussuriya)",
+    "adjudicator_name": "Official Panel Decision (Okitha Karunadhara)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1792,7 +1792,7 @@
     "rank": 128
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1806,7 +1806,7 @@
     "rank": 129
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
+    "adjudicator_name": "Official Panel Decision (Vakeesh Rupan)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1820,7 +1820,7 @@
     "rank": 130
   },
   {
-    "adjudicator_name": "Official Panel Decision (Anah Cassim , Mevindu Asuramanna , Shakeeb)",
+    "adjudicator_name": "Official Panel Decision (Naika Gooneratne , Sandil Ranasinghe , Shaluka Herath)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1834,7 +1834,7 @@
     "rank": 131
   },
   {
-    "adjudicator_name": "Official Panel Decision (Akindu Athauda , Mabroor Ahmed , Rudhesh Ram)",
+    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Athauda , Aliza Hussain , Jayageeth Basnayake , Sandil Ranasinghe)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1848,7 +1848,7 @@
     "rank": 132
   },
   {
-    "adjudicator_name": "Official Panel Decision (Thithira Jayakody 💢 , Aliza , Husnaa Imtiaz , Jayageeth Bassnayake 💢 , Shakeeb Mohideen)",
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1862,7 +1862,7 @@
     "rank": 133
   },
   {
-    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Husnaa Imtiaz , Yasindu Edussuriya)",
+    "adjudicator_name": "Official Panel Decision (Himanshu Jayasinghe)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1876,7 +1876,7 @@
     "rank": 134
   },
   {
-    "adjudicator_name": "Official Panel Decision (Dinal Wellappili)",
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
     "tournaments_count": 1,
@@ -1890,6 +1890,188 @@
     "rank": 135
   },
   {
+    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Akindu Attauda , Raashid Cassim , Sanithma Jayasooriya , Visura Padeniya)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 136
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Sarah Warnakulasooriya)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 137
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Husnaa Imtiaz , Abdullah Yusoof 💢 , Nevan Serasundera , Suchith Tissera 💢 , Thithira Jayakody)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 138
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Shakeeb Mohideen , Nethma Madawala , Nethula Hettihewage)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 139
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Mevindu , Nethma Madawela , Yasindu)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 140
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Visura , Kaveesha Mallawarachchi , Senuka Seneviratne)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 141
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 142
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Chirathi Perera , Amnah Jiffrey , Saara Zubair)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 143
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Akindu Athauda , Mabroor Ahmed , Rudhesh Ram)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 144
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody 💢 , Aliza , Husnaa Imtiaz , Jayageeth Bassnayake 💢 , Shakeeb Mohideen)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 145
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Shalem Sumanthiran , Husnaa Imtiaz , Yasindu Edussuriya)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 0.0,
+    "opp_win_pct": 100.0,
+    "side_bias": "Opposition Leaning (100.0% Opp)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 146
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Thithira Jayakody , Amnah Jiffrey , Esala Rajapakshe , Indeevari De Silva , Kaveesha De Silva)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 147
+  },
+  {
+    "adjudicator_name": "Official Panel Decision (Dinal Wellappili)",
+    "institution": "Tournament Adjudication Core",
+    "debates_judged": 1,
+    "tournaments_count": 1,
+    "outrounds_judged": 1,
+    "prop_win_pct": 100.0,
+    "opp_win_pct": 0.0,
+    "side_bias": "Proposition Leaning (100.0% Prop)",
+    "avg_substantive_score": 71.4286,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": 0.0,
+    "rank": 148
+  },
+  {
     "adjudicator_name": "Official Panel Decision (Senuka Seneviratne , Chrishelle Perera , Dihen Udumalagala , Rudhesh Ram , Sanithma Jayasooriya)",
     "institution": "Tournament Adjudication Core",
     "debates_judged": 1,
@@ -1901,7 +2083,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 136
+    "rank": 149
   },
   {
     "adjudicator_name": "Dineth Keragala",
@@ -1915,6 +2097,6 @@
     "avg_substantive_score": 70.4167,
     "strictness_label": "Strict / Low-Scoring (-0.78 pts vs circuit)",
     "avg_win_margin": 5.0,
-    "rank": 137
+    "rank": 150
   }
 ]

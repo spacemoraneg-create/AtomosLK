@@ -244,8 +244,23 @@ class AtomosQuery:
         cur.execute("SELECT COUNT(*) as cnt FROM debates WHERE is_walkover = 0")
         total_debates = cur.fetchone()["cnt"]
 
+        cur.execute("SELECT COUNT(*) as cnt FROM speech_performances")
+        total_speeches_all = cur.fetchone()["cnt"]
+
         cur.execute("SELECT COUNT(*) as cnt FROM speech_performances WHERE is_valid_rubric = 1")
-        total_speeches = cur.fetchone()["cnt"]
+        total_valid_speeches = cur.fetchone()["cnt"]
+
+        cur.execute("""
+            SELECT 
+                COUNT(CASE WHEN r.round_type = 'PRELIMINARY' THEN 1 END) as prelim_debates,
+                COUNT(CASE WHEN r.round_type = 'ELIMINATION' THEN 1 END) as knockout_debates
+            FROM debates d
+            JOIN rounds r ON d.round_id = r.id
+            WHERE d.is_walkover = 0
+        """)
+        rounds_row = cur.fetchone()
+        prelim_rounds = rounds_row["prelim_debates"] if rounds_row else 0
+        knockout_rounds = rounds_row["knockout_debates"] if rounds_row else 0
 
         side_balance = self._motion_engine.get_overall_side_balance()
 
@@ -254,7 +269,10 @@ class AtomosQuery:
             "total_institutions": total_institutions,
             "total_tournaments": total_tournaments,
             "total_debates_debated": total_debates,
-            "total_valid_speeches": total_speeches,
+            "total_speeches": total_speeches_all,
+            "total_valid_speeches": total_valid_speeches,
+            "total_prelim_rounds": prelim_rounds,
+            "total_knockout_rounds": knockout_rounds,
             "national_side_balance": side_balance,
         }
 

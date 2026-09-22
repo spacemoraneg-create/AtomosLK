@@ -510,6 +510,43 @@ class TournamentNormalizer:
                         (round_id, debate_id, r_name, prop_tid, opp_tid, source_url),
                     )
 
+        # Standardize Elimination Round Names using Backward Induction
+        cur.execute("""
+            SELECT r.id, r.round_number, r.name, COUNT(d.id) as deb_cnt
+            FROM rounds r
+            LEFT JOIN debates d ON d.round_id = r.id AND d.is_walkover = 0
+            WHERE r.tournament_id = ? AND r.round_type = 'ELIMINATION'
+            GROUP BY r.id
+            ORDER BY r.round_number ASC
+        """, (tournament_id,))
+        elims = cur.fetchall()
+        n_elims = len(elims)
+        for e_idx, e_row in enumerate(elims):
+            from_end = n_elims - 1 - e_idx
+            cnt = e_row["deb_cnt"]
+            old_name = e_row["name"] or ""
+            old_lower = old_name.lower()
+
+            if "novice" in old_lower:
+                continue
+
+            if from_end == 0:
+                std_name = "Grand Final"
+            elif from_end == 1:
+                std_name = "Semifinals"
+            elif from_end == 2:
+                std_name = "Quarterfinals"
+            elif from_end == 3:
+                std_name = "Partial Octofinals" if cnt <= 4 else "Octofinals"
+            elif from_end == 4:
+                std_name = "Partial Double Octofinals" if cnt <= 8 else "Double Octofinals"
+            else:
+                std_name = old_name
+
+            if std_name != old_name:
+                cur.execute("UPDATE rounds SET name = ? WHERE id = ?", (std_name, e_row["id"]))
+
+
         # 5b. Extract Motions from motions.html if available
         motions_html_file = raw_dir / "motions.html"
         if motions_html_file.exists():

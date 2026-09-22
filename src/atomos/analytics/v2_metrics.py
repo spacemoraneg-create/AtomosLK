@@ -221,16 +221,27 @@ class V2MetricsEngine:
                 else:
                     p_ach, o_ach = "Finalist", "Champion"
             else:
-                match_r = next((r for r in t_elims if r[0] == rnum), None)
+                r_idx = next((i for i, r in enumerate(t_elims) if r[0] == rnum), None)
+                match_r = t_elims[r_idx] if r_idx is not None else None
                 cnt = match_r[1] if match_r else 0
-                if cnt == 2:
+
+                if r_idx == 1:
                     stage = "Semifinalist"
-                elif cnt == 4:
+                elif r_idx == 2:
                     stage = "Quarterfinalist"
-                elif cnt == 8:
-                    stage = "Octofinalist"
+                elif r_idx == 3:
+                    stage = "Partial Octofinalist" if cnt <= 4 else "Octofinalist"
+                elif r_idx == 4:
+                    stage = "Double Partial Octofinalist" if cnt <= 8 else "Double Octofinalist"
                 else:
-                    stage = "Partial Octofinalist"
+                    if cnt == 2:
+                        stage = "Semifinalist"
+                    elif cnt == 4:
+                        stage = "Quarterfinalist"
+                    elif cnt == 8:
+                        stage = "Octofinalist"
+                    else:
+                        stage = "Partial Octofinalist"
                 p_ach, o_ach = stage, stage
 
             if p_tid:
@@ -1339,7 +1350,7 @@ class V2MetricsEngine:
         tourneys = cur.fetchall()
 
         # Prelim + Open Knockout rounds count per tournament
-        open_knockout_counts = {1: 5, 2: 3, 3: 4, 4: 4, 7: 4, 10: 4, 16: 3, 18: 3}
+        open_knockout_counts = {1: 5, 2: 3, 3: 4, 4: 4, 7: 4, 10: 4, 16: 3, 18: 3, 44: 4}
 
         t_results: List[Dict[str, Any]] = []
 

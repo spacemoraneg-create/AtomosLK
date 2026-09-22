@@ -48,11 +48,11 @@ class TestV2UniversalLaw:
         prof = v2.get_debater_v2_profile("Vidath Marasinghe")
         assert prof is not None
 
-        # Verify Vidath Marasinghe substantive preliminary mean (72.84 across 29 prelim rounds)
-        assert round(prof["speaker_avg"], 2) == 72.84
-        assert round(prof["speaker_score"], 2) == 72.84
-        assert prof["prelims_debated"] == 29
-        assert prof["tournaments_debated"] == 6
+        # Verify Vidath Marasinghe substantive preliminary mean (72.74 across 34 prelim rounds)
+        assert round(prof["speaker_avg"], 2) == 72.74
+        assert round(prof["speaker_score"], 2) == 72.74
+        assert prof["prelims_debated"] == 34
+        assert prof["tournaments_debated"] == 7
 
     def test_sample_stdev(self):
         # Empty and 1-item lists
@@ -160,7 +160,7 @@ class TestV2AdjudicatorsAndTournaments:
 
     def test_tournament_hard_rankings(self, v2):
         tours = v2.get_tournament_hard_rankings(sort_by="atss")
-        assert len(tours) == 8
+        assert len(tours) == 9
         for t in tours:
             assert "atss" in t
             assert "brk_atss" in t
@@ -202,7 +202,7 @@ class TestV2RestApi:
     def test_api_tournaments(self, client):
         r = client.get("/api/v2/leaderboard/tournaments")
         assert r.status_code == 200
-        assert len(r.get_json()["leaderboard"]) == 8
+        assert len(r.get_json()["leaderboard"]) == 9
 
     def test_api_adjudicators(self, client):
         r = client.get("/api/v2/leaderboard/adjudicators")

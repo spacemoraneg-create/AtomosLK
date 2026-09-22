@@ -25,7 +25,8 @@ OFFICIAL_TOURNAMENT_DATES = {
     7: "March 13–16, 2026",     # VVIDC 2026
     10: "June 19–22, 2026",     # Metho 2026
     16: "July 3–6, 2026",       # RIC ISDC 2026
-    18: "July 31 – Aug 3, 2026" # Chap's '26
+    18: "July 31 – Aug 3, 2026", # Chap's '26
+    44: "Sept 18–21, 2026",     # Nixon's 2026
 }
 
 CHRONOLOGICAL_TOURNAMENT_ORDER = {
@@ -37,6 +38,7 @@ CHRONOLOGICAL_TOURNAMENT_ORDER = {
     3: 6,   # APIIT ISDC 2026 (July 17–20)
     18: 7,  # Chap's '26 (July 31–Aug 3)
     4: 8,   # SLSDC 2026 (Aug 22–31)
+    44: 9,  # Nixon's 2026 (Sept 18–21)
 }
 
 CLEAN_TOURNAMENT_NAMES = {
@@ -47,7 +49,8 @@ CLEAN_TOURNAMENT_NAMES = {
     7: "Visakha Vidyalaya Championship (VVIDC 2026)",
     10: "Shanthi Peiris Memorial (Metho 2026)",
     16: "RIC ISDC 2026",
-    18: "Frances Chapman Memorial (Chap's '26)"
+    18: "Frances Chapman Memorial (Chap's '26)",
+    44: "Lillian Nixon's Memorial (Nixon's 2026)",
 }
 
 

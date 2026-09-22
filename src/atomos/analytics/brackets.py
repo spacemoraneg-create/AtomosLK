@@ -93,18 +93,41 @@ class BracketEngine:
             deb_cnt = r["debate_count"]
             r_name = r["round_name"]
 
-            # Standardize stage label
-            if "novice" in (r_name or "").lower():
+            # Standardize stage label using backward induction from Grand Final
+            r_name_lower = (r_name or "").lower()
+            from_end = len(round_rows) - 1 - r_idx
+
+            if "novice" in r_name_lower:
                 stage_label = r_name
             elif grand_final_match is not None:
                 # Open Grand Final was already reached; later rounds are Novice
-                stage_label = f"Novice {STAGE_NAMES_BY_COUNT.get(deb_cnt, r_name)}"
-            elif deb_cnt in STAGE_NAMES_BY_COUNT and ("round" in (r_name or "").lower() or not r_name):
-                stage_label = STAGE_NAMES_BY_COUNT[deb_cnt]
-            elif r_idx == len(round_rows) - 1 and deb_cnt == 1:
+                stage_label = f"Novice {r_name}"
+            elif "partial double octo" in r_name_lower:
+                stage_label = "Partial Double Octofinals"
+            elif "partial octo" in r_name_lower:
+                stage_label = "Partial Octofinals"
+            elif "double octo" in r_name_lower:
+                stage_label = "Double Octofinals"
+            elif "octo" in r_name_lower:
+                stage_label = "Octofinals"
+            elif "quarter" in r_name_lower:
+                stage_label = "Quarterfinals"
+            elif "semi" in r_name_lower:
+                stage_label = "Semifinals"
+            elif "grand final" in r_name_lower:
                 stage_label = "Grand Final"
+            elif from_end == 0:
+                stage_label = "Grand Final"
+            elif from_end == 1:
+                stage_label = "Semifinals"
+            elif from_end == 2:
+                stage_label = "Quarterfinals"
+            elif from_end == 3:
+                stage_label = "Partial Octofinals" if deb_cnt <= 4 else "Octofinals"
+            elif from_end == 4:
+                stage_label = "Partial Double Octofinals" if deb_cnt <= 8 else "Double Octofinals"
             else:
-                stage_label = r_name
+                stage_label = r_name or f"Knockout Round {r['round_number']}"
 
             # Query debates in this round
             cur.execute("""

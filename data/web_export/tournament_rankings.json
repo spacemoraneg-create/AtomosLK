@@ -30,6 +30,21 @@
     "rank": 2
   },
   {
+    "tournament_id": 44,
+    "tournament_slug": "nixons2026",
+    "tournament_name": "Lillian Nixon's Memorial (Nixon's 2026)",
+    "dates": "Sept 18–21, 2026",
+    "apttss": 244.743,
+    "apttss_breaking": 250.04,
+    "teams_participated": 38,
+    "prelim_rounds": 5,
+    "break_structure": "Partial Octos (Top 12)",
+    "speeches_count": 618,
+    "debates_count": 104,
+    "breaking_teams_count": 12,
+    "rank": 3
+  },
+  {
     "tournament_id": 2,
     "tournament_slug": "aisdc26",
     "tournament_name": "AIS Debating Championship (AISDC 2026)",
@@ -42,7 +57,7 @@
     "speeches_count": 414,
     "debates_count": 67,
     "breaking_teams_count": 8,
-    "rank": 3
+    "rank": 4
   },
   {
     "tournament_id": 10,
@@ -57,7 +72,7 @@
     "speeches_count": 500,
     "debates_count": 100,
     "breaking_teams_count": 16,
-    "rank": 4
+    "rank": 5
   },
   {
     "tournament_id": 16,
@@ -72,7 +87,7 @@
     "speeches_count": 414,
     "debates_count": 67,
     "breaking_teams_count": 8,
-    "rank": 5
+    "rank": 6
   },
   {
     "tournament_id": 7,
@@ -87,7 +102,7 @@
     "speeches_count": 510,
     "debates_count": 96,
     "breaking_teams_count": 12,
-    "rank": 6
+    "rank": 7
   },
   {
     "tournament_id": 3,
@@ -102,7 +117,7 @@
     "speeches_count": 612,
     "debates_count": 125,
     "breaking_teams_count": 20,
-    "rank": 7
+    "rank": 8
   },
   {
     "tournament_id": 1,
@@ -113,10 +128,10 @@
     "apttss_breaking": 247.136,
     "teams_participated": 70,
     "prelim_rounds": 5,
-    "break_structure": "Octofinals (Top 16)",
+    "break_structure": "Partial Octos (Top 12)",
     "speeches_count": 965,
     "debates_count": 191,
     "breaking_teams_count": 24,
-    "rank": 8
+    "rank": 9
   }
 ]

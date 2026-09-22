@@ -33,8 +33,8 @@
     const num = Number(val);
     if (!isFinite(num)) return 'N/A';
     if (num % 1 === 0) return String(Math.trunc(num));
-    // Up to 3 decimal places if exist, never round up
-    const targetDecimals = Math.max(maxDecimals || 3, 3);
+    // Up to maxDecimals places (default 3), never round up
+    const targetDecimals = (maxDecimals !== undefined && maxDecimals !== null) ? maxDecimals : 3;
     const s = num.toFixed(8);
     const parts = s.split('.');
     const integerPart = parts[0];
@@ -270,12 +270,27 @@
         list.sort((a, b) => b.speaker_score - a.speaker_score);
       }
 
+      // Assign true circuit rank before filtering
+      list.forEach((s, idx) => {
+        s._trueRank = idx + 1;
+      });
+
       // Filter by search
       if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
         list = list.filter((s) => {
-          const debaterName = s.speaker_name || s.name || '';
-          return debaterName.toLowerCase().includes(searchQuery) ||
-                 (s.institution && s.institution.toLowerCase().includes(searchQuery));
+          const debaterName = (s.speaker_name || s.name || '').toLowerCase();
+          const inst = (s.institution || '').toLowerCase();
+          return debaterName.includes(q) || inst.includes(q);
+        });
+
+        // Prioritize debater name matches over institution matches
+        list.sort((a, b) => {
+          const aNameMatch = (a.speaker_name || a.name || '').toLowerCase().includes(q);
+          const bNameMatch = (b.speaker_name || b.name || '').toLowerCase().includes(q);
+          if (aNameMatch && !bNameMatch) return -1;
+          if (!aNameMatch && bNameMatch) return 1;
+          return a._trueRank - b._trueRank;
         });
       }
 
@@ -284,12 +299,11 @@
         return;
       }
 
-      tbody.innerHTML = list.map((s, idx) => {
-        const rank = idx + 1;
+      tbody.innerHTML = list.map((s) => {
         const debaterName = s.speaker_name || s.name || '';
         return `
           <tr>
-            <td style="text-align: center;">${getRankBadge(rank)}</td>
+            <td style="text-align: center;">${getRankBadge(s._trueRank)}</td>
             <td>
               <a class="table-link" href="bio.html?debater=${encodeURIComponent(debaterName)}">${escapeHtml(debaterName)}</a>
             </td>
@@ -318,12 +332,15 @@
     const p = document.getElementById('vitalPrelims');
     const k = document.getElementById('vitalKnockouts');
 
-    if (t) t.textContent = '8';
-    if (d) d.textContent = data && data.total_persons ? data.total_persons : '772';
-    if (s) s.textContent = data && data.total_valid_speeches ? Number(data.total_valid_speeches).toLocaleString() : '6,442';
-    if (r) r.textContent = data && data.total_debates_debated ? Number(data.total_debates_debated).toLocaleString() : '908';
-    if (p) p.textContent = '760';
-    if (k) k.textContent = '148';
+    if (t) t.textContent = data && data.total_tournaments ? String(data.total_tournaments) : '9';
+    if (d) d.textContent = data && data.total_persons ? Number(data.total_persons).toLocaleString() : '844';
+    if (s) {
+      const speechCount = (data && data.total_speeches) ? data.total_speeches : (data && data.total_valid_speeches ? data.total_valid_speeches : 7410);
+      s.textContent = Number(speechCount).toLocaleString();
+    }
+    if (r) r.textContent = data && data.total_debates_debated ? Number(data.total_debates_debated).toLocaleString() : '1,012';
+    if (p) p.textContent = data && data.total_prelim_rounds ? Number(data.total_prelim_rounds).toLocaleString() : '882';
+    if (k) k.textContent = data && data.total_knockout_rounds ? Number(data.total_knockout_rounds).toLocaleString() : '130';
   }
 
   // ==========================================================================
@@ -519,11 +536,26 @@
         list.sort((a, b) => b.speaker_score - a.speaker_score);
       }
 
+      // Assign true circuit rank before filtering
+      list.forEach((s, idx) => {
+        s._trueRank = idx + 1;
+      });
+
       if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
         list = list.filter((s) => {
-          const debaterName = s.speaker_name || s.name || '';
-          return debaterName.toLowerCase().includes(searchQuery) ||
-                 (s.institution && s.institution.toLowerCase().includes(searchQuery));
+          const debaterName = (s.speaker_name || s.name || '').toLowerCase();
+          const inst = (s.institution || '').toLowerCase();
+          return debaterName.includes(q) || inst.includes(q);
+        });
+
+        // Prioritize debater name matches over institution matches
+        list.sort((a, b) => {
+          const aNameMatch = (a.speaker_name || a.name || '').toLowerCase().includes(q);
+          const bNameMatch = (b.speaker_name || b.name || '').toLowerCase().includes(q);
+          if (aNameMatch && !bNameMatch) return -1;
+          if (!aNameMatch && bNameMatch) return 1;
+          return a._trueRank - b._trueRank;
         });
       }
 
@@ -549,11 +581,11 @@
               </tr>
             </thead>
             <tbody>
-              ${list.map((s, idx) => {
+              ${list.map((s) => {
                 const debaterName = s.speaker_name || s.name || '';
                 return `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td style="text-align: center;">${getRankBadge(s._trueRank)}</td>
                   <td>
                     <a class="table-link" href="bio.html?debater=${encodeURIComponent(debaterName)}">${escapeHtml(debaterName)}</a>
                   </td>
@@ -599,11 +631,25 @@
         list.sort((a, b) => b.atss - a.atss);
       }
 
+      // Assign true rank before filtering
+      list.forEach((t, idx) => {
+        t._trueRank = idx + 1;
+      });
+
       if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
         list = list.filter((t) =>
-          (t.team_name && t.team_name.toLowerCase().includes(searchQuery)) ||
-          (t.institution && t.institution.toLowerCase().includes(searchQuery))
+          (t.team_name && t.team_name.toLowerCase().includes(q)) ||
+          (t.institution && t.institution.toLowerCase().includes(q))
         );
+
+        list.sort((a, b) => {
+          const aNameMatch = (a.team_name || '').toLowerCase().includes(q);
+          const bNameMatch = (b.team_name || '').toLowerCase().includes(q);
+          if (aNameMatch && !bNameMatch) return -1;
+          if (!aNameMatch && bNameMatch) return 1;
+          return a._trueRank - b._trueRank;
+        });
       }
 
       if (list.length === 0) {
@@ -627,9 +673,9 @@
               </tr>
             </thead>
             <tbody>
-              ${list.map((t, idx) => `
+              ${list.map((t) => `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td style="text-align: center;">${getRankBadge(t._trueRank)}</td>
                   <td>
                     <a class="table-link" href="team_bio.html?team=${encodeURIComponent(t.team_name)}">${escapeHtml(t.team_name)}</a>
                   </td>
@@ -672,10 +718,16 @@
         list.sort((a, b) => b.delta - a.delta);
       }
 
+      // Assign true rank before filtering
+      list.forEach((i, idx) => {
+        i._trueRank = idx + 1;
+      });
+
       if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
         list = list.filter((i) =>
-          (i.institution_name && i.institution_name.toLowerCase().includes(searchQuery)) ||
-          (i.code && i.code.toLowerCase().includes(searchQuery))
+          (i.institution_name && i.institution_name.toLowerCase().includes(q)) ||
+          (i.code && i.code.toLowerCase().includes(q))
         );
       }
 
@@ -700,7 +752,7 @@
               </tr>
             </thead>
             <tbody>
-              ${list.map((i, idx) => {
+              ${list.map((i) => {
                 const aTeamLink = i.a_team_name ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.a_team_name)}">${fmt(i.a_atss, 2)}</a>` : fmt(i.a_atss, 2);
                 const bTeamLink = i.b_team_name && i.b_atss ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.b_team_name)}">${fmt(i.b_atss, 2)}</a>` : (i.b_atss ? fmt(i.b_atss, 2) : '-');
                 let netDiffHtml = '-';
@@ -712,7 +764,7 @@
 
                 return `
                   <tr>
-                    <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                    <td style="text-align: center;">${getRankBadge(i._trueRank)}</td>
                     <td>
                       <a class="table-link" href="institution_bio.html?inst=${encodeURIComponent(i.institution_name)}">${escapeHtml(i.institution_name)}</a>
                       ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
@@ -751,10 +803,16 @@
         list.sort((a, b) => b.atss - a.atss);
       }
 
+      // Assign true rank before filtering
+      list.forEach((t, idx) => {
+        t._trueRank = idx + 1;
+      });
+
       if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
         list = list.filter((t) =>
-          (t.name && t.name.toLowerCase().includes(searchQuery)) ||
-          (t.hosting_dates && t.hosting_dates.toLowerCase().includes(searchQuery))
+          (t.name && t.name.toLowerCase().includes(q)) ||
+          (t.hosting_dates && t.hosting_dates.toLowerCase().includes(q))
         );
       }
 
@@ -776,9 +834,9 @@
               </tr>
             </thead>
             <tbody>
-              ${list.map((t, idx) => `
+              ${list.map((t) => `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td style="text-align: center;">${getRankBadge(t._trueRank)}</td>
                   <td style="font-weight: 700; color: #ffffff;">${escapeHtml(t.name)}</td>
                   <td style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.65);">${escapeHtml(t.hosting_dates)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #38bdf8;">${fmt(t.atss, 2)}</td>
@@ -809,11 +867,25 @@
         list.sort((a, b) => b.prelims_adjudicated - a.prelims_adjudicated);
       }
 
+      // Assign true rank before filtering
+      list.forEach((j, idx) => {
+        j._trueRank = idx + 1;
+      });
+
       if (searchQuery) {
+        const q = searchQuery.toLowerCase().trim();
         list = list.filter((j) =>
-          (j.adjudicator_name && j.adjudicator_name.toLowerCase().includes(searchQuery)) ||
-          (j.institution && j.institution.toLowerCase().includes(searchQuery))
+          (j.adjudicator_name && j.adjudicator_name.toLowerCase().includes(q)) ||
+          (j.institution && j.institution.toLowerCase().includes(q))
         );
+
+        list.sort((a, b) => {
+          const aNameMatch = (a.adjudicator_name || '').toLowerCase().includes(q);
+          const bNameMatch = (b.adjudicator_name || '').toLowerCase().includes(q);
+          if (aNameMatch && !bNameMatch) return -1;
+          if (!aNameMatch && bNameMatch) return 1;
+          return a._trueRank - b._trueRank;
+        });
       }
 
       if (list.length === 0) {
@@ -837,9 +909,9 @@
               </tr>
             </thead>
             <tbody>
-              ${list.map((j, idx) => `
+              ${list.map((j) => `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(idx + 1)}</td>
+                  <td style="text-align: center;">${getRankBadge(j._trueRank)}</td>
                   <td>
                     <a class="table-link" href="adjudicator_bio.html?judge=${encodeURIComponent(j.adjudicator_name)}">${escapeHtml(j.adjudicator_name)}</a>
                   </td>

@@ -128,6 +128,30 @@ SYSTEM_INSTRUCTION = """You are Atomos, a deeply knowledgeable, human-like debat
     - LC = Ladies' College.
     - These are two completely distinct schools in Colombo!
     - A debate between MLC and LC (e.g. MLC A vs. LC White at VVIDC 2026 Round 5) is a cross-school clash between two different institutions, NEVER a same-school collision!
+- MANDATORY TOURNAMENT BREAK STRUCTURES & KNOCKOUT STAGE NOMENCLATURE:
+  * In Sri Lankan and WSDC debating, elimination rounds are strictly determined by the tournament break size. You MUST NEVER confuse Octofinals, Partial Octofinals, and Partial Double Octofinals:
+    1. BREAK OF 12 (e.g. Lillian Nixon's 2026, VVIDC 2026):
+       - Seeds 1–4 receive a BYE straight to Quarterfinals!
+       - Seeds 5–12 (8 teams) debate in Round 6 in 4 debates.
+       - THIS ROUND IS THE "PARTIAL OCTOFINALS" (or "Partial Octos"). IT IS NEVER AN OCTOFINAL!
+       - The 4 winners advance to the Quarterfinals (Round 7).
+       - EXAMPLE: At Nixon's 2026, D. S. Senanayake College A (DS A) debated Ananda College (AC A) in the PARTIAL OCTOFINALS (Round 6) and won. DS A then advanced to the QUARTERFINALS (Round 7) against Trinity College Kandy (TCK Red). NEVER call Round 6 at Nixon's an "Octofinal"! It is strictly the Partial Octofinals.
+    2. BREAK OF 16 (e.g. SLSDC 2026 / Law Fac, Metho 2026):
+       - All top 16 teams debate in 8 debates.
+       - THIS IS THE "OCTOFINALS" (or "Octos").
+       - Winners advance to Quarterfinals (4 debates).
+    3. BREAK OF 24 (e.g. Vijis '26):
+       - Seeds 1–8 receive a BYE straight to Octofinals!
+       - Seeds 9–24 (16 teams) debate in Round 6 in 8 debates.
+       - THIS ROUND IS THE "PARTIAL DOUBLE OCTOFINALS" (or "Partial Double Octos").
+       - The 8 winners advance to Round 7 (OCTOFINALS), where they face seeds 1–8 in 8 debates.
+       - The 8 Octofinal winners advance to Quarterfinals (Round 8, 4 debates).
+    4. BREAK OF 32:
+       - 16 debates. THIS IS THE "DOUBLE OCTOFINALS" (Double Octos).
+    5. QUARTERFINALS (Quarters): Always 8 teams, 4 debates.
+    6. SEMIFINALS (Semis): Always 4 teams, 2 debates.
+    7. GRAND FINAL: Always 2 teams, 1 debate.
+
 
 ================================================================================
 6. DISTINCT COUNTS MANDATE & SPEAKER TAB QUALIFICATION:

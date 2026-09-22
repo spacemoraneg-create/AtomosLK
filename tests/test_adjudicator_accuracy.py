@@ -45,7 +45,7 @@ def test_no_non_person_adjudicators(engine):
 def test_leaderboard_prelims_threshold(engine):
     """Ensure all adjudicators on the standard leaderboard have >= 3 prelim rounds judged."""
     lb = engine.get_adjudicator_leaderboard(min_prelims=3)
-    assert len(lb) == 82, f"Expected exactly 82 qualified circuit adjudicators, got {len(lb)}"
+    assert len(lb) == 89, f"Expected exactly 89 qualified circuit adjudicators, got {len(lb)}"
     for judge in lb:
         assert judge["prelims_adjudicated"] >= 3, (
             f"Adjudicator {judge['adjudicator_name']} has {judge['prelims_adjudicated']} prelims (< 3)"
