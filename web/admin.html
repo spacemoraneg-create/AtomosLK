@@ -24,8 +24,8 @@
       <a href="adjudicator_bio.html" class="nav-link">ADJUDICATOR BIO</a>
       <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
       <a href="pool.html" class="nav-link">POOL</a>
-      <a href="admin.html" class="nav-link active">ADMIN</a>
       <a href="chat.html" class="nav-link">AI CHATBOT</a>
+      <a href="admin.html" class="nav-link active">ADMIN</a>
     </nav>
   </header>
 
@@ -43,7 +43,7 @@
           </svg>
         </div>
         <div class="subpage-title" style="margin-bottom: 6px; font-size: 20px;">
-          <span>ATOMOS SECURITY GATEWAY // RESTRICTED ACCESS</span>
+          <span>Administrative Access</span>
         </div>
         <div class="admin-lock-subtitle">
           Administrative credentials required to inspect relational tables, manage tournament pipelines, and execute system diagnostics.
@@ -82,7 +82,7 @@
       <div class="admin-top-bar">
         <div class="admin-bar-left">
           <div class="subpage-title" style="margin-bottom: 0;">
-            <span>ATOMOS CORE ADMINISTRATION // COMMAND CONSOLE</span>
+            <span>Admin Console</span>
           </div>
           <div class="admin-tags-row">
             <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">AUTHENTICATED</span>
@@ -106,7 +106,7 @@
           1. DATABASE & SYSTEM STATUS
         </button>
         <button class="admin-tab-btn" data-tab="paneBio" id="tabBtnBio">
-          2. DATA CONFIRMATION // BIO ENGINE
+          2. DEBATER AUDIT
         </button>
         <button class="admin-tab-btn" data-tab="paneTournaments" id="tabBtnTournaments">
           3. TOURNAMENT OPERATIONS
@@ -114,7 +114,11 @@
         <button class="admin-tab-btn" data-tab="paneTests" id="tabBtnTests">
           4. DIAGNOSTIC TESTING
         </button>
+        <button class="admin-tab-btn" data-tab="paneMerges" id="tabBtnMerges">
+          5. IDENTITY MERGING
+        </button>
       </div>
+
 
       <!-- ================================================================== -->
       <!-- TAB 1: SYSTEM & DATABASE STATUS                                    -->
@@ -369,6 +373,69 @@
 
       </div>
 
+      <!-- ================================================================== -->
+      <!-- TAB 5: IDENTITY MERGING                                            -->
+      <!-- ================================================================== -->
+      <div id="paneMerges" class="admin-tab-pane">
+        
+        <div class="admin-box" style="margin-bottom: 20px;">
+          <div class="admin-box-title">IDENTITY MERGER & RESOLUTION ENGINE</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
+            Identify and merge duplicate Person identities (typos, single-name expansions) and Team identities (acronyms vs full names) with full foreign key cascading across all tournament records.
+          </p>
+
+          <div class="admin-btn-row" style="margin-bottom: 16px;">
+            <button id="btnFilterAllMerges" class="admin-btn admin-btn-primary">ALL SUGGESTIONS</button>
+            <button id="btnFilterPersonMerges" class="admin-btn admin-btn-secondary">PERSONS (<span id="mergePersonCount">0</span>)</button>
+            <button id="btnFilterTeamMerges" class="admin-btn admin-btn-secondary">TEAMS (<span id="mergeTeamCount">0</span>)</button>
+            <button id="btnRefreshMerges" class="admin-btn admin-btn-outline" style="margin-left: auto;">REFRESH SUGGESTIONS</button>
+          </div>
+
+          <!-- Status / Action Feedback Message -->
+          <div id="mergeStatusBox" class="admin-status-box hidden" style="margin-bottom: 16px;"></div>
+
+          <!-- Suggestions List -->
+          <div id="mergeSuggestionsContainer" class="merge-suggestions-grid">
+            <div style="text-align: center; padding: 32px; color: rgba(255,255,255,0.5);">Loading candidate duplicate suggestions...</div>
+          </div>
+        </div>
+
+        <!-- Manual Arbitrary Merge Box -->
+        <div class="admin-box">
+          <div class="admin-box-title">MANUAL IDENTITY MERGER</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
+            Execute a manual merge for any arbitrary pair of records by specifying their IDs. The duplicate entity will be permanently removed and merged into the primary canonical target.
+          </p>
+
+          <div class="admin-form-group" style="margin-bottom: 16px;">
+            <label class="admin-form-label">ENTITY TYPE</label>
+            <select id="manualMergeType" class="admin-select-input" style="max-width: 320px;">
+              <option value="person">Person (Debater / Adjudicator)</option>
+              <option value="team">Team</option>
+            </select>
+          </div>
+
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px;">
+            <div class="admin-form-group">
+              <label class="admin-form-label">TARGET / PRIMARY ID (KEEP THIS RECORD)</label>
+              <input type="number" id="manualPrimaryId" class="admin-text-input" placeholder="Primary entity ID (e.g. 104)" />
+              <div id="manualPrimaryMeta" style="font-size: 11px; color: #38bdf8; font-family: var(--font-mono); margin-top: 4px;"></div>
+            </div>
+
+            <div class="admin-form-group">
+              <label class="admin-form-label">SOURCE / DUPLICATE ID (MERGE & DELETE THIS)</label>
+              <input type="number" id="manualDuplicateId" class="admin-text-input" placeholder="Duplicate entity ID to delete (e.g. 382)" />
+              <div id="manualDuplicateMeta" style="font-size: 11px; color: #f87171; font-family: var(--font-mono); margin-top: 4px;"></div>
+            </div>
+          </div>
+
+          <button id="btnExecuteManualMerge" class="admin-btn admin-btn-danger">
+            EXECUTE MANUAL MERGE
+          </button>
+        </div>
+
+      </div>
+
     </div>
 
     <!-- ==================================================================== -->
@@ -392,10 +459,11 @@
 
     <!-- Footer -->
     <footer class="atomos-footer">
-      <div class="footer-tag">ATOMOS V1 // ADMINISTRATIVE GATEWAY</div>
+      <div class="footer-tag">ATOMOS V2 // ADMINISTRATIVE CONSOLE</div>
     </footer>
   </main>
 
   <script src="admin.js"></script>
 </body>
 </html>
+

@@ -76,6 +76,12 @@ class DebaterHeadToHead:
     # Mutual rivals
     common_opponents: List[CommonOpponentRecord]
 
+    # Break Rank Avg (BRA)
+    a_bra: Optional[float] = None
+    b_bra: Optional[float] = None
+    a_breaks_count: int = 0
+    b_breaks_count: int = 0
+
     # Tour-to-tour consistency standard deviation
     a_consistency_std_dev: Optional[float] = None
     b_consistency_std_dev: Optional[float] = None
@@ -102,11 +108,74 @@ class TeamHeadToHead:
     # Mutual rivals
     common_opponents: List[CommonOpponentRecord]
 
+    # Break Rank Avg (BRA)
+    a_bra: Optional[float] = None
+    b_bra: Optional[float] = None
+    a_breaks_count: int = 0
+    b_breaks_count: int = 0
+
 
 class HeadToHeadEngine:
     def __init__(self, conn: sqlite3.Connection):
         self.conn = conn
         self.profile_engine = DebaterProfileEngine(conn)
+        self._break_seeds_cache = None
+
+    def _get_break_seeds_map(self) -> Dict[Tuple[str, int], int]:
+        """Calculates preliminary seed rank (1 to N) for every breaking team in each tournament."""
+        if self._break_seeds_cache is not None:
+            return self._break_seeds_cache
+
+        breaking = self.profile_engine.critical_engine._get_breaking_teams()
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT r.tournament_id,
+                   COALESCE(t.canonical_name, t.name) as team_name,
+                   SUM(CASE WHEN (d.prop_team_id = t.id AND b.winner_side = 'Proposition')
+                              OR (d.opp_team_id = t.id AND b.winner_side = 'Opposition') THEN 1 ELSE 0 END) as ballots_won,
+                   AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as atss,
+                   AVG(CASE WHEN d.prop_team_id = t.id THEN b.win_margin ELSE -b.win_margin END) as avg_margin
+            FROM teams t
+            JOIN debates d ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
+            JOIN rounds r ON d.round_id = r.id
+            JOIN adjudicator_ballots b ON d.id = b.debate_id
+            WHERE r.round_type = 'PRELIMINARY' AND d.is_walkover = 0
+            GROUP BY r.tournament_id, COALESCE(t.canonical_name, t.name)
+        """)
+        tour_teams = defaultdict(list)
+        for r in cur.fetchall():
+            tour_teams[r[0]].append({"team": r[1], "wins": r[2] or 0, "atss": r[3] or 0.0, "margin": r[4] or 0.0})
+
+        break_seeds: Dict[Tuple[str, int], int] = {}
+        for tid, tlist in tour_teams.items():
+            tlist.sort(key=lambda x: (x["wins"], x["atss"], x["margin"]), reverse=True)
+            for idx, t in enumerate(tlist, 1):
+                if (t["team"], tid) in breaking:
+                    break_seeds[(t["team"], tid)] = idx
+        self._break_seeds_cache = break_seeds
+        return break_seeds
+
+    def _calculate_debater_bra(self, person_id: int, break_seeds: Dict[Tuple[str, int], int]) -> Tuple[Optional[float], int]:
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT DISTINCT COALESCE(t.canonical_name, t.name), r.tournament_id
+            FROM speech_performances sp
+            JOIN teams t ON sp.team_id = t.id
+            JOIN rounds r ON sp.round_id = r.id
+            WHERE sp.person_id = ?
+        """, (person_id,))
+        seeds = [break_seeds[(tname, tid)] for tname, tid in cur.fetchall() if (tname, tid) in break_seeds]
+        if not seeds:
+            return None, 0
+        from atomos.analytics.v2_metrics import truncate_3
+        return truncate_3(sum(seeds) / len(seeds)), len(seeds)
+
+    def _calculate_team_bra(self, team_name: str, break_seeds: Dict[Tuple[str, int], int]) -> Tuple[Optional[float], int]:
+        seeds = [seed for (tname, tid), seed in break_seeds.items() if tname.lower() == team_name.lower()]
+        if not seeds:
+            return None, 0
+        from atomos.analytics.v2_metrics import truncate_3
+        return truncate_3(sum(seeds) / len(seeds)), len(seeds)
 
     def compare_debaters(self, person_id_a: int, person_id_b: int) -> Optional[DebaterHeadToHead]:
         """Generate comprehensive head-to-head comparison between two debaters."""
@@ -115,6 +184,7 @@ class HeadToHeadEngine:
         
         if not prof_a or not prof_b:
             return None
+
 
         cur = self.conn.cursor()
 
@@ -283,7 +353,12 @@ class HeadToHeadEngine:
         a_direct_avg = round(sum(a_direct_sub_scores) / len(a_direct_sub_scores), 5) if a_direct_sub_scores else None
         b_direct_avg = round(sum(b_direct_sub_scores) / len(b_direct_sub_scores), 5) if b_direct_sub_scores else None
 
-        # 3. Tournament-to-Tournament Consistency (Standard Deviation of Tournament Averages)
+        # 3. Break Rank Avg (BRA)
+        break_seeds = self._get_break_seeds_map()
+        a_bra, a_breaks = self._calculate_debater_bra(person_id_a, break_seeds)
+        b_bra, b_breaks = self._calculate_debater_bra(person_id_b, break_seeds)
+
+        # 4. Tournament-to-Tournament Consistency (Standard Deviation of Tournament Averages)
         def _calc_consistency(prof: DebaterProfile) -> Optional[float]:
             if not prof or not prof.tournaments:
                 return None
@@ -306,9 +381,14 @@ class HeadToHeadEngine:
             a_direct_sub_avg=a_direct_avg,
             b_direct_sub_avg=b_direct_avg,
             common_opponents=common_opponents,
+            a_bra=a_bra,
+            b_bra=b_bra,
+            a_breaks_count=a_breaks,
+            b_breaks_count=b_breaks,
             a_consistency_std_dev=a_consistency,
             b_consistency_std_dev=b_consistency,
         )
+
 
     def _calculate_common_opponents_debater(self, p_a: int, p_b: int) -> List[CommonOpponentRecord]:
         """Find common opponent teams that both debaters faced and summarize records."""
@@ -514,6 +594,11 @@ class HeadToHeadEngine:
         a_avg_margin = round(sum(all_margins_a) / len(all_margins_a), 5) if all_margins_a else None
         b_avg_margin = round(-a_avg_margin, 5) if a_avg_margin is not None else None
 
+        # Break Rank Avg (BRA)
+        break_seeds = self._get_break_seeds_map()
+        a_bra, a_breaks = self._calculate_team_bra(team_name_a, break_seeds)
+        b_bra, b_breaks = self._calculate_team_bra(team_name_b, break_seeds)
+
         return TeamHeadToHead(
             team_a_name=team_name_a,
             team_b_name=team_name_b,
@@ -527,7 +612,12 @@ class HeadToHeadEngine:
             metrics_a=metrics_a,
             metrics_b=metrics_b,
             common_opponents=common_opponents,
+            a_bra=a_bra,
+            b_bra=b_bra,
+            a_breaks_count=a_breaks,
+            b_breaks_count=b_breaks,
         )
+
 
     def _get_team_career_metrics(self, team_name: str) -> dict:
         """Fetch high-level career metrics for a team identity."""

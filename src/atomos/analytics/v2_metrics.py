@@ -104,7 +104,27 @@ CANONICAL_ADJUDICATOR_ALIASES = {
     "Zaid B. Hussain": "Zaid Hussain",
     "Buthmini Mohotty": "Buthmini Mohotti",
     "Ra&#x27;ed Abdul Cader": "Ra'ed Abdul Cader",
+    "Aliza": "Aliza Hussain",
+    "Chirathi": "Chirathi Silva",
+    "Dinal": "Dinal Wellappili",
+    "Okitha": "Okitha Karunadhara",
+    "Vakeesh": "Vakeesh Rupan",
+    "Raashid": "Raashid Cassim",
+    "Nevan": "Nevan Serasundera",
+    "Mabroor": "Mabroor Ahmed",
+    "Lehara": "Lehara Edirisinghe",
+    "Shaluka": "Shaluka Herath",
+    "Navidi": "Navidi Perera",
+    "Chanidu": "Chanidu Rathnayake",
+    "Gimhan": "Gimhan Sooriyabandara",
+    "Afly": "Afly Mohamed",
+    "Amiru": "Amiru Upekh Gamage",
+    "Vidath": "Vidath Marasinghe",
+    "Thiseni": "Thiseni Mapa",
+    "Shalem": "Shalem Sumanthiran",
+    "Husnaa": "Husnaa Imtiaz",
 }
+
 
 
 def calc_sample_stdev(values: List[float]) -> float:
@@ -237,6 +257,65 @@ class V2MetricsEngine:
                 person_ach[pid] = better_ach(person_ach.get(pid), raw_team_ach[tid])
 
         return raw_team_ach, canonical_team_ach, person_ach
+
+    def _get_break_seeds_map(self) -> Dict[Tuple[str, int], int]:
+        """Calculates preliminary seed rank (1 to N) for every breaking team in each tournament."""
+        if hasattr(self, "_break_seeds_cache") and self._break_seeds_cache is not None:
+            return self._break_seeds_cache
+
+        from atomos.analytics.critical_stats import CriticalStatsEngine
+        crit = CriticalStatsEngine(self.conn)
+        breaking = crit._get_breaking_teams()
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT r.tournament_id,
+                   COALESCE(t.canonical_name, t.name) as team_name,
+                   SUM(CASE WHEN (d.prop_team_id = t.id AND b.winner_side = 'Proposition')
+                              OR (d.opp_team_id = t.id AND b.winner_side = 'Opposition') THEN 1 ELSE 0 END) as ballots_won,
+                   AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as atss,
+                   AVG(CASE WHEN d.prop_team_id = t.id THEN b.win_margin ELSE -b.win_margin END) as avg_margin
+            FROM teams t
+            JOIN debates d ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
+            JOIN rounds r ON d.round_id = r.id
+            JOIN adjudicator_ballots b ON d.id = b.debate_id
+            WHERE r.round_type = 'PRELIMINARY' AND d.is_walkover = 0
+            GROUP BY r.tournament_id, COALESCE(t.canonical_name, t.name)
+        """)
+        tour_teams = defaultdict(list)
+        for r in cur.fetchall():
+            tour_teams[r[0]].append({"team": r[1], "wins": r[2] or 0, "atss": r[3] or 0.0, "margin": r[4] or 0.0})
+
+        break_seeds: Dict[Tuple[str, int], int] = {}
+        for tid, tlist in tour_teams.items():
+            tlist.sort(key=lambda x: (x["wins"], x["atss"], x["margin"]), reverse=True)
+            for idx, t in enumerate(tlist, 1):
+                if (t["team"], tid) in breaking:
+                    break_seeds[(t["team"], tid)] = idx
+        self._break_seeds_cache = break_seeds
+        return break_seeds
+
+    def _calculate_debater_bra(self, person_id: int) -> Tuple[Optional[float], int]:
+        break_seeds = self._get_break_seeds_map()
+        cur = self.conn.cursor()
+        cur.execute("""
+            SELECT DISTINCT COALESCE(t.canonical_name, t.name), r.tournament_id
+            FROM speech_performances sp
+            JOIN teams t ON sp.team_id = t.id
+            JOIN rounds r ON sp.round_id = r.id
+            WHERE sp.person_id = ?
+        """, (person_id,))
+        seeds = [break_seeds[(tname, tid)] for tname, tid in cur.fetchall() if (tname, tid) in break_seeds]
+        if not seeds:
+            return None, 0
+        return truncate_3(sum(seeds) / len(seeds)), len(seeds)
+
+    def _calculate_team_bra(self, team_name: str) -> Tuple[Optional[float], int]:
+        break_seeds = self._get_break_seeds_map()
+        seeds = [seed for (tname, tid), seed in break_seeds.items() if tname.lower() == team_name.lower()]
+        if not seeds:
+            return None, 0
+        return truncate_3(sum(seeds) / len(seeds)), len(seeds)
+
 
     # =========================================================================
     # 1. MULTI-PURPOSE INDIVIDUAL (DEBATER) LEADERBOARD
@@ -804,12 +883,16 @@ class V2MetricsEngine:
         awpt = truncate_3(total_wins / len(tournaments_seen)) if tournaments_seen else 0.0
         highest_achieve = canonical_team_ach.get(canonical_team_name, "Preliminary Rounds")
 
+        team_bra, team_breaks = self._calculate_team_bra(canonical_team_name)
+
         return {
             "team_name": canonical_team_name,
             "institution": institution_name,
             "atss": overall_atss,
             "win_percentage": overall_win_pct,
             "stdev": overall_stdev,
+            "bra": team_bra,
+            "breaks_count": team_breaks,
             "prelims_debated": prelims_total,
             "tournaments_debated": len(tournaments_seen),
             "total_debates": len(debates),
@@ -821,6 +904,7 @@ class V2MetricsEngine:
             "top_atss_lineups": top_atss_lineups,
             "tournament_breakdown": tour_breakdown,
         }
+
 
     # =========================================================================
     # 4. MULTI-PURPOSE INSTITUTION LEADERBOARD & INSTITUTION BIO
@@ -1107,7 +1191,7 @@ class V2MetricsEngine:
     # =========================================================================
     # 5. ADJUDICATOR BIO & LEADERBOARD (AASS, AATSS, PROP/OPP BIAS)
     # =========================================================================
-    def get_adjudicator_leaderboard(self) -> List[Dict[str, Any]]:
+    def get_adjudicator_leaderboard(self, min_prelims: int = 3) -> List[Dict[str, Any]]:
         """
         Compute official circuit adjudicator intelligence profiles:
         - AASS: Average Awarded Speaker Score (strictly substantive speeches)
@@ -1123,6 +1207,7 @@ class V2MetricsEngine:
                    b.adjudicator_institution,
                    r.tournament_id,
                    r.id as round_id,
+                   r.round_type,
                    b.winner_side,
                    b.prop_total_score,
                    b.opp_total_score
@@ -1133,7 +1218,11 @@ class V2MetricsEngine:
               AND b.adjudicator_raw_name != ''
               AND b.adjudicator_raw_name NOT LIKE '%Official%'
               AND b.adjudicator_raw_name NOT LIKE '%Scoresheet%'
+              AND b.adjudicator_raw_name NOT LIKE '%Walkover%'
               AND b.adjudicator_raw_name NOT LIKE '%Tab%'
+              AND b.adjudicator_raw_name NOT LIKE '%Panel%'
+              AND b.adjudicator_raw_name NOT LIKE '%Reconciled%'
+              AND b.adjudicator_raw_name NOT LIKE '%Reconstructed%'
         """)
         ballot_rows = cur.fetchall()
 
@@ -1141,7 +1230,8 @@ class V2MetricsEngine:
             "ballot_ids": [],
             "institutions": set(),
             "tournaments": set(),
-            "rounds": set(),
+            "prelim_rounds": set(),
+            "outrounds": set(),
             "prop_wins": 0,
             "opp_wins": 0,
             "team_scores": [],
@@ -1155,7 +1245,10 @@ class V2MetricsEngine:
             if br["adjudicator_institution"] and br["adjudicator_institution"].strip():
                 j["institutions"].add(br["adjudicator_institution"].strip())
             j["tournaments"].add(br["tournament_id"])
-            j["rounds"].add(br["round_id"])
+            if br["round_type"] == "PRELIMINARY":
+                j["prelim_rounds"].add(br["round_id"])
+            else:
+                j["outrounds"].add(br["round_id"])
             if br["winner_side"] == "Proposition":
                 j["prop_wins"] += 1
             elif br["winner_side"] == "Opposition":
@@ -1169,7 +1262,8 @@ class V2MetricsEngine:
 
         for jname, jd in judge_data.items():
             ballots_cnt = len(jd["ballot_ids"])
-            if ballots_cnt < 2:
+            prelims_cnt = len(jd["prelim_rounds"])
+            if prelims_cnt < min_prelims:
                 continue
 
             inst = next(iter(jd["institutions"]), "Independent Adjudicator")
@@ -1204,7 +1298,9 @@ class V2MetricsEngine:
                 "prop_opp_bias": f"{prop_pct}% Prop / {opp_pct}% Opp",
                 "prop_bias_pct": prop_pct,
                 "opp_bias_pct": opp_pct,
-                "prelims_adjudicated": len(jd["rounds"]),
+                "prelims_adjudicated": prelims_cnt,
+                "outrounds_adjudicated": len(jd["outrounds"]),
+                "total_rounds_adjudicated": prelims_cnt + len(jd["outrounds"]),
                 "tournaments_adjudicated": len(jd["tournaments"]),
                 "ballots_count": ballots_cnt,
             })
@@ -1217,11 +1313,12 @@ class V2MetricsEngine:
 
     def get_adjudicator_bio(self, judge_name: str) -> Optional[Dict[str, Any]]:
         """Fetch bio dossier for an adjudicator."""
-        judges = self.get_adjudicator_leaderboard()
+        judges = self.get_adjudicator_leaderboard(min_prelims=0)
         target = next((j for j in judges if j["adjudicator_name"].lower() == judge_name.lower()), None)
         if not target:
             target = next((j for j in judges if judge_name.lower() in j["adjudicator_name"].lower()), None)
         return target
+
 
     # =========================================================================
     # 6. HARD TOURNAMENT LEADERBOARD
@@ -1375,14 +1472,24 @@ class V2MetricsEngine:
     # =========================================================================
     # 7. NATIONAL POOL 3-TIER REGISTRY (UNRANKED)
     # =========================================================================
-    def get_national_pool_tiers(self) -> Dict[str, List[Dict[str, Any]]]:
+    def get_national_pool_tiers(self) -> Dict[str, Any]:
         """
-        Return the 3 official unranked National Contingent rosters:
+        Return the 3 official National Contingent rosters, ranked within each group
+        by Critical Tab average (fallback to normal Tab, then fallback to database substantive average):
         1. Nat Pool, Direct
         2. Nat Pool, Trialed
         3. Trials
         """
         cur = self.conn.cursor()
+        from atomos.analytics.critical_stats import CriticalStatsEngine
+        from atomos.analytics.master_tabs import MasterTabEngine
+
+        crit_engine = CriticalStatsEngine(self.conn)
+        master_engine = MasterTabEngine(self.conn)
+
+        crit_map = {s["person_id"]: s.get("speaker_avg") for s in crit_engine.get_critical_speaker_stats(min_tournaments=3)}
+        master_map = {s["person_id"]: s.get("speaker_avg") for s in master_engine.get_master_speaker_tab(min_tournaments=1)}
+
         cur.execute("""
             SELECT p.id as person_id,
                    p.canonical_name,
@@ -1406,11 +1513,39 @@ class V2MetricsEngine:
         trials: List[Dict[str, Any]] = []
 
         for r in rows:
+            pid = r["person_id"]
+            score = crit_map.get(pid)
+            score_src = "Critical Tab"
+            if score is None:
+                score = master_map.get(pid)
+                score_src = "Tab" if score is not None else None
+
+            if score is None:
+                cur.execute("""
+                    SELECT AVG(sp.total_score)
+                    FROM speech_performances sp
+                    JOIN rounds r ON sp.round_id = r.id
+                    JOIN debates d ON sp.debate_id = d.id
+                    WHERE sp.person_id = ?
+                      AND sp.speech_type = 'SUBSTANTIVE'
+                      AND r.round_type = 'PRELIMINARY'
+                      AND d.is_walkover = 0
+                      AND sp.total_score > 0
+                """, (pid,))
+                db_avg = cur.fetchone()[0]
+                if db_avg:
+                    score = truncate_3(float(db_avg))
+                    score_src = "Tab"
+
+            final_score = truncate_3(float(score)) if score is not None else 0.0
+
             entry = {
-                "person_id": r["person_id"],
+                "person_id": pid,
                 "name": r["canonical_name"],
                 "institution": r["institution"],
                 "national_level": r["national_level"],
+                "speaker_score": final_score,
+                "score_source": score_src or "Tab",
             }
             lvl = (r["national_level"] or "").lower()
             if "direct" in lvl:
@@ -1420,12 +1555,19 @@ class V2MetricsEngine:
             elif "trials" in lvl:
                 trials.append(entry)
 
+        # Sort each tier descending by speaker_score and assign rank_in_tier
+        for group in (direct, trialed, trials):
+            group.sort(key=lambda x: -x["speaker_score"])
+            for rank, item in enumerate(group, start=1):
+                item["rank_in_tier"] = rank
+
         return {
             "nat_pool_direct": direct,
             "nat_pool_trialed": trialed,
             "trials": trials,
             "total_count": len(rows),
         }
+
 
     # =========================================================================
     # 8. DEBATER BIO (V2 SPEC)
@@ -1633,6 +1775,7 @@ class V2MetricsEngine:
                 })
 
         _, _, person_ach = self._get_all_team_and_debater_achievements()
+        debater_bra, debater_breaks = self._calculate_debater_bra(pid)
 
         return {
             "person_id": pid,
@@ -1644,6 +1787,8 @@ class V2MetricsEngine:
             "speaker_score": spk_avg,
             "win_percentage": win_pct,
             "stdev": stdev,
+            "bra": debater_bra,
+            "breaks_count": debater_breaks,
             "prelims_debated": prelims_cnt,
             "tournaments_debated": tourneys_cnt,
             "total_debates": tot_debates,
@@ -1652,3 +1797,4 @@ class V2MetricsEngine:
             "position_averages": positions,
             "tournament_breakdown": tournament_breakdown,
         }
+

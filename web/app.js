@@ -936,7 +936,7 @@
         if (container) {
           container.innerHTML = `
             <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-              Type any debater's name above to inspect their comprehensive circuit career dossier.
+              Type any debater's name above to view their career record.
             </div>
           `;
         }
@@ -1327,7 +1327,7 @@
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #c084fc;">${fmt(bio.wins_per_tournament, 2)}</div>
             <div class="bio-stat-lbl">WINS PER TOURNAMENT</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">AWPT Velocity</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Avg Wins / Tournament</div>
           </div>
         </div>
 
@@ -1823,7 +1823,7 @@
             </div>
           </div>
           <div>
-            <span class="badge-count" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">OFFICIAL TRIBUNAL</span>
+            <span class="badge-count" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">ADJUDICATOR</span>
           </div>
         </div>
 
@@ -1832,34 +1832,34 @@
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #38bdf8;">${fmt(bio.aass, 2)}</div>
             <div class="bio-stat-lbl">AASS (SUBSTANTIVE MEAN)</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Average Awarded Speaker Score (No replies)</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Substantive Mean (No replies)</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.aatss, 2)}</div>
             <div class="bio-stat-lbl">AATSS (TEAM AVG)</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Average Awarded Team Speaker Score</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Team Mean</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
             <div class="bio-stat-lbl">PROP / OPP WIN BIAS</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Ballot Decision Rate</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #38bdf8;">${bio.prelims_adjudicated}</div>
             <div class="bio-stat-lbl">PRELIMS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Contested Rounds Judged</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #c084fc;">${bio.tournaments_adjudicated}</div>
             <div class="bio-stat-lbl">TOURNAMENTS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Championship Tournaments</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
           </div>
         </div>
 
         <!-- Prop vs Opp Decision Bias Visual Bar -->
         <div class="bio-section-heading">
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18"/></svg>
-          PROP VS OPP DECISION BIAS VISUALIZATION
+          BALLOT DECISION SPLIT
         </div>
         <div class="roster-box" style="margin-bottom: 24px;">
           <div class="bias-container">
@@ -2028,10 +2028,12 @@
 
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Computing 6-metric head-to-head clash...</div>`;
 
-      // Fetch live direct clashes from server if available
+      // Fetch live direct clashes and BRA from server if available
       let directDebates = [];
       let aDirectWins = 0;
       let bDirectWins = 0;
+      let braA = selectedA.bra !== undefined ? selectedA.bra : null;
+      let braB = selectedB.bra !== undefined ? selectedB.bra : null;
 
       if (state.isServerOnline) {
         try {
@@ -2041,6 +2043,8 @@
             directDebates = j.direct_debates || [];
             aDirectWins = j.a_direct_wins || 0;
             bDirectWins = j.b_direct_wins || 0;
+            if (j.a_bra !== undefined) braA = j.a_bra;
+            if (j.b_bra !== undefined) braB = j.b_bra;
           }
         } catch (e) {}
       }
@@ -2068,10 +2072,19 @@
       if (selectedA.win_percentage > selectedB.win_percentage) w2 = 'A';
       else if (selectedB.win_percentage > selectedA.win_percentage) w2 = 'B';
 
-      // 3. Stdev (lower is better!)
+      // 3. Break Rank Avg (BRA) - lower seed rank is better! (e.g. 1st seed > 4th seed)
       let w3 = 'TIE';
-      if (selectedA.stdev < selectedB.stdev) w3 = 'A';
-      else if (selectedB.stdev < selectedA.stdev) w3 = 'B';
+      if (braA !== null && braB !== null) {
+        if (braA < braB) w3 = 'A';
+        else if (braB < braA) w3 = 'B';
+        else w3 = 'TIE';
+      } else if (braA !== null && braB === null) {
+        w3 = 'A'; // Contender A broke to knockouts, B never broke
+      } else if (braB !== null && braA === null) {
+        w3 = 'B'; // Contender B broke to knockouts, A never broke
+      } else {
+        w3 = 'NONE';
+      }
 
       // 4. Prelims Debated (higher better)
       let w4 = 'TIE';
@@ -2126,13 +2139,20 @@
       function badge(w) {
         if (w === 'A') return `<span class="h2h-cat-badge badge-a">CONTENDER 1</span>`;
         if (w === 'B') return `<span class="h2h-cat-badge badge-b">CONTENDER 2</span>`;
-        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">NO CLASHES</span>`;
+        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">NO BREAKS</span>`;
         return `<span class="h2h-cat-badge badge-tie">TIE</span>`;
       }
 
       const b1 = getBar(selectedA.speaker_score, selectedB.speaker_score, true);
       const b2 = getBar(selectedA.win_percentage, selectedB.win_percentage, true);
-      const b3 = getBar(selectedA.stdev, selectedB.stdev, false);
+      let b3 = { a: 50, b: 50 };
+      if (braA !== null && braB !== null) {
+        b3 = getBar(braA, braB, false);
+      } else if (braA !== null && braB === null) {
+        b3 = { a: 100, b: 0 };
+      } else if (braB !== null && braA === null) {
+        b3 = { a: 0, b: 100 };
+      }
       const b4 = getBar(selectedA.prelims_debated, selectedB.prelims_debated, true);
       const b5 = getBar(10 - rankAchA, 10 - rankAchB, true);
       const b6 = directDebates.length > 0 ? getBar(aDirectWins, bDirectWins, true) : { a: 50, b: 50 };
@@ -2144,7 +2164,7 @@
           </div>
           <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
           <div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 6px;">
-            Judged strictly across: Speaker Score, Win %, Stdev (consistency), Prelims Debated, Highest Achievement, and Tournament Clashes.
+            Judged strictly across: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Tournament Clashes.
           </div>
         </div>
 
@@ -2161,7 +2181,7 @@
                 <div class="h2h-cat-bar-a" style="width: ${b1.a}%;"></div>
                 <div class="h2h-cat-bar-b" style="width: ${b1.b}%;"></div>
               </div>
-              <div class="h2h-cat-subtext">Universal substantive mean across all rounds</div>
+              <div class="h2h-cat-subtext">Speaker average across substantive speeches</div>
             </div>
             <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.speaker_score, 2)}</div>
           </div>
@@ -2183,22 +2203,23 @@
             <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.win_percentage, 1)}%</div>
           </div>
 
-          <!-- 3. Stdev (lower the better) -->
+          <!-- 3. Break Rank Avg (BRA) -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #38bdf8;">${fmt(selectedA.stdev, 2)}</div>
+            <div class="h2h-cat-val" style="color: #38bdf8;">${braA !== null ? fmt(braA, 2) : '-'}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">3. STDEV (LOWER IS BETTER)</span>
+                <span class="h2h-cat-title">3. BREAK RANK AVG (BRA)</span>
                 ${badge(w3)}
               </div>
               <div class="h2h-cat-bar">
                 <div class="h2h-cat-bar-a" style="width: ${b3.a}%;"></div>
                 <div class="h2h-cat-bar-b" style="width: ${b3.b}%;"></div>
               </div>
-              <div class="h2h-cat-subtext">Score consistency & standard deviation</div>
+              <div class="h2h-cat-subtext">Average preliminary break seed (Lower is better)</div>
             </div>
-            <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.stdev, 2)}</div>
+            <div class="h2h-cat-val" style="color: #f43f5e;">${braB !== null ? fmt(braB, 2) : '-'}</div>
           </div>
+
 
           <!-- 4. Prelims Debated -->
           <div class="h2h-category-card">
@@ -2322,14 +2343,18 @@
         }
         return arr.map(d => `
           <div class="pool-debater-card">
-            <div>
-              <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(d.name)}">${escapeHtml(d.name)}</a>
+            <div style="display: flex; align-items: center; gap: 12px;">
+              <span class="pool-rank-badge">#${d.rank_in_tier || '-'}</span>
               <div>
-                <a class="pool-debater-inst" href="institution_bio.html?inst=${encodeURIComponent(d.institution)}">${escapeHtml(d.institution)}</a>
+                <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(d.name)}">${escapeHtml(d.name)}</a>
+                <div>
+                  <a class="pool-debater-inst" href="institution_bio.html?inst=${encodeURIComponent(d.institution || '')}">${escapeHtml(d.institution || 'Independent')}</a>
+                </div>
               </div>
             </div>
-            <div>
-              <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level)}</span>
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+              <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level || '')}</span>
+              ${d.speaker_score ? `<span style="font-size: 11px; font-family: var(--font-mono); color: #38bdf8; font-weight: 600;">Avg: ${fmt(d.speaker_score, 3)} pts <span style="color: rgba(255,255,255,0.4); font-size: 9.5px; text-transform: uppercase;">(${escapeHtml(d.score_source || 'Tab')})</span></span>` : ''}
             </div>
           </div>
         `).join('');

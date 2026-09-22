@@ -27,8 +27,9 @@ from atomos.pipeline.ingestion import IngestionPipeline
 from atomos.normalizer.validator import IntegrityValidator
 from atomos.analytics.v2_metrics import V2MetricsEngine
 from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER, CLEAN_TOURNAMENT_NAMES, OFFICIAL_TOURNAMENT_DATES
+from atomos.analytics.identity_resolver import IdentityResolver
 
-ADMIN_PASSWORD = "Olivedelight"
+ADMIN_PASSWORD = "Sexyback"
 ADMIN_AUTH_TOKEN = hashlib.sha256(f"{ADMIN_PASSWORD}_atomos_secure_salt_2026".encode("utf-8")).hexdigest()
 
 
@@ -42,6 +43,7 @@ def create_app(db_conn=None) -> Flask:
     query_engine = AtomosQuery(conn)
     agent = AtomosAgent(conn)
     v2_engine = V2MetricsEngine(conn)
+    identity_resolver = IdentityResolver(conn)
 
     @app.after_request
     def add_cors_headers(response):
@@ -748,11 +750,22 @@ def create_app(db_conn=None) -> Flask:
 
         elif suite in ("unit", "accuracy", "all"):
             if suite == "accuracy":
-                cmd = [sys.executable, "-m", "pytest", "tests/test_normalizer.py", "tests/test_critical_stats.py", "tests/test_data_accuracy.py", "-v"]
+                cmd = [
+                    sys.executable, "-m", "pytest",
+                    "tests/test_normalizer.py",
+                    "tests/test_critical_stats.py",
+                    "tests/test_data_accuracy.py",
+                    "tests/test_v2_metrics.py",
+                    "tests/test_adjudicator_accuracy.py",
+                    "-v"
+                ]
+                suite_timeout = 90
             elif suite == "all":
-                cmd = [sys.executable, "-m", "pytest", "tests/", "-q"]
+                cmd = [sys.executable, "-m", "pytest", "tests/", "-q", "--tb=short"]
+                suite_timeout = 180
             else:
                 cmd = [sys.executable, "-m", "pytest", "tests/test_normalizer.py", "tests/test_critical_stats.py", "-v"]
+                suite_timeout = 90
 
             root_dir = str(Path(__file__).resolve().parent.parent.parent)
             env = os.environ.copy()
@@ -764,7 +777,7 @@ def create_app(db_conn=None) -> Flask:
                     cwd=root_dir,
                     capture_output=True,
                     text=True,
-                    timeout=90,
+                    timeout=suite_timeout,
                     env=env,
                 )
                 duration = round(time.time() - start_time, 2)
@@ -777,13 +790,89 @@ def create_app(db_conn=None) -> Flask:
                     "duration_seconds": duration,
                 })
             except subprocess.TimeoutExpired:
-                return jsonify({"error": "Test suite timed out after 90 seconds."}), 504
+                return jsonify({"error": f"Test suite timed out after {suite_timeout} seconds."}), 504
             except Exception as e:
                 return jsonify({"error": f"Test runner execution error: {str(e)}"}), 500
 
         return jsonify({"error": f"Unknown test suite '{suite}'. Options: 'integrity', 'accuracy', 'unit', 'all'"}), 400
 
+    # 24. Identity Resolver & Merger Endpoints
+    @app.route("/api/admin/merges/suggestions", methods=["GET"])
+    @require_admin
+    def admin_merge_suggestions():
+        try:
+            persons = identity_resolver.get_person_suggestions()
+            teams = identity_resolver.get_team_suggestions()
+            return jsonify({
+                "success": True,
+                "persons": persons,
+                "teams": teams,
+                "counts": {
+                    "persons": len(persons),
+                    "teams": len(teams),
+                }
+            })
+        except Exception as e:
+            return jsonify({"error": f"Failed to compute merge suggestions: {str(e)}"}), 500
+
+    @app.route("/api/admin/merges/execute", methods=["POST"])
+    @require_admin
+    def admin_merge_execute():
+        payload = request.get_json(force=True, silent=True) or {}
+        entity_type = payload.get("type", "").strip().lower()
+        primary_id = payload.get("primary_id")
+        duplicate_id = payload.get("duplicate_id")
+
+        if not entity_type or primary_id is None or duplicate_id is None:
+            return jsonify({"error": "Missing required fields: type ('person'|'team'), primary_id, duplicate_id"}), 400
+
+        try:
+            primary_id = int(primary_id)
+            duplicate_id = int(duplicate_id)
+            if entity_type == "person":
+                res = identity_resolver.execute_person_merge(primary_id, duplicate_id)
+            elif entity_type == "team":
+                res = identity_resolver.execute_team_merge(primary_id, duplicate_id)
+            else:
+                return jsonify({"error": f"Invalid entity type '{entity_type}'. Must be 'person' or 'team'."}), 400
+
+            # Re-export static cache
+            try:
+                root_dir = Path(__file__).resolve().parent.parent.parent
+                if str(root_dir) not in sys.path:
+                    sys.path.insert(0, str(root_dir))
+                from scripts.export_web_data import export_web_data
+                export_web_data(data_export_dir)
+            except Exception as exp_err:
+                print(f"[WARN] Static export after merge encountered an issue: {exp_err}")
+
+            return jsonify(res)
+        except ValueError as ve:
+            return jsonify({"error": str(ve)}), 400
+        except Exception as e:
+            return jsonify({"error": f"Merge failed: {str(e)}"}), 500
+
+    @app.route("/api/admin/merges/dismiss", methods=["POST"])
+    @require_admin
+    def admin_merge_dismiss():
+        payload = request.get_json(force=True, silent=True) or {}
+        entity_type = payload.get("type", "").strip().lower()
+        id_a = payload.get("id_a")
+        id_b = payload.get("id_b")
+
+        if not entity_type or id_a is None or id_b is None:
+            return jsonify({"error": "Missing required fields: type ('person'|'team'), id_a, id_b"}), 400
+
+        try:
+            id_a = int(id_a)
+            id_b = int(id_b)
+            identity_resolver.dismiss_suggestion(entity_type, id_a, id_b)
+            return jsonify({"success": True, "message": f"Suggestion dismissed."})
+        except Exception as e:
+            return jsonify({"error": f"Failed to dismiss suggestion: {str(e)}"}), 500
+
     return app
+
 
 
 def run_server(host: str = "127.0.0.1", port: int = 5000, debug: bool = False):

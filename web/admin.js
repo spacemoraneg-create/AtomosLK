@@ -837,6 +837,325 @@
   }
 
   // =========================================================================
+  // 6. TAB 5: IDENTITY RESOLVER & MERGER TOOL
+  // =========================================================================
+
+  let mergeSuggestionsData = { persons: [], teams: [] };
+  let activeMergeFilter = 'all'; // 'all', 'person', 'team'
+
+  function initIdentityMerger() {
+    const btnAll = document.getElementById('btnFilterAllMerges');
+    const btnPersons = document.getElementById('btnFilterPersonMerges');
+    const btnTeams = document.getElementById('btnFilterTeamMerges');
+    const btnRefresh = document.getElementById('btnRefreshMerges');
+    const btnManualMerge = document.getElementById('btnExecuteManualMerge');
+
+    if (btnAll) {
+      btnAll.addEventListener('click', () => {
+        activeMergeFilter = 'all';
+        updateFilterButtons();
+        renderMergeSuggestions();
+      });
+    }
+    if (btnPersons) {
+      btnPersons.addEventListener('click', () => {
+        activeMergeFilter = 'person';
+        updateFilterButtons();
+        renderMergeSuggestions();
+      });
+    }
+    if (btnTeams) {
+      btnTeams.addEventListener('click', () => {
+        activeMergeFilter = 'team';
+        updateFilterButtons();
+        renderMergeSuggestions();
+      });
+    }
+    if (btnRefresh) {
+      btnRefresh.addEventListener('click', () => fetchMergeSuggestions());
+    }
+
+    if (btnManualMerge) {
+      btnManualMerge.addEventListener('click', handleManualMerge);
+    }
+
+    function updateFilterButtons() {
+      if (btnAll) btnAll.className = activeMergeFilter === 'all' ? 'admin-btn admin-btn-primary' : 'admin-btn admin-btn-secondary';
+      if (btnPersons) btnPersons.className = activeMergeFilter === 'person' ? 'admin-btn admin-btn-primary' : 'admin-btn admin-btn-secondary';
+      if (btnTeams) btnTeams.className = activeMergeFilter === 'team' ? 'admin-btn admin-btn-primary' : 'admin-btn admin-btn-secondary';
+    }
+  }
+
+  async function fetchMergeSuggestions() {
+    const container = document.getElementById('mergeSuggestionsContainer');
+    if (container) {
+      container.innerHTML = `<div style="text-align: center; padding: 32px; color: rgba(255,255,255,0.5);"><div class="spinner"></div> Scanning database for candidate duplicate identities...</div>`;
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/merges/suggestions`, {
+        headers: getHeaders(),
+      });
+      if (res.status === 401) {
+        handleUnauthorized();
+        return;
+      }
+      if (!res.ok) throw new Error('Failed to fetch suggestions');
+
+      const data = await res.json();
+      mergeSuggestionsData = {
+        persons: data.persons || [],
+        teams: data.teams || [],
+      };
+
+      setText('mergePersonCount', mergeSuggestionsData.persons.length);
+      setText('mergeTeamCount', mergeSuggestionsData.teams.length);
+
+      renderMergeSuggestions();
+    } catch (e) {
+      if (container) {
+        container.innerHTML = `<div style="text-align: center; padding: 24px; color: #f87171;">Failed to load candidate suggestions: ${escapeHtml(e.message)}</div>`;
+      }
+    }
+  }
+
+  function renderMergeSuggestions() {
+    const container = document.getElementById('mergeSuggestionsContainer');
+    if (!container) return;
+
+    let items = [];
+    if (activeMergeFilter === 'all') {
+      items = [...mergeSuggestionsData.persons, ...mergeSuggestionsData.teams];
+    } else if (activeMergeFilter === 'person') {
+      items = mergeSuggestionsData.persons;
+    } else if (activeMergeFilter === 'team') {
+      items = mergeSuggestionsData.teams;
+    }
+
+    if (items.length === 0) {
+      container.innerHTML = `
+        <div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+          No candidate duplicate suggestions found for this category. All identities appear resolved.
+        </div>
+      `;
+      return;
+    }
+
+    container.innerHTML = items.map((s, idx) => {
+      const p = s.primary;
+      const d = s.duplicate;
+      const pName = s.type === 'person' ? p.canonical_name : p.name;
+      const dName = s.type === 'person' ? d.canonical_name : d.name;
+      const pInst = p.institution || p.institution_name || 'Independent';
+      const dInst = d.institution || d.institution_name || 'Independent';
+
+      return `
+        <div class="merge-card" id="mergeCard_${s.type}_${p.id}_${d.id}">
+          <div class="merge-card-header">
+            <div class="merge-card-type">
+              <span class="badge-count" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${escapeHtml(s.type.toUpperCase())}</span>
+              <span style="font-weight: 600; color: #fff; font-size: 13px;">${escapeHtml(s.match_type)}</span>
+            </div>
+            <div class="merge-card-conf" style="font-family: var(--font-mono); font-size: 11.5px; color: #34d399; font-weight: 700;">
+              ${s.confidence}% MATCH
+            </div>
+          </div>
+
+          <div class="merge-clash-grid">
+            <!-- Target / Primary to Keep -->
+            <div class="merge-entity-box target">
+              <div class="merge-role-tag" style="color: #34d399;">CANONICAL TARGET (KEEP)</div>
+              <div class="merge-entity-name">${escapeHtml(pName)}</div>
+              <div class="merge-entity-sub">ID: #${p.id} · ${escapeHtml(pInst)}</div>
+              <div class="merge-entity-stats">
+                <span>${p.speech_count ?? 0} speeches</span>
+                ${p.tour_count !== undefined ? `<span>${p.tour_count} tournaments</span>` : ''}
+              </div>
+            </div>
+
+            <!-- Arrow Indicator -->
+            <div class="merge-arrow-col">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12 5 19 12 12 19"></polyline>
+              </svg>
+            </div>
+
+            <!-- Duplicate to Merge & Delete -->
+            <div class="merge-entity-box duplicate">
+              <div class="merge-role-tag" style="color: #f87171;">DUPLICATE VARIANT (MERGE)</div>
+              <div class="merge-entity-name">${escapeHtml(dName)}</div>
+              <div class="merge-entity-sub">ID: #${d.id} · ${escapeHtml(dInst)}</div>
+              <div class="merge-entity-stats">
+                <span>${d.speech_count ?? 0} speeches</span>
+                ${d.tour_count !== undefined ? `<span>${d.tour_count} tournaments</span>` : ''}
+              </div>
+            </div>
+          </div>
+
+          <div class="merge-actions-row">
+            <button
+              class="admin-btn admin-btn-primary admin-btn-sm btn-action-merge"
+              data-type="${escapeHtml(s.type)}"
+              data-primary-id="${p.id}"
+              data-duplicate-id="${d.id}"
+              data-primary-name="${escapeHtml(pName)}"
+              data-dup-name="${escapeHtml(dName)}"
+            >
+              MERGE INTO #${p.id}
+            </button>
+            <button
+              class="admin-btn admin-btn-outline admin-btn-sm btn-action-dismiss"
+              data-type="${escapeHtml(s.type)}"
+              data-a="${p.id}"
+              data-b="${d.id}"
+            >
+              DISMISS
+            </button>
+          </div>
+        </div>
+      `;
+    }).join('');
+
+    // Attach merge click handlers
+    container.querySelectorAll('.btn-action-merge').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const type = btn.getAttribute('data-type');
+        const primaryId = btn.getAttribute('data-primary-id');
+        const duplicateId = btn.getAttribute('data-duplicate-id');
+        const primaryName = btn.getAttribute('data-primary-name');
+        const dupName = btn.getAttribute('data-dup-name');
+
+        const ok = confirm(`Confirm Merge:\n\nMerge duplicate '${dupName}' (#${duplicateId}) into canonical '${primaryName}' (#${primaryId})?\n\nThis will reassign all performances, debates, and ballots, and remove record #${duplicateId}.`);
+        if (!ok) return;
+
+        await executeMerge(type, primaryId, duplicateId);
+      });
+    });
+
+    // Attach dismiss click handlers
+    container.querySelectorAll('.btn-action-dismiss').forEach((btn) => {
+      btn.addEventListener('click', async () => {
+        const type = btn.getAttribute('data-type');
+        const a = btn.getAttribute('data-a');
+        const b = btn.getAttribute('data-b');
+        await dismissMerge(type, a, b);
+      });
+    });
+  }
+
+  async function executeMerge(type, primaryId, duplicateId) {
+    const statusBox = document.getElementById('mergeStatusBox');
+    if (statusBox) {
+      statusBox.className = 'admin-status-box';
+      statusBox.textContent = `Executing transactional merge for ${type} #${duplicateId} -> #${primaryId}...`;
+      statusBox.classList.remove('hidden');
+    }
+
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/merges/execute`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          type,
+          primary_id: primaryId,
+          duplicate_id: duplicateId,
+        }),
+      });
+
+      if (res.status === 401) {
+        handleUnauthorized();
+        return;
+      }
+
+      const data = await res.json();
+      if (res.ok && data.success) {
+        if (statusBox) {
+          statusBox.className = 'admin-status-box status-success';
+          statusBox.textContent = data.message;
+        }
+        // Refresh suggestions & status
+        fetchMergeSuggestions();
+        fetchAdminStatus();
+      } else {
+        if (statusBox) {
+          statusBox.className = 'admin-status-box status-error';
+          statusBox.textContent = `Merge failed: ${data.error || 'Server error'}`;
+        }
+      }
+    } catch (e) {
+      if (statusBox) {
+        statusBox.className = 'admin-status-box status-error';
+        statusBox.textContent = `Network error during merge: ${e.message}`;
+      }
+    }
+  }
+
+  async function dismissMerge(type, idA, idB) {
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/merges/dismiss`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify({
+          type,
+          id_a: idA,
+          id_b: idB,
+        }),
+      });
+
+      if (res.status === 401) {
+        handleUnauthorized();
+        return;
+      }
+
+      if (res.ok) {
+        // Remove from local dataset and re-render
+        if (type === 'person') {
+          mergeSuggestionsData.persons = mergeSuggestionsData.persons.filter(
+            (s) => !(s.primary.id == idA && s.duplicate.id == idB) && !(s.primary.id == idB && s.duplicate.id == idA)
+          );
+          setText('mergePersonCount', mergeSuggestionsData.persons.length);
+        } else {
+          mergeSuggestionsData.teams = mergeSuggestionsData.teams.filter(
+            (s) => !(s.primary.id == idA && s.duplicate.id == idB) && !(s.primary.id == idB && s.duplicate.id == idA)
+          );
+          setText('mergeTeamCount', mergeSuggestionsData.teams.length);
+        }
+        renderMergeSuggestions();
+      }
+    } catch (e) {
+      console.warn('Failed to dismiss merge:', e);
+    }
+  }
+
+  async function handleManualMerge() {
+    const typeSelect = document.getElementById('manualMergeType');
+    const primaryInput = document.getElementById('manualPrimaryId');
+    const duplicateInput = document.getElementById('manualDuplicateId');
+
+    const type = (typeSelect ? typeSelect.value : 'person').trim();
+    const primaryId = (primaryInput ? primaryInput.value : '').trim();
+    const duplicateId = (duplicateInput ? duplicateInput.value : '').trim();
+
+    if (!primaryId || !duplicateId) {
+      alert('Please enter both Primary ID and Duplicate ID.');
+      return;
+    }
+
+    if (primaryId === duplicateId) {
+      alert('Primary ID and Duplicate ID cannot be the same record.');
+      return;
+    }
+
+    const ok = confirm(`Execute Manual Merge:\n\nEntity Type: ${type.toUpperCase()}\nCanonical ID: #${primaryId} (KEEP)\nDuplicate ID: #${duplicateId} (MERGE & DELETE)\n\nProceed with this database operation?`);
+    if (!ok) return;
+
+    await executeMerge(type, primaryId, duplicateId);
+    if (primaryInput) primaryInput.value = '';
+    if (duplicateInput) duplicateInput.value = '';
+  }
+
+  // =========================================================================
   // UTILITY HELPERS
   // =========================================================================
 
@@ -876,16 +1195,28 @@
     if (refreshBtn) {
       refreshBtn.addEventListener('click', () => {
         fetchAdminStatus();
+        fetchMergeSuggestions();
       });
     }
 
     // Init tab navigation
     initTabs();
 
+    // Hook tab 5 click to load suggestions
+    const tabBtnMerges = document.getElementById('tabBtnMerges');
+    if (tabBtnMerges) {
+      tabBtnMerges.addEventListener('click', () => {
+        if (!mergeSuggestionsData.persons.length && !mergeSuggestionsData.teams.length) {
+          fetchMergeSuggestions();
+        }
+      });
+    }
+
     // Init subcomponents
     initBioAudit();
     initTournamentOperations();
     initDiagnosticTests();
+    initIdentityMerger();
 
     // Verify session state or URL parameters
     const urlParams = new URLSearchParams(window.location.search);
@@ -897,7 +1228,7 @@
     if (authParam) {
       if (passwordInput) passwordInput.value = authParam;
       handleLogin().then(() => {
-        if (authParam === 'Olivedelight') {
+        if (authParam === 'Sexyback' || authParam === 'Olivedelight') {
           if (tabParam) {
             const tabBtn = document.querySelector(`.admin-tab-btn[data-tab="pane${tabParam.charAt(0).toUpperCase() + tabParam.slice(1)}"]`);
             if (tabBtn) tabBtn.click();
@@ -915,3 +1246,4 @@
     }
   });
 })();
+
