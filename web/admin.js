@@ -848,7 +848,6 @@
     const btnPersons = document.getElementById('btnFilterPersonMerges');
     const btnTeams = document.getElementById('btnFilterTeamMerges');
     const btnRefresh = document.getElementById('btnRefreshMerges');
-    const btnManualMerge = document.getElementById('btnExecuteManualMerge');
 
     if (btnAll) {
       btnAll.addEventListener('click', () => {
@@ -875,15 +874,14 @@
       btnRefresh.addEventListener('click', () => fetchMergeSuggestions());
     }
 
-    if (btnManualMerge) {
-      btnManualMerge.addEventListener('click', handleManualMerge);
-    }
-
     function updateFilterButtons() {
       if (btnAll) btnAll.className = activeMergeFilter === 'all' ? 'admin-btn admin-btn-primary' : 'admin-btn admin-btn-secondary';
       if (btnPersons) btnPersons.className = activeMergeFilter === 'person' ? 'admin-btn admin-btn-primary' : 'admin-btn admin-btn-secondary';
       if (btnTeams) btnTeams.className = activeMergeFilter === 'team' ? 'admin-btn admin-btn-primary' : 'admin-btn admin-btn-secondary';
     }
+
+    initInstitutionTeamExplorer();
+    initManualMergeAutocomplete();
   }
 
   async function fetchMergeSuggestions(silent = false) {
@@ -1192,31 +1190,637 @@
     }
   }
 
-  async function handleManualMerge() {
+  // -------------------------------------------------------------------------
+  // Submodule A: Institution Team Explorer & Merger
+  // -------------------------------------------------------------------------
+  let instList = [];
+  let currentInstTeamsData = null;
+  let instSelectedTarget = null;
+  let instSelectedDuplicate = null;
+
+  async function initInstitutionTeamExplorer() {
+    const searchInput = document.getElementById('instTeamExplorerInput');
+    const loadBtn = document.getElementById('btnLoadInstTeams');
+    const clearBtn = document.getElementById('btnClearInstTeams');
+    const mergeBar = document.getElementById('instTeamsMergeBar');
+    const confirmMergeBtn = document.getElementById('btnExecuteInstTeamMerge');
+    const resetSelectionBtn = document.getElementById('btnResetInstTeamSelection');
+    const clearTargetBtn = document.getElementById('btnClearSelectedTarget');
+    const clearDuplicateBtn = document.getElementById('btnClearSelectedDuplicate');
+    const chips = document.querySelectorAll('.inst-chip');
+
+    // Populate datalist from /api/admin/institutions/list
+    async function loadInstitutionDatalist() {
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/institutions/list`, {
+          headers: getHeaders(),
+        });
+        if (res.status === 401) {
+          handleUnauthorized();
+          return;
+        }
+        if (!res.ok) return;
+        const data = await res.json();
+        instList = data.institutions || [];
+        const dl = document.getElementById('institutionsDatalist');
+        if (dl) {
+          dl.innerHTML = instList
+            .map((inst) => `<option value="${escapeHtml(inst.name)}">${escapeHtml(inst.name)}${inst.code ? ` (${escapeHtml(inst.code)})` : ''} — ${inst.team_count} teams</option>`)
+            .join('');
+        }
+      } catch (e) {
+        console.warn('Failed to load institutions list:', e);
+      }
+    }
+
+    loadInstitutionDatalist();
+
+    // Load teams for an institution
+    async function fetchInstitutionTeams(identifier) {
+      const trimmed = (identifier || '').trim();
+      if (!trimmed) {
+        alert('Please enter or select an institution.');
+        return;
+      }
+
+      const container = document.getElementById('instTeamsResultsContainer');
+      const statusBox = document.getElementById('instTeamsStatusBox');
+      if (statusBox) statusBox.classList.add('hidden');
+
+      if (container) {
+        container.innerHTML = `<div style="text-align: center; padding: 36px; color: rgba(255,255,255,0.5);"><div class="spinner"></div> Loading all teams for '${escapeHtml(trimmed)}'...</div>`;
+      }
+
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/institutions/${encodeURIComponent(trimmed)}/teams`, {
+          headers: getHeaders(),
+        });
+        if (res.status === 401) {
+          handleUnauthorized();
+          return;
+        }
+
+        const data = await res.json();
+        if (!res.ok || !data.success) {
+          if (container) {
+            container.innerHTML = `<div style="text-align: center; padding: 28px; color: #f87171; font-family: var(--font-mono);">${escapeHtml(data.error || 'Failed to find institution teams')}</div>`;
+          }
+          return;
+        }
+
+        currentInstTeamsData = data;
+        // Keep selected target or duplicate if still in returned list, else null
+        if (instSelectedTarget && !data.teams.some(t => t.id === instSelectedTarget.id)) {
+          instSelectedTarget = null;
+        }
+        if (instSelectedDuplicate && !data.teams.some(t => t.id === instSelectedDuplicate.id)) {
+          instSelectedDuplicate = null;
+        }
+
+        if (clearBtn) clearBtn.classList.remove('hidden');
+        renderInstitutionTeamsGrid();
+        updateInstitutionMergeBar();
+      } catch (err) {
+        if (container) {
+          container.innerHTML = `<div style="text-align: center; padding: 28px; color: #f87171;">Network error fetching institution teams: ${escapeHtml(err.message)}</div>`;
+        }
+      }
+    }
+
+    function renderInstitutionTeamsGrid() {
+      const container = document.getElementById('instTeamsResultsContainer');
+      if (!container || !currentInstTeamsData) return;
+
+      const inst = currentInstTeamsData.institution;
+      const teams = currentInstTeamsData.teams || [];
+
+      if (teams.length === 0) {
+        container.innerHTML = `
+          <div style="padding: 24px; text-align: center; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            No teams recorded for institution '${escapeHtml(inst.name)}'.
+          </div>
+        `;
+        return;
+      }
+
+      let html = `
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+          <div style="font-size: 15px; font-weight: 700; color: #ffffff;">
+            ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(56,189,248,0.15); color: #38bdf8; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
+          </div>
+          <div style="font-family: var(--font-mono); font-size: 12px; color: #38bdf8; font-weight: 600;">
+            ${teams.length} ${teams.length === 1 ? 'Team' : 'Teams'} across all tournaments
+          </div>
+        </div>
+        <div class="inst-teams-grid">
+      `;
+
+      teams.forEach((t) => {
+        const isTarget = instSelectedTarget && instSelectedTarget.id === t.id;
+        const isDuplicate = instSelectedDuplicate && instSelectedDuplicate.id === t.id;
+
+        let cardClass = 'inst-team-card';
+        if (isTarget) cardClass += ' is-target';
+        if (isDuplicate) cardClass += ' is-duplicate';
+
+        const membersList = t.members
+          ? t.members.split(',').map((m) => escapeHtml(m.trim())).join(', ')
+          : 'No members recorded in team tab';
+
+        html += `
+          <div class="${cardClass}" id="instTeamCard_${t.id}">
+            <div class="inst-team-header">
+              <div>
+                <div class="inst-team-name">
+                  <span>${escapeHtml(t.name)}</span>
+                  <span class="inst-team-id">#${t.id}</span>
+                </div>
+                <div class="inst-team-tour">${escapeHtml(t.official_tournament_name || t.tournament_name)}</div>
+              </div>
+              ${isTarget ? `<span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399; font-weight: 800;">TARGET</span>` : ''}
+              ${isDuplicate ? `<span class="badge-count" style="background: rgba(248,113,113,0.2); color: #f87171; font-weight: 800;">DUPLICATE</span>` : ''}
+            </div>
+
+            <div class="inst-team-members">
+              <div class="inst-team-members-lbl">Debaters / Members</div>
+              <div>${membersList}</div>
+            </div>
+
+            <div class="inst-team-stats-row">
+              <span>${t.debate_count ?? 0} Debates</span>
+              <span>&bull;</span>
+              <span>${t.speech_count ?? 0} Speeches</span>
+            </div>
+
+            <div class="inst-team-actions">
+              <button
+                class="admin-btn ${isTarget ? 'admin-btn-primary' : 'admin-btn-outline'} btn-inst-set-target"
+                data-team-id="${t.id}"
+              >
+                ${isTarget ? 'REMOVE TARGET' : 'SET AS TARGET (KEEP)'}
+              </button>
+              <button
+                class="admin-btn ${isDuplicate ? 'admin-btn-danger' : 'admin-btn-secondary'} btn-inst-set-dup"
+                data-team-id="${t.id}"
+              >
+                ${isDuplicate ? 'REMOVE DUPLICATE' : 'SET AS DUPLICATE (MERGE)'}
+              </button>
+            </div>
+          </div>
+        `;
+      });
+
+      html += '</div>';
+      container.innerHTML = html;
+
+      // Attach button events
+      container.querySelectorAll('.btn-inst-set-target').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const teamId = parseInt(btn.getAttribute('data-team-id'), 10);
+          const team = teams.find((x) => x.id === teamId);
+          if (!team) return;
+
+          if (instSelectedTarget && instSelectedTarget.id === teamId) {
+            instSelectedTarget = null;
+          } else {
+            if (instSelectedDuplicate && instSelectedDuplicate.id === teamId) {
+              instSelectedDuplicate = null;
+            }
+            instSelectedTarget = team;
+          }
+          renderInstitutionTeamsGrid();
+          updateInstitutionMergeBar();
+        });
+      });
+
+      container.querySelectorAll('.btn-inst-set-dup').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const teamId = parseInt(btn.getAttribute('data-team-id'), 10);
+          const team = teams.find((x) => x.id === teamId);
+          if (!team) return;
+
+          if (instSelectedDuplicate && instSelectedDuplicate.id === teamId) {
+            instSelectedDuplicate = null;
+          } else {
+            if (instSelectedTarget && instSelectedTarget.id === teamId) {
+              instSelectedTarget = null;
+            }
+            instSelectedDuplicate = team;
+          }
+          renderInstitutionTeamsGrid();
+          updateInstitutionMergeBar();
+        });
+      });
+    }
+
+    function updateInstitutionMergeBar() {
+      if (!mergeBar) return;
+
+      if (!instSelectedTarget && !instSelectedDuplicate) {
+        mergeBar.classList.add('hidden');
+        return;
+      }
+
+      mergeBar.classList.remove('hidden');
+
+      const targetLbl = document.getElementById('instSelectedTargetLabel');
+      const dupLbl = document.getElementById('instSelectedDuplicateLabel');
+
+      if (instSelectedTarget) {
+        targetLbl.innerHTML = `<strong>${escapeHtml(instSelectedTarget.name)}</strong> <span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399;">#${instSelectedTarget.id}</span> <span style="color: rgba(255,255,255,0.6); font-size: 11.5px;">(${escapeHtml(instSelectedTarget.official_tournament_name || instSelectedTarget.tournament_name)})</span>`;
+        if (clearTargetBtn) clearTargetBtn.classList.remove('hidden');
+      } else {
+        targetLbl.textContent = 'None selected (Click [Set as Target] on any card)';
+        if (clearTargetBtn) clearTargetBtn.classList.add('hidden');
+      }
+
+      if (instSelectedDuplicate) {
+        dupLbl.innerHTML = `<strong>${escapeHtml(instSelectedDuplicate.name)}</strong> <span class="badge-count" style="background: rgba(248,113,113,0.2); color: #f87171;">#${instSelectedDuplicate.id}</span> <span style="color: rgba(255,255,255,0.6); font-size: 11.5px;">(${escapeHtml(instSelectedDuplicate.official_tournament_name || instSelectedDuplicate.tournament_name)})</span>`;
+        if (clearDuplicateBtn) clearDuplicateBtn.classList.remove('hidden');
+      } else {
+        dupLbl.textContent = 'None selected (Click [Set as Duplicate] on any card)';
+        if (clearDuplicateBtn) clearDuplicateBtn.classList.add('hidden');
+      }
+
+      if (confirmMergeBtn) {
+        if (instSelectedTarget && instSelectedDuplicate) {
+          if (instSelectedTarget.id === instSelectedDuplicate.id) {
+            confirmMergeBtn.disabled = true;
+            confirmMergeBtn.textContent = 'CANNOT MERGE SAME TEAM';
+          } else {
+            confirmMergeBtn.disabled = false;
+            confirmMergeBtn.textContent = `MERGE #${instSelectedDuplicate.id} INTO #${instSelectedTarget.id}`;
+          }
+        } else {
+          confirmMergeBtn.disabled = true;
+          confirmMergeBtn.textContent = 'CONFIRM & MERGE TEAMS';
+        }
+      }
+    }
+
+    // Search button & Enter key
+    if (loadBtn) {
+      loadBtn.addEventListener('click', () => {
+        fetchInstitutionTeams(searchInput ? searchInput.value : '');
+      });
+    }
+
+    if (searchInput) {
+      searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') {
+          e.preventDefault();
+          fetchInstitutionTeams(searchInput.value);
+        }
+      });
+    }
+
+    // Quick chips
+    chips.forEach((chip) => {
+      chip.addEventListener('click', () => {
+        const instName = chip.getAttribute('data-inst');
+        if (searchInput) searchInput.value = instName;
+        fetchInstitutionTeams(instName);
+      });
+    });
+
+    // Clear buttons
+    if (clearBtn) {
+      clearBtn.addEventListener('click', () => {
+        if (searchInput) searchInput.value = '';
+        currentInstTeamsData = null;
+        instSelectedTarget = null;
+        instSelectedDuplicate = null;
+        updateInstitutionMergeBar();
+        clearBtn.classList.add('hidden');
+        const container = document.getElementById('instTeamsResultsContainer');
+        if (container) {
+          container.innerHTML = `
+            <div style="text-align: center; padding: 36px 20px; color: rgba(255,255,255,0.45); font-family: var(--font-mono); font-size: 13px;">
+              Type or select an institution above to view all historical teams.
+            </div>
+          `;
+        }
+      });
+    }
+
+    if (clearTargetBtn) {
+      clearTargetBtn.addEventListener('click', () => {
+        instSelectedTarget = null;
+        renderInstitutionTeamsGrid();
+        updateInstitutionMergeBar();
+      });
+    }
+
+    if (clearDuplicateBtn) {
+      clearDuplicateBtn.addEventListener('click', () => {
+        instSelectedDuplicate = null;
+        renderInstitutionTeamsGrid();
+        updateInstitutionMergeBar();
+      });
+    }
+
+    if (resetSelectionBtn) {
+      resetSelectionBtn.addEventListener('click', () => {
+        instSelectedTarget = null;
+        instSelectedDuplicate = null;
+        renderInstitutionTeamsGrid();
+        updateInstitutionMergeBar();
+      });
+    }
+
+    // Execute merge between the two selected teams
+    if (confirmMergeBtn) {
+      confirmMergeBtn.addEventListener('click', async () => {
+        if (!instSelectedTarget || !instSelectedDuplicate) return;
+
+        const target = instSelectedTarget;
+        const dup = instSelectedDuplicate;
+
+        const ok = confirm(
+          `Confirm Institutional Team Merge:\n\n` +
+          `Target Team (KEEP): '${target.name}' (#${target.id}) [${target.official_tournament_name || target.tournament_name}]\n` +
+          `Duplicate Team (DELETE & MERGE): '${dup.name}' (#${dup.id}) [${dup.official_tournament_name || dup.tournament_name}]\n\n` +
+          `All debates, speeches, and member allocations will be transferred to target team #${target.id}.\n` +
+          `Duplicate team #${dup.id} will be permanently purged.\n\nProceed?`
+        );
+        if (!ok) return;
+
+        confirmMergeBtn.disabled = true;
+        const originalText = confirmMergeBtn.textContent;
+        confirmMergeBtn.textContent = 'EXECUTING MERGE...';
+
+        const success = await executeMerge('team', target.id, dup.id);
+        if (success) {
+          instSelectedDuplicate = null;
+          // Reload institution teams
+          if (currentInstTeamsData && currentInstTeamsData.institution) {
+            await fetchInstitutionTeams(String(currentInstTeamsData.institution.id));
+          }
+        } else {
+          confirmMergeBtn.disabled = false;
+          confirmMergeBtn.textContent = originalText;
+        }
+      });
+    }
+  }
+
+  // -------------------------------------------------------------------------
+  // Submodule B: Manual Merge with Live Search Autocomplete
+  // -------------------------------------------------------------------------
+  function initManualMergeAutocomplete() {
     const typeSelect = document.getElementById('manualMergeType');
-    const primaryInput = document.getElementById('manualPrimaryId');
-    const duplicateInput = document.getElementById('manualDuplicateId');
+    const primaryInput = document.getElementById('manualPrimaryInput');
+    const primaryHidden = document.getElementById('manualPrimaryId');
+    const primaryDropdown = document.getElementById('manualPrimaryDropdown');
+    const primaryChip = document.getElementById('manualPrimarySelectedCard');
 
-    const type = (typeSelect ? typeSelect.value : 'person').trim();
-    const primaryId = (primaryInput ? primaryInput.value : '').trim();
-    const duplicateId = (duplicateInput ? duplicateInput.value : '').trim();
+    const duplicateInput = document.getElementById('manualDuplicateInput');
+    const duplicateHidden = document.getElementById('manualDuplicateId');
+    const duplicateDropdown = document.getElementById('manualDuplicateDropdown');
+    const duplicateChip = document.getElementById('manualDuplicateSelectedCard');
 
-    if (!primaryId || !duplicateId) {
-      alert('Please enter both Primary ID and Duplicate ID.');
-      return;
+    const btnManualMerge = document.getElementById('btnExecuteManualMerge');
+
+    function resetInputs() {
+      if (primaryInput) primaryInput.value = '';
+      if (primaryHidden) primaryHidden.value = '';
+      if (primaryDropdown) primaryDropdown.classList.add('hidden');
+      if (primaryChip) {
+        primaryChip.innerHTML = '';
+        primaryChip.classList.add('hidden');
+      }
+
+      if (duplicateInput) duplicateInput.value = '';
+      if (duplicateHidden) duplicateHidden.value = '';
+      if (duplicateDropdown) duplicateDropdown.classList.add('hidden');
+      if (duplicateChip) {
+        duplicateChip.innerHTML = '';
+        duplicateChip.classList.add('hidden');
+      }
     }
 
-    if (primaryId === duplicateId) {
-      alert('Primary ID and Duplicate ID cannot be the same record.');
-      return;
+    if (typeSelect) {
+      typeSelect.addEventListener('change', () => {
+        resetInputs();
+        const placeholder = typeSelect.value === 'person' 
+          ? 'Type name, school, or ID to search...'
+          : 'Type team name, school, or ID to search...';
+        if (primaryInput) primaryInput.placeholder = placeholder;
+        if (duplicateInput) duplicateInput.placeholder = placeholder;
+      });
     }
 
-    const ok = confirm(`Execute Manual Merge:\n\nEntity Type: ${type.toUpperCase()}\nCanonical ID: #${primaryId} (KEEP)\nDuplicate ID: #${duplicateId} (MERGE & DELETE)\n\nProceed with this database operation?`);
-    if (!ok) return;
+    function bindAutocomplete(input, hidden, dropdown, chip, isTarget) {
+      if (!input || !hidden || !dropdown || !chip) return;
 
-    await executeMerge(type, primaryId, duplicateId);
-    if (primaryInput) primaryInput.value = '';
-    if (duplicateInput) duplicateInput.value = '';
+      let debounceTimer = null;
+
+      input.addEventListener('input', () => {
+        clearTimeout(debounceTimer);
+        const query = input.value.trim();
+        if (!query) {
+          dropdown.classList.add('hidden');
+          return;
+        }
+
+        debounceTimer = setTimeout(async () => {
+          const type = typeSelect ? typeSelect.value : 'person';
+          try {
+            const res = await fetch(
+              `${API_BASE}/api/admin/entities/search?type=${encodeURIComponent(type)}&q=${encodeURIComponent(query)}&limit=10`,
+              { headers: getHeaders() }
+            );
+            if (res.status === 401) {
+              handleUnauthorized();
+              return;
+            }
+            if (!res.ok) return;
+
+            const data = await res.json();
+            const results = data.results || [];
+
+            if (results.length === 0) {
+              dropdown.innerHTML = `
+                <div style="padding: 12px; font-family: var(--font-mono); font-size: 12px; color: rgba(255,255,255,0.5); text-align: center;">
+                  No matching ${escapeHtml(type)} records found.
+                </div>
+              `;
+              dropdown.classList.remove('hidden');
+              return;
+            }
+
+            dropdown.innerHTML = results.map((r) => {
+              if (type === 'person') {
+                const pName = r.canonical_name || 'Unnamed';
+                const inst = r.institution || 'Independent';
+                const speeches = r.speech_count ?? 0;
+                return `
+                  <div class="entity-auto-item" data-id="${r.id}" data-name="${escapeHtml(pName)}" data-sub="${escapeHtml(inst)}" data-stats="${speeches} speeches">
+                    <div>
+                      <div class="entity-auto-title">
+                        <span>${escapeHtml(pName)}</span>
+                        <span class="entity-auto-badge">#${r.id}</span>
+                      </div>
+                      <div class="entity-auto-sub">${escapeHtml(inst)} ${r.national_level ? `&bull; <span style="color: #38bdf8;">${escapeHtml(r.national_level)}</span>` : ''}</div>
+                    </div>
+                    <div class="entity-auto-stats">${speeches} speeches</div>
+                  </div>
+                `;
+              } else {
+                const tName = r.name || 'Unnamed Team';
+                const tour = r.official_tournament_name || r.tournament_name || 'Tournament';
+                const inst = r.institution_name || 'Independent';
+                const speeches = r.speech_count ?? 0;
+                const members = r.members ? escapeHtml(r.members) : '';
+                return `
+                  <div class="entity-auto-item" data-id="${r.id}" data-name="${escapeHtml(tName)}" data-sub="${escapeHtml(tour)} &bull; ${escapeHtml(inst)}" data-stats="${speeches} speeches">
+                    <div style="max-width: 80%;">
+                      <div class="entity-auto-title">
+                        <span>${escapeHtml(tName)}</span>
+                        <span class="entity-auto-badge">#${r.id}</span>
+                      </div>
+                      <div class="entity-auto-sub">${escapeHtml(tour)} &bull; ${escapeHtml(inst)}</div>
+                      ${members ? `<div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 2px;">${members}</div>` : ''}
+                    </div>
+                    <div class="entity-auto-stats">${speeches} sp.</div>
+                  </div>
+                `;
+              }
+            }).join('');
+
+            dropdown.querySelectorAll('.entity-auto-item').forEach((item) => {
+              item.addEventListener('click', () => {
+                const id = item.getAttribute('data-id');
+                const name = item.getAttribute('data-name');
+                const sub = item.getAttribute('data-sub');
+                const stats = item.getAttribute('data-stats');
+
+                selectEntity(id, name, sub, stats);
+              });
+            });
+
+            dropdown.classList.remove('hidden');
+          } catch (e) {
+            console.warn('Entity search error:', e);
+          }
+        }, 200);
+      });
+
+      function selectEntity(id, name, sub, stats) {
+        hidden.value = id;
+        input.value = name;
+        dropdown.classList.add('hidden');
+
+        chip.innerHTML = `
+          <div class="chip-content">
+            <div class="chip-name">
+              <span>${escapeHtml(name)}</span>
+              <span class="badge-count" style="background: rgba(${isTarget ? '52,211,153' : '248,113,113'}, 0.2); color: ${isTarget ? '#34d399' : '#f87171'}; font-weight: 700;">#${id}</span>
+            </div>
+            <div class="chip-sub">${sub} &bull; ${stats}</div>
+          </div>
+          <button type="button" class="chip-clear-btn" title="Remove selection">&times;</button>
+        `;
+        chip.classList.remove('hidden');
+
+        const clearBtn = chip.querySelector('.chip-clear-btn');
+        if (clearBtn) {
+          clearBtn.addEventListener('click', () => {
+            hidden.value = '';
+            input.value = '';
+            chip.innerHTML = '';
+            chip.classList.add('hidden');
+            input.focus();
+          });
+        }
+      }
+
+      // If user presses Enter or tabs out with a number, resolve ID directly
+      input.addEventListener('change', async () => {
+        const val = input.value.trim();
+        if (/^\d+$/.test(val) && !hidden.value) {
+          const type = typeSelect ? typeSelect.value : 'person';
+          try {
+            const res = await fetch(`${API_BASE}/api/admin/entities/search?type=${encodeURIComponent(type)}&q=${val}&limit=1`, {
+              headers: getHeaders(),
+            });
+            if (res.ok) {
+              const data = await res.json();
+              if (data.results && data.results.length > 0) {
+                const r = data.results[0];
+                const name = type === 'person' ? r.canonical_name : r.name;
+                const sub = type === 'person' ? (r.institution || 'Independent') : `${r.official_tournament_name || ''} · ${r.institution_name || ''}`;
+                const stats = `${r.speech_count || 0} speeches`;
+                selectEntity(r.id, name, sub, stats);
+              }
+            }
+          } catch (e) {}
+        }
+      });
+    }
+
+    bindAutocomplete(primaryInput, primaryHidden, primaryDropdown, primaryChip, true);
+    bindAutocomplete(duplicateInput, duplicateHidden, duplicateDropdown, duplicateChip, false);
+
+    // Close dropdowns on outside click
+    document.addEventListener('click', (e) => {
+      if (primaryDropdown && !primaryDropdown.contains(e.target) && e.target !== primaryInput) {
+        primaryDropdown.classList.add('hidden');
+      }
+      if (duplicateDropdown && !duplicateDropdown.contains(e.target) && e.target !== duplicateInput) {
+        duplicateDropdown.classList.add('hidden');
+      }
+    });
+
+    // Wire manual merge execution button
+    if (btnManualMerge) {
+      btnManualMerge.addEventListener('click', async () => {
+        const type = (typeSelect ? typeSelect.value : 'person').trim();
+        let primaryId = (primaryHidden ? primaryHidden.value : '').trim();
+        let duplicateId = (duplicateHidden ? duplicateHidden.value : '').trim();
+
+        // Fallbacks if user typed raw numbers without picking from dropdown
+        if (!primaryId && primaryInput && /^\d+$/.test(primaryInput.value.trim())) {
+          primaryId = primaryInput.value.trim();
+        }
+        if (!duplicateId && duplicateInput && /^\d+$/.test(duplicateInput.value.trim())) {
+          duplicateId = duplicateInput.value.trim();
+        }
+
+        if (!primaryId || !duplicateId) {
+          alert('Please search and select both a Canonical Target and a Duplicate entity.');
+          return;
+        }
+
+        if (primaryId === duplicateId) {
+          alert('Canonical Target ID and Duplicate ID cannot be the same entity.');
+          return;
+        }
+
+        const priName = primaryInput ? primaryInput.value : `#${primaryId}`;
+        const dupName = duplicateInput ? duplicateInput.value : `#${duplicateId}`;
+
+        const ok = confirm(
+          `Execute Manual ${type.toUpperCase()} Merge:\n\n` +
+          `Target Entity (KEEP): '${priName}' (#${primaryId})\n` +
+          `Duplicate Entity (DELETE & MERGE): '${dupName}' (#${duplicateId})\n\n` +
+          `Proceed with permanent database merge?`
+        );
+        if (!ok) return;
+
+        btnManualMerge.disabled = true;
+        const originalText = btnManualMerge.textContent;
+        btnManualMerge.textContent = 'EXECUTING MANUAL MERGE...';
+
+        const success = await executeMerge(type, primaryId, duplicateId);
+        btnManualMerge.disabled = false;
+        btnManualMerge.textContent = originalText;
+
+        if (success) {
+          resetInputs();
+        }
+      });
+    }
   }
 
   // =========================================================================

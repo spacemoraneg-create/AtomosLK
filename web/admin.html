@@ -400,11 +400,89 @@
           </div>
         </div>
 
-        <!-- Manual Arbitrary Merge Box -->
+        <!-- Institution Team Explorer & Merger -->
+        <div class="admin-box" style="margin-bottom: 20px;">
+          <div class="admin-box-title">INSTITUTION TEAM EXPLORER & MERGER</div>
+          <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
+            Type or select an institution below to inspect every team that has ever competed under that institution across all tournaments. Choose a canonical target team and a duplicate team to merge them with full database cascading.
+          </p>
+
+          <!-- Institution Search Bar & Controls -->
+          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+            <div style="flex: 1; min-width: 260px; position: relative;">
+              <input
+                type="text"
+                id="instTeamExplorerInput"
+                list="institutionsDatalist"
+                class="admin-text-input"
+                placeholder="Type or select institution (e.g. Royal College, Trinity, Ananda, Moir, CIS, STC)..."
+                autocomplete="off"
+              />
+              <datalist id="institutionsDatalist"></datalist>
+            </div>
+            <button id="btnLoadInstTeams" class="admin-btn admin-btn-primary">LOAD TEAMS</button>
+            <button id="btnClearInstTeams" class="admin-btn admin-btn-outline hidden">CLEAR</button>
+          </div>
+
+          <!-- Quick Institution Filter Chips -->
+          <div class="admin-chips-row" style="margin-bottom: 16px;">
+            <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-right: 6px;">QUICK SELECT:</span>
+            <button class="admin-chip-btn inst-chip" data-inst="Royal College">Royal College</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Trinity College">Trinity College</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Ananda College">Ananda College</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Elizabeth Moir School">Elizabeth Moir</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Colombo International School">CIS</button>
+            <button class="admin-chip-btn inst-chip" data-inst="S. Thomas' College">S. Thomas'</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Methodist College">Methodist</button>
+            <button class="admin-chip-btn inst-chip" data-inst="D. S. Senanayake College">D. S. Senanayake</button>
+          </div>
+
+          <!-- Status / Notice Box -->
+          <div id="instTeamsStatusBox" class="admin-status-box hidden" style="margin-bottom: 16px;"></div>
+
+          <!-- Team Merge Action Bar (Shown when Target or Duplicate is selected) -->
+          <div id="instTeamsMergeBar" class="inst-merge-action-bar hidden">
+            <div class="inst-merge-bar-content">
+              <div class="inst-merge-slot slot-target">
+                <span class="inst-merge-slot-lbl">CANONICAL TARGET (KEEP):</span>
+                <span id="instSelectedTargetLabel" class="inst-merge-slot-val">None selected</span>
+                <button id="btnClearSelectedTarget" class="inst-merge-clear-btn hidden" title="Remove target">&times;</button>
+              </div>
+              <div class="inst-merge-arrow">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <line x1="5" y1="12" x2="19" y2="12"></line>
+                  <polyline points="12 5 19 12 12 19"></polyline>
+                </svg>
+              </div>
+              <div class="inst-merge-slot slot-duplicate">
+                <span class="inst-merge-slot-lbl">DUPLICATE VARIANT (MERGE):</span>
+                <span id="instSelectedDuplicateLabel" class="inst-merge-slot-val">None selected</span>
+                <button id="btnClearSelectedDuplicate" class="inst-merge-clear-btn hidden" title="Remove duplicate">&times;</button>
+              </div>
+            </div>
+            <div class="inst-merge-bar-actions">
+              <button id="btnExecuteInstTeamMerge" class="admin-btn admin-btn-danger" disabled>
+                CONFIRM & MERGE TEAMS
+              </button>
+              <button id="btnResetInstTeamSelection" class="admin-btn admin-btn-outline">
+                RESET SELECTION
+              </button>
+            </div>
+          </div>
+
+          <!-- Results Grid Container -->
+          <div id="instTeamsResultsContainer">
+            <div style="text-align: center; padding: 36px 20px; color: rgba(255,255,255,0.45); font-family: var(--font-mono); font-size: 13px;">
+              Type or select an institution above to view all historical teams.
+            </div>
+          </div>
+        </div>
+
+        <!-- Manual Identity Merger with Live Autocomplete -->
         <div class="admin-box">
           <div class="admin-box-title">MANUAL IDENTITY MERGER</div>
           <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
-            Execute a manual merge for any arbitrary pair of records by specifying their IDs. The duplicate entity will be permanently removed and merged into the primary canonical target.
+            Search and merge any two debaters or teams by name, school, or ID. The duplicate entity will be permanently removed and merged into the canonical target with complete foreign key re-mapping.
           </p>
 
           <div class="admin-form-group" style="margin-bottom: 16px;">
@@ -415,19 +493,43 @@
             </select>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-bottom: 16px;">
-            <div class="admin-form-group">
-              <label class="admin-form-label">TARGET / PRIMARY ID (KEEP THIS RECORD)</label>
-              <input type="number" id="manualPrimaryId" class="admin-text-input" placeholder="Primary entity ID (e.g. 104)" />
-              <div id="manualPrimaryMeta" style="font-size: 11px; color: #38bdf8; font-family: var(--font-mono); margin-top: 4px;"></div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px; margin-bottom: 18px;">
+            <!-- Target / Primary Selection -->
+            <div class="admin-form-group" style="position: relative;">
+              <label class="admin-form-label" style="color: #34d399;">CANONICAL TARGET (KEEP THIS RECORD)</label>
+              <div class="autocomplete-wrapper" style="position: relative;">
+                <input
+                  type="text"
+                  id="manualPrimaryInput"
+                  class="admin-text-input"
+                  placeholder="Type name, school, or ID to search..."
+                  autocomplete="off"
+                />
+                <input type="hidden" id="manualPrimaryId" />
+                <div id="manualPrimaryDropdown" class="entity-autocomplete-dropdown hidden"></div>
+              </div>
+              <div id="manualPrimarySelectedCard" class="selected-entity-chip hidden"></div>
             </div>
 
-            <div class="admin-form-group">
-              <label class="admin-form-label">SOURCE / DUPLICATE ID (MERGE & DELETE THIS)</label>
-              <input type="number" id="manualDuplicateId" class="admin-text-input" placeholder="Duplicate entity ID to delete (e.g. 382)" />
-              <div id="manualDuplicateMeta" style="font-size: 11px; color: #f87171; font-family: var(--font-mono); margin-top: 4px;"></div>
+            <!-- Duplicate / Source Selection -->
+            <div class="admin-form-group" style="position: relative;">
+              <label class="admin-form-label" style="color: #f87171;">SOURCE / DUPLICATE (MERGE & DELETE)</label>
+              <div class="autocomplete-wrapper" style="position: relative;">
+                <input
+                  type="text"
+                  id="manualDuplicateInput"
+                  class="admin-text-input"
+                  placeholder="Type name, school, or ID to search..."
+                  autocomplete="off"
+                />
+                <input type="hidden" id="manualDuplicateId" />
+                <div id="manualDuplicateDropdown" class="entity-autocomplete-dropdown hidden"></div>
+              </div>
+              <div id="manualDuplicateSelectedCard" class="selected-entity-chip hidden"></div>
             </div>
           </div>
+
+          <div id="manualMergeStatusBox" class="admin-status-box hidden" style="margin-bottom: 14px;"></div>
 
           <button id="btnExecuteManualMerge" class="admin-btn admin-btn-danger">
             EXECUTE MANUAL MERGE

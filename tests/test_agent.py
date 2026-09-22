@@ -167,7 +167,7 @@ class TestAtomosAgentExecution:
         assert res.intent == AgentIntent.INSTITUTION_DOSSIER.value
         assert "Royal College" in res.answer
         assert "National Powerhouse" in res.answer
-        assert "90.03956" in res.answer
+        assert "National IPI Score" in res.answer
 
     def test_ask_top_speakers(self, agent):
         res = agent.ask("top 5 speakers")

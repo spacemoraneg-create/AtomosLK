@@ -875,6 +875,137 @@ def create_app(db_conn=None) -> Flask:
         except Exception as e:
             return jsonify({"error": f"Failed to dismiss suggestion: {str(e)}"}), 500
 
+    @app.route("/api/admin/institutions/list", methods=["GET"])
+    @require_admin
+    def admin_institutions_list():
+        try:
+            cur = conn.cursor()
+            cur.execute("""
+                SELECT i.id, i.name, i.code, COUNT(t.id) as team_count
+                FROM institutions i
+                LEFT JOIN teams t ON t.institution_id = i.id
+                GROUP BY i.id
+                ORDER BY i.name ASC
+            """)
+            institutions = [dict(r) for r in cur.fetchall()]
+            return jsonify({"success": True, "institutions": institutions, "count": len(institutions)})
+        except Exception as e:
+            return jsonify({"error": f"Failed to list institutions: {str(e)}"}), 500
+
+    @app.route("/api/admin/institutions/<identifier>/teams", methods=["GET"])
+    @require_admin
+    def admin_institution_teams(identifier: str):
+        try:
+            cur = conn.cursor()
+            identifier_clean = identifier.strip()
+            if identifier_clean.isdigit():
+                cur.execute("SELECT id, name, code FROM institutions WHERE id = ?", (int(identifier_clean),))
+            else:
+                cur.execute(
+                    "SELECT id, name, code FROM institutions WHERE LOWER(name) = LOWER(?) OR LOWER(code) = LOWER(?)",
+                    (identifier_clean, identifier_clean)
+                )
+            inst = cur.fetchone()
+            if not inst:
+                cur.execute(
+                    "SELECT id, name, code FROM institutions WHERE LOWER(name) LIKE LOWER(?) ORDER BY LENGTH(name) ASC LIMIT 1",
+                    (f"%{identifier_clean}%",)
+                )
+                inst = cur.fetchone()
+
+            if not inst:
+                return jsonify({"error": f"Institution '{identifier}' not found."}), 404
+
+            inst_id = inst["id"]
+            cur.execute("""
+                SELECT t.id, t.name, t.canonical_name, t.tournament_id,
+                       tour.name as tournament_name, tour.slug as tournament_slug, tour.year,
+                       (SELECT COUNT(*) FROM speech_performances sp WHERE sp.team_id = t.id) as speech_count,
+                       (SELECT COUNT(DISTINCT d.id) FROM debates d WHERE d.prop_team_id = t.id OR d.opp_team_id = t.id) as debate_count,
+                       (SELECT GROUP_CONCAT(DISTINCT p.canonical_name) 
+                        FROM team_members tm 
+                        JOIN persons p ON tm.person_id = p.id 
+                        WHERE tm.team_id = t.id) as members
+                FROM teams t
+                JOIN tournaments tour ON t.tournament_id = tour.id
+                WHERE t.institution_id = ?
+                ORDER BY tour.id ASC, t.name ASC
+            """, (inst_id,))
+            teams = []
+            for r in cur.fetchall():
+                d = dict(r)
+                d["official_tournament_name"] = CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"])
+                teams.append(d)
+
+            return jsonify({
+                "success": True,
+                "institution": dict(inst),
+                "teams": teams,
+                "count": len(teams),
+            })
+        except Exception as e:
+            return jsonify({"error": f"Failed to fetch institution teams: {str(e)}"}), 500
+
+    @app.route("/api/admin/entities/search", methods=["GET"])
+    @require_admin
+    def admin_entities_search():
+        try:
+            entity_type = request.args.get("type", "person").strip().lower()
+            q = request.args.get("q", "").strip()
+            limit = min(50, max(1, int(request.args.get("limit", 15))))
+
+            if not q:
+                return jsonify({"success": True, "results": []})
+
+            cur = conn.cursor()
+            results = []
+
+            if entity_type == "person":
+                is_num = q.isdigit()
+                cur.execute("""
+                    SELECT p.id, p.canonical_name, p.national_level,
+                           COUNT(sp.id) as speech_count,
+                           (SELECT i.name FROM speech_performances sp2
+                            JOIN teams t ON sp2.team_id = t.id
+                            JOIN institutions i ON t.institution_id = i.id
+                            WHERE sp2.person_id = p.id
+                            ORDER BY sp2.id DESC LIMIT 1) as institution
+                    FROM persons p
+                    LEFT JOIN speech_performances sp ON p.id = sp.person_id
+                    WHERE LOWER(p.canonical_name) LIKE LOWER(?) OR p.id = ?
+                    GROUP BY p.id
+                    ORDER BY (CASE WHEN p.id = ? THEN 1 WHEN LOWER(p.canonical_name) = LOWER(?) THEN 2 ELSE 3 END), speech_count DESC
+                    LIMIT ?
+                """, (f"%{q}%", int(q) if is_num else -1, int(q) if is_num else -1, q, limit))
+                for r in cur.fetchall():
+                    results.append(dict(r))
+
+            elif entity_type == "team":
+                is_num = q.isdigit()
+                cur.execute("""
+                    SELECT t.id, t.name, t.canonical_name, t.tournament_id,
+                       tour.name as tournament_name, i.name as institution_name,
+                       (SELECT COUNT(*) FROM speech_performances sp WHERE sp.team_id = t.id) as speech_count,
+                       (SELECT GROUP_CONCAT(DISTINCT p.canonical_name) 
+                        FROM team_members tm 
+                        JOIN persons p ON tm.person_id = p.id 
+                        WHERE tm.team_id = t.id) as members
+                    FROM teams t
+                    JOIN tournaments tour ON t.tournament_id = tour.id
+                    LEFT JOIN institutions i ON t.institution_id = i.id
+                    WHERE LOWER(t.name) LIKE LOWER(?) OR LOWER(i.name) LIKE LOWER(?) OR t.id = ?
+                    ORDER BY (CASE WHEN t.id = ? THEN 1 ELSE 2 END), t.id DESC
+                    LIMIT ?
+                """, (f"%{q}%", f"%{q}%", int(q) if is_num else -1, int(q) if is_num else -1, limit))
+                for r in cur.fetchall():
+                    d = dict(r)
+                    d["official_tournament_name"] = CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"])
+                    results.append(d)
+
+            return jsonify({"success": True, "type": entity_type, "results": results})
+        except Exception as e:
+            return jsonify({"error": f"Search error: {str(e)}"}), 500
+
     return app
 
 
