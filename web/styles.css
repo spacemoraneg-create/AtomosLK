@@ -334,20 +334,27 @@ body {
 }
 
 /* Data Tables */
-.data-table-wrap {
+.data-table-wrap,
+.table-responsive,
+.table-container {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
   overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
   border-radius: 16px;
   background: rgba(8, 14, 28, 0.45);
   border: 1px solid rgba(255, 255, 255, 0.12);
   max-height: 420px;
   overflow-y: auto;
-  contain: content;
-  will-change: scroll-position;
+  contain: paint;
 }
 
-.atomos-table {
+.atomos-table,
+.leaderboard-table,
+.data-table {
   width: 100%;
-  min-width: 980px;
+  min-width: 820px;
   table-layout: auto;
   border-collapse: collapse;
   font-size: 13px;
@@ -355,7 +362,9 @@ body {
 }
 
 /* 100% Solid Opaque Sticky Header (No Transparency, Zero Interlacing) */
-.atomos-table th {
+.atomos-table th,
+.leaderboard-table th,
+.data-table th {
   font-family: var(--font-mono);
   font-size: 11px;
   letter-spacing: 0.1em;
@@ -371,13 +380,17 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
 }
 
-.atomos-table td {
+.atomos-table td,
+.leaderboard-table td,
+.data-table td {
   padding: 13px 18px;
   border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   white-space: nowrap;
 }
 
-.atomos-table tr:hover td {
+.atomos-table tr:hover td,
+.leaderboard-table tr:hover td,
+.data-table tr:hover td {
   background: rgba(255, 255, 255, 0.12);
 }
 
@@ -591,12 +604,17 @@ body {
 .subpage-container {
   width: 100%;
   max-width: 1380px;
+  min-width: 0;
+  box-sizing: border-box;
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
 .subpage-card {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
   background: linear-gradient(135deg, rgba(29, 78, 216, 0.45) 0%, rgba(14, 30, 68, 0.85) 100%);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
@@ -950,9 +968,13 @@ body {
 
 .bio-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
   gap: 12px;
   margin-bottom: 24px;
+}
+
+.bio-positions-grid {
+  grid-template-columns: repeat(4, 1fr);
 }
 
 .bio-stat-tile {
@@ -3326,8 +3348,8 @@ body {
 
 
 /* ==========================================================================
-   UNIVERSAL MOBILE RESPONSIVE SCALING (768px and 480px)
-   Addresses vertical scaling and cramped mobile interfaces across all pages
+   UNIVERSAL MOBILE RESPONSIVE SCALING (768px, 540px, and 480px)
+   Addresses vertical scaling, cramped cards, table wrapping, and subpages
    ========================================================================== */
 
 @media (max-width: 768px) {
@@ -3338,6 +3360,10 @@ body {
   .atomos-container,
   .subpage-container {
     gap: 14px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   /* Top Nav */
@@ -3346,6 +3372,9 @@ body {
     border-radius: 14px;
     margin-bottom: 14px;
     gap: 8px;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
   }
 
   .nav-brand-name {
@@ -3393,16 +3422,26 @@ body {
   .subpage-card {
     padding: 16px 14px;
     border-radius: 16px;
+    width: 100%;
+    max-width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+    overflow-x: hidden;
   }
 
   .subpage-title {
     font-size: 20px;
     margin-bottom: 14px;
     gap: 8px;
+    flex-wrap: wrap;
   }
 
   .subpage-tabs-bar {
     gap: 8px;
+    flex-direction: column;
+    align-items: stretch;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.12);
+    padding-bottom: 8px;
   }
 
   .subpage-tabs {
@@ -3420,10 +3459,47 @@ body {
     flex-shrink: 0;
   }
 
+  .subpage-mode-switcher {
+    width: 100%;
+    display: flex;
+    margin-left: 0;
+    margin-top: 4px;
+    box-sizing: border-box;
+  }
+
+  .mode-switch-btn {
+    flex: 1;
+    text-align: center;
+    padding: 7px 10px;
+    font-size: 10.5px;
+  }
+
   /* Table Containers: eliminate double-scroll lock on mobile */
+  .data-table-wrap,
+  .table-responsive,
+  .table-container,
   .subpage-container .data-table-wrap {
     max-height: 65vh;
     -webkit-overflow-scrolling: touch;
+    width: 100%;
+    max-width: 100%;
+    box-sizing: border-box;
+  }
+
+  .atomos-table th,
+  .atomos-table td,
+  .leaderboard-table th,
+  .leaderboard-table td,
+  .data-table th,
+  .data-table td {
+    padding: 10px 12px;
+    font-size: 12px;
+  }
+
+  .atomos-table th,
+  .leaderboard-table th,
+  .data-table th {
+    font-size: 10px;
   }
 
   /* Bio Pages */
@@ -3434,6 +3510,8 @@ body {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .bio-name {
@@ -3442,17 +3520,25 @@ body {
 
   .bio-stats-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 8px;
+    gap: 10px;
     margin-bottom: 16px;
+  }
+
+  .bio-positions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 
   .bio-stat-tile {
     padding: 12px 10px;
     border-radius: 12px;
+    min-width: 0;
+    box-sizing: border-box;
   }
 
   .bio-stat-val {
     font-size: 22px;
+    word-break: break-word;
   }
 
   /* H2H Page */
@@ -3465,6 +3551,8 @@ body {
     text-align: center;
     font-size: 18px;
     padding: 4px 0;
+    margin: 0 auto;
+    justify-self: center;
   }
 
   .h2h-matchup-body,
@@ -3473,10 +3561,58 @@ body {
     gap: 6px;
   }
 
+  .h2h-category-card {
+    padding: 12px 14px;
+    gap: 12px;
+  }
+
+  /* Chatbot Console */
+  .chat-window {
+    min-height: 400px;
+    height: 62vh;
+  }
+
+  .chat-messages {
+    padding: 14px 10px;
+    gap: 12px;
+  }
+
+  .chat-bubble {
+    max-width: 92%;
+    padding: 10px 14px;
+    font-size: 13px;
+  }
+
+  .chat-bubble.user {
+    max-width: 85%;
+  }
+
+  .chat-input-bar {
+    gap: 8px;
+    margin-top: 10px;
+  }
+
+  .chat-input {
+    padding: 10px 12px;
+    font-size: 13px;
+  }
+
+  .chat-send-btn {
+    padding: 10px 16px;
+    font-size: 12px;
+  }
+
   /* Admin Console Mobile Scaling */
   .admin-lock-card {
     padding: 24px 16px;
     margin: 16px auto;
+  }
+
+  .admin-modal-card {
+    max-width: 94vw;
+    padding: 18px 14px;
+    margin: 12px;
+    box-sizing: border-box;
   }
 
   .admin-tabs-nav {
@@ -3497,6 +3633,8 @@ body {
 
   .admin-box {
     padding: 14px;
+    width: 100%;
+    box-sizing: border-box;
   }
 
   .admin-kv-grid {
@@ -3578,7 +3716,43 @@ body {
   }
 }
 
+@media (max-width: 540px) {
+  .h2h-category-card {
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    padding: 12px 10px;
+  }
+
+  .h2h-cat-center {
+    grid-column: 1 / -1;
+    order: -1;
+  }
+
+  .h2h-cat-val {
+    font-size: 14.5px;
+    text-align: center;
+  }
+
+  .metric-pills-bar {
+    gap: 6px;
+  }
+
+  .metric-pill-btn {
+    padding: 5px 10px;
+    font-size: 10px;
+  }
+}
+
 @media (max-width: 480px) {
+  body {
+    padding: 10px 6px 28px;
+  }
+
+  .subpage-card {
+    padding: 12px 10px;
+    border-radius: 14px;
+  }
+
   .hero-title {
     font-size: 34px;
   }
@@ -3587,12 +3761,48 @@ body {
     font-size: 22px;
   }
 
+  .bio-profile-header {
+    padding: 12px 10px;
+    border-radius: 12px;
+  }
+
   .subpage-title {
-    font-size: 18px;
+    font-size: 17px;
+    margin-bottom: 12px;
+    gap: 6px;
   }
 
   .bio-stats-grid {
     grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .bio-positions-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 6px;
+  }
+
+  .bio-stat-tile {
+    padding: 10px 6px;
+    border-radius: 10px;
+  }
+
+  .bio-stat-val {
+    font-size: 18px;
+  }
+
+  .bio-stat-lbl {
+    font-size: 8.5px;
+  }
+
+  .atomos-table th,
+  .atomos-table td,
+  .leaderboard-table th,
+  .leaderboard-table td,
+  .data-table th,
+  .data-table td {
+    padding: 8px 8px;
+    font-size: 11px;
   }
 
   .admin-positions-grid {
@@ -3605,8 +3815,22 @@ body {
   }
 
   .pool-rank-badge {
-    width: 24px;
-    height: 24px;
+    width: 20px;
+    height: 20px;
     font-size: 10px;
+  }
+
+  .score-pill {
+    font-size: 11px;
+    padding: 3px 6px;
+  }
+
+  .quick-chips-row {
+    gap: 4px;
+  }
+
+  .quick-chip {
+    font-size: 10px;
+    padding: 4px 8px;
   }
 }

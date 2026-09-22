@@ -204,7 +204,10 @@
 
     // KPI Tiles
     setText('kpiTournaments', db.tournaments_count ?? '--');
-    setText('kpiDebates', `${db.contested_debates ?? '--'} (${db.debates_count ?? '--'} tot)`);
+    const kpiDebatesEl = document.getElementById('kpiDebates');
+    if (kpiDebatesEl) {
+      kpiDebatesEl.innerHTML = `${db.contested_debates ?? '--'} <span style="font-size: 14px; opacity: 0.6; font-family: var(--font-mono);">/ ${db.debates_count ?? '--'}</span>`;
+    }
     setText('kpiDebaters', db.persons_count ?? '--');
     setText('kpiBallots', db.ballots_count ?? '--');
     setText('kpiSpeeches', db.speeches_count ?? '--');

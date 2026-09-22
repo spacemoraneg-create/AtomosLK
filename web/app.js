@@ -1148,7 +1148,7 @@
           <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 20V10"/><path d="M12 20V4"/><path d="M6 20v-6"/></svg>
           SPEAKER POSITION DEBATED BREAKDOWN
         </div>
-        <div class="bio-stats-grid" style="grid-template-columns: repeat(4, 1fr);">
+        <div class="bio-stats-grid bio-positions-grid">
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #38bdf8;">${pos1}</div>
             <div class="bio-stat-lbl">1ST SPEAKER AVG</div>
@@ -1957,8 +1957,8 @@
           JUDGING HISTORY (${(bio.judging_history && bio.judging_history.length) || (bio.prelims_adjudicated + (bio.outrounds_adjudicated || 0))} DEBATES)
         </div>
         ${bio.judging_history && bio.judging_history.length > 0 ? `
-          <div class="table-container" style="margin-bottom: 32px;">
-            <table class="data-table">
+          <div class="data-table-wrap" style="margin-bottom: 32px;">
+            <table class="atomos-table">
               <thead>
                 <tr>
                   <th style="width: 22%;">TOURNAMENT</th>
