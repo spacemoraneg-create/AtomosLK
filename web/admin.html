@@ -402,9 +402,9 @@
 
         <!-- Institution Team Explorer & Merger -->
         <div class="admin-box" style="margin-bottom: 20px;">
-          <div class="admin-box-title">INSTITUTION TEAM EXPLORER & MERGER</div>
+          <div class="admin-box-title">INSTITUTION TEAM NAMES EXPLORER & MERGER</div>
           <p style="font-size: 13px; color: rgba(255,255,255,0.7); line-height: 1.5; margin-bottom: 16px;">
-            Type or select an institution below to inspect every team that has ever competed under that institution across all tournaments. Choose a canonical target team and a duplicate team to merge them with full database cascading.
+            Inspect every distinct name a school has competed under across tournaments. Select a canonical target team and a variant name to unify them with complete database cascading and visual confirmation.
           </p>
 
           <!-- Institution Search Bar & Controls -->
@@ -420,7 +420,7 @@
               />
               <datalist id="institutionsDatalist"></datalist>
             </div>
-            <button id="btnLoadInstTeams" class="admin-btn admin-btn-primary">LOAD TEAMS</button>
+            <button id="btnLoadInstTeams" class="admin-btn admin-btn-primary">LOAD SCHOOL ROSTER</button>
             <button id="btnClearInstTeams" class="admin-btn admin-btn-outline hidden">CLEAR</button>
           </div>
 
@@ -428,19 +428,21 @@
           <div class="admin-chips-row" style="margin-bottom: 16px;">
             <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-right: 6px;">QUICK SELECT:</span>
             <button class="admin-chip-btn inst-chip" data-inst="Royal College">Royal College</button>
-            <button class="admin-chip-btn inst-chip" data-inst="Trinity College">Trinity College</button>
-            <button class="admin-chip-btn inst-chip" data-inst="Ananda College">Ananda College</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Trinity College Kandy">Trinity</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Ananda College">Ananda</button>
             <button class="admin-chip-btn inst-chip" data-inst="Elizabeth Moir School">Elizabeth Moir</button>
             <button class="admin-chip-btn inst-chip" data-inst="Colombo International School">CIS</button>
             <button class="admin-chip-btn inst-chip" data-inst="S. Thomas' College">S. Thomas'</button>
             <button class="admin-chip-btn inst-chip" data-inst="Methodist College">Methodist</button>
             <button class="admin-chip-btn inst-chip" data-inst="D. S. Senanayake College">D. S. Senanayake</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Nalanda College">Nalanda</button>
+            <button class="admin-chip-btn inst-chip" data-inst="Bishop's College">Bishop's</button>
           </div>
 
-          <!-- Status / Notice Box -->
+          <!-- Status / Confirmation Notice Box -->
           <div id="instTeamsStatusBox" class="admin-status-box hidden" style="margin-bottom: 16px;"></div>
 
-          <!-- Team Merge Action Bar (Shown when Target or Duplicate is selected) -->
+          <!-- Team Name Merge Action Bar (Shown when Target or Variant is chosen) -->
           <div id="instTeamsMergeBar" class="inst-merge-action-bar hidden">
             <div class="inst-merge-bar-content">
               <div class="inst-merge-slot slot-target">
@@ -455,14 +457,14 @@
                 </svg>
               </div>
               <div class="inst-merge-slot slot-duplicate">
-                <span class="inst-merge-slot-lbl">DUPLICATE VARIANT (MERGE):</span>
+                <span class="inst-merge-slot-lbl">VARIANT TO UNIFY (MERGE):</span>
                 <span id="instSelectedDuplicateLabel" class="inst-merge-slot-val">None selected</span>
-                <button id="btnClearSelectedDuplicate" class="inst-merge-clear-btn hidden" title="Remove duplicate">&times;</button>
+                <button id="btnClearSelectedDuplicate" class="inst-merge-clear-btn hidden" title="Remove variant">&times;</button>
               </div>
             </div>
             <div class="inst-merge-bar-actions">
               <button id="btnExecuteInstTeamMerge" class="admin-btn admin-btn-danger" disabled>
-                CONFIRM & MERGE TEAMS
+                CONFIRM & UNIFY TEAM NAMES
               </button>
               <button id="btnResetInstTeamSelection" class="admin-btn admin-btn-outline">
                 RESET SELECTION
@@ -470,11 +472,19 @@
             </div>
           </div>
 
-          <!-- Results Grid Container -->
+          <!-- Results Grid Container (Distinct Team Names) -->
           <div id="instTeamsResultsContainer">
             <div style="text-align: center; padding: 36px 20px; color: rgba(255,255,255,0.45); font-family: var(--font-mono); font-size: 13px;">
-              Type or select an institution above to view all historical teams.
+              Type or select an institution above to inspect every name the school has competed under.
             </div>
+          </div>
+
+          <!-- Confirmed Merges Audit Section -->
+          <div id="instConfirmedMergesSection" class="hidden" style="margin-top: 24px; padding-top: 18px; border-top: 1px solid rgba(255,255,255,0.1);">
+            <div style="font-size: 12px; font-weight: 700; font-family: var(--font-mono); color: #34d399; letter-spacing: 0.05em; margin-bottom: 10px;">
+              CONFIRMED NAME UNIFICATIONS & AUDIT TRAIL
+            </div>
+            <div id="instConfirmedMergesList"></div>
           </div>
         </div>
 
@@ -555,6 +565,39 @@
         <div class="admin-modal-actions">
           <button id="cancelDeleteBtn" class="admin-btn admin-btn-outline">CANCEL</button>
           <button id="confirmDeleteBtn" class="admin-btn admin-btn-danger">CONFIRM PERMANENT DELETE</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- INSTITUTION TEAM MERGE CONFIRMATION MODAL                            -->
+    <!-- ==================================================================== -->
+    <div id="instTeamMergeConfirmModal" class="admin-modal-backdrop hidden">
+      <div class="admin-modal-card" style="border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 189, 248, 0.2); max-width: 520px;">
+        <div class="admin-modal-title" style="color: #38bdf8;">CONFIRM TEAM IDENTITY MERGE</div>
+        <p id="instTeamMergeModalMessage" class="admin-modal-text">
+          Review the canonical unification details below before executing this permanent relational merge.
+        </p>
+        <div class="admin-box" style="margin-bottom: 16px; background: rgba(2, 6, 23, 0.7); padding: 14px;">
+          <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
+            <strong>Institution:</strong> <span id="modalInstName" style="color: #38bdf8;">--</span>
+          </div>
+          <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
+            <strong>Canonical Target (Keep):</strong> <span id="modalTargetName" style="color: #34d399; font-weight: 700;">--</span>
+          </div>
+          <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
+            <strong>Variant to Unify (Merge):</strong> <span id="modalVariantName" style="color: #f87171; font-weight: 700;">--</span>
+          </div>
+          <div style="font-size: 12px; color: rgba(255,255,255,0.7); line-height: 1.4;">
+            <strong>Affected Tournaments:</strong> <span id="modalAffectedTours" class="monospace" style="color: #cbd5e1;">--</span>
+          </div>
+        </div>
+        <div class="admin-modal-alert" style="background: rgba(56, 189, 248, 0.1); border-left-color: #38bdf8; color: #bae6fd;">
+          CONFIRMATION EFFECT: All debate records, speaker performances, and leaderboards under the variant name will be unified under the canonical target across the entire season.
+        </div>
+        <div class="admin-modal-actions">
+          <button id="cancelInstTeamMergeBtn" class="admin-btn admin-btn-outline">CANCEL</button>
+          <button id="confirmInstTeamMergeModalBtn" class="admin-btn admin-btn-danger">CONFIRM PERMANENT MERGE</button>
         </div>
       </div>
     </div>

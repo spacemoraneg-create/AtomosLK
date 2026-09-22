@@ -1191,12 +1191,12 @@
   }
 
   // -------------------------------------------------------------------------
-  // Submodule A: Institution Team Explorer & Merger
+  // Submodule A: Institution Team Names Explorer & Merger
   // -------------------------------------------------------------------------
   let instList = [];
-  let currentInstTeamsData = null;
-  let instSelectedTarget = null;
-  let instSelectedDuplicate = null;
+  let currentInstData = null;
+  let selectedTargetTeamName = null;
+  let selectedVariantTeamName = null;
 
   async function initInstitutionTeamExplorer() {
     const searchInput = document.getElementById('instTeamExplorerInput');
@@ -1208,6 +1208,15 @@
     const clearTargetBtn = document.getElementById('btnClearSelectedTarget');
     const clearDuplicateBtn = document.getElementById('btnClearSelectedDuplicate');
     const chips = document.querySelectorAll('.inst-chip');
+
+    // Modal elements
+    const mergeModal = document.getElementById('instTeamMergeConfirmModal');
+    const modalInstName = document.getElementById('modalInstName');
+    const modalTargetName = document.getElementById('modalTargetName');
+    const modalVariantName = document.getElementById('modalVariantName');
+    const modalAffectedTours = document.getElementById('modalAffectedTours');
+    const cancelModalBtn = document.getElementById('cancelInstTeamMergeBtn');
+    const confirmModalBtn = document.getElementById('confirmInstTeamMergeModalBtn');
 
     // Populate datalist from /api/admin/institutions/list
     async function loadInstitutionDatalist() {
@@ -1235,7 +1244,7 @@
 
     loadInstitutionDatalist();
 
-    // Load teams for an institution
+    // Load distinct team names for an institution
     async function fetchInstitutionTeams(identifier) {
       const trimmed = (identifier || '').trim();
       if (!trimmed) {
@@ -1245,10 +1254,10 @@
 
       const container = document.getElementById('instTeamsResultsContainer');
       const statusBox = document.getElementById('instTeamsStatusBox');
-      if (statusBox) statusBox.classList.add('hidden');
+      const auditSection = document.getElementById('instConfirmedMergesSection');
 
       if (container) {
-        container.innerHTML = `<div style="text-align: center; padding: 36px; color: rgba(255,255,255,0.5);"><div class="spinner"></div> Loading all teams for '${escapeHtml(trimmed)}'...</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 36px; color: rgba(255,255,255,0.5);"><div class="spinner"></div> Loading distinct team names for '${escapeHtml(trimmed)}'...</div>`;
       }
 
       try {
@@ -1265,20 +1274,23 @@
           if (container) {
             container.innerHTML = `<div style="text-align: center; padding: 28px; color: #f87171; font-family: var(--font-mono);">${escapeHtml(data.error || 'Failed to find institution teams')}</div>`;
           }
+          if (auditSection) auditSection.classList.add('hidden');
           return;
         }
 
-        currentInstTeamsData = data;
-        // Keep selected target or duplicate if still in returned list, else null
-        if (instSelectedTarget && !data.teams.some(t => t.id === instSelectedTarget.id)) {
-          instSelectedTarget = null;
+        currentInstData = data;
+
+        // Reset or maintain selections if they still exist
+        if (selectedTargetTeamName && !data.team_names.some(tn => tn.name === selectedTargetTeamName)) {
+          selectedTargetTeamName = null;
         }
-        if (instSelectedDuplicate && !data.teams.some(t => t.id === instSelectedDuplicate.id)) {
-          instSelectedDuplicate = null;
+        if (selectedVariantTeamName && !data.team_names.some(tn => tn.name === selectedVariantTeamName)) {
+          selectedVariantTeamName = null;
         }
 
         if (clearBtn) clearBtn.classList.remove('hidden');
-        renderInstitutionTeamsGrid();
+        renderInstitutionTeamNamesGrid();
+        renderConfirmedMergesAudit();
         updateInstitutionMergeBar();
       } catch (err) {
         if (container) {
@@ -1287,17 +1299,17 @@
       }
     }
 
-    function renderInstitutionTeamsGrid() {
+    function renderInstitutionTeamNamesGrid() {
       const container = document.getElementById('instTeamsResultsContainer');
-      if (!container || !currentInstTeamsData) return;
+      if (!container || !currentInstData) return;
 
-      const inst = currentInstTeamsData.institution;
-      const teams = currentInstTeamsData.teams || [];
+      const inst = currentInstData.institution;
+      const teamNames = currentInstData.team_names || [];
 
-      if (teams.length === 0) {
+      if (teamNames.length === 0) {
         container.innerHTML = `
           <div style="padding: 24px; text-align: center; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-            No teams recorded for institution '${escapeHtml(inst.name)}'.
+            No debate teams recorded for institution '${escapeHtml(inst.name)}'.
           </div>
         `;
         return;
@@ -1309,63 +1321,106 @@
             ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(56,189,248,0.15); color: #38bdf8; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
           </div>
           <div style="font-family: var(--font-mono); font-size: 12px; color: #38bdf8; font-weight: 600;">
-            ${teams.length} ${teams.length === 1 ? 'Team' : 'Teams'} across all tournaments
+            ${teamNames.length} Distinct Team Names across ${currentInstData.total_instances || 0} Tournament Entries
           </div>
         </div>
         <div class="inst-teams-grid">
       `;
 
-      teams.forEach((t) => {
-        const isTarget = instSelectedTarget && instSelectedTarget.id === t.id;
-        const isDuplicate = instSelectedDuplicate && instSelectedDuplicate.id === t.id;
+      teamNames.forEach((tn) => {
+        const isTarget = selectedTargetTeamName === tn.name;
+        const isVariant = selectedVariantTeamName === tn.name;
 
         let cardClass = 'inst-team-card';
         if (isTarget) cardClass += ' is-target';
-        if (isDuplicate) cardClass += ' is-duplicate';
-
-        const membersList = t.members
-          ? t.members.split(',').map((m) => escapeHtml(m.trim())).join(', ')
-          : 'No members recorded in team tab';
+        if (isVariant) cardClass += ' is-duplicate';
 
         html += `
-          <div class="${cardClass}" id="instTeamCard_${t.id}">
+          <div class="${cardClass}" id="instTeamNameCard_${escapeHtml(tn.name).replace(/\s+/g, '_')}">
             <div class="inst-team-header">
               <div>
                 <div class="inst-team-name">
-                  <span>${escapeHtml(t.name)}</span>
-                  <span class="inst-team-id">#${t.id}</span>
+                  <span>${escapeHtml(tn.name)}</span>
+                  ${tn.tier ? `<span class="badge-count" style="background: rgba(56,189,248,0.15); color: #38bdf8;">TIER ${escapeHtml(tn.tier)}</span>` : ''}
                 </div>
-                <div class="inst-team-tour">${escapeHtml(t.official_tournament_name || t.tournament_name)}</div>
+                <div style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px;">
+                  Fielded in ${tn.instance_count} ${tn.instance_count === 1 ? 'Tournament' : 'Tournaments'}
+                </div>
               </div>
-              ${isTarget ? `<span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399; font-weight: 800;">TARGET</span>` : ''}
-              ${isDuplicate ? `<span class="badge-count" style="background: rgba(248,113,113,0.2); color: #f87171; font-weight: 800;">DUPLICATE</span>` : ''}
+              <div>
+                ${tn.is_merged 
+                  ? `<span class="badge-count" style="background: rgba(16,185,129,0.2); color: #34d399; font-weight: 700;">MERGED INTO ${escapeHtml(tn.merged_into)}</span>` 
+                  : (tn.merged_variants && tn.merged_variants.length > 0 
+                      ? `<span class="badge-count" style="background: rgba(52,211,153,0.25); color: #34d399; font-weight: 800;">CANONICAL FLAGSHIP</span>` 
+                      : (isTarget 
+                          ? `<span class="badge-count" style="background: rgba(52,211,153,0.25); color: #34d399; font-weight: 800;">TARGET</span>` 
+                          : (isVariant 
+                              ? `<span class="badge-count" style="background: rgba(248,113,113,0.25); color: #f87171; font-weight: 800;">VARIANT</span>` 
+                              : `<span class="badge-count" style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);">STANDALONE</span>`)))}
+              </div>
             </div>
 
+            <!-- Tournaments List -->
+            <div style="margin: 2px 0 6px;">
+              <div style="font-family: var(--font-mono); font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 4px;">Tournaments Competed:</div>
+              <div>
+                ${tn.tournaments.map(tour => `<span class="inst-tour-tag">${escapeHtml(tour.name)}</span>`).join('')}
+              </div>
+            </div>
+
+            <!-- Debaters / Members -->
             <div class="inst-team-members">
-              <div class="inst-team-members-lbl">Debaters / Members</div>
-              <div>${membersList}</div>
+              <div class="inst-team-members-lbl">Debaters Roster</div>
+              <div>${escapeHtml(tn.members || 'No debaters recorded in tab')}</div>
             </div>
 
+            <!-- Stats -->
             <div class="inst-team-stats-row">
-              <span>${t.debate_count ?? 0} Debates</span>
+              <span>${tn.total_debates} Debates</span>
               <span>&bull;</span>
-              <span>${t.speech_count ?? 0} Speeches</span>
+              <span>${tn.total_speeches} Speeches</span>
             </div>
 
-            <div class="inst-team-actions">
-              <button
-                class="admin-btn ${isTarget ? 'admin-btn-primary' : 'admin-btn-outline'} btn-inst-set-target"
-                data-team-id="${t.id}"
-              >
-                ${isTarget ? 'REMOVE TARGET' : 'SET AS TARGET (KEEP)'}
-              </button>
-              <button
-                class="admin-btn ${isDuplicate ? 'admin-btn-danger' : 'admin-btn-secondary'} btn-inst-set-dup"
-                data-team-id="${t.id}"
-              >
-                ${isDuplicate ? 'REMOVE DUPLICATE' : 'SET AS DUPLICATE (MERGE)'}
-              </button>
-            </div>
+            <!-- Confirmed Merged Variants Info -->
+            ${tn.merged_variants && tn.merged_variants.length > 0 ? `
+              <div class="inst-confirmed-merged-box">
+                <span style="font-size: 10.5px; font-weight: 700; color: #34d399; font-family: var(--font-mono); text-transform: uppercase;">Confirmed Merged Variants:</span>
+                <div style="margin-top: 4px;">
+                  ${tn.merged_variants.map(v => `<span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399; font-weight: 700; margin-right: 4px; margin-bottom: 2px; display: inline-block;">${escapeHtml(v)}</span>`).join('')}
+                </div>
+              </div>
+            ` : ''}
+
+            <!-- Merged Into Info / Unmerge Option -->
+            ${tn.is_merged ? `
+              <div class="inst-merged-into-box">
+                <div>
+                  <span style="color: rgba(255,255,255,0.6);">Unified Under:</span>
+                  <strong style="color: #38bdf8; margin-left: 6px;">${escapeHtml(tn.merged_into)}</strong>
+                </div>
+                <button class="admin-btn admin-btn-outline admin-btn-sm btn-inst-unmerge" data-variant-name="${escapeHtml(tn.name)}" style="padding: 4px 10px; font-size: 11px;">
+                  UNMERGE
+                </button>
+              </div>
+            ` : ''}
+
+            <!-- Action Buttons -->
+            ${!tn.is_merged ? `
+              <div class="inst-team-actions">
+                <button
+                  class="admin-btn ${isTarget ? 'admin-btn-primary' : 'admin-btn-outline'} btn-inst-set-target"
+                  data-team-name="${escapeHtml(tn.name)}"
+                >
+                  ${isTarget ? 'REMOVE TARGET' : 'SET AS TARGET (KEEP)'}
+                </button>
+                <button
+                  class="admin-btn ${isVariant ? 'admin-btn-danger' : 'admin-btn-secondary'} btn-inst-set-variant"
+                  data-team-name="${escapeHtml(tn.name)}"
+                >
+                  ${isVariant ? 'REMOVE VARIANT' : 'SET AS VARIANT (MERGE)'}
+                </button>
+              </div>
+            ` : ''}
           </div>
         `;
       });
@@ -1376,39 +1431,73 @@
       // Attach button events
       container.querySelectorAll('.btn-inst-set-target').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const teamId = parseInt(btn.getAttribute('data-team-id'), 10);
-          const team = teams.find((x) => x.id === teamId);
-          if (!team) return;
-
-          if (instSelectedTarget && instSelectedTarget.id === teamId) {
-            instSelectedTarget = null;
+          const tName = btn.getAttribute('data-team-name');
+          if (selectedTargetTeamName === tName) {
+            selectedTargetTeamName = null;
           } else {
-            if (instSelectedDuplicate && instSelectedDuplicate.id === teamId) {
-              instSelectedDuplicate = null;
-            }
-            instSelectedTarget = team;
+            if (selectedVariantTeamName === tName) selectedVariantTeamName = null;
+            selectedTargetTeamName = tName;
           }
-          renderInstitutionTeamsGrid();
+          renderInstitutionTeamNamesGrid();
           updateInstitutionMergeBar();
         });
       });
 
-      container.querySelectorAll('.btn-inst-set-dup').forEach((btn) => {
+      container.querySelectorAll('.btn-inst-set-variant').forEach((btn) => {
         btn.addEventListener('click', () => {
-          const teamId = parseInt(btn.getAttribute('data-team-id'), 10);
-          const team = teams.find((x) => x.id === teamId);
-          if (!team) return;
-
-          if (instSelectedDuplicate && instSelectedDuplicate.id === teamId) {
-            instSelectedDuplicate = null;
+          const vName = btn.getAttribute('data-team-name');
+          if (selectedVariantTeamName === vName) {
+            selectedVariantTeamName = null;
           } else {
-            if (instSelectedTarget && instSelectedTarget.id === teamId) {
-              instSelectedTarget = null;
-            }
-            instSelectedDuplicate = team;
+            if (selectedTargetTeamName === vName) selectedTargetTeamName = null;
+            selectedVariantTeamName = vName;
           }
-          renderInstitutionTeamsGrid();
+          renderInstitutionTeamNamesGrid();
           updateInstitutionMergeBar();
+        });
+      });
+
+      container.querySelectorAll('.btn-inst-unmerge').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const vName = btn.getAttribute('data-variant-name');
+          handleUnmergeTeamName(vName);
+        });
+      });
+    }
+
+    function renderConfirmedMergesAudit() {
+      const section = document.getElementById('instConfirmedMergesSection');
+      const listContainer = document.getElementById('instConfirmedMergesList');
+      if (!section || !listContainer || !currentInstData) return;
+
+      const merges = currentInstData.confirmed_merges || [];
+      if (merges.length === 0) {
+        section.classList.add('hidden');
+        return;
+      }
+
+      section.classList.remove('hidden');
+      listContainer.innerHTML = merges.map((m) => `
+        <div class="inst-audit-row">
+          <div>
+            <strong style="color: #34d399;">${escapeHtml(m.target_canonical_name)}</strong>
+            <span style="color: rgba(255,255,255,0.4); margin: 0 8px;">&larr;</span>
+            <strong style="color: #f87171;">${escapeHtml(m.variant_name)}</strong>
+            <span class="badge-count" style="margin-left: 10px; background: rgba(16,185,129,0.15); color: #34d399; font-weight: 700;">CONFIRMED UNIFIED</span>
+          </div>
+          <div style="display: flex; align-items: center; gap: 12px;">
+            <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">${m.decided_at || ''}</span>
+            <button class="admin-btn admin-btn-outline admin-btn-sm btn-inst-unmerge-audit" data-variant-name="${escapeHtml(m.variant_name)}" style="padding: 3px 8px; font-size: 11px;">
+              UNMERGE
+            </button>
+          </div>
+        </div>
+      `).join('');
+
+      listContainer.querySelectorAll('.btn-inst-unmerge-audit').forEach((btn) => {
+        btn.addEventListener('click', () => {
+          const vName = btn.getAttribute('data-variant-name');
+          handleUnmergeTeamName(vName);
         });
       });
     }
@@ -1416,7 +1505,7 @@
     function updateInstitutionMergeBar() {
       if (!mergeBar) return;
 
-      if (!instSelectedTarget && !instSelectedDuplicate) {
+      if (!selectedTargetTeamName && !selectedVariantTeamName) {
         mergeBar.classList.add('hidden');
         return;
       }
@@ -1426,34 +1515,162 @@
       const targetLbl = document.getElementById('instSelectedTargetLabel');
       const dupLbl = document.getElementById('instSelectedDuplicateLabel');
 
-      if (instSelectedTarget) {
-        targetLbl.innerHTML = `<strong>${escapeHtml(instSelectedTarget.name)}</strong> <span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399;">#${instSelectedTarget.id}</span> <span style="color: rgba(255,255,255,0.6); font-size: 11.5px;">(${escapeHtml(instSelectedTarget.official_tournament_name || instSelectedTarget.tournament_name)})</span>`;
+      if (selectedTargetTeamName) {
+        targetLbl.innerHTML = `<strong>${escapeHtml(selectedTargetTeamName)}</strong> <span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399; font-weight: 700;">KEEP</span>`;
         if (clearTargetBtn) clearTargetBtn.classList.remove('hidden');
       } else {
         targetLbl.textContent = 'None selected (Click [Set as Target] on any card)';
         if (clearTargetBtn) clearTargetBtn.classList.add('hidden');
       }
 
-      if (instSelectedDuplicate) {
-        dupLbl.innerHTML = `<strong>${escapeHtml(instSelectedDuplicate.name)}</strong> <span class="badge-count" style="background: rgba(248,113,113,0.2); color: #f87171;">#${instSelectedDuplicate.id}</span> <span style="color: rgba(255,255,255,0.6); font-size: 11.5px;">(${escapeHtml(instSelectedDuplicate.official_tournament_name || instSelectedDuplicate.tournament_name)})</span>`;
+      if (selectedVariantTeamName) {
+        dupLbl.innerHTML = `<strong>${escapeHtml(selectedVariantTeamName)}</strong> <span class="badge-count" style="background: rgba(248,113,113,0.2); color: #f87171; font-weight: 700;">UNIFY</span>`;
         if (clearDuplicateBtn) clearDuplicateBtn.classList.remove('hidden');
       } else {
-        dupLbl.textContent = 'None selected (Click [Set as Duplicate] on any card)';
+        dupLbl.textContent = 'None selected (Click [Set as Variant] on any card)';
         if (clearDuplicateBtn) clearDuplicateBtn.classList.add('hidden');
       }
 
       if (confirmMergeBtn) {
-        if (instSelectedTarget && instSelectedDuplicate) {
-          if (instSelectedTarget.id === instSelectedDuplicate.id) {
+        if (selectedTargetTeamName && selectedVariantTeamName) {
+          if (selectedTargetTeamName.toLowerCase() === selectedVariantTeamName.toLowerCase()) {
             confirmMergeBtn.disabled = true;
-            confirmMergeBtn.textContent = 'CANNOT MERGE SAME TEAM';
+            confirmMergeBtn.textContent = 'CANNOT MERGE IDENTICAL NAMES';
           } else {
             confirmMergeBtn.disabled = false;
-            confirmMergeBtn.textContent = `MERGE #${instSelectedDuplicate.id} INTO #${instSelectedTarget.id}`;
+            confirmMergeBtn.textContent = `MERGE '${selectedVariantTeamName}' INTO '${selectedTargetTeamName}'`;
           }
         } else {
           confirmMergeBtn.disabled = true;
-          confirmMergeBtn.textContent = 'CONFIRM & MERGE TEAMS';
+          confirmMergeBtn.textContent = 'CONFIRM & UNIFY TEAM NAMES';
+        }
+      }
+    }
+
+    // Open explicit confirmation modal before executing merge
+    if (confirmMergeBtn) {
+      confirmMergeBtn.addEventListener('click', () => {
+        if (!selectedTargetTeamName || !selectedVariantTeamName || !currentInstData) return;
+
+        const variantObj = (currentInstData.team_names || []).find(x => x.name === selectedVariantTeamName);
+        const tourNames = variantObj ? variantObj.tournaments.map(t => t.name).join(', ') : 'All recorded tournaments';
+
+        if (modalInstName) modalInstName.textContent = currentInstData.institution.name;
+        if (modalTargetName) modalTargetName.textContent = selectedTargetTeamName;
+        if (modalVariantName) modalVariantName.textContent = selectedVariantTeamName;
+        if (modalAffectedTours) modalAffectedTours.textContent = tourNames;
+
+        if (mergeModal) mergeModal.classList.remove('hidden');
+      });
+    }
+
+    if (cancelModalBtn) {
+      cancelModalBtn.addEventListener('click', () => {
+        if (mergeModal) mergeModal.classList.add('hidden');
+      });
+    }
+
+    // Confirm inside modal executes the merge
+    if (confirmModalBtn) {
+      confirmModalBtn.addEventListener('click', async () => {
+        if (!selectedTargetTeamName || !selectedVariantTeamName || !currentInstData) return;
+
+        confirmModalBtn.disabled = true;
+        const originalText = confirmModalBtn.textContent;
+        confirmModalBtn.textContent = 'EXECUTING MERGE...';
+
+        try {
+          const res = await fetch(`${API_BASE}/api/admin/institutions/merge_team_names`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({
+              institution_id: currentInstData.institution.id,
+              target_canonical_name: selectedTargetTeamName,
+              variant_name: selectedVariantTeamName,
+            }),
+          });
+
+          if (res.status === 401) {
+            handleUnauthorized();
+            return;
+          }
+
+          const data = await res.json();
+          if (mergeModal) mergeModal.classList.add('hidden');
+
+          const statusBox = document.getElementById('instTeamsStatusBox');
+          if (res.ok && data.success) {
+            if (statusBox) {
+              statusBox.className = 'admin-status-box status-success';
+              statusBox.textContent = data.message;
+              statusBox.classList.remove('hidden');
+            }
+            selectedVariantTeamName = null;
+            // Reload institution data to reflect confirmed merge
+            await fetchInstitutionTeams(String(currentInstData.institution.id));
+          } else {
+            if (statusBox) {
+              statusBox.className = 'admin-status-box status-error';
+              statusBox.textContent = `Merge note: ${data.error || 'Operation failed'}`;
+              statusBox.classList.remove('hidden');
+            }
+          }
+        } catch (e) {
+          if (mergeModal) mergeModal.classList.add('hidden');
+          const statusBox = document.getElementById('instTeamsStatusBox');
+          if (statusBox) {
+            statusBox.className = 'admin-status-box status-error';
+            statusBox.textContent = `Network error during team merge: ${e.message}`;
+            statusBox.classList.remove('hidden');
+          }
+        } finally {
+          confirmModalBtn.disabled = false;
+          confirmModalBtn.textContent = originalText;
+        }
+      });
+    }
+
+    async function handleUnmergeTeamName(variantName) {
+      if (!currentInstData) return;
+      const ok = confirm(`Confirm Unmerge:\n\nRestore team name '${variantName}' as an independent standalone team identity for ${currentInstData.institution.name}?\n\nProceed?`);
+      if (!ok) return;
+
+      const statusBox = document.getElementById('instTeamsStatusBox');
+      try {
+        const res = await fetch(`${API_BASE}/api/admin/institutions/unmerge_team_name`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({
+            institution_id: currentInstData.institution.id,
+            variant_name: variantName,
+          }),
+        });
+
+        if (res.status === 401) {
+          handleUnauthorized();
+          return;
+        }
+
+        const data = await res.json();
+        if (res.ok && data.success) {
+          if (statusBox) {
+            statusBox.className = 'admin-status-box status-success';
+            statusBox.textContent = data.message;
+            statusBox.classList.remove('hidden');
+          }
+          await fetchInstitutionTeams(String(currentInstData.institution.id));
+        } else {
+          if (statusBox) {
+            statusBox.className = 'admin-status-box status-error';
+            statusBox.textContent = `Unmerge error: ${data.error || 'Failed to unmerge'}`;
+            statusBox.classList.remove('hidden');
+          }
+        }
+      } catch (e) {
+        if (statusBox) {
+          statusBox.className = 'admin-status-box status-error';
+          statusBox.textContent = `Network error during unmerge: ${e.message}`;
+          statusBox.classList.remove('hidden');
         }
       }
     }
@@ -1483,83 +1700,50 @@
       });
     });
 
-    // Clear buttons
+    // Clear & Reset buttons
     if (clearBtn) {
       clearBtn.addEventListener('click', () => {
         if (searchInput) searchInput.value = '';
-        currentInstTeamsData = null;
-        instSelectedTarget = null;
-        instSelectedDuplicate = null;
+        currentInstData = null;
+        selectedTargetTeamName = null;
+        selectedVariantTeamName = null;
         updateInstitutionMergeBar();
         clearBtn.classList.add('hidden');
         const container = document.getElementById('instTeamsResultsContainer');
         if (container) {
           container.innerHTML = `
             <div style="text-align: center; padding: 36px 20px; color: rgba(255,255,255,0.45); font-family: var(--font-mono); font-size: 13px;">
-              Type or select an institution above to view all historical teams.
+              Type or select an institution above to inspect every name the school has competed under.
             </div>
           `;
         }
+        const auditSection = document.getElementById('instConfirmedMergesSection');
+        if (auditSection) auditSection.classList.add('hidden');
       });
     }
 
     if (clearTargetBtn) {
       clearTargetBtn.addEventListener('click', () => {
-        instSelectedTarget = null;
-        renderInstitutionTeamsGrid();
+        selectedTargetTeamName = null;
+        renderInstitutionTeamNamesGrid();
         updateInstitutionMergeBar();
       });
     }
 
     if (clearDuplicateBtn) {
       clearDuplicateBtn.addEventListener('click', () => {
-        instSelectedDuplicate = null;
-        renderInstitutionTeamsGrid();
+        selectedVariantTeamName = null;
+        renderInstitutionTeamNamesGrid();
         updateInstitutionMergeBar();
       });
     }
 
     if (resetSelectionBtn) {
       resetSelectionBtn.addEventListener('click', () => {
-        instSelectedTarget = null;
-        instSelectedDuplicate = null;
-        renderInstitutionTeamsGrid();
+        selectedTargetTeamName = null;
+        selectedVariantTeamName = null;
+        renderInstitutionTeamNamesGrid();
         updateInstitutionMergeBar();
-      });
-    }
-
-    // Execute merge between the two selected teams
-    if (confirmMergeBtn) {
-      confirmMergeBtn.addEventListener('click', async () => {
-        if (!instSelectedTarget || !instSelectedDuplicate) return;
-
-        const target = instSelectedTarget;
-        const dup = instSelectedDuplicate;
-
-        const ok = confirm(
-          `Confirm Institutional Team Merge:\n\n` +
-          `Target Team (KEEP): '${target.name}' (#${target.id}) [${target.official_tournament_name || target.tournament_name}]\n` +
-          `Duplicate Team (DELETE & MERGE): '${dup.name}' (#${dup.id}) [${dup.official_tournament_name || dup.tournament_name}]\n\n` +
-          `All debates, speeches, and member allocations will be transferred to target team #${target.id}.\n` +
-          `Duplicate team #${dup.id} will be permanently purged.\n\nProceed?`
-        );
-        if (!ok) return;
-
-        confirmMergeBtn.disabled = true;
-        const originalText = confirmMergeBtn.textContent;
-        confirmMergeBtn.textContent = 'EXECUTING MERGE...';
-
-        const success = await executeMerge('team', target.id, dup.id);
-        if (success) {
-          instSelectedDuplicate = null;
-          // Reload institution teams
-          if (currentInstTeamsData && currentInstTeamsData.institution) {
-            await fetchInstitutionTeams(String(currentInstTeamsData.institution.id));
-          }
-        } else {
-          confirmMergeBtn.disabled = false;
-          confirmMergeBtn.textContent = originalText;
-        }
       });
     }
   }

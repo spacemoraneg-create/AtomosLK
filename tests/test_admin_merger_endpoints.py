@@ -125,3 +125,134 @@ def test_entities_search_team(test_client):
     assert res_id.status_code == 200
     assert len(res_id.json["results"]) == 1
     assert res_id.json["results"][0]["name"] == "Trinity A"
+
+
+def test_institution_team_names_grouping(test_client):
+    client, token = test_client
+
+    res = client.get("/api/admin/institutions/1/teams", headers={"X-Admin-Token": token})
+    assert res.status_code == 200
+    data = res.json
+    assert data["success"] is True
+    assert "team_names" in data
+    assert data["count"] == 2
+    assert data["total_instances"] == 2
+
+    # Check distinct team name objects
+    names = {tn["name"]: tn for tn in data["team_names"]}
+    assert "Royal A" in names
+    assert "Royal College A" in names
+
+    ra = names["Royal A"]
+    assert ra["canonical_name"] == "Royal A"
+    assert ra["instance_count"] == 1
+    assert ra["is_merged"] is False
+    assert len(ra["tournaments"]) == 1
+    assert ra["members"] == "Vidath Marasinghe"
+
+
+def test_institution_merge_and_unmerge_team_names(test_client):
+    client, token = test_client
+
+    # 1. Merge "Royal College A" into canonical "Royal A"
+    merge_res = client.post(
+        "/api/admin/institutions/merge_team_names",
+        headers={"X-Admin-Token": token},
+        json={
+            "institution_id": 1,
+            "target_canonical_name": "Royal A",
+            "variant_name": "Royal College A",
+            "tier": "A"
+        }
+    )
+    assert merge_res.status_code == 200
+    merge_data = merge_res.json
+    assert merge_data["success"] is True
+    assert merge_data["target_canonical_name"] == "Royal A"
+    assert merge_data["variant_name"] == "Royal College A"
+    assert merge_data["instances_updated"] == 1
+
+    # 2. Verify state via GET
+    get_res = client.get("/api/admin/institutions/1/teams", headers={"X-Admin-Token": token})
+    assert get_res.status_code == 200
+    get_data = get_res.json
+
+    # Confirmed merges list has 1 item
+    assert len(get_data["confirmed_merges"]) == 1
+    cm = get_data["confirmed_merges"][0]
+    assert cm["target_canonical_name"] == "Royal A"
+    assert cm["variant_name"] == "Royal College A"
+
+    # In team_names list
+    names = {tn["name"]: tn for tn in get_data["team_names"]}
+    assert names["Royal A"]["merged_variants"] == ["Royal College A"]
+    assert names["Royal College A"]["is_merged"] is True
+    assert names["Royal College A"]["merged_into"] == "Royal A"
+
+    # 3. Unmerge "Royal College A"
+    unmerge_res = client.post(
+        "/api/admin/institutions/unmerge_team_name",
+        headers={"X-Admin-Token": token},
+        json={
+            "institution_id": 1,
+            "variant_name": "Royal College A"
+        }
+    )
+    assert unmerge_res.status_code == 200
+    assert unmerge_res.json["success"] is True
+
+    # 4. Verify state after unmerge
+    get_res2 = client.get("/api/admin/institutions/1/teams", headers={"X-Admin-Token": token})
+    assert get_res2.status_code == 200
+    get_data2 = get_res2.json
+    assert len(get_data2["confirmed_merges"]) == 0
+
+    names2 = {tn["name"]: tn for tn in get_data2["team_names"]}
+    assert names2["Royal A"]["merged_variants"] == []
+    assert names2["Royal College A"]["is_merged"] is False
+    assert names2["Royal College A"]["canonical_name"] == "Royal College A"
+
+
+def test_institution_merge_validation_errors(test_client):
+    client, token = test_client
+
+    # Missing fields
+    res_bad = client.post(
+        "/api/admin/institutions/merge_team_names",
+        headers={"X-Admin-Token": token},
+        json={"institution_id": 1}
+    )
+    assert res_bad.status_code == 400
+
+    # Non-existent institution
+    res_no_inst = client.post(
+        "/api/admin/institutions/merge_team_names",
+        headers={"X-Admin-Token": token},
+        json={
+            "institution_id": 9999,
+            "target_canonical_name": "Royal A",
+            "variant_name": "Royal College A"
+        }
+    )
+    assert res_no_inst.status_code == 404
+
+    # Non-existent variant team
+    res_no_var = client.post(
+        "/api/admin/institutions/merge_team_names",
+        headers={"X-Admin-Token": token},
+        json={
+            "institution_id": 1,
+            "target_canonical_name": "Royal A",
+            "variant_name": "Ghost Variant Team"
+        }
+    )
+    assert res_no_var.status_code == 404
+
+    # Unmerge missing fields
+    res_unmerge_bad = client.post(
+        "/api/admin/institutions/unmerge_team_name",
+        headers={"X-Admin-Token": token},
+        json={"institution_id": 1}
+    )
+    assert res_unmerge_bad.status_code == 400
+

@@ -12,6 +12,7 @@ import subprocess
 import sys
 import threading
 import time
+from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
@@ -917,8 +918,21 @@ def create_app(db_conn=None) -> Flask:
                 return jsonify({"error": f"Institution '{identifier}' not found."}), 404
 
             inst_id = inst["id"]
+
+            # Ensure confirmed_team_merges tracking table exists
             cur.execute("""
-                SELECT t.id, t.name, t.canonical_name, t.tournament_id,
+                CREATE TABLE IF NOT EXISTS confirmed_team_merges (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    institution_id INTEGER NOT NULL,
+                    target_canonical_name TEXT NOT NULL,
+                    variant_name TEXT NOT NULL,
+                    decided_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(institution_id, variant_name)
+                )
+            """)
+
+            cur.execute("""
+                SELECT t.id, t.name, t.canonical_name, t.tier, t.tournament_id,
                        tour.name as tournament_name, tour.slug as tournament_slug, tour.year,
                        (SELECT COUNT(*) FROM speech_performances sp WHERE sp.team_id = t.id) as speech_count,
                        (SELECT COUNT(DISTINCT d.id) FROM debates d WHERE d.prop_team_id = t.id OR d.opp_team_id = t.id) as debate_count,
@@ -931,20 +945,279 @@ def create_app(db_conn=None) -> Flask:
                 WHERE t.institution_id = ?
                 ORDER BY tour.id ASC, t.name ASC
             """, (inst_id,))
-            teams = []
-            for r in cur.fetchall():
+            raw_teams = cur.fetchall()
+
+            # Group teams by distinct team name (t.name)
+            grouped = defaultdict(lambda: {
+                "name": "",
+                "canonical_name": "",
+                "tier": "",
+                "instance_count": 0,
+                "team_ids": [],
+                "tournaments": [],
+                "all_members": set(),
+                "total_debates": 0,
+                "total_speeches": 0,
+                "merged_variants": set(),
+            })
+
+            teams_list = []
+            for r in raw_teams:
                 d = dict(r)
                 d["official_tournament_name"] = CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"])
-                teams.append(d)
+                teams_list.append(d)
+
+                name = r["name"]
+                g = grouped[name]
+                g["name"] = name
+                g["canonical_name"] = r["canonical_name"] or name
+                g["tier"] = r["tier"] or ("A" if name.endswith(" A") else ("B" if name.endswith(" B") else None))
+                g["instance_count"] += 1
+                g["team_ids"].append(r["id"])
+
+                g["tournaments"].append({
+                    "id": r["tournament_id"],
+                    "name": d["official_tournament_name"],
+                    "slug": r["tournament_slug"],
+                    "team_id": r["id"]
+                })
+
+                if r["members"]:
+                    for m in r["members"].split(","):
+                        m_clean = m.strip()
+                        if m_clean:
+                            g["all_members"].add(m_clean)
+
+                g["total_debates"] += r["debate_count"] or 0
+                g["total_speeches"] += r["speech_count"] or 0
+
+            # Determine merged variants for canonical targets
+            for name, g in grouped.items():
+                canon = g["canonical_name"]
+                if canon and canon != name and canon in grouped:
+                    grouped[canon]["merged_variants"].add(name)
+
+            # Query confirmed merges audit log
+            cur.execute("""
+                SELECT target_canonical_name, variant_name, decided_at
+                FROM confirmed_team_merges
+                WHERE institution_id = ?
+                ORDER BY decided_at DESC
+            """, (inst_id,))
+            confirmed_merges = [dict(row) for row in cur.fetchall()]
+
+            # Also ensure confirmed log reflects in grouping
+            for cm in confirmed_merges:
+                tgt = cm["target_canonical_name"]
+                var = cm["variant_name"]
+                if tgt in grouped and var in grouped:
+                    grouped[tgt]["merged_variants"].add(var)
+                    grouped[var]["canonical_name"] = tgt
+
+            team_names = []
+            for name, g in sorted(grouped.items(), key=lambda x: (-x[1]["instance_count"], x[0])):
+                is_merged = (g["canonical_name"] != name)
+                team_names.append({
+                    "name": g["name"],
+                    "canonical_name": g["canonical_name"],
+                    "tier": g["tier"],
+                    "instance_count": g["instance_count"],
+                    "team_ids": g["team_ids"],
+                    "tournaments": g["tournaments"],
+                    "members": ", ".join(sorted(g["all_members"])),
+                    "total_debates": g["total_debates"],
+                    "total_speeches": g["total_speeches"],
+                    "is_merged": is_merged,
+                    "merged_into": g["canonical_name"] if is_merged else None,
+                    "merged_variants": sorted(list(g["merged_variants"])),
+                })
 
             return jsonify({
                 "success": True,
                 "institution": dict(inst),
-                "teams": teams,
-                "count": len(teams),
+                "team_names": team_names,
+                "teams": teams_list,
+                "confirmed_merges": confirmed_merges,
+                "count": len(team_names),
+                "total_instances": len(teams_list),
             })
         except Exception as e:
             return jsonify({"error": f"Failed to fetch institution teams: {str(e)}"}), 500
+
+    @app.route("/api/admin/institutions/merge_team_names", methods=["POST"])
+    @require_admin
+    def admin_merge_team_names():
+        try:
+            payload = request.get_json(force=True, silent=True) or {}
+            inst_id = int(payload.get("institution_id", 0))
+            target_name = (payload.get("target_canonical_name") or "").strip()
+            variant_name = (payload.get("variant_name") or "").strip()
+            tier = (payload.get("tier") or "").strip().upper() or None
+
+            if not inst_id or not target_name or not variant_name:
+                return jsonify({"error": "institution_id, target_canonical_name, and variant_name are required."}), 400
+
+            if target_name.lower() == variant_name.lower():
+                return jsonify({"error": "Target canonical name and variant name cannot be identical."}), 400
+
+            cur = conn.cursor()
+            cur.execute("SELECT id, name FROM institutions WHERE id = ?", (inst_id,))
+            inst = cur.fetchone()
+            if not inst:
+                return jsonify({"error": f"Institution ID {inst_id} not found."}), 404
+
+            # Determine tier if missing
+            if not tier:
+                cur.execute("SELECT tier FROM teams WHERE institution_id = ? AND (name = ? OR canonical_name = ?) AND tier IS NOT NULL LIMIT 1",
+                            (inst_id, target_name, target_name))
+                tier_row = cur.fetchone()
+                tier = tier_row[0] if tier_row else ("A" if target_name.endswith(" A") else ("B" if target_name.endswith(" B") else "A"))
+
+            # Find all variant teams
+            cur.execute("""
+                SELECT t.id, t.tournament_id, tour.name as tour_name
+                FROM teams t
+                JOIN tournaments tour ON t.tournament_id = tour.id
+                WHERE t.institution_id = ? AND (t.name = ? OR t.canonical_name = ?)
+            """, (inst_id, variant_name, variant_name))
+            variant_teams = cur.fetchall()
+            if not variant_teams:
+                return jsonify({"error": f"No team entries found with name '{variant_name}'."}), 404
+
+            affected_tournaments = []
+            same_tournament_merged = 0
+
+            for vt in variant_teams:
+                v_id = vt["id"]
+                tour_id = vt["tournament_id"]
+                t_name = CLEAN_TOURNAMENT_NAMES.get(tour_id, vt["tour_name"])
+                affected_tournaments.append(t_name)
+
+                # Check if target team exists in same tournament
+                cur.execute("""
+                    SELECT id FROM teams
+                    WHERE institution_id = ? AND tournament_id = ? AND (name = ? OR canonical_name = ?) AND id != ?
+                    LIMIT 1
+                """, (inst_id, tour_id, target_name, target_name, v_id))
+                target_in_same = cur.fetchone()
+
+                if target_in_same:
+                    t_id = target_in_same["id"]
+                    cur.execute("UPDATE speech_performances SET team_id = ? WHERE team_id = ?", (t_id, v_id))
+                    cur.execute("UPDATE team_members SET team_id = ? WHERE team_id = ?", (t_id, v_id))
+                    cur.execute("UPDATE debates SET prop_team_id = ? WHERE prop_team_id = ?", (t_id, v_id))
+                    cur.execute("UPDATE debates SET opp_team_id = ? WHERE opp_team_id = ?", (t_id, v_id))
+                    cur.execute("UPDATE debates SET walkover_winner_id = ? WHERE walkover_winner_id = ?", (t_id, v_id))
+                    cur.execute("DELETE FROM teams WHERE id = ?", (v_id,))
+                    same_tournament_merged += 1
+                else:
+                    cur.execute("UPDATE teams SET canonical_name = ?, tier = ? WHERE id = ?",
+                                (target_name, tier, v_id))
+                    cur.execute("""
+                        INSERT INTO team_resolutions (team_id, canonical_name, tier, institution_id, status, confidence, reason, reviewed_by_user, decided_at)
+                        VALUES (?, ?, ?, ?, 'CONFIRMED', 1.0, 'Manual admin team name merge', 1, CURRENT_TIMESTAMP)
+                        ON CONFLICT(id) DO NOTHING
+                    """, (v_id, target_name, tier, inst_id))
+
+            # Record in confirmed_team_merges
+            cur.execute("""
+                CREATE TABLE IF NOT EXISTS confirmed_team_merges (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    institution_id INTEGER NOT NULL,
+                    target_canonical_name TEXT NOT NULL,
+                    variant_name TEXT NOT NULL,
+                    decided_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    UNIQUE(institution_id, variant_name)
+                )
+            """)
+            cur.execute("""
+                INSERT OR REPLACE INTO confirmed_team_merges (institution_id, target_canonical_name, variant_name, decided_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+            """, (inst_id, target_name, variant_name))
+
+            conn.commit()
+
+            # Refresh static web data in background thread
+            def run_async_export():
+                try:
+                    root_dir = Path(__file__).resolve().parent.parent.parent
+                    if str(root_dir) not in sys.path:
+                        sys.path.insert(0, str(root_dir))
+                    from scripts.export_web_data import export_web_data
+                    export_web_data(data_export_dir)
+                except Exception as exp_err:
+                    print(f"[WARN] Async web data export encountered an issue: {exp_err}")
+
+            threading.Thread(target=run_async_export, daemon=True).start()
+
+            decided_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+            return jsonify({
+                "success": True,
+                "message": f"Confirmed: All instances of team name '{variant_name}' are now unified under canonical team '{target_name}'.",
+                "target_canonical_name": target_name,
+                "variant_name": variant_name,
+                "institution_name": inst["name"],
+                "affected_tournaments": list(dict.fromkeys(affected_tournaments)),
+                "instances_updated": len(variant_teams),
+                "same_tournament_merged": same_tournament_merged,
+                "decided_at": decided_time,
+            })
+        except Exception as e:
+            conn.rollback()
+            return jsonify({"error": f"Failed to merge team names: {str(e)}"}), 500
+
+    @app.route("/api/admin/institutions/unmerge_team_name", methods=["POST"])
+    @require_admin
+    def admin_unmerge_team_name():
+        try:
+            payload = request.get_json(force=True, silent=True) or {}
+            inst_id = int(payload.get("institution_id", 0))
+            variant_name = (payload.get("variant_name") or "").strip()
+
+            if not inst_id or not variant_name:
+                return jsonify({"error": "institution_id and variant_name are required."}), 400
+
+            cur = conn.cursor()
+            cur.execute("SELECT id, name FROM institutions WHERE id = ?", (inst_id,))
+            inst = cur.fetchone()
+            if not inst:
+                return jsonify({"error": f"Institution ID {inst_id} not found."}), 404
+
+            # Restore canonical_name = name
+            cur.execute("""
+                UPDATE teams SET canonical_name = name
+                WHERE institution_id = ? AND name = ?
+            """, (inst_id, variant_name))
+
+            cur.execute("""
+                DELETE FROM confirmed_team_merges
+                WHERE institution_id = ? AND variant_name = ?
+            """, (inst_id, variant_name))
+
+            conn.commit()
+
+            # Refresh static web data in background thread
+            def run_async_export():
+                try:
+                    root_dir = Path(__file__).resolve().parent.parent.parent
+                    if str(root_dir) not in sys.path:
+                        sys.path.insert(0, str(root_dir))
+                    from scripts.export_web_data import export_web_data
+                    export_web_data(data_export_dir)
+                except Exception as exp_err:
+                    print(f"[WARN] Async web data export encountered an issue: {exp_err}")
+
+            threading.Thread(target=run_async_export, daemon=True).start()
+
+            return jsonify({
+                "success": True,
+                "message": f"Confirmed: Team name '{variant_name}' has been unmerged and restored as an independent team identity.",
+                "variant_name": variant_name,
+                "institution_name": inst["name"],
+            })
+        except Exception as e:
+            conn.rollback()
+            return jsonify({"error": f"Failed to unmerge team name: {str(e)}"}), 500
 
     @app.route("/api/admin/entities/search", methods=["GET"])
     @require_admin
