@@ -10,6 +10,7 @@ import hashlib
 import os
 import subprocess
 import sys
+import threading
 import time
 from datetime import datetime, timezone
 from pathlib import Path
@@ -836,15 +837,18 @@ def create_app(db_conn=None) -> Flask:
             else:
                 return jsonify({"error": f"Invalid entity type '{entity_type}'. Must be 'person' or 'team'."}), 400
 
-            # Re-export static cache
-            try:
-                root_dir = Path(__file__).resolve().parent.parent.parent
-                if str(root_dir) not in sys.path:
-                    sys.path.insert(0, str(root_dir))
-                from scripts.export_web_data import export_web_data
-                export_web_data(data_export_dir)
-            except Exception as exp_err:
-                print(f"[WARN] Static export after merge encountered an issue: {exp_err}")
+            # Re-export static cache asynchronously so HTTP API responds in milliseconds
+            def _bg_export():
+                try:
+                    root_dir = Path(__file__).resolve().parent.parent.parent
+                    if str(root_dir) not in sys.path:
+                        sys.path.insert(0, str(root_dir))
+                    from scripts.export_web_data import export_web_data
+                    export_web_data(data_export_dir)
+                except Exception as exp_err:
+                    print(f"[WARN] Async static export after merge encountered an issue: {exp_err}")
+
+            threading.Thread(target=_bg_export, daemon=True).start()
 
             return jsonify(res)
         except ValueError as ve:

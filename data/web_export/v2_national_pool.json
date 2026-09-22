@@ -37,13 +37,22 @@
       "rank_in_tier": 4
     },
     {
+      "person_id": 333,
+      "name": "Dithira De Silva",
+      "institution": "Royal College",
+      "national_level": "Nat Pool, Direct",
+      "speaker_score": 72.12,
+      "score_source": "Critical Tab",
+      "rank_in_tier": 5
+    },
+    {
       "person_id": 23,
       "name": "Adithi Vitharanage",
       "institution": "Visakha Vidyalaya",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.11,
       "score_source": "Critical Tab",
-      "rank_in_tier": 5
+      "rank_in_tier": 6
     },
     {
       "person_id": 436,
@@ -51,15 +60,6 @@
       "institution": "Asian International School",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.08,
-      "score_source": "Critical Tab",
-      "rank_in_tier": 6
-    },
-    {
-      "person_id": 333,
-      "name": "Dithira De Silva",
-      "institution": "Royal College",
-      "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.04,
       "score_source": "Critical Tab",
       "rank_in_tier": 7
     },

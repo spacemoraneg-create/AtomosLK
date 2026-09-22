@@ -886,9 +886,9 @@
     }
   }
 
-  async function fetchMergeSuggestions() {
+  async function fetchMergeSuggestions(silent = false) {
     const container = document.getElementById('mergeSuggestionsContainer');
-    if (container) {
+    if (container && !silent) {
       container.innerHTML = `<div style="text-align: center; padding: 32px; color: rgba(255,255,255,0.5);"><div class="spinner"></div> Scanning database for candidate duplicate identities...</div>`;
     }
 
@@ -913,7 +913,7 @@
 
       renderMergeSuggestions();
     } catch (e) {
-      if (container) {
+      if (container && !silent) {
         container.innerHTML = `<div style="text-align: center; padding: 24px; color: #f87171;">Failed to load candidate suggestions: ${escapeHtml(e.message)}</div>`;
       }
     }
@@ -1032,7 +1032,26 @@
         const ok = confirm(`Confirm Merge:\n\nMerge duplicate '${dupName}' (#${duplicateId}) into canonical '${primaryName}' (#${primaryId})?\n\nThis will reassign all performances, debates, and ballots, and remove record #${duplicateId}.`);
         if (!ok) return;
 
-        await executeMerge(type, primaryId, duplicateId);
+        // Immediate responsive button feedback & prevent double clicking
+        btn.disabled = true;
+        const originalText = btn.innerHTML;
+        btn.innerHTML = `<span class="spinner" style="width: 12px; height: 12px; display: inline-block; vertical-align: middle; margin-right: 6px;"></span> MERGING...`;
+
+        const card = document.getElementById(`mergeCard_${type}_${primaryId}_${duplicateId}`);
+        if (card) {
+          card.querySelectorAll('button').forEach((b) => (b.disabled = true));
+          card.style.opacity = '0.5';
+        }
+
+        const success = await executeMerge(type, primaryId, duplicateId);
+        if (!success) {
+          btn.disabled = false;
+          btn.innerHTML = originalText;
+          if (card) {
+            card.querySelectorAll('button').forEach((b) => (b.disabled = false));
+            card.style.opacity = '1';
+          }
+        }
       });
     });
 
@@ -1042,6 +1061,9 @@
         const type = btn.getAttribute('data-type');
         const a = btn.getAttribute('data-a');
         const b = btn.getAttribute('data-b');
+        btn.disabled = true;
+        const card = btn.closest('.merge-card');
+        if (card) card.style.opacity = '0.4';
         await dismissMerge(type, a, b);
       });
     });
@@ -1068,7 +1090,7 @@
 
       if (res.status === 401) {
         handleUnauthorized();
-        return;
+        return false;
       }
 
       const data = await res.json();
@@ -1077,20 +1099,59 @@
           statusBox.className = 'admin-status-box status-success';
           statusBox.textContent = data.message;
         }
-        // Refresh suggestions & status
-        fetchMergeSuggestions();
+
+        // Optimistically purge duplicate record cards immediately from local UI state
+        const numPri = parseInt(primaryId, 10);
+        const numDup = parseInt(duplicateId, 10);
+
+        if (type === 'person') {
+          mergeSuggestionsData.persons = mergeSuggestionsData.persons.filter(
+            (s) => s.primary.id !== numDup && s.duplicate.id !== numDup
+          );
+          setText('mergePersonCount', mergeSuggestionsData.persons.length);
+        } else {
+          mergeSuggestionsData.teams = mergeSuggestionsData.teams.filter(
+            (s) => s.primary.id !== numDup && s.duplicate.id !== numDup
+          );
+          setText('mergeTeamCount', mergeSuggestionsData.teams.length);
+        }
+
+        renderMergeSuggestions();
+
+        // Refresh suggestions & database status in background without locking UI
+        fetchMergeSuggestions(true);
         fetchAdminStatus();
+        return true;
       } else {
         if (statusBox) {
           statusBox.className = 'admin-status-box status-error';
-          statusBox.textContent = `Merge failed: ${data.error || 'Server error'}`;
+          statusBox.textContent = `Merge note: ${data.error || 'Operation encountered an issue'}`;
         }
+        // If the record was already merged or does not exist, purge the stale card
+        if (data.error && (data.error.includes('does not exist') || data.error.includes('already merged'))) {
+          const numDup = parseInt(duplicateId, 10);
+          if (type === 'person') {
+            mergeSuggestionsData.persons = mergeSuggestionsData.persons.filter(
+              (s) => s.primary.id !== numDup && s.duplicate.id !== numDup
+            );
+            setText('mergePersonCount', mergeSuggestionsData.persons.length);
+          } else {
+            mergeSuggestionsData.teams = mergeSuggestionsData.teams.filter(
+              (s) => s.primary.id !== numDup && s.duplicate.id !== numDup
+            );
+            setText('mergeTeamCount', mergeSuggestionsData.teams.length);
+          }
+          renderMergeSuggestions();
+          return true;
+        }
+        return false;
       }
     } catch (e) {
       if (statusBox) {
         statusBox.className = 'admin-status-box status-error';
         statusBox.textContent = `Network error during merge: ${e.message}`;
       }
+      return false;
     }
   }
 

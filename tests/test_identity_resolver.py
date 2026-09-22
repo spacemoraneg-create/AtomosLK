@@ -231,3 +231,8 @@ def test_execute_person_merge(memory_db):
     assert cur.fetchone() is None
     cur.execute("SELECT COUNT(*) FROM speech_performances WHERE person_id = ?", (p_primary,))
     assert cur.fetchone()[0] == 1
+
+    # Verify idempotent re-merge does not crash with "ID does not exist"
+    res_repeat = resolver.execute_person_merge(primary_id=p_primary, duplicate_id=p_dup)
+    assert res_repeat["success"] is True
+    assert "already been merged" in res_repeat["message"]

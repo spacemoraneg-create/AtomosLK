@@ -132,6 +132,28 @@
     "rank": 6
   },
   {
+    "person_id": 333,
+    "speaker_name": "Dithira De Silva",
+    "institution": "Royal College",
+    "institution_name": "Royal College",
+    "national_level": "Nat Pool, Direct",
+    "speaker_avg": 72.12,
+    "win_percentage": 96.7,
+    "prelims": 30,
+    "break_percentage": 100.0,
+    "tournaments": 6,
+    "avg": 72.11667,
+    "speech_avg": 72.11667,
+    "cumulative_speech_avg": 72.11667,
+    "avg_of_avgs": 72.12976,
+    "regulation": "new",
+    "avg_of_deviations": 0.50274,
+    "win_rate_debated": 96.66667,
+    "prelim_rounds_debated": 30,
+    "eligible_tournaments": 6,
+    "rank": 7
+  },
+  {
     "person_id": 330,
     "speaker_name": "Druvin Vitharanage",
     "institution": "Royal College",
@@ -151,7 +173,7 @@
     "win_rate_debated": 96.15385,
     "prelim_rounds_debated": 26,
     "eligible_tournaments": 5,
-    "rank": 7
+    "rank": 8
   },
   {
     "person_id": 23,
@@ -173,7 +195,7 @@
     "win_rate_debated": 68.75,
     "prelim_rounds_debated": 32,
     "eligible_tournaments": 6,
-    "rank": 8
+    "rank": 9
   },
   {
     "person_id": 436,
@@ -194,28 +216,6 @@
     "avg_of_deviations": 0.52682,
     "win_rate_debated": 75.0,
     "prelim_rounds_debated": 24,
-    "eligible_tournaments": 5,
-    "rank": 9
-  },
-  {
-    "person_id": 333,
-    "speaker_name": "Dithira De Silva",
-    "institution": "Royal College",
-    "institution_name": "Royal College",
-    "national_level": "Nat Pool, Direct",
-    "speaker_avg": 72.04,
-    "win_percentage": 100.0,
-    "prelims": 25,
-    "break_percentage": 100.0,
-    "tournaments": 5,
-    "avg": 72.04,
-    "speech_avg": 72.04,
-    "cumulative_speech_avg": 72.04,
-    "avg_of_avgs": 72.08071,
-    "regulation": "new",
-    "avg_of_deviations": 0.48486,
-    "win_rate_debated": 100.0,
-    "prelim_rounds_debated": 25,
     "eligible_tournaments": 5,
     "rank": 10
   },
@@ -2178,6 +2178,28 @@
     "rank": 99
   },
   {
+    "person_id": 94,
+    "speaker_name": "K.W.D.Tharushika Dewmini Withanage",
+    "institution": "Devi Balika Vidyalaya",
+    "institution_name": "Devi Balika Vidyalaya",
+    "national_level": null,
+    "speaker_avg": 69.27,
+    "win_percentage": 40.9,
+    "prelims": 22,
+    "break_percentage": 0.0,
+    "tournaments": 4,
+    "avg": 69.27273,
+    "speech_avg": 69.27273,
+    "cumulative_speech_avg": 69.27273,
+    "avg_of_avgs": 69.25,
+    "regulation": "new",
+    "avg_of_deviations": 1.42598,
+    "win_rate_debated": 40.90909,
+    "prelim_rounds_debated": 22,
+    "eligible_tournaments": 4,
+    "rank": 100
+  },
+  {
     "person_id": 618,
     "speaker_name": "Chris Aatharshan",
     "institution": "St. Joseph's College",
@@ -2197,7 +2219,7 @@
     "win_rate_debated": 53.84615,
     "prelim_rounds_debated": 13,
     "eligible_tournaments": 3,
-    "rank": 100
+    "rank": 101
   },
   {
     "person_id": 98,
@@ -2219,7 +2241,7 @@
     "win_rate_debated": 47.05882,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 4,
-    "rank": 101
+    "rank": 102
   },
   {
     "person_id": 191,
@@ -2241,7 +2263,7 @@
     "win_rate_debated": 41.66667,
     "prelim_rounds_debated": 12,
     "eligible_tournaments": 3,
-    "rank": 102
+    "rank": 103
   },
   {
     "person_id": 468,
@@ -2263,7 +2285,7 @@
     "win_rate_debated": 40.0,
     "prelim_rounds_debated": 25,
     "eligible_tournaments": 5,
-    "rank": 103
+    "rank": 104
   },
   {
     "person_id": 121,
@@ -2285,28 +2307,6 @@
     "win_rate_debated": 23.52941,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 4,
-    "rank": 104
-  },
-  {
-    "person_id": 94,
-    "speaker_name": "K.W.D.Tharushika Dewmini Withanage",
-    "institution": "Devi Balika Vidyalaya",
-    "institution_name": "Devi Balika Vidyalaya",
-    "national_level": null,
-    "speaker_avg": 69.04,
-    "win_percentage": 42.9,
-    "prelims": 14,
-    "break_percentage": 0.0,
-    "tournaments": 3,
-    "avg": 69.03571,
-    "speech_avg": 69.03571,
-    "cumulative_speech_avg": 69.03571,
-    "avg_of_avgs": 69.05,
-    "regulation": "new",
-    "avg_of_deviations": 1.42391,
-    "win_rate_debated": 42.85714,
-    "prelim_rounds_debated": 14,
-    "eligible_tournaments": 3,
     "rank": 105
   },
   {
@@ -2337,20 +2337,20 @@
     "institution": "Devi Balika Vidyalaya",
     "institution_name": "Devi Balika Vidyalaya",
     "national_level": null,
-    "speaker_avg": 68.86,
-    "win_percentage": 42.9,
-    "prelims": 14,
+    "speaker_avg": 68.84,
+    "win_percentage": 40.9,
+    "prelims": 22,
     "break_percentage": 0.0,
-    "tournaments": 3,
-    "avg": 68.85714,
-    "speech_avg": 68.85714,
-    "cumulative_speech_avg": 68.85714,
-    "avg_of_avgs": 68.875,
+    "tournaments": 4,
+    "avg": 68.84091,
+    "speech_avg": 68.84091,
+    "cumulative_speech_avg": 68.84091,
+    "avg_of_avgs": 68.81071,
     "regulation": "new",
-    "avg_of_deviations": 1.31504,
-    "win_rate_debated": 42.85714,
-    "prelim_rounds_debated": 14,
-    "eligible_tournaments": 3,
+    "avg_of_deviations": 1.42972,
+    "win_rate_debated": 40.90909,
+    "prelim_rounds_debated": 22,
+    "eligible_tournaments": 4,
     "rank": 107
   },
   {

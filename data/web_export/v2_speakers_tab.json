@@ -102,6 +102,23 @@
     "rank": 6
   },
   {
+    "person_id": 333,
+    "name": "Dithira De Silva",
+    "speaker_name": "Dithira De Silva",
+    "institution": "Royal College",
+    "national_level": "Nat Pool, Direct",
+    "speaker_score": 72.116,
+    "win_percentage": 96.666,
+    "stdev": 0.784,
+    "prelims_debated": 30,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 30,
+    "total_debates": 30,
+    "total_wins": 29,
+    "highest_achievement": "Finalist",
+    "rank": 7
+  },
+  {
     "person_id": 330,
     "name": "Druvin Vitharanage",
     "speaker_name": "Druvin Vitharanage",
@@ -116,7 +133,7 @@
     "total_debates": 26,
     "total_wins": 25,
     "highest_achievement": "Champion",
-    "rank": 7
+    "rank": 8
   },
   {
     "person_id": 23,
@@ -133,7 +150,7 @@
     "total_debates": 32,
     "total_wins": 22,
     "highest_achievement": "Finalist",
-    "rank": 8
+    "rank": 9
   },
   {
     "person_id": 436,
@@ -150,23 +167,6 @@
     "total_debates": 24,
     "total_wins": 18,
     "highest_achievement": "Champion",
-    "rank": 9
-  },
-  {
-    "person_id": 333,
-    "name": "Dithira De Silva",
-    "speaker_name": "Dithira De Silva",
-    "institution": "Royal College",
-    "national_level": "Nat Pool, Direct",
-    "speaker_score": 72.04,
-    "win_percentage": 100,
-    "stdev": 0.734,
-    "prelims_debated": 25,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 25,
-    "total_debates": 25,
-    "total_wins": 25,
-    "highest_achievement": "Finalist",
     "rank": 10
   },
   {
@@ -1836,6 +1836,23 @@
     "rank": 108
   },
   {
+    "person_id": 94,
+    "name": "K.W.D.Tharushika Dewmini Withanage",
+    "speaker_name": "K.W.D.Tharushika Dewmini Withanage",
+    "institution": "Devi Balika Vidyalaya",
+    "national_level": null,
+    "speaker_score": 69.272,
+    "win_percentage": 40.909,
+    "stdev": 1.601,
+    "prelims_debated": 22,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 22,
+    "total_debates": 22,
+    "total_wins": 9,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 109
+  },
+  {
     "person_id": 618,
     "name": "Chris Aatharshan",
     "speaker_name": "Chris Aatharshan",
@@ -1850,7 +1867,7 @@
     "total_debates": 13,
     "total_wins": 7,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 109
+    "rank": 110
   },
   {
     "person_id": 877,
@@ -1867,7 +1884,7 @@
     "total_debates": 13,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 110
+    "rank": 111
   },
   {
     "person_id": 98,
@@ -1884,7 +1901,7 @@
     "total_debates": 17,
     "total_wins": 8,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 111
+    "rank": 112
   },
   {
     "person_id": 121,
@@ -1901,7 +1918,7 @@
     "total_debates": 17,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 112
+    "rank": 113
   },
   {
     "person_id": 191,
@@ -1918,7 +1935,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 113
+    "rank": 114
   },
   {
     "person_id": 468,
@@ -1935,7 +1952,7 @@
     "total_debates": 25,
     "total_wins": 10,
     "highest_achievement": "Semifinalist",
-    "rank": 114
+    "rank": 115
   },
   {
     "person_id": 480,
@@ -1951,23 +1968,6 @@
     "total_substantive_speeches": 12,
     "total_debates": 12,
     "total_wins": 4,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 115
-  },
-  {
-    "person_id": 94,
-    "name": "K.W.D.Tharushika Dewmini Withanage",
-    "speaker_name": "K.W.D.Tharushika Dewmini Withanage",
-    "institution": "Devi Balika Vidyalaya",
-    "national_level": null,
-    "speaker_score": 69.035,
-    "win_percentage": 42.857,
-    "stdev": 1.646,
-    "prelims_debated": 14,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 14,
-    "total_debates": 14,
-    "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
     "rank": 116
   },
@@ -2011,14 +2011,14 @@
     "speaker_name": "S.M.Yuthmi Vinethya",
     "institution": "Devi Balika Vidyalaya",
     "national_level": null,
-    "speaker_score": 68.857,
-    "win_percentage": 42.857,
-    "stdev": 1.433,
-    "prelims_debated": 14,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 14,
-    "total_debates": 14,
-    "total_wins": 6,
+    "speaker_score": 68.84,
+    "win_percentage": 40.909,
+    "stdev": 1.546,
+    "prelims_debated": 22,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 22,
+    "total_debates": 22,
+    "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
     "rank": 119
   },
