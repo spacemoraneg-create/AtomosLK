@@ -1899,17 +1899,17 @@
           </div>
         </div>
 
-        <!-- 1. First Box Seen (5 Metrics) -->
+        <!-- 1. Key Metrics Grid (6 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #38bdf8;">${fmt(bio.aass, 2)}</div>
+            <div class="bio-stat-val" style="color: #38bdf8;">${bio.aass ? fmt(bio.aass, 2) : '-'}</div>
             <div class="bio-stat-lbl">AASS (SUBSTANTIVE MEAN)</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Substantive Mean (No replies)</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Awarded Speaker Avg</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.aatss, 2)}</div>
+            <div class="bio-stat-val" style="color: #34d399;">${bio.aatss ? fmt(bio.aatss, 2) : '-'}</div>
             <div class="bio-stat-lbl">AATSS (TEAM AVG)</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Team Mean</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Awarded Team Avg</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
@@ -1917,12 +1917,17 @@
             <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #38bdf8;">${bio.prelims_adjudicated}</div>
+            <div class="bio-stat-val" style="color: #38bdf8;">${bio.prelims_adjudicated || 0}</div>
             <div class="bio-stat-lbl">PRELIMS ADJUDICATED</div>
             <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #c084fc;">${bio.tournaments_adjudicated}</div>
+            <div class="bio-stat-val" style="color: #fbbf24;">${bio.outrounds_adjudicated || 0}</div>
+            <div class="bio-stat-lbl">KNOCKOUTS ADJUDICATED</div>
+            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Elimination Panels</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #c084fc;">${bio.tournaments_adjudicated || 0}</div>
             <div class="bio-stat-lbl">TOURNAMENTS ADJUDICATED</div>
             <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
           </div>
@@ -1945,6 +1950,69 @@
             </div>
           </div>
         </div>
+
+        <!-- 2. Detailed Judging History Table -->
+        <div class="bio-section-heading">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+          JUDGING HISTORY (${(bio.judging_history && bio.judging_history.length) || (bio.prelims_adjudicated + (bio.outrounds_adjudicated || 0))} DEBATES)
+        </div>
+        ${bio.judging_history && bio.judging_history.length > 0 ? `
+          <div class="table-container" style="margin-bottom: 32px;">
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th style="width: 22%;">TOURNAMENT</th>
+                  <th style="width: 14%;">ROUND</th>
+                  <th style="width: 32%;">CONTESTED MATCHUP</th>
+                  <th style="width: 14%; text-align: center;">DECISION</th>
+                  <th style="width: 18%;">PANEL / ROLE</th>
+                </tr>
+              </thead>
+              <tbody>
+                ${bio.judging_history.map((h) => {
+                  const isKnockout = h.round_type === 'ELIMINATION';
+                  const roundBadge = isKnockout
+                    ? `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(251, 191, 36, 0.2); color: #fbbf24; font-weight: 700;">${escapeHtml(h.round_name)}</span>`
+                    : `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(56, 189, 248, 0.15); color: #38bdf8; font-weight: 600;">${escapeHtml(h.round_name)}</span>`;
+
+                  const winnerColor = h.winner_side === 'Proposition' ? '#38bdf8' : (h.winner_side === 'Opposition' ? '#f43f5e' : 'rgba(255,255,255,0.7)');
+                  const marginText = h.win_margin ? ` (${fmt(h.win_margin, 1)} pts)` : '';
+
+                  const panelText = h.is_panel && h.panel_members && h.panel_members.length > 0
+                    ? `<div style="font-size: 11px; color: rgba(255,255,255,0.85);"><span style="color: #c084fc; font-weight: 700;">PANEL:</span> ${h.panel_members.map(m => escapeHtml(m)).join(', ')}</div>`
+                    : `<span style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">Solo Chair</span>`;
+
+                  return `
+                    <tr>
+                      <td style="font-weight: 600; color: #ffffff;">
+                        <div>${escapeHtml(h.tournament_name)}</div>
+                        <div style="font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">${escapeHtml(h.tournament_dates || '')}</div>
+                      </td>
+                      <td>${roundBadge}</td>
+                      <td>
+                        <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px;">
+                          <a class="table-link" href="team_bio.html?team=${encodeURIComponent(h.prop_team)}">${escapeHtml(h.prop_team)}</a>
+                          <span style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono);">(Prop)</span>
+                          <span style="color: rgba(255,255,255,0.3);">vs</span>
+                          <a class="table-link" href="team_bio.html?team=${encodeURIComponent(h.opp_team)}">${escapeHtml(h.opp_team)}</a>
+                          <span style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono);">(Opp)</span>
+                        </div>
+                      </td>
+                      <td style="text-align: center; font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; color: ${winnerColor};">
+                        ${escapeHtml(h.winner_side || 'Decided')}${marginText}
+                      </td>
+                      <td>${panelText}</td>
+                    </tr>
+                  `;
+                }).join('')}
+              </tbody>
+            </table>
+          </div>
+        ` : `
+          <div class="roster-box" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 12px; margin-bottom: 24px;">
+            Detailed round matchups recorded under standard preliminary scoring ballots.
+          </div>
+        `}
       `;
     }
   }
@@ -2072,7 +2140,7 @@
           <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
             <div style="font-size: 16px; color: #38bdf8; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // 6 CORE METRICS</div>
             <div style="font-size: 13px; max-width: 520px; margin: 0 auto; line-height: 1.6; color: rgba(255,255,255,0.65);">
-              Select Contender 1 and Contender 2 above to compare them across the 6 official circuit metrics: Speaker Score, Win %, Stdev (lower is better), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
+              Select Contender 1 and Contender 2 above to compare them across the 6 official circuit metrics: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
             </div>
           </div>
         `;

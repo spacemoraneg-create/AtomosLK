@@ -24,6 +24,7 @@ Implements the V2 Radical Overhaul mathematical specifications:
 """
 
 import math
+import re
 import sqlite3
 from collections import defaultdict
 from typing import Any, Dict, List, Optional, Tuple
@@ -1227,15 +1228,13 @@ class V2MetricsEngine:
             JOIN rounds r ON d.round_id = r.id
             WHERE b.adjudicator_raw_name IS NOT NULL
               AND b.adjudicator_raw_name != ''
-              AND b.adjudicator_raw_name NOT LIKE '%Official%'
               AND b.adjudicator_raw_name NOT LIKE '%Scoresheet%'
               AND b.adjudicator_raw_name NOT LIKE '%Walkover%'
               AND b.adjudicator_raw_name NOT LIKE '%Tab%'
-              AND b.adjudicator_raw_name NOT LIKE '%Panel%'
-              AND b.adjudicator_raw_name NOT LIKE '%Reconciled%'
-              AND b.adjudicator_raw_name NOT LIKE '%Reconstructed%'
         """)
         ballot_rows = cur.fetchall()
+
+        panel_regex = re.compile(r"Official (?:Panel Decision|Reconstructed)\s*\((.*?)\)", re.IGNORECASE)
 
         judge_data = defaultdict(lambda: {
             "ballot_ids": [],
@@ -1250,24 +1249,47 @@ class V2MetricsEngine:
 
         for br in ballot_rows:
             raw_name = br["adjudicator_raw_name"].strip()
-            cname = CANONICAL_ADJUDICATOR_ALIASES.get(raw_name, raw_name)
-            j = judge_data[cname]
-            j["ballot_ids"].append(br["ballot_id"])
-            if br["adjudicator_institution"] and br["adjudicator_institution"].strip():
-                j["institutions"].add(br["adjudicator_institution"].strip())
-            j["tournaments"].add(br["tournament_id"])
-            if br["round_type"] == "PRELIMINARY":
-                j["prelim_rounds"].add(br["round_id"])
-            else:
-                j["outrounds"].add(br["round_id"])
-            if br["winner_side"] == "Proposition":
-                j["prop_wins"] += 1
-            elif br["winner_side"] == "Opposition":
-                j["opp_wins"] += 1
-            p_s = br["prop_total_score"]
-            o_s = br["opp_total_score"]
-            if p_s and o_s and p_s > 0 and o_s > 0:
-                j["team_scores"].append((float(p_s) + float(o_s)) / 2.0)
+            m = panel_regex.search(raw_name)
+            if m:
+                inner = m.group(1)
+                names = [n.strip() for n in re.split(r"[,;]|\band\b", inner) if n.strip()]
+                for n in names:
+                    clean_n = re.sub(r"[^\w\s\.\']", "", n).strip()
+                    if not clean_n or len(clean_n) < 2:
+                        continue
+                    cname = CANONICAL_ADJUDICATOR_ALIASES.get(clean_n, clean_n)
+                    j = judge_data[cname]
+                    j["ballot_ids"].append(br["ballot_id"])
+                    if br["adjudicator_institution"] and br["adjudicator_institution"].strip() and br["adjudicator_institution"] != "Tournament Adjudication Core":
+                        j["institutions"].add(br["adjudicator_institution"].strip())
+                    j["tournaments"].add(br["tournament_id"])
+                    if br["round_type"] == "PRELIMINARY":
+                        j["prelim_rounds"].add(br["round_id"])
+                    else:
+                        j["outrounds"].add(br["round_id"])
+                    if br["winner_side"] == "Proposition":
+                        j["prop_wins"] += 1
+                    elif br["winner_side"] == "Opposition":
+                        j["opp_wins"] += 1
+            elif not any(k in raw_name.lower() for k in ["official", "panel", "scoresheet", "walkover", "tab", "reconciled", "reconstructed"]):
+                cname = CANONICAL_ADJUDICATOR_ALIASES.get(raw_name, raw_name)
+                j = judge_data[cname]
+                j["ballot_ids"].append(br["ballot_id"])
+                if br["adjudicator_institution"] and br["adjudicator_institution"].strip():
+                    j["institutions"].add(br["adjudicator_institution"].strip())
+                j["tournaments"].add(br["tournament_id"])
+                if br["round_type"] == "PRELIMINARY":
+                    j["prelim_rounds"].add(br["round_id"])
+                else:
+                    j["outrounds"].add(br["round_id"])
+                if br["winner_side"] == "Proposition":
+                    j["prop_wins"] += 1
+                elif br["winner_side"] == "Opposition":
+                    j["opp_wins"] += 1
+                p_s = br["prop_total_score"]
+                o_s = br["opp_total_score"]
+                if p_s and o_s and p_s > 0 and o_s > 0:
+                    j["team_scores"].append((float(p_s) + float(o_s)) / 2.0)
 
         judges: List[Dict[str, Any]] = []
 
@@ -1299,6 +1321,7 @@ class V2MetricsEngine:
             prop_pct = truncate_3((pwins / total_decisions * 100.0)) if total_decisions else 0
             opp_pct = truncate_3((owins / total_decisions * 100.0)) if total_decisions else 0
 
+            outrounds_cnt = len(jd["outrounds"])
             judges.append({
                 "adjudicator_name": jname,
                 "institution": inst,
@@ -1310,10 +1333,11 @@ class V2MetricsEngine:
                 "prop_bias_pct": prop_pct,
                 "opp_bias_pct": opp_pct,
                 "prelims_adjudicated": prelims_cnt,
-                "outrounds_adjudicated": len(jd["outrounds"]),
-                "total_rounds_adjudicated": prelims_cnt + len(jd["outrounds"]),
+                "outrounds_adjudicated": outrounds_cnt,
+                "total_rounds_adjudicated": prelims_cnt + outrounds_cnt,
                 "tournaments_adjudicated": len(jd["tournaments"]),
                 "ballots_count": ballots_cnt,
+                "_ballot_ids": jd["ballot_ids"],
             })
 
         judges.sort(key=lambda x: -x["prelims_adjudicated"])
@@ -1323,12 +1347,105 @@ class V2MetricsEngine:
         return judges
 
     def get_adjudicator_bio(self, judge_name: str) -> Optional[Dict[str, Any]]:
-        """Fetch bio dossier for an adjudicator."""
+        """Fetch bio dossier for an adjudicator with detailed match-level judging history."""
         judges = self.get_adjudicator_leaderboard(min_prelims=0)
         target = next((j for j in judges if j["adjudicator_name"].lower() == judge_name.lower()), None)
         if not target:
             target = next((j for j in judges if judge_name.lower() in j["adjudicator_name"].lower()), None)
-        return target
+        if not target:
+            return None
+
+        # Build detailed round-by-round judging history
+        cur = self.conn.cursor()
+        panel_regex = re.compile(r"Official (?:Panel Decision|Reconstructed)\s*\((.*?)\)", re.IGNORECASE)
+
+        ballot_ids = target.get("_ballot_ids", [])
+        history: List[Dict[str, Any]] = []
+
+        if ballot_ids:
+            placeholders = ",".join("?" * len(ballot_ids))
+            cur.execute(f"""
+                SELECT b.id as ballot_id,
+                       b.adjudicator_raw_name,
+                       b.prop_total_score,
+                       b.opp_total_score,
+                       b.win_margin,
+                       b.winner_side,
+                       r.id as round_id,
+                       r.round_number,
+                       r.name as round_name,
+                       r.round_type,
+                       t.id as tournament_id,
+                       t.name as tournament_name,
+                       t.slug as tournament_slug,
+                       pt.name as prop_team,
+                       pi.name as prop_inst,
+                       ot.name as opp_team,
+                       oi.name as opp_inst
+                FROM adjudicator_ballots b
+                JOIN debates d ON b.debate_id = d.id
+                JOIN rounds r ON d.round_id = r.id
+                JOIN tournaments t ON r.tournament_id = t.id
+                LEFT JOIN teams pt ON d.prop_team_id = pt.id
+                LEFT JOIN institutions pi ON pt.institution_id = pi.id
+                LEFT JOIN teams ot ON d.opp_team_id = ot.id
+                LEFT JOIN institutions oi ON ot.institution_id = oi.id
+                WHERE b.id IN ({placeholders})
+                ORDER BY t.id ASC, r.round_number ASC
+            """, ballot_ids)
+
+            seen_debates = set()
+            for row in cur.fetchall():
+                b_id = row["ballot_id"]
+                if b_id in seen_debates:
+                    continue
+                seen_debates.add(b_id)
+
+                raw = row["adjudicator_raw_name"] or ""
+                m = panel_regex.search(raw)
+                is_panel = False
+                panel_members: List[str] = []
+                if m:
+                    is_panel = True
+                    inner = m.group(1)
+                    panel_members = [re.sub(r"[^\w\s\.\']", "", n).strip() for n in re.split(r"[,;]|\band\b", inner) if n.strip()]
+
+                t_id = row["tournament_id"]
+                t_name = CLEAN_TOURNAMENT_NAMES.get(t_id, row["tournament_name"])
+                dates = OFFICIAL_TOURNAMENT_DATES.get(t_id, "2026")
+
+                history.append({
+                    "ballot_id": b_id,
+                    "tournament_id": t_id,
+                    "tournament_name": t_name,
+                    "tournament_slug": row["tournament_slug"],
+                    "tournament_dates": dates,
+                    "round_number": row["round_number"],
+                    "round_name": row["round_name"] or f"Round {row['round_number']}",
+                    "round_type": row["round_type"],
+                    "prop_team": row["prop_team"] or "Proposition",
+                    "prop_inst": row["prop_inst"] or "",
+                    "opp_team": row["opp_team"] or "Opposition",
+                    "opp_inst": row["opp_inst"] or "",
+                    "winner_side": row["winner_side"],
+                    "win_margin": row["win_margin"],
+                    "prop_score": row["prop_total_score"],
+                    "opp_score": row["opp_total_score"],
+                    "is_panel": is_panel,
+                    "panel_members": panel_members,
+                })
+
+        # Sort history: by tournament chronological order, then round number
+        history.sort(key=lambda x: (
+            CHRONOLOGICAL_TOURNAMENT_ORDER.get(x["tournament_id"], 99),
+            x["round_number"]
+        ))
+
+        res = dict(target)
+        # Remove internal ballot_ids before returning
+        res.pop("_ballot_ids", None)
+        res["judging_history"] = history
+        return res
 
 
     # =========================================================================

@@ -119,3 +119,96 @@ def test_truncation_precision():
     assert truncate_3(70.0) == 70.0
     assert truncate_3(68.1234) == 68.123
     assert truncate_3(None) is None
+
+
+def test_panel_outrounds_credited(engine):
+    """Ensure panel elimination round ballots credit top circuit adjudicators with outrounds."""
+    lb = engine.get_adjudicator_leaderboard(min_prelims=3)
+    judges_map = {j["adjudicator_name"]: j for j in lb}
+
+    # Prominent adjudicators who chaired / paneled outrounds
+    senuka = judges_map.get("Senuka Seneviratne")
+    assert senuka is not None, "Senuka Seneviratne must exist in leaderboard"
+    assert senuka["outrounds_adjudicated"] >= 10, (
+        f"Expected Senuka to have >= 10 outrounds credited from panels, got {senuka['outrounds_adjudicated']}"
+    )
+    assert senuka["total_rounds_adjudicated"] >= 35
+
+    akindu = judges_map.get("Akindu Athauda")
+    assert akindu is not None, "Akindu Athauda must exist in leaderboard"
+    assert akindu["outrounds_adjudicated"] >= 10
+
+    kaveesha = judges_map.get("Kaveesha Mallawaarachchi")
+    assert kaveesha is not None, "Kaveesha Mallawaarachchi must exist in leaderboard"
+    assert kaveesha["outrounds_adjudicated"] >= 10
+
+    sarah = judges_map.get("Sarah Warnakulasuriya")
+    assert sarah is not None, "Sarah Warnakulasuriya must exist in leaderboard"
+    assert sarah["outrounds_adjudicated"] >= 10
+
+
+def test_zero_orphan_single_name_judges_in_db(db_conn):
+    """Ensure zero single-token person records exist where a full canonical counterpart exists."""
+    cur = db_conn.cursor()
+    cur.execute("""
+        SELECT DISTINCT p.id, p.canonical_name
+        FROM persons p
+        JOIN adjudicator_ballots b ON b.adjudicator_person_id = p.id
+    """)
+    judges = cur.fetchall()
+    single_token = [j[1] for j in judges if len(j[1].strip().split()) < 2]
+    for s_name in single_token:
+        cur.execute("SELECT id, canonical_name FROM persons WHERE canonical_name LIKE ? AND canonical_name != ?", (f"{s_name} %", s_name))
+        counterparts = cur.fetchall()
+        assert len(counterparts) == 0, f"Unmerged orphan single-name adjudicator '{s_name}' has full-name counterparts: {counterparts}"
+
+
+def test_adjudicator_bio_detailed_history(engine):
+    """Verify that get_adjudicator_bio provides match-level judging history with panel metadata."""
+    bio = engine.get_adjudicator_bio("Senuka Seneviratne")
+    assert bio is not None
+    assert "judging_history" in bio
+    history = bio["judging_history"]
+    assert len(history) >= 30, f"Expected Senuka history >= 30 debates, got {len(history)}"
+
+    # Verify structure of history items
+    sample = history[0]
+    assert "tournament_name" in sample
+    assert "round_name" in sample
+    assert "round_type" in sample
+    assert "prop_team" in sample
+    assert "opp_team" in sample
+    assert "winner_side" in sample
+    assert "is_panel" in sample
+    assert "panel_members" in sample
+
+    # Verify that panel rounds exist and have co-judges
+    panel_rounds = [h for h in history if h["is_panel"]]
+    assert len(panel_rounds) >= 10, "Expected at least 10 panel rounds in Senuka's history"
+    for pr in panel_rounds:
+        assert len(pr["panel_members"]) > 0
+
+
+def test_conflict_of_interest_detection(db_conn):
+    """Ensure conflict-of-interest checks can identify any debates where a judge judged their own institution."""
+    cur = db_conn.cursor()
+    cur.execute("""
+        SELECT b.id, b.adjudicator_raw_name, b.adjudicator_institution, 
+               t1.name as prop_team, i1.name as prop_inst,
+               t2.name as opp_team, i2.name as opp_inst
+        FROM adjudicator_ballots b
+        JOIN debates d ON b.debate_id = d.id
+        LEFT JOIN teams t1 ON d.prop_team_id = t1.id
+        LEFT JOIN institutions i1 ON t1.institution_id = i1.id
+        LEFT JOIN teams t2 ON d.opp_team_id = t2.id
+        LEFT JOIN institutions i2 ON t2.institution_id = i2.id
+        WHERE b.adjudicator_institution IS NOT NULL AND b.adjudicator_institution != ''
+          AND (
+            LOWER(b.adjudicator_institution) = LOWER(i1.name) OR LOWER(b.adjudicator_institution) = LOWER(i1.code)
+            OR LOWER(b.adjudicator_institution) = LOWER(i2.name) OR LOWER(b.adjudicator_institution) = LOWER(i2.code)
+          )
+    """)
+    conflicts = cur.fetchall()
+    # In legitimate tournament operations, this should be near 0
+    assert len(conflicts) <= 5, f"High number of institutional conflicts detected: {len(conflicts)}"
+
