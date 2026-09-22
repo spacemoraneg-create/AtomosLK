@@ -142,12 +142,21 @@ class TabbycatExtractor:
         html = self.fetch(home_url)
 
         # Detect slug
-        slug_match = re.search(r'class="navbar-brand"\s+href="/([^/]+)/"', html)
+        slug_match = re.search(r'<a[^>]*class=["\'][^"\']*navbar-brand[^"\']*["\'][^>]*href=["\']/([^/\s"\']+)["\']', html)
+        if not slug_match:
+            slug_match = re.search(r'<a[^>]*href=["\']/([^/\s"\']+)["\'][^>]*class=["\'][^"\']*navbar-brand[^"\']*["\']', html)
+        if not slug_match:
+            slug_match = re.search(r'class="navbar-brand"\s+href="/([^/]+)/"', html)
+
         if slug_match:
             slug = slug_match.group(1)
         else:
             path_parts = [p for p in parsed.path.split("/") if p]
-            slug = path_parts[0] if path_parts else "tournament"
+            if path_parts:
+                slug = path_parts[0]
+            else:
+                host_subdomain = parsed.netloc.split(".")[0]
+                slug = host_subdomain if host_subdomain not in ("www", "tabbycat", "calicotab") else "tournament"
 
         # Tournament title
         title_match = re.search(r'<title>\s*(.*?)\s*</title>', html, re.DOTALL)
@@ -169,36 +178,65 @@ class TabbycatExtractor:
             "rounds": [],
         }
 
-        # Match rounds specifically
-        round_matches = re.findall(r'href="/' + re.escape(slug) + r'/results/round/(\d+)/">\s*(.*?)\s*</a>', html, re.DOTALL)
+        # Match rounds specifically from HTML elements or hrefs
+        seen_round_nums: Set[int] = set()
+        round_matches = re.findall(
+            r'<a[^>]*href=["\'](?:/' + re.escape(slug) + r')?/results/round/(\d+)/?["\'][^>]*>(.*?)</a>',
+            html,
+            re.DOTALL | re.IGNORECASE,
+        )
         for r_num_str, r_name in round_matches:
             r_num = int(r_num_str)
-            clean_name = re.sub(r'<[^>]+>', '', r_name).strip()
-            discovered_routes["rounds"].append({
-                "number": r_num,
-                "name": clean_name,
-                "path": f"/{slug}/results/round/{r_num}/",
-            })
+            if r_num not in seen_round_nums:
+                seen_round_nums.add(r_num)
+                clean_name = re.sub(r'<[^>]+>', '', r_name).strip()
+                discovered_routes["rounds"].append({
+                    "number": r_num,
+                    "name": clean_name or f"Round {r_num}",
+                    "path": f"/{slug}/results/round/{r_num}/",
+                })
+
+        # Also discover rounds from all hrefs if not captured above
+        for h in sorted(hrefs):
+            m_r = re.search(r'/results/round/(\d+)/?', h)
+            if m_r:
+                r_num = int(m_r.group(1))
+                if r_num not in seen_round_nums:
+                    seen_round_nums.add(r_num)
+                    discovered_routes["rounds"].append({
+                        "number": r_num,
+                        "name": f"Round {r_num}",
+                        "path": f"/{slug}/results/round/{r_num}/" if slug else h,
+                    })
+
+        discovered_routes["rounds"].sort(key=lambda x: x["number"])
 
         # Discover all other tournament-specific paths
         slug_prefix = f"/{slug}/"
         for h in sorted(hrefs):
-            if not h.startswith(slug_prefix):
+            if h.startswith(slug_prefix):
+                path_rel = h[len(slug_prefix):].rstrip("/")
+            elif h.startswith("/") and not any(h.startswith(f"/{other}/") for other in ["static", "media", "admin"]):
+                path_rel = h.lstrip("/").rstrip("/")
+            else:
                 continue
-            path_rel = h[len(slug_prefix):].rstrip("/")
 
             if path_rel.startswith("tab/"):
                 clean_name = path_rel.replace("tab/", "").replace("/", " ").title() + " Tab"
-                discovered_routes["tabs"].append({"name": clean_name, "path": h})
+                if not any(r["path"] == h for r in discovered_routes["tabs"]):
+                    discovered_routes["tabs"].append({"name": clean_name, "path": h})
             elif path_rel.startswith("participants/"):
                 clean_name = path_rel.replace("participants/", "").replace("/", " ").title()
-                discovered_routes["participants"].append({"name": clean_name, "path": h})
+                if not any(r["path"] == h for r in discovered_routes["participants"]):
+                    discovered_routes["participants"].append({"name": clean_name, "path": h})
             elif path_rel.startswith("motions"):
                 clean_name = path_rel.replace("motions/", "").replace("/", " ").title() or "Motions"
-                discovered_routes["motions"].append({"name": clean_name, "path": h})
+                if not any(r["path"] == h for r in discovered_routes["motions"]):
+                    discovered_routes["motions"].append({"name": clean_name, "path": h})
             elif path_rel.startswith("break/"):
                 clean_name = path_rel.replace("break/", "").replace("/", " ").title()
-                discovered_routes["breaks"].append({"name": clean_name, "path": h})
+                if not any(r["path"] == h for r in discovered_routes["breaks"]):
+                    discovered_routes["breaks"].append({"name": clean_name, "path": h})
 
         return {
             "origin": origin,
@@ -522,5 +560,6 @@ class TabbycatExtractor:
             "total_debates_extracted": len(extracted_data["debates"]),
         }
         (raw_dir / "manifest.json").write_text(json.dumps(manifest, indent=2), encoding="utf-8")
+        extracted_data["metadata"] = manifest
 
         return extracted_data

@@ -35,3 +35,19 @@ class TestIngestionPipeline:
         assert summary["teams_count"] > 0
         assert summary["debates_count"] > 0
         assert summary["is_valid"] is True
+
+    def test_pipeline_local_slug_autodetect(self, tmp_path):
+        # Passing local slug without skip_extract=True should auto-detect existing directory
+        raw_dir = Path("data/raw/aisdc26")
+        if not raw_dir.exists():
+            pytest.skip("data/raw/aisdc26 not available for test")
+
+        db_path = tmp_path / "test_autodetect.db"
+        pipeline = IngestionPipeline(db_path=db_path)
+        summary = pipeline.ingest_tournament("aisdc26", skip_extract=False, verbose=False)
+
+        assert summary["slug"] == "aisdc26"
+        assert summary["rounds_count"] > 0
+        assert summary["teams_count"] > 0
+        assert summary["is_valid"] is True
+

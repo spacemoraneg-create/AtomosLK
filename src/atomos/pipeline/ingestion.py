@@ -58,14 +58,24 @@ class IngestionPipeline:
         # STEP 1: EXTRACTION
         if not skip_extract:
             if not base_url:
-                raise ValueError(f"Full URL required for extraction. Got: '{target}'")
-            log(f"Step 1/4: Extracting tournament from {base_url} into {raw_base_dir}...")
-            extractor = TabbycatExtractor()
-            extract_data = extractor.extract_tournament(base_url=base_url, output_dir=raw_base_dir)
-            slug = extract_data["metadata"]["slug"]
-            raw_dir = raw_base_dir / slug
-            log(f"Extraction completed successfully for slug '{slug}'.")
-        else:
+                if raw_dir.exists():
+                    log(f"Target '{target}' is a local slug and '{raw_dir}' exists. Using existing raw files.")
+                    skip_extract = True
+                else:
+                    raise ValueError(f"Full URL required for extraction or existing raw directory '{raw_dir}' not found.")
+            else:
+                log(f"Step 1/4: Extracting tournament from {base_url} into {raw_base_dir}...")
+                extractor = TabbycatExtractor()
+                extract_data = extractor.extract_tournament(base_url=base_url, output_dir=raw_base_dir)
+                slug = (
+                    extract_data.get("metadata", {}).get("tournament_slug")
+                    or extract_data.get("metadata", {}).get("slug")
+                    or extract_data.get("tournament_slug", slug)
+                )
+                raw_dir = raw_base_dir / slug
+                log(f"Extraction completed successfully for slug '{slug}'.")
+
+        if skip_extract:
             log(f"Step 1/4: Skipping extraction. Using existing files in {raw_dir}")
             if not raw_dir.exists():
                 raise FileNotFoundError(f"Raw data directory does not exist: {raw_dir}")
@@ -89,7 +99,7 @@ class IngestionPipeline:
         # STEP 4: INTEGRITY VALIDATION
         log("Step 4/4: Running integrity validation gatekeeper...")
         validator = IntegrityValidator(conn)
-        report = validator.validate()
+        report = validator.validate(tournament_id=tournament_id)
 
         if not report.is_valid:
             log(f"WARNING: Integrity check flagged issues: {report.critical_errors}")

@@ -636,7 +636,7 @@ def create_app(db_conn=None) -> Flask:
                 if str(root_dir) not in sys.path:
                     sys.path.insert(0, str(root_dir))
                 from scripts.export_web_data import export_web_data
-                export_web_data(data_export_dir)
+                export_web_data(Path("data/web_export"))
             except Exception as exp_err:
                 print(f"[WARN] Web data export after import encountered an issue: {exp_err}")
 
@@ -711,7 +711,7 @@ def create_app(db_conn=None) -> Flask:
                 if str(root_dir) not in sys.path:
                     sys.path.insert(0, str(root_dir))
                 from scripts.export_web_data import export_web_data
-                export_web_data(data_export_dir)
+                export_web_data(Path("data/web_export"))
             except Exception as exp_err:
                 print(f"[WARN] Web data export after deletion encountered an issue: {exp_err}")
 
