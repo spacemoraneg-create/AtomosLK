@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Atomos V1 - Automated Debating Statistics and Archival System</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237692ff'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
 </head>
 <body>
 
@@ -21,23 +21,16 @@
         <svg class="hero-card-svg" viewBox="0 0 567.16 617.49" preserveAspectRatio="none" aria-hidden="true">
           <defs>
             <linearGradient id="heroCardGrad" x1="0%" y1="0%" x2="0%" y2="100%">
-              <stop offset="0%" stop-color="#B4E2EF" />
-              <stop offset="10%" stop-color="#96CAE8" />
-              <stop offset="20%" stop-color="#78B3E2" />
-              <stop offset="30%" stop-color="#5A9BDC" />
-              <stop offset="40%" stop-color="#3C83D6" />
-              <stop offset="50%" stop-color="#1F6BCF" />
-              <stop offset="60%" stop-color="#1C5CB2" />
-              <stop offset="70%" stop-color="#1E4F90" />
-              <stop offset="80%" stop-color="#20426F" />
-              <stop offset="90%" stop-color="#21354E" />
-              <stop offset="100%" stop-color="#23272D" />
+              <stop offset="0%" stop-color="#abd2fa" />
+              <stop offset="25%" stop-color="#7692ff" />
+              <stop offset="60%" stop-color="#1b2cc1" />
+              <stop offset="100%" stop-color="#091540" />
             </linearGradient>
           </defs>
           <path
             d="M 355.156 1.5 L 77.274 1.5 C 34.597 1.5 1.5 34.601 1.5 77.278 L 1.5 540.212 C 1.5 582.889 34.597 615.986 77.274 615.986 L 489.882 615.986 C 532.560 615.986 565.657 582.889 565.657 540.212 L 565.657 227.886 C 565.657 208.877 558.650 190.535 545.977 176.367 L 412.747 27.257 C 398.089 10.870 377.143 1.5 355.156 1.5 Z"
             fill="url(#heroCardGrad)"
-            stroke="rgba(255, 255, 255, 0.45)"
+            stroke="rgba(171, 210, 250, 0.45)"
             stroke-width="2.5"
             vector-effect="non-scaling-stroke"
           />
@@ -229,7 +222,16 @@
     <!-- ====================================================================
          FOOTER
          ==================================================================== -->
-    <footer class="atomos-footer">
+    <footer class="atomos-footer" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 14px;">
+      <div style="display: flex; align-items: center; gap: 10px; font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; color: rgba(171, 210, 250, 0.85); text-transform: uppercase;">
+        <span>PALETTE: #091540 · #1B2CC1 · #7692FF · #ABD2FA</span>
+        <div style="display: inline-flex; gap: 5px; align-items: center; vertical-align: middle;">
+          <span style="width: 13px; height: 13px; border-radius: 50%; background: #091540; border: 1.5px solid rgba(255,255,255,0.45); display: inline-block;" title="#091540 (Midnight Navy)"></span>
+          <span style="width: 13px; height: 13px; border-radius: 50%; background: #1b2cc1; border: 1.5px solid rgba(255,255,255,0.45); display: inline-block;" title="#1B2CC1 (Cobalt Sapphire)"></span>
+          <span style="width: 13px; height: 13px; border-radius: 50%; background: #7692ff; border: 1.5px solid rgba(255,255,255,0.45); display: inline-block;" title="#7692FF (Periwinkle)"></span>
+          <span style="width: 13px; height: 13px; border-radius: 50%; background: #abd2fa; border: 1.5px solid rgba(255,255,255,0.45); display: inline-block;" title="#ABD2FA (Ice Sky)"></span>
+        </div>
+      </div>
       <div class="footer-tag">ATOMOS V1</div>
     </footer>
 

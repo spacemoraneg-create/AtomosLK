@@ -238,11 +238,11 @@
       .map((t) => {
         return `
           <tr>
-            <td class="monospace" style="color: #38bdf8; font-weight: 700;">#${t.chrono_order ?? t.id}</td>
+            <td class="monospace" style="color: #7692ff; font-weight: 700;">#${t.chrono_order ?? t.id}</td>
             <td class="monospace">${escapeHtml(t.slug)}</td>
             <td style="font-weight: 500;">
               <div>${escapeHtml(t.official_name || t.name)}</div>
-              <div style="font-size: 11px; color: #38bdf8; font-family: var(--font-mono); margin-top: 2px;">
+              <div style="font-size: 11px; color: #7692ff; font-family: var(--font-mono); margin-top: 2px;">
                 ${t.hosting_dates ? escapeHtml(t.hosting_dates) : '2026'} · ${t.source_url ? escapeHtml(t.source_url) : 'Local Tab Archive'}
               </div>
             </td>
@@ -515,7 +515,7 @@
           return `
             <div class="bio-autocomplete-item" data-name="${escapeHtml(r.canonical_name || r.name)}">
               <div class="bio-ac-name">${escapeHtml(r.canonical_name || r.name)}</div>
-              <div class="bio-ac-inst">${escapeHtml(r.institution || 'Independent')} ${r.national_level ? `&bull; <span style="color: #38bdf8;">${escapeHtml(r.national_level)}</span>` : ''}</div>
+              <div class="bio-ac-inst">${escapeHtml(r.institution || 'Independent')} ${r.national_level ? `&bull; <span style="color: #7692ff;">${escapeHtml(r.national_level)}</span>` : ''}</div>
             </div>
           `;
         })
@@ -544,7 +544,7 @@
     if (!container) return;
 
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #38bdf8; font-family: var(--font-mono);">
+      <div style="text-align: center; padding: 40px; color: #7692ff; font-family: var(--font-mono);">
         Loading career profile and ballot breakdown for ${escapeHtml(name)}...
       </div>
     `;
@@ -585,7 +585,7 @@
     };
 
     const natBadge = p.national_level
-      ? `<span class="badge-count" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8; margin-left: 8px;">${escapeHtml(p.national_level)}</span>`
+      ? `<span class="badge-count" style="background: rgba(118, 146, 255, 0.2); color: #7692ff; margin-left: 8px;">${escapeHtml(p.national_level)}</span>`
       : '';
 
     const tournaments = p.tournaments || [];
@@ -616,7 +616,7 @@
         <!-- 8 Core Metrics Grid -->
         <div class="bio-stats-grid" style="margin-bottom: 24px;">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #38bdf8;">${(p.tab_rank || p.master_tab_rank) ? '#' + (p.tab_rank || p.master_tab_rank) : 'UR'}</div>
+            <div class="bio-stat-val" style="color: #7692ff;">${(p.tab_rank || p.master_tab_rank) ? '#' + (p.tab_rank || p.master_tab_rank) : 'UR'}</div>
             <div class="bio-stat-lbl">Official Tab Rank</div>
           </div>
           <div class="bio-stat-tile">
@@ -660,7 +660,7 @@
 
           <div class="admin-positions-grid">
             <div class="admin-pos-tile">
-              <div class="admin-pos-badge" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">1st SPEECH</div>
+              <div class="admin-pos-badge" style="background: rgba(118, 146, 255, 0.2); color: #7692ff;">1st SPEECH</div>
               <div class="admin-pos-count">${pos['1st']?.count ?? 0}</div>
               <div class="admin-pos-sub">Avg: ${pos['1st']?.avg !== null && pos['1st']?.avg !== undefined ? pos['1st'].avg.toFixed(2) : '--'} pts</div>
             </div>
@@ -713,7 +713,7 @@
                       <td class="monospace">${escapeHtml(t.team_name || '--')}</td>
                       <td>${qualBadge}</td>
                       <td class="monospace" style="font-size: 12px; color: rgba(255,255,255,0.85);">${scoresList}</td>
-                      <td class="monospace" style="font-weight: 600; color: #38bdf8;">
+                      <td class="monospace" style="font-weight: 600; color: #7692ff;">
                         ${t.tournament_average !== null && t.tournament_average !== undefined ? t.tournament_average.toFixed(2) : '--'}
                       </td>
                       <td style="font-size: 12px; color: #34d399;">${escapeHtml(t.highest_stage || '--')}</td>
@@ -1101,7 +1101,7 @@
           <div class="merge-card-header">
             <div>
               <div class="merge-card-type">
-                <span class="badge-count" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">${escapeHtml(s.type.toUpperCase())}</span>
+                <span class="badge-count" style="background: rgba(118, 146, 255, 0.15); color: #7692ff;">${escapeHtml(s.type.toUpperCase())}</span>
                 <span style="font-weight: 600; color: #fff; font-size: 13px;">${escapeHtml(s.match_type)}</span>
               </div>
               ${s.reason ? `<div style="font-size: 11px; color: #94a3b8; margin-top: 4px;">${escapeHtml(s.reason)}</div>` : ''}
@@ -1125,7 +1125,7 @@
 
             <!-- Arrow Indicator -->
             <div class="merge-arrow-col">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#7692ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
@@ -1462,9 +1462,9 @@
       let html = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
           <div style="font-size: 15px; font-weight: 700; color: #ffffff;">
-            ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(56,189,248,0.15); color: #38bdf8; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
+            ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(118, 146, 255,0.15); color: #7692ff; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
           </div>
-          <div style="font-family: var(--font-mono); font-size: 12px; color: #38bdf8; font-weight: 600;">
+          <div style="font-family: var(--font-mono); font-size: 12px; color: #7692ff; font-weight: 600;">
             ${teamNames.length} Distinct Team Names across ${currentInstData.total_instances || 0} Tournament Entries
           </div>
         </div>
@@ -1485,7 +1485,7 @@
               <div>
                 <div class="inst-team-name">
                   <span>${escapeHtml(tn.name)}</span>
-                  ${tn.tier ? `<span class="badge-count" style="background: rgba(56,189,248,0.15); color: #38bdf8;">TIER ${escapeHtml(tn.tier)}</span>` : ''}
+                  ${tn.tier ? `<span class="badge-count" style="background: rgba(118, 146, 255,0.15); color: #7692ff;">TIER ${escapeHtml(tn.tier)}</span>` : ''}
                 </div>
                 <div style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 3px;">
                   Fielded in ${tn.instance_count} ${tn.instance_count === 1 ? 'Tournament' : 'Tournaments'}
@@ -1540,7 +1540,7 @@
               <div class="inst-merged-into-box">
                 <div>
                   <span style="color: rgba(255,255,255,0.6);">Merged Under:</span>
-                  <strong style="color: #38bdf8; margin-left: 6px;">${escapeHtml(tn.merged_into)}</strong>
+                  <strong style="color: #7692ff; margin-left: 6px;">${escapeHtml(tn.merged_into)}</strong>
                 </div>
                 <button class="admin-btn admin-btn-outline admin-btn-sm btn-inst-unmerge" data-variant-name="${escapeHtml(tn.name)}" style="padding: 4px 10px; font-size: 11px;">
                   UNMERGE
@@ -1989,7 +1989,7 @@
                         <span>${escapeHtml(pName)}</span>
                         <span class="entity-auto-badge">#${r.id}</span>
                       </div>
-                      <div class="entity-auto-sub">${escapeHtml(inst)} ${r.national_level ? `&bull; <span style="color: #38bdf8;">${escapeHtml(r.national_level)}</span>` : ''}</div>
+                      <div class="entity-auto-sub">${escapeHtml(inst)} ${r.national_level ? `&bull; <span style="color: #7692ff;">${escapeHtml(r.national_level)}</span>` : ''}</div>
                     </div>
                     <div class="entity-auto-stats">${speeches} speeches</div>
                   </div>

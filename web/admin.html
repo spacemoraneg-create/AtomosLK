@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Command Console - Atomos V1</title>
   <link rel="stylesheet" href="styles.css" />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%2338bdf8'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Ccircle cx='50' cy='50' r='50' fill='%237692ff'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(-28 50 50)'/%3E%3Cellipse cx='50' cy='50' rx='36' ry='14' stroke='%23ffffff' stroke-width='2.5' stroke-opacity='0.55' fill='none' transform='rotate(28 50 50)'/%3E%3Ccircle cx='50' cy='50' r='9' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='34' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='20' cy='66' r='4' fill='%23ffffff'/%3E%3Ccircle cx='80' cy='34' r='4' fill='%23ffffff'/%3E%3C/svg%3E" />
 </head>
 <body>
 
@@ -37,7 +37,7 @@
     <div id="adminLockView" class="subpage-card admin-lock-card">
       <div class="admin-lock-header">
         <div class="admin-lock-icon">
-          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="#7692ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
             <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
             <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
           </svg>
@@ -86,7 +86,7 @@
           </div>
           <div class="admin-tags-row">
             <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">AUTHENTICATED</span>
-            <span class="badge-count" style="background: rgba(56, 189, 248, 0.2); color: #38bdf8;">SESSION ACTIVE</span>
+            <span class="badge-count" style="background: rgba(118, 146, 255, 0.2); color: #7692ff;">SESSION ACTIVE</span>
             <span class="badge-count" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">SYNTHETIC BALLOTS: 0</span>
           </div>
         </div>
@@ -97,7 +97,7 @@
           <button id="adminDownloadExportBtn" class="admin-btn admin-btn-secondary" title="Download current static JSON export zip bundle">
             EXPORT ZIP
           </button>
-          <button id="adminSyncGithubBtn" class="admin-btn admin-btn-secondary" title="Sync database & static export directly to GitHub repository" style="border-color: #38bdf8; color: #38bdf8;">
+          <button id="adminSyncGithubBtn" class="admin-btn admin-btn-secondary" title="Sync database & static export directly to GitHub repository" style="border-color: #7692ff; color: #7692ff;">
             SYNC TO GITHUB
           </button>
           <button id="adminRefreshBtn" class="admin-btn admin-btn-secondary" title="Refresh all database metrics">
@@ -137,7 +137,7 @@
         <!-- Live KPI Stats Grid -->
         <div class="bio-stats-grid" style="margin-bottom: 24px;">
           <div class="bio-stat-tile">
-            <div id="kpiTournaments" class="bio-stat-val" style="color: #38bdf8;">--</div>
+            <div id="kpiTournaments" class="bio-stat-val" style="color: #7692ff;">--</div>
             <div class="bio-stat-lbl">Ingested Tournaments</div>
           </div>
           <div class="bio-stat-tile">
@@ -205,7 +205,7 @@
         <div class="admin-box" style="margin-bottom: 28px;">
           <div class="admin-box-title" style="display: flex; justify-content: space-between; align-items: center;">
             <span>DATA PERSISTENCE & GITHUB REPOSITORY SYNCHRONIZATION</span>
-            <span id="githubSyncBadge" class="badge-count" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">CHECKING GITHUB STATUS...</span>
+            <span id="githubSyncBadge" class="badge-count" style="background: rgba(118, 146, 255, 0.15); color: #7692ff;">CHECKING GITHUB STATUS...</span>
           </div>
           <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px; line-height: 1.5;">
             Render free-tier web services have ephemeral storage that resets upon sleep or container restart. Use the tools below to permanently persist your database merges directly to your GitHub repository or download the SQLite database locally.
@@ -217,7 +217,7 @@
             <button id="paneDownloadExportBtn" class="admin-btn admin-btn-secondary">
               DOWNLOAD STATIC EXPORT (ZIP)
             </button>
-            <button id="paneSyncGithubBtn" class="admin-btn admin-btn-secondary" style="border-color: #38bdf8; color: #38bdf8;">
+            <button id="paneSyncGithubBtn" class="admin-btn admin-btn-secondary" style="border-color: #7692ff; color: #7692ff;">
               PUSH DATABASE TO GITHUB
             </button>
           </div>
@@ -483,7 +483,7 @@
                 <button id="btnClearSelectedTarget" class="inst-merge-clear-btn hidden" title="Remove target">&times;</button>
               </div>
               <div class="inst-merge-arrow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#38bdf8" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#7692ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -605,14 +605,14 @@
     <!-- INSTITUTION TEAM MERGE CONFIRMATION MODAL                            -->
     <!-- ==================================================================== -->
     <div id="instTeamMergeConfirmModal" class="admin-modal-backdrop hidden">
-      <div class="admin-modal-card" style="border-color: rgba(56, 189, 248, 0.4); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(56, 189, 248, 0.2); max-width: 520px;">
-        <div class="admin-modal-title" style="color: #38bdf8;">CONFIRM TEAM IDENTITY MERGE</div>
+      <div class="admin-modal-card" style="border-color: rgba(118, 146, 255, 0.4); box-shadow: 0 24px 48px rgba(0, 0, 0, 0.8), 0 0 24px rgba(118, 146, 255, 0.2); max-width: 520px;">
+        <div class="admin-modal-title" style="color: #7692ff;">CONFIRM TEAM IDENTITY MERGE</div>
         <p id="instTeamMergeModalMessage" class="admin-modal-text">
           Review the canonical merge details below before executing this relational merge.
         </p>
         <div class="admin-box" style="margin-bottom: 16px; background: rgba(2, 6, 23, 0.7); padding: 14px;">
           <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
-            <strong>Institution:</strong> <span id="modalInstName" style="color: #38bdf8;">--</span>
+            <strong>Institution:</strong> <span id="modalInstName" style="color: #7692ff;">--</span>
           </div>
           <div style="font-size: 13px; margin-bottom: 8px; color: #fff;">
             <strong>Canonical Target (Keep):</strong> <span id="modalTargetName" style="color: #34d399; font-weight: 700;">--</span>
@@ -624,7 +624,7 @@
             <strong>Affected Tournaments:</strong> <span id="modalAffectedTours" class="monospace" style="color: #cbd5e1;">--</span>
           </div>
         </div>
-        <div class="admin-modal-alert" style="background: rgba(56, 189, 248, 0.1); border-left-color: #38bdf8; color: #bae6fd;">
+        <div class="admin-modal-alert" style="background: rgba(118, 146, 255, 0.1); border-left-color: #7692ff; color: #abd2fa;">
           CONFIRMATION EFFECT: All debate records, speaker performances, and leaderboards under the variant name will be unified under the canonical target across the entire season.
         </div>
         <div class="admin-modal-actions">
