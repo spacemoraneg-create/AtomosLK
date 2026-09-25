@@ -1460,7 +1460,7 @@
       }
 
       let html = `
-        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(255,255,255,0.08); padding-bottom: 10px;">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(118, 146, 255, 0.12); padding-bottom: 10px;">
           <div style="font-size: 15px; font-weight: 700; color: #ffffff;">
             ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(118, 146, 255,0.15); color: #7692ff; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
           </div>
@@ -1500,7 +1500,7 @@
                           ? `<span class="badge-count" style="background: rgba(52,211,153,0.25); color: #34d399; font-weight: 800;">TARGET</span>` 
                           : (isVariant 
                               ? `<span class="badge-count" style="background: rgba(248,113,113,0.25); color: #f87171; font-weight: 800;">VARIANT</span>` 
-                              : `<span class="badge-count" style="background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.6);">STANDALONE</span>`)))}
+                              : `<span class="badge-count" style="background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(118, 146, 255, 0.2); color: #abd2fa;">STANDALONE</span>`)))}
               </div>
             </div>
 

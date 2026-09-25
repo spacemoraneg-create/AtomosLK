@@ -774,7 +774,7 @@
                     <td style="text-align: center;">${getRankBadge(i._trueRank)}</td>
                     <td>
                       <a class="table-link" href="institution_bio.html?inst=${encodeURIComponent(i.institution_name)}">${escapeHtml(i.institution_name)}</a>
-                      ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(255,255,255,0.1); color: rgba(255,255,255,0.7); font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
+                      ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(118, 146, 255, 0.2); color: #abd2fa; font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
                     </td>
                     <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'delta' ? '800; color: #7692ff;' : '700;'}">${fmt(i.delta, 2)}</td>
                     <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'a_atss' ? '800; color: #7692ff;' : '600;'}">${aTeamLink}</td>
