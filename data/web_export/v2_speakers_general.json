@@ -923,13 +923,13 @@
     "speaker_name": "Rachel Schockman",
     "institution": "Gateway College Dehiwala",
     "national_level": null,
-    "speaker_score": 70.766,
-    "win_percentage": 60,
-    "stdev": 1.178,
-    "prelims_debated": 15,
+    "speaker_score": 70.718,
+    "win_percentage": 56.25,
+    "stdev": 1.154,
+    "prelims_debated": 16,
     "tournaments_debated": 4,
-    "total_substantive_speeches": 15,
-    "total_debates": 15,
+    "total_substantive_speeches": 16,
+    "total_debates": 16,
     "total_wins": 9,
     "highest_achievement": "Semifinalist",
     "rank": 55
@@ -1042,14 +1042,14 @@
     "speaker_name": "Nethini Samarakoon",
     "institution": "Bishop's College",
     "national_level": null,
-    "speaker_score": 70.661,
-    "win_percentage": 71.875,
-    "stdev": 0.855,
-    "prelims_debated": 32,
+    "speaker_score": 70.656,
+    "win_percentage": 72.727,
+    "stdev": 0.842,
+    "prelims_debated": 33,
     "tournaments_debated": 7,
-    "total_substantive_speeches": 32,
-    "total_debates": 32,
-    "total_wins": 23,
+    "total_substantive_speeches": 33,
+    "total_debates": 33,
+    "total_wins": 24,
     "highest_achievement": "Champion",
     "rank": 62
   },
@@ -1496,6 +1496,23 @@
     "rank": 88
   },
   {
+    "person_id": 791,
+    "name": "Kenuli Pallewatta",
+    "speaker_name": "Kenuli Pallewatta",
+    "institution": "Stafford International School",
+    "national_level": null,
+    "speaker_score": 70.375,
+    "win_percentage": 50,
+    "stdev": 2.295,
+    "prelims_debated": 8,
+    "tournaments_debated": 2,
+    "total_substantive_speeches": 8,
+    "total_debates": 8,
+    "total_wins": 4,
+    "highest_achievement": "Quarterfinalist",
+    "rank": 89
+  },
+  {
     "person_id": 620,
     "name": "Yesandu Kotelawala",
     "speaker_name": "Yesandu Kotelawala",
@@ -1510,7 +1527,7 @@
     "total_debates": 7,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 89
+    "rank": 90
   },
   {
     "person_id": 869,
@@ -1527,7 +1544,7 @@
     "total_debates": 10,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 90
+    "rank": 91
   },
   {
     "person_id": 65,
@@ -1544,7 +1561,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 91
+    "rank": 92
   },
   {
     "person_id": 78,
@@ -1561,7 +1578,7 @@
     "total_debates": 10,
     "total_wins": 6,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 92
+    "rank": 93
   },
   {
     "person_id": 591,
@@ -1578,7 +1595,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 93
+    "rank": 94
   },
   {
     "person_id": 588,
@@ -1595,7 +1612,7 @@
     "total_debates": 8,
     "total_wins": 4,
     "highest_achievement": "Semifinalist",
-    "rank": 94
+    "rank": 95
   },
   {
     "person_id": 86,
@@ -1612,7 +1629,7 @@
     "total_debates": 18,
     "total_wins": 11,
     "highest_achievement": "Finalist",
-    "rank": 95
+    "rank": 96
   },
   {
     "person_id": 541,
@@ -1629,7 +1646,7 @@
     "total_debates": 10,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 96
+    "rank": 97
   },
   {
     "person_id": 91,
@@ -1646,7 +1663,7 @@
     "total_debates": 30,
     "total_wins": 17,
     "highest_achievement": "Quarterfinalist",
-    "rank": 97
+    "rank": 98
   },
   {
     "person_id": 460,
@@ -1663,7 +1680,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 98
+    "rank": 99
   },
   {
     "person_id": 375,
@@ -1680,7 +1697,7 @@
     "total_debates": 17,
     "total_wins": 8,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 99
+    "rank": 100
   },
   {
     "person_id": 605,
@@ -1697,23 +1714,6 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 100
-  },
-  {
-    "person_id": 12,
-    "name": "Sanuli Dilasnee",
-    "speaker_name": "Sanuli Dilasnee",
-    "institution": "Hillwood College Kandy",
-    "national_level": null,
-    "speaker_score": 70.2,
-    "win_percentage": 90,
-    "stdev": 0.632,
-    "prelims_debated": 10,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 10,
-    "total_debates": 10,
-    "total_wins": 9,
-    "highest_achievement": "Finalist",
     "rank": 101
   },
   {
@@ -1870,6 +1870,23 @@
     "rank": 110
   },
   {
+    "person_id": 12,
+    "name": "Sanuli Dilasnee",
+    "speaker_name": "Sanuli Dilasnee",
+    "institution": "Hillwood College Kandy",
+    "national_level": null,
+    "speaker_score": 70.09,
+    "win_percentage": 90.909,
+    "stdev": 0.7,
+    "prelims_debated": 11,
+    "tournaments_debated": 3,
+    "total_substantive_speeches": 11,
+    "total_debates": 11,
+    "total_wins": 10,
+    "highest_achievement": "Finalist",
+    "rank": 111
+  },
+  {
     "person_id": 13,
     "name": "Thilini Paranavidhana",
     "speaker_name": "Thilini Paranavidhana",
@@ -1884,7 +1901,7 @@
     "total_debates": 14,
     "total_wins": 10,
     "highest_achievement": "Semifinalist",
-    "rank": 111
+    "rank": 112
   },
   {
     "person_id": 453,
@@ -1901,7 +1918,7 @@
     "total_debates": 8,
     "total_wins": 6,
     "highest_achievement": "Semifinalist",
-    "rank": 112
+    "rank": 113
   },
   {
     "person_id": 55,
@@ -1909,16 +1926,16 @@
     "speaker_name": "Adrianna Abhayaratne",
     "institution": "Ladies' College",
     "national_level": null,
-    "speaker_score": 70.062,
-    "win_percentage": 50,
-    "stdev": 1.59,
-    "prelims_debated": 8,
+    "speaker_score": 70.055,
+    "win_percentage": 55.555,
+    "stdev": 1.488,
+    "prelims_debated": 9,
     "tournaments_debated": 3,
-    "total_substantive_speeches": 8,
-    "total_debates": 8,
-    "total_wins": 4,
+    "total_substantive_speeches": 9,
+    "total_debates": 9,
+    "total_wins": 5,
     "highest_achievement": "Quarterfinalist",
-    "rank": 113
+    "rank": 114
   },
   {
     "person_id": 73,
@@ -1935,7 +1952,7 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Octofinalist",
-    "rank": 114
+    "rank": 115
   },
   {
     "person_id": 88,
@@ -1952,7 +1969,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Quarterfinalist",
-    "rank": 115
+    "rank": 116
   },
   {
     "person_id": 51,
@@ -1969,7 +1986,7 @@
     "total_debates": 10,
     "total_wins": 6,
     "highest_achievement": "Octofinalist",
-    "rank": 116
+    "rank": 117
   },
   {
     "person_id": 627,
@@ -1986,7 +2003,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 117
+    "rank": 118
   },
   {
     "person_id": 376,
@@ -2003,7 +2020,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 118
+    "rank": 119
   },
   {
     "person_id": 84,
@@ -2020,7 +2037,7 @@
     "total_debates": 31,
     "total_wins": 16,
     "highest_achievement": "Octofinalist",
-    "rank": 119
+    "rank": 120
   },
   {
     "person_id": 622,
@@ -2037,7 +2054,7 @@
     "total_debates": 7,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 120
+    "rank": 121
   },
   {
     "person_id": 380,
@@ -2054,7 +2071,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 121
+    "rank": 122
   },
   {
     "person_id": 642,
@@ -2071,7 +2088,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 122
+    "rank": 123
   },
   {
     "person_id": 69,
@@ -2088,7 +2105,7 @@
     "total_debates": 14,
     "total_wins": 7,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 123
+    "rank": 124
   },
   {
     "person_id": 63,
@@ -2105,7 +2122,7 @@
     "total_debates": 30,
     "total_wins": 15,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 124
+    "rank": 125
   },
   {
     "person_id": 148,
@@ -2122,7 +2139,7 @@
     "total_debates": 36,
     "total_wins": 22,
     "highest_achievement": "Semifinalist",
-    "rank": 125
+    "rank": 126
   },
   {
     "person_id": 72,
@@ -2139,7 +2156,7 @@
     "total_debates": 17,
     "total_wins": 10,
     "highest_achievement": "Quarterfinalist",
-    "rank": 126
+    "rank": 127
   },
   {
     "person_id": 144,
@@ -2156,7 +2173,7 @@
     "total_debates": 38,
     "total_wins": 19,
     "highest_achievement": "Quarterfinalist",
-    "rank": 127
+    "rank": 128
   },
   {
     "person_id": 725,
@@ -2173,7 +2190,7 @@
     "total_debates": 9,
     "total_wins": 3,
     "highest_achievement": "Semifinalist",
-    "rank": 128
+    "rank": 129
   },
   {
     "person_id": 139,
@@ -2190,7 +2207,7 @@
     "total_debates": 15,
     "total_wins": 7,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 129
+    "rank": 130
   },
   {
     "person_id": 356,
@@ -2207,7 +2224,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Quarterfinalist",
-    "rank": 130
+    "rank": 131
   },
   {
     "person_id": 449,
@@ -2224,7 +2241,7 @@
     "total_debates": 12,
     "total_wins": 7,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 131
+    "rank": 132
   },
   {
     "person_id": 649,
@@ -2241,7 +2258,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 132
+    "rank": 133
   },
   {
     "person_id": 61,
@@ -2258,7 +2275,7 @@
     "total_debates": 16,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 133
+    "rank": 134
   },
   {
     "person_id": 108,
@@ -2275,7 +2292,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 134
+    "rank": 135
   },
   {
     "person_id": 383,
@@ -2292,7 +2309,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 135
+    "rank": 136
   },
   {
     "person_id": 593,
@@ -2309,7 +2326,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 136
+    "rank": 137
   },
   {
     "person_id": 602,
@@ -2326,7 +2343,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 137
+    "rank": 138
   },
   {
     "person_id": 87,
@@ -2343,7 +2360,7 @@
     "total_debates": 18,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 138
+    "rank": 139
   },
   {
     "person_id": 146,
@@ -2360,7 +2377,7 @@
     "total_debates": 16,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 139
+    "rank": 140
   },
   {
     "person_id": 619,
@@ -2377,7 +2394,7 @@
     "total_debates": 18,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 140
+    "rank": 141
   },
   {
     "person_id": 900,
@@ -2394,7 +2411,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 141
+    "rank": 142
   },
   {
     "person_id": 326,
@@ -2411,7 +2428,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 142
+    "rank": 143
   },
   {
     "person_id": 643,
@@ -2428,7 +2445,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 143
+    "rank": 144
   },
   {
     "person_id": 637,
@@ -2445,7 +2462,7 @@
     "total_debates": 7,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 144
+    "rank": 145
   },
   {
     "person_id": 64,
@@ -2462,7 +2479,7 @@
     "total_debates": 9,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 145
+    "rank": 146
   },
   {
     "person_id": 31,
@@ -2479,7 +2496,7 @@
     "total_debates": 22,
     "total_wins": 14,
     "highest_achievement": "Quarterfinalist",
-    "rank": 146
+    "rank": 147
   },
   {
     "person_id": 99,
@@ -2496,7 +2513,7 @@
     "total_debates": 23,
     "total_wins": 11,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 147
+    "rank": 148
   },
   {
     "person_id": 126,
@@ -2513,7 +2530,7 @@
     "total_debates": 14,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 148
+    "rank": 149
   },
   {
     "person_id": 402,
@@ -2530,7 +2547,7 @@
     "total_debates": 32,
     "total_wins": 14,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 149
+    "rank": 150
   },
   {
     "person_id": 590,
@@ -2547,7 +2564,7 @@
     "total_debates": 27,
     "total_wins": 17,
     "highest_achievement": "Finalist",
-    "rank": 150
+    "rank": 151
   },
   {
     "person_id": 40,
@@ -2564,7 +2581,7 @@
     "total_debates": 5,
     "total_wins": 4,
     "highest_achievement": "Octofinalist",
-    "rank": 151
+    "rank": 152
   },
   {
     "person_id": 915,
@@ -2581,7 +2598,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 152
+    "rank": 153
   },
   {
     "person_id": 469,
@@ -2598,7 +2615,7 @@
     "total_debates": 31,
     "total_wins": 13,
     "highest_achievement": "Semifinalist",
-    "rank": 153
+    "rank": 154
   },
   {
     "person_id": 455,
@@ -2615,7 +2632,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 154
+    "rank": 155
   },
   {
     "person_id": 651,
@@ -2632,7 +2649,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 155
+    "rank": 156
   },
   {
     "person_id": 82,
@@ -2649,7 +2666,7 @@
     "total_debates": 31,
     "total_wins": 16,
     "highest_achievement": "Octofinalist",
-    "rank": 156
+    "rank": 157
   },
   {
     "person_id": 603,
@@ -2666,7 +2683,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 157
+    "rank": 158
   },
   {
     "person_id": 595,
@@ -2683,7 +2700,7 @@
     "total_debates": 11,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 158
+    "rank": 159
   },
   {
     "person_id": 601,
@@ -2700,7 +2717,7 @@
     "total_debates": 12,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 159
+    "rank": 160
   },
   {
     "person_id": 59,
@@ -2717,7 +2734,7 @@
     "total_debates": 9,
     "total_wins": 5,
     "highest_achievement": "Quarterfinalist",
-    "rank": 160
+    "rank": 161
   },
   {
     "person_id": 806,
@@ -2734,7 +2751,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 161
+    "rank": 162
   },
   {
     "person_id": 131,
@@ -2751,7 +2768,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 162
+    "rank": 163
   },
   {
     "person_id": 735,
@@ -2768,7 +2785,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 163
+    "rank": 164
   },
   {
     "person_id": 137,
@@ -2785,7 +2802,7 @@
     "total_debates": 13,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 164
+    "rank": 165
   },
   {
     "person_id": 156,
@@ -2802,7 +2819,7 @@
     "total_debates": 10,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 165
+    "rank": 166
   },
   {
     "person_id": 143,
@@ -2819,7 +2836,7 @@
     "total_debates": 15,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 166
+    "rank": 167
   },
   {
     "person_id": 45,
@@ -2836,7 +2853,7 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 167
+    "rank": 168
   },
   {
     "person_id": 609,
@@ -2853,7 +2870,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 168
+    "rank": 169
   },
   {
     "person_id": 807,
@@ -2870,7 +2887,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 169
+    "rank": 170
   },
   {
     "person_id": 83,
@@ -2887,7 +2904,7 @@
     "total_debates": 25,
     "total_wins": 13,
     "highest_achievement": "Octofinalist",
-    "rank": 170
+    "rank": 171
   },
   {
     "person_id": 477,
@@ -2904,7 +2921,7 @@
     "total_debates": 7,
     "total_wins": 3,
     "highest_achievement": "Octofinalist",
-    "rank": 171
+    "rank": 172
   },
   {
     "person_id": 111,
@@ -2921,7 +2938,7 @@
     "total_debates": 32,
     "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 172
+    "rank": 173
   },
   {
     "person_id": 98,
@@ -2938,7 +2955,7 @@
     "total_debates": 30,
     "total_wins": 14,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 173
+    "rank": 174
   },
   {
     "person_id": 583,
@@ -2955,7 +2972,7 @@
     "total_debates": 9,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 174
+    "rank": 175
   },
   {
     "person_id": 118,
@@ -2972,7 +2989,7 @@
     "total_debates": 26,
     "total_wins": 13,
     "highest_achievement": "Quarterfinalist",
-    "rank": 175
+    "rank": 176
   },
   {
     "person_id": 121,
@@ -2989,7 +3006,7 @@
     "total_debates": 22,
     "total_wins": 7,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 176
+    "rank": 177
   },
   {
     "person_id": 470,
@@ -3006,7 +3023,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Semifinalist",
-    "rank": 177
+    "rank": 178
   },
   {
     "person_id": 618,
@@ -3023,7 +3040,7 @@
     "total_debates": 18,
     "total_wins": 8,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 178
+    "rank": 179
   },
   {
     "person_id": 142,
@@ -3040,7 +3057,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 179
+    "rank": 180
   },
   {
     "person_id": 486,
@@ -3057,7 +3074,7 @@
     "total_debates": 8,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 180
+    "rank": 181
   },
   {
     "person_id": 79,
@@ -3074,7 +3091,7 @@
     "total_debates": 15,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 181
+    "rank": 182
   },
   {
     "person_id": 608,
@@ -3091,7 +3108,7 @@
     "total_debates": 7,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 182
+    "rank": 183
   },
   {
     "person_id": 478,
@@ -3108,7 +3125,7 @@
     "total_debates": 26,
     "total_wins": 14,
     "highest_achievement": "Octofinalist",
-    "rank": 183
+    "rank": 184
   },
   {
     "person_id": 39,
@@ -3125,7 +3142,7 @@
     "total_debates": 5,
     "total_wins": 4,
     "highest_achievement": "Octofinalist",
-    "rank": 184
+    "rank": 185
   },
   {
     "person_id": 906,
@@ -3142,7 +3159,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 185
+    "rank": 186
   },
   {
     "person_id": 387,
@@ -3159,7 +3176,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 186
+    "rank": 187
   },
   {
     "person_id": 804,
@@ -3176,7 +3193,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 187
+    "rank": 188
   },
   {
     "person_id": 132,
@@ -3193,7 +3210,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 188
+    "rank": 189
   },
   {
     "person_id": 75,
@@ -3210,7 +3227,7 @@
     "total_debates": 22,
     "total_wins": 8,
     "highest_achievement": "Quarterfinalist",
-    "rank": 189
+    "rank": 190
   },
   {
     "person_id": 29,
@@ -3227,7 +3244,7 @@
     "total_debates": 8,
     "total_wins": 5,
     "highest_achievement": "Quarterfinalist",
-    "rank": 190
+    "rank": 191
   },
   {
     "person_id": 363,
@@ -3244,7 +3261,7 @@
     "total_debates": 15,
     "total_wins": 8,
     "highest_achievement": "Octofinalist",
-    "rank": 191
+    "rank": 192
   },
   {
     "person_id": 140,
@@ -3261,7 +3278,7 @@
     "total_debates": 22,
     "total_wins": 11,
     "highest_achievement": "Quarterfinalist",
-    "rank": 192
+    "rank": 193
   },
   {
     "person_id": 632,
@@ -3278,7 +3295,7 @@
     "total_debates": 11,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 193
+    "rank": 194
   },
   {
     "person_id": 468,
@@ -3295,7 +3312,7 @@
     "total_debates": 30,
     "total_wins": 12,
     "highest_achievement": "Semifinalist",
-    "rank": 194
+    "rank": 195
   },
   {
     "person_id": 616,
@@ -3312,7 +3329,7 @@
     "total_debates": 11,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 195
+    "rank": 196
   },
   {
     "person_id": 607,
@@ -3329,7 +3346,7 @@
     "total_debates": 9,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 196
+    "rank": 197
   },
   {
     "person_id": 488,
@@ -3346,7 +3363,7 @@
     "total_debates": 16,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 197
+    "rank": 198
   },
   {
     "person_id": 214,
@@ -3363,7 +3380,7 @@
     "total_debates": 21,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 198
+    "rank": 199
   },
   {
     "person_id": 80,
@@ -3380,7 +3397,7 @@
     "total_debates": 10,
     "total_wins": 5,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 199
+    "rank": 200
   },
   {
     "person_id": 173,
@@ -3397,7 +3414,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 200
+    "rank": 201
   },
   {
     "person_id": 448,
@@ -3414,7 +3431,7 @@
     "total_debates": 9,
     "total_wins": 6,
     "highest_achievement": "Semifinalist",
-    "rank": 201
+    "rank": 202
   },
   {
     "person_id": 94,
@@ -3431,7 +3448,7 @@
     "total_debates": 22,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 202
+    "rank": 203
   },
   {
     "person_id": 652,
@@ -3448,7 +3465,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 203
+    "rank": 204
   },
   {
     "person_id": 179,
@@ -3465,7 +3482,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Semifinalist",
-    "rank": 204
+    "rank": 205
   },
   {
     "person_id": 398,
@@ -3482,7 +3499,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 205
+    "rank": 206
   },
   {
     "person_id": 645,
@@ -3499,7 +3516,7 @@
     "total_debates": 6,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 206
+    "rank": 207
   },
   {
     "person_id": 732,
@@ -3516,7 +3533,7 @@
     "total_debates": 9,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 207
+    "rank": 208
   },
   {
     "person_id": 476,
@@ -3533,7 +3550,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 208
+    "rank": 209
   },
   {
     "person_id": 600,
@@ -3550,7 +3567,7 @@
     "total_debates": 11,
     "total_wins": 7,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 209
+    "rank": 210
   },
   {
     "person_id": 110,
@@ -3567,7 +3584,7 @@
     "total_debates": 32,
     "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 210
+    "rank": 211
   },
   {
     "person_id": 191,
@@ -3584,7 +3601,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 211
+    "rank": 212
   },
   {
     "person_id": 621,
@@ -3601,7 +3618,7 @@
     "total_debates": 7,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 212
+    "rank": 213
   },
   {
     "person_id": 480,
@@ -3618,7 +3635,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 213
+    "rank": 214
   },
   {
     "person_id": 103,
@@ -3635,7 +3652,7 @@
     "total_debates": 10,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 214
+    "rank": 215
   },
   {
     "person_id": 916,
@@ -3652,7 +3669,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 215
+    "rank": 216
   },
   {
     "person_id": 919,
@@ -3669,7 +3686,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 216
+    "rank": 217
   },
   {
     "person_id": 397,
@@ -3686,7 +3703,7 @@
     "total_debates": 10,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 217
+    "rank": 218
   },
   {
     "person_id": 925,
@@ -3703,7 +3720,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 218
+    "rank": 219
   },
   {
     "person_id": 672,
@@ -3720,7 +3737,7 @@
     "total_debates": 10,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 219
+    "rank": 220
   },
   {
     "person_id": 939,
@@ -3737,7 +3754,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 220
+    "rank": 221
   },
   {
     "person_id": 161,
@@ -3754,7 +3771,7 @@
     "total_debates": 9,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 221
+    "rank": 222
   },
   {
     "person_id": 629,
@@ -3771,7 +3788,7 @@
     "total_debates": 12,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 222
+    "rank": 223
   },
   {
     "person_id": 160,
@@ -3788,7 +3805,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 223
+    "rank": 224
   },
   {
     "person_id": 481,
@@ -3805,7 +3822,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 224
+    "rank": 225
   },
   {
     "person_id": 401,
@@ -3822,7 +3839,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 225
+    "rank": 226
   },
   {
     "person_id": 207,
@@ -3839,7 +3856,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 226
+    "rank": 227
   },
   {
     "person_id": 733,
@@ -3856,7 +3873,7 @@
     "total_debates": 10,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 227
+    "rank": 228
   },
   {
     "person_id": 445,
@@ -3873,7 +3890,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 228
+    "rank": 229
   },
   {
     "person_id": 911,
@@ -3890,7 +3907,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 229
+    "rank": 230
   },
   {
     "person_id": 920,
@@ -3907,7 +3924,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 230
+    "rank": 231
   },
   {
     "person_id": 147,
@@ -3924,7 +3941,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 231
+    "rank": 232
   },
   {
     "person_id": 669,
@@ -3941,7 +3958,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 232
+    "rank": 233
   },
   {
     "person_id": 119,
@@ -3958,7 +3975,7 @@
     "total_debates": 19,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 233
+    "rank": 234
   },
   {
     "person_id": 158,
@@ -3975,7 +3992,7 @@
     "total_debates": 8,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 234
+    "rank": 235
   },
   {
     "person_id": 95,
@@ -3992,7 +4009,7 @@
     "total_debates": 22,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 235
+    "rank": 236
   },
   {
     "person_id": 96,
@@ -4009,7 +4026,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 236
+    "rank": 237
   },
   {
     "person_id": 655,
@@ -4026,7 +4043,7 @@
     "total_debates": 8,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 237
+    "rank": 238
   },
   {
     "person_id": 166,
@@ -4043,7 +4060,7 @@
     "total_debates": 8,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 238
+    "rank": 239
   },
   {
     "person_id": 730,
@@ -4060,7 +4077,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 239
+    "rank": 240
   },
   {
     "person_id": 172,
@@ -4077,7 +4094,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 240
+    "rank": 241
   },
   {
     "person_id": 648,
@@ -4094,7 +4111,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 241
+    "rank": 242
   },
   {
     "person_id": 157,
@@ -4111,7 +4128,7 @@
     "total_debates": 10,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 242
+    "rank": 243
   },
   {
     "person_id": 215,
@@ -4128,7 +4145,7 @@
     "total_debates": 21,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 243
+    "rank": 244
   },
   {
     "person_id": 90,
@@ -4145,7 +4162,7 @@
     "total_debates": 18,
     "total_wins": 7,
     "highest_achievement": "Quarterfinalist",
-    "rank": 244
+    "rank": 245
   },
   {
     "person_id": 489,
@@ -4162,7 +4179,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 245
+    "rank": 246
   },
   {
     "person_id": 394,
@@ -4179,7 +4196,7 @@
     "total_debates": 7,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 246
+    "rank": 247
   },
   {
     "person_id": 475,
@@ -4196,7 +4213,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 247
+    "rank": 248
   },
   {
     "person_id": 482,
@@ -4213,7 +4230,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 248
+    "rank": 249
   },
   {
     "person_id": 499,
@@ -4230,7 +4247,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 249
+    "rank": 250
   },
   {
     "person_id": 77,
@@ -4247,7 +4264,7 @@
     "total_debates": 24,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 250
+    "rank": 251
   },
   {
     "person_id": 154,
@@ -4264,7 +4281,7 @@
     "total_debates": 6,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 251
+    "rank": 252
   },
   {
     "person_id": 471,
@@ -4281,7 +4298,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Semifinalist",
-    "rank": 252
+    "rank": 253
   },
   {
     "person_id": 472,
@@ -4298,7 +4315,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Semifinalist",
-    "rank": 253
+    "rank": 254
   },
   {
     "person_id": 149,
@@ -4315,7 +4332,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 254
+    "rank": 255
   },
   {
     "person_id": 670,
@@ -4332,7 +4349,7 @@
     "total_debates": 7,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 255
+    "rank": 256
   },
   {
     "person_id": 457,
@@ -4349,7 +4366,7 @@
     "total_debates": 8,
     "total_wins": 5,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 256
+    "rank": 257
   },
   {
     "person_id": 395,
@@ -4366,7 +4383,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Champion",
-    "rank": 257
+    "rank": 258
   },
   {
     "person_id": 153,
@@ -4383,7 +4400,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 258
+    "rank": 259
   },
   {
     "person_id": 515,
@@ -4400,7 +4417,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 259
+    "rank": 260
   },
   {
     "person_id": 636,
@@ -4417,7 +4434,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 260
+    "rank": 261
   },
   {
     "person_id": 671,
@@ -4434,7 +4451,7 @@
     "total_debates": 7,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 261
+    "rank": 262
   },
   {
     "person_id": 244,
@@ -4451,7 +4468,7 @@
     "total_debates": 15,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 262
+    "rank": 263
   },
   {
     "person_id": 467,
@@ -4468,7 +4485,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Semifinalist",
-    "rank": 263
+    "rank": 264
   },
   {
     "person_id": 917,
@@ -4485,7 +4502,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 264
+    "rank": 265
   },
   {
     "person_id": 136,
@@ -4502,7 +4519,7 @@
     "total_debates": 9,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 265
+    "rank": 266
   },
   {
     "person_id": 513,
@@ -4519,7 +4536,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 266
+    "rank": 267
   },
   {
     "person_id": 206,
@@ -4536,7 +4553,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 267
+    "rank": 268
   },
   {
     "person_id": 938,
@@ -4553,7 +4570,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 268
+    "rank": 269
   },
   {
     "person_id": 165,
@@ -4570,7 +4587,7 @@
     "total_debates": 15,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 269
+    "rank": 270
   },
   {
     "person_id": 406,
@@ -4587,7 +4604,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 270
+    "rank": 271
   },
   {
     "person_id": 653,
@@ -4604,7 +4621,7 @@
     "total_debates": 7,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 271
+    "rank": 272
   },
   {
     "person_id": 729,
@@ -4621,7 +4638,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 272
+    "rank": 273
   },
   {
     "person_id": 239,
@@ -4638,7 +4655,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 273
+    "rank": 274
   },
   {
     "person_id": 630,
@@ -4655,7 +4672,7 @@
     "total_debates": 9,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 274
+    "rank": 275
   },
   {
     "person_id": 658,
@@ -4672,7 +4689,7 @@
     "total_debates": 9,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 275
+    "rank": 276
   },
   {
     "person_id": 164,
@@ -4689,7 +4706,7 @@
     "total_debates": 8,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 276
+    "rank": 277
   },
   {
     "person_id": 604,
@@ -4706,7 +4723,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 277
+    "rank": 278
   },
   {
     "person_id": 754,
@@ -4723,7 +4740,7 @@
     "total_debates": 9,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 278
+    "rank": 279
   },
   {
     "person_id": 102,
@@ -4740,7 +4757,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 279
+    "rank": 280
   },
   {
     "person_id": 135,
@@ -4757,7 +4774,7 @@
     "total_debates": 8,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 280
+    "rank": 281
   },
   {
     "person_id": 151,
@@ -4774,7 +4791,7 @@
     "total_debates": 16,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 281
+    "rank": 282
   },
   {
     "person_id": 683,
@@ -4791,7 +4808,7 @@
     "total_debates": 7,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 282
+    "rank": 283
   },
   {
     "person_id": 152,
@@ -4808,7 +4825,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 283
+    "rank": 284
   },
   {
     "person_id": 210,
@@ -4825,7 +4842,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 284
+    "rank": 285
   },
   {
     "person_id": 212,
@@ -4842,7 +4859,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 285
+    "rank": 286
   },
   {
     "person_id": 682,
@@ -4859,7 +4876,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 286
+    "rank": 287
   },
   {
     "person_id": 113,
@@ -4876,7 +4893,7 @@
     "total_debates": 14,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 287
+    "rank": 288
   },
   {
     "person_id": 631,
@@ -4891,23 +4908,6 @@
     "tournaments_debated": 2,
     "total_substantive_speeches": 6,
     "total_debates": 6,
-    "total_wins": 3,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 288
-  },
-  {
-    "person_id": 116,
-    "name": "Ahmed Ali Ashkar",
-    "speaker_name": "Ahmed Ali Ashkar",
-    "institution": "HIS",
-    "national_level": null,
-    "speaker_score": 68.15,
-    "win_percentage": 30,
-    "stdev": 1.986,
-    "prelims_debated": 10,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 10,
-    "total_debates": 10,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "rank": 289
@@ -4964,23 +4964,6 @@
     "rank": 292
   },
   {
-    "person_id": 934,
-    "name": "Navitha Ranasinghe",
-    "speaker_name": "Navitha Ranasinghe",
-    "institution": "S. Thomas' Preparatory School",
-    "national_level": null,
-    "speaker_score": 68.1,
-    "win_percentage": 20,
-    "stdev": 1.816,
-    "prelims_debated": 5,
-    "tournaments_debated": 1,
-    "total_substantive_speeches": 5,
-    "total_debates": 5,
-    "total_wins": 1,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 293
-  },
-  {
     "person_id": 163,
     "name": "Aakifah Nuzhah Nazeer",
     "speaker_name": "Aakifah Nuzhah Nazeer",
@@ -4995,7 +4978,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 294
+    "rank": 293
   },
   {
     "person_id": 256,
@@ -5012,7 +4995,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 295
+    "rank": 294
   },
   {
     "person_id": 150,
@@ -5028,6 +5011,23 @@
     "total_substantive_speeches": 11,
     "total_debates": 11,
     "total_wins": 5,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 295
+  },
+  {
+    "person_id": 116,
+    "name": "Ahmed Ali Ashkar",
+    "speaker_name": "Ahmed Ali Ashkar",
+    "institution": "HIS",
+    "national_level": null,
+    "speaker_score": 68.045,
+    "win_percentage": 36.363,
+    "stdev": 1.916,
+    "prelims_debated": 11,
+    "tournaments_debated": 3,
+    "total_substantive_speeches": 11,
+    "total_debates": 11,
+    "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "rank": 296
   },
@@ -5559,6 +5559,23 @@
     "rank": 327
   },
   {
+    "person_id": 656,
+    "name": "Navinu Hewadikaram",
+    "speaker_name": "Navinu Hewadikaram",
+    "institution": "Ananda College",
+    "national_level": null,
+    "speaker_score": 67.461,
+    "win_percentage": 23.076,
+    "stdev": 2.809,
+    "prelims_debated": 13,
+    "tournaments_debated": 3,
+    "total_substantive_speeches": 13,
+    "total_debates": 13,
+    "total_wins": 3,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 328
+  },
+  {
     "person_id": 122,
     "name": "Chethali Elwitigala",
     "speaker_name": "Chethali Elwitigala",
@@ -5573,7 +5590,7 @@
     "total_debates": 5,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 328
+    "rank": 329
   },
   {
     "person_id": 742,
@@ -5590,7 +5607,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 329
+    "rank": 330
   },
   {
     "person_id": 224,
@@ -5607,7 +5624,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 330
+    "rank": 331
   },
   {
     "person_id": 817,
@@ -5624,7 +5641,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 331
+    "rank": 332
   },
   {
     "person_id": 624,
@@ -5641,7 +5658,7 @@
     "total_debates": 11,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 332
+    "rank": 333
   },
   {
     "person_id": 504,
@@ -5658,7 +5675,7 @@
     "total_debates": 11,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 333
+    "rank": 334
   },
   {
     "person_id": 52,
@@ -5675,7 +5692,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 334
+    "rank": 335
   },
   {
     "person_id": 180,
@@ -5692,7 +5709,7 @@
     "total_debates": 12,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 335
+    "rank": 336
   },
   {
     "person_id": 209,
@@ -5709,7 +5726,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 336
+    "rank": 337
   },
   {
     "person_id": 664,
@@ -5725,23 +5742,6 @@
     "total_substantive_speeches": 6,
     "total_debates": 6,
     "total_wins": 2,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 337
-  },
-  {
-    "person_id": 656,
-    "name": "Navinu Hewadikaram",
-    "speaker_name": "Navinu Hewadikaram",
-    "institution": "Ananda College",
-    "national_level": null,
-    "speaker_score": 67.25,
-    "win_percentage": 25,
-    "stdev": 2.824,
-    "prelims_debated": 12,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 12,
-    "total_debates": 12,
-    "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "rank": 338
   },
@@ -5899,6 +5899,23 @@
     "rank": 347
   },
   {
+    "person_id": 934,
+    "name": "Navitha Ranasinghe",
+    "speaker_name": "Navitha Ranasinghe",
+    "institution": "S. Thomas' Preparatory School",
+    "national_level": null,
+    "speaker_score": 66.916,
+    "win_percentage": 16.666,
+    "stdev": 3.322,
+    "prelims_debated": 6,
+    "tournaments_debated": 2,
+    "total_substantive_speeches": 6,
+    "total_debates": 6,
+    "total_wins": 1,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 348
+  },
+  {
     "person_id": 409,
     "name": "Deyana",
     "speaker_name": "Deyana",
@@ -5913,7 +5930,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 348
+    "rank": 349
   },
   {
     "person_id": 850,
@@ -5930,7 +5947,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 349
+    "rank": 350
   },
   {
     "person_id": 228,
@@ -5947,7 +5964,7 @@
     "total_debates": 6,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 350
+    "rank": 351
   },
   {
     "person_id": 936,
@@ -5964,7 +5981,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 351
+    "rank": 352
   },
   {
     "person_id": 229,
@@ -5981,7 +5998,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 352
+    "rank": 353
   },
   {
     "person_id": 548,
@@ -5998,7 +6015,7 @@
     "total_debates": 7,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 353
+    "rank": 354
   },
   {
     "person_id": 932,
@@ -6015,7 +6032,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 354
+    "rank": 355
   },
   {
     "person_id": 195,
@@ -6032,7 +6049,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 355
+    "rank": 356
   },
   {
     "person_id": 517,
@@ -6049,7 +6066,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 356
+    "rank": 357
   },
   {
     "person_id": 755,
@@ -6066,7 +6083,7 @@
     "total_debates": 9,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 357
+    "rank": 358
   },
   {
     "person_id": 684,
@@ -6083,7 +6100,7 @@
     "total_debates": 5,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 358
+    "rank": 359
   },
   {
     "person_id": 205,
@@ -6100,7 +6117,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 359
+    "rank": 360
   },
   {
     "person_id": 226,
@@ -6117,7 +6134,7 @@
     "total_debates": 8,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 360
+    "rank": 361
   },
   {
     "person_id": 547,
@@ -6134,7 +6151,7 @@
     "total_debates": 7,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 361
+    "rank": 362
   },
   {
     "person_id": 188,
@@ -6151,7 +6168,7 @@
     "total_debates": 9,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 362
+    "rank": 363
   },
   {
     "person_id": 390,
@@ -6168,7 +6185,7 @@
     "total_debates": 5,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 363
+    "rank": 364
   },
   {
     "person_id": 93,
@@ -6185,7 +6202,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 364
+    "rank": 365
   },
   {
     "person_id": 852,
@@ -6202,7 +6219,7 @@
     "total_debates": 8,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 365
+    "rank": 366
   },
   {
     "person_id": 674,
@@ -6219,7 +6236,7 @@
     "total_debates": 7,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 366
+    "rank": 367
   },
   {
     "person_id": 246,
@@ -6236,7 +6253,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 367
+    "rank": 368
   },
   {
     "person_id": 202,
@@ -6253,7 +6270,7 @@
     "total_debates": 10,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 368
+    "rank": 369
   },
   {
     "person_id": 227,
@@ -6270,7 +6287,7 @@
     "total_debates": 10,
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 369
+    "rank": 370
   },
   {
     "person_id": 203,
@@ -6287,7 +6304,7 @@
     "total_debates": 8,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 370
+    "rank": 371
   },
   {
     "person_id": 245,
@@ -6304,7 +6321,7 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 371
+    "rank": 372
   },
   {
     "person_id": 257,
@@ -6321,6 +6338,6 @@
     "total_debates": 5,
     "total_wins": 0,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 372
+    "rank": 373
   }
 ]
