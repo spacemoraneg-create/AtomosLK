@@ -1157,6 +1157,164 @@ class AtomosQuery:
         """
         return self._activity_engine.get_activity_leaderboard()
 
+    def get_debater_adjudicator_record(
+        self,
+        debater: str,
+        adjudicator: Optional[str] = None,
+    ) -> Dict[str, Any]:
+        """
+        Retrieve complete, deterministic record of all debates where an adjudicator
+        officiated a specific debater. Evaluates ground-truth debate outcomes (Won/Lost),
+        speech scores, winning margin, tournament, round, and opposition team.
+        """
+        matches = self._search_engine.search_debaters(debater, limit=1)
+        if not matches:
+            return {"error": f"Debater '{debater}' not found in database."}
+        person_id = matches[0].get("person_id") or matches[0].get("id")
+        canonical_name = matches[0].get("canonical_name") or matches[0].get("name", str(debater))
+
+        cur = self._conn.cursor()
+        sql = """
+        SELECT
+            d.id as debate_id,
+            t.id as tournament_id,
+            t.name as tournament_name,
+            r.round_number,
+            r.name as round_name,
+            r.round_type,
+            sp.side as debater_side,
+            sp.position as debater_position,
+            sp.speech_type,
+            sp.total_score,
+            tm.id as debater_team_id,
+            tm.name as debater_team,
+            opp.id as opp_team_id,
+            opp.name as opp_team,
+            ab.adjudicator_person_id,
+            ab.adjudicator_raw_name,
+            ab.winner_side,
+            ab.win_margin,
+            ab.prop_total_score,
+            ab.opp_total_score,
+            d.is_walkover,
+            d.walkover_winner_id
+        FROM speech_performances sp
+        JOIN rounds r ON sp.round_id = r.id
+        JOIN tournaments t ON r.tournament_id = t.id
+        JOIN debates d ON sp.debate_id = d.id
+        JOIN teams tm ON sp.team_id = tm.id
+        LEFT JOIN teams opp ON ((d.prop_team_id = tm.id AND d.opp_team_id = opp.id) 
+                             OR (d.opp_team_id = tm.id AND d.prop_team_id = opp.id))
+        JOIN adjudicator_ballots ab ON sp.ballot_id = ab.id
+        WHERE sp.person_id = ?
+        ORDER BY t.id ASC, r.round_number ASC, sp.id ASC
+        """
+        cur.execute(sql, (person_id,))
+        rows = cur.fetchall()
+
+        from atomos.analytics.tournaments import CLEAN_TOURNAMENT_NAMES
+        debates_map: Dict[Tuple[str, int], Dict[str, Any]] = {}
+        for r in rows:
+            raw_judge = r["adjudicator_raw_name"] or "Unknown"
+            import html
+            clean_judge = html.unescape(raw_judge.replace("Official Reconstructed (", "").rstrip(")"))
+            if clean_judge.lower().strip() in ("scoresheet", "tabbycat", "tab", "unknown", "adjudicator not recorded", ""):
+                continue
+
+            d_id = r["debate_id"]
+            key = (clean_judge, d_id)
+
+            if key not in debates_map:
+                if r["is_walkover"] == 1:
+                    won = (r["walkover_winner_id"] == r["debater_team_id"])
+                else:
+                    won = (r["debater_side"] == r["winner_side"])
+
+                t_name = CLEAN_TOURNAMENT_NAMES.get(r["tournament_id"], r["tournament_name"])
+
+                debates_map[key] = {
+                    "adjudicator": clean_judge,
+                    "raw_adjudicator_name": raw_judge,
+                    "adjudicator_person_id": r["adjudicator_person_id"],
+                    "debate_id": d_id,
+                    "tournament_id": r["tournament_id"],
+                    "tournament_name": t_name,
+                    "round_number": r["round_number"],
+                    "round_name": r["round_name"],
+                    "round_type": r["round_type"],
+                    "debater_team": r["debater_team"],
+                    "opponent_team": r["opp_team"] or "Opponent",
+                    "side": r["debater_side"],
+                    "winner_side": r["winner_side"],
+                    "win_margin": r["win_margin"],
+                    "won": won,
+                    "outcome": "Won" if won else "Lost",
+                    "substantive_scores": [],
+                    "reply_scores": [],
+                }
+
+            if r["speech_type"] == "SUBSTANTIVE":
+                debates_map[key]["substantive_scores"].append(float(r["total_score"]))
+            elif r["speech_type"] == "REPLY":
+                debates_map[key]["reply_scores"].append(float(r["total_score"]))
+
+        all_records = list(debates_map.values())
+
+        if adjudicator and adjudicator.strip():
+            target_adj = adjudicator.strip().lower()
+            all_records = [
+                d for d in all_records
+                if target_adj in d["adjudicator"].lower() or target_adj in d["raw_adjudicator_name"].lower()
+            ]
+
+        judges_summary: Dict[str, Dict[str, Any]] = {}
+        for d in all_records:
+            j = d["adjudicator"]
+            if j not in judges_summary:
+                judges_summary[j] = {
+                    "adjudicator": j,
+                    "debates_count": 0,
+                    "wins": 0,
+                    "losses": 0,
+                    "substantive_scores": [],
+                    "tournaments": set(),
+                }
+            judges_summary[j]["debates_count"] += 1
+            if d["won"]:
+                judges_summary[j]["wins"] += 1
+            else:
+                judges_summary[j]["losses"] += 1
+            judges_summary[j]["substantive_scores"].extend(d["substantive_scores"])
+            judges_summary[j]["tournaments"].add(d["tournament_name"])
+
+        summary_list = []
+        for j, s in judges_summary.items():
+            tot = s["debates_count"]
+            w = s["wins"]
+            l = s["losses"]
+            wr = round(w / tot * 100.0, 1) if tot > 0 else 0.0
+            sub_avg = round(sum(s["substantive_scores"]) / len(s["substantive_scores"]), 2) if s["substantive_scores"] else None
+            summary_list.append({
+                "adjudicator": j,
+                "debates_judged": tot,
+                "wins": w,
+                "losses": l,
+                "win_percentage": wr,
+                "average_score_awarded": sub_avg,
+                "tournaments": sorted(list(s["tournaments"])),
+            })
+
+        summary_list.sort(key=lambda x: (-x["debates_judged"], -x["win_percentage"]))
+
+        return {
+            "debater": canonical_name,
+            "person_id": person_id,
+            "filter_adjudicator": adjudicator,
+            "total_debates_found": len(all_records),
+            "judges_summary": summary_list,
+            "debates": all_records,
+        }
+
     def close(self):
         """Close underlying database connection if owned."""
         if self._conn:

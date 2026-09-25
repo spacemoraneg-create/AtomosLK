@@ -395,6 +395,27 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
             }
         }
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_debater_adjudicator_record",
+            "description": "Retrieve complete official record of all debates where an adjudicator judged a specific debater. Provides exact debate counts (deduplicated by debate ID), individual speech scores, debate sides (Proposition vs Opposition), winning side, and true match outcomes (Won or Lost). Use this whenever asked which judges have judged a debater, how a debater performed under an adjudicator, or whether a judge gave a debater a win or loss.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "debater": {
+                        "type": "string",
+                        "description": "Debater canonical name (e.g. 'Balishta Wijesinghe', 'Vidath Marasinghe')."
+                    },
+                    "adjudicator": {
+                        "type": "string",
+                        "description": "Optional adjudicator name filter (e.g. 'Adam Dhilshan', 'Senuka Seneviratne'). If omitted, returns all adjudicators who judged this debater, ranked by most frequent."
+                    }
+                },
+                "required": ["debater"]
+            }
+        }
+    },
 ]
 
 
@@ -551,6 +572,11 @@ def dispatch_tool(
             ta = args.get("team_a", "")
             tb = args.get("team_b", "")
             return query_engine.predict_matchup(ta, tb)
+
+        elif name == "get_debater_adjudicator_record":
+            deb = args.get("debater") or args.get("debater_name") or args.get("identifier") or ""
+            adj = args.get("adjudicator") or args.get("adjudicator_name") or args.get("judge")
+            return query_engine.get_debater_adjudicator_record(debater=deb, adjudicator=adj)
 
         else:
             return {"error": f"Unknown tool name '{name}'."}

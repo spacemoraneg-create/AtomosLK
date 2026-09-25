@@ -31,7 +31,7 @@ def query_engine():
 
 def test_tool_schemas_validity():
     """Verify that all tool schemas conform to standard OpenAI/Gemini function calling specs."""
-    assert len(TOOL_SCHEMAS) == 18
+    assert len(TOOL_SCHEMAS) == 19
     expected_tools = {
         "search_entities",
         "get_debater_profile",
@@ -50,6 +50,7 @@ def test_tool_schemas_validity():
         "get_judge_profile",
         "get_judge_leaderboard",
         "predict_matchup",
+        "get_debater_adjudicator_record",
         "execute_sql",
     }
     found_tools = set()
@@ -331,4 +332,21 @@ def test_atomos_query_new_engines(query_engine):
     dispatched_pred = dispatch_tool("predict_matchup", {"team_a": "DS A", "team_b": "RC A"}, query_engine=query_engine)
     assert "error" not in dispatched_pred
     assert "simulation" in dispatched_pred
+
+    # 5. Debater-Adjudicator Record
+    rec = query_engine.get_debater_adjudicator_record("Balishta Wijesinghe", "Adam Dhilshan")
+    assert "error" not in rec
+    assert rec["total_debates_found"] == 3
+    assert len(rec["judges_summary"]) == 1
+    assert rec["judges_summary"][0]["wins"] == 3
+    assert rec["judges_summary"][0]["losses"] == 0
+    assert rec["judges_summary"][0]["win_percentage"] == 100.0
+    dispatched_rec = dispatch_tool("get_debater_adjudicator_record", {"debater": "Balishta Wijesinghe", "adjudicator": "Adam Dhilshan"}, query_engine=query_engine)
+    assert "error" not in dispatched_rec
+    assert dispatched_rec["total_debates_found"] == 3
+    assert dispatched_rec["judges_summary"][0]["wins"] == 3
+    assert dispatched_rec["judges_summary"][0]["losses"] == 0
+    assert dispatched_rec["judges_summary"][0]["win_percentage"] == 100.0
+
+
 

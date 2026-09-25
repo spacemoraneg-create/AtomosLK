@@ -90,12 +90,21 @@
             <span class="badge-count" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">SYNTHETIC BALLOTS: 0</span>
           </div>
         </div>
-        <div class="admin-bar-right">
+        <div class="admin-bar-right" style="display: flex; gap: 8px; flex-wrap: wrap;">
+          <button id="adminDownloadDbBtn" class="admin-btn admin-btn-secondary" title="Download current atomos.db SQLite database">
+            DOWNLOAD DB
+          </button>
+          <button id="adminDownloadExportBtn" class="admin-btn admin-btn-secondary" title="Download current static JSON export zip bundle">
+            EXPORT ZIP
+          </button>
+          <button id="adminSyncGithubBtn" class="admin-btn admin-btn-secondary" title="Sync database & static export directly to GitHub repository" style="border-color: #38bdf8; color: #38bdf8;">
+            SYNC TO GITHUB
+          </button>
           <button id="adminRefreshBtn" class="admin-btn admin-btn-secondary" title="Refresh all database metrics">
-            REFRESH DATA
+            REFRESH
           </button>
           <button id="adminLockBtn" class="admin-btn admin-btn-danger" title="Lock console and clear session">
-            LOCK CONSOLE
+            LOCK
           </button>
         </div>
       </div>
@@ -190,6 +199,29 @@
               <span id="dbPragmaCheck" class="admin-kv-val monospace" style="color: #34d399;">--</span>
             </div>
           </div>
+        </div>
+
+        <!-- Data Persistence & GitHub Sync Box -->
+        <div class="admin-box" style="margin-bottom: 28px;">
+          <div class="admin-box-title" style="display: flex; justify-content: space-between; align-items: center;">
+            <span>DATA PERSISTENCE & GITHUB REPOSITORY SYNCHRONIZATION</span>
+            <span id="githubSyncBadge" class="badge-count" style="background: rgba(56, 189, 248, 0.15); color: #38bdf8;">CHECKING GITHUB STATUS...</span>
+          </div>
+          <div style="font-size: 13px; color: rgba(255,255,255,0.7); margin-bottom: 16px; line-height: 1.5;">
+            Render free-tier web services have ephemeral storage that resets upon sleep or container restart. Use the tools below to permanently persist your database merges directly to your GitHub repository or download the SQLite database locally.
+          </div>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <button id="paneDownloadDbBtn" class="admin-btn admin-btn-primary">
+              DOWNLOAD ATOMOS.DB
+            </button>
+            <button id="paneDownloadExportBtn" class="admin-btn admin-btn-secondary">
+              DOWNLOAD STATIC EXPORT (ZIP)
+            </button>
+            <button id="paneSyncGithubBtn" class="admin-btn admin-btn-secondary" style="border-color: #38bdf8; color: #38bdf8;">
+              PUSH DATABASE TO GITHUB
+            </button>
+          </div>
+          <div id="githubSyncStatusBox" class="admin-status-box hidden" style="margin-top: 14px;"></div>
         </div>
 
         <!-- Ingested Tournaments Table -->

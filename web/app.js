@@ -147,27 +147,34 @@
     }
   }
 
-  // Fetch JSON with offline fallback
+  // Fetch JSON with live API priority and offline static fallback
   async function fetchJson(filename, fallbackApi) {
     let data = null;
-    try {
-      const res = await fetch(`data/web_export/${filename}`);
-      if (res.ok) data = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch(`../data/web_export/${filename}`);
-        if (res.ok) data = await res.json();
-      } catch (err) {}
-    }
+    const cacheBuster = `_cb=${Date.now()}`;
 
-    if (!data && state.isServerOnline && fallbackApi) {
+    // 1. Live Server API Priority (guarantees universal, continuously updated dataset)
+    if (state.isServerOnline && fallbackApi) {
       try {
-        const res = await fetch(`${state.apiUrl}${fallbackApi}`);
+        const sep = fallbackApi.includes('?') ? '&' : '?';
+        const res = await fetch(`${state.apiUrl}${fallbackApi}${sep}${cacheBuster}`);
         if (res.ok) {
           const j = await res.json();
           data = j.leaderboard || j;
         }
       } catch (e) {}
+    }
+
+    // 2. Offline / Static Archival Fallback
+    if (!data) {
+      try {
+        const res = await fetch(`data/web_export/${filename}?${cacheBuster}`);
+        if (res.ok) data = await res.json();
+      } catch (e) {
+        try {
+          const res = await fetch(`../data/web_export/${filename}?${cacheBuster}`);
+          if (res.ok) data = await res.json();
+        } catch (err) {}
+      }
     }
     return data;
   }

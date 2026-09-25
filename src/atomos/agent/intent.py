@@ -103,8 +103,8 @@ def classify_intent(query: str) -> Tuple[AgentIntent, Dict[str, Any]]:
         }
 
     # 6. Adjudicator / Judge Lookups
-    if any(k in q_lower for k in ["who judged", "judged by", "chair judge", "adjudicator", "adjudicators", "judge who"]):
-        m = re.search(r"(?:judged|for|of)\s+([A-Za-z\s\.\']+?)(?:\'s|when|\?|$)", q, re.IGNORECASE)
+    if any(k in q_lower for k in ["who judged", "has judged", "who has judged", "judged by", "judged", "who judges", "judges", "chair judge", "adjudicator", "adjudicators", "judge who"]):
+        m = re.search(r"(?:judged|judges|for|of)\s+([A-Za-z\s\.\']+?)(?:\'s|\s+the|when|\?|$)", q, re.IGNORECASE)
         ident = clean_entity_name(m.group(1)) if m else ""
         return AgentIntent.ADJUDICATOR_LOOKUP, {
             "identifier": ident,

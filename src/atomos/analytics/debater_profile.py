@@ -124,6 +124,10 @@ class DebaterProfile:
     positions_breakdown: Optional[Dict[str, Any]] = None
     adjudication_record: Optional[Dict[str, Any]] = None
 
+    # Official V2 Leaderboard Ranks
+    tab_rank: Optional[int] = None
+    general_tab_rank: Optional[int] = None
+
 
 @dataclass
 class DebaterSearchResult:
@@ -280,21 +284,32 @@ class DebaterProfileEngine:
         inst_rows = cur.fetchall()
         institution = ", ".join([r[0] for r in inst_rows if r[0]]) if inst_rows else "Independent / Composite"
 
-        # 4. Master Tab & Critical Stats Rankings
-        mtab = self.master_engine.get_master_speaker_tab(min_tournaments=1)
+        # 4. Official V2 Leaderboard Rankings (Tab tier: >= 12 rounds; General tier: >= 5 rounds)
+        from atomos.analytics.v2_metrics import V2MetricsEngine
+        v2_eng = V2MetricsEngine(self.conn)
+        tab_speakers = v2_eng.get_multipurpose_speakers(tier="tab")
+        gen_speakers = v2_eng.get_multipurpose_speakers(tier="general")
         cstats = self.critical_engine.get_critical_speaker_stats(min_tournaments=3)
 
-        mt_total = len(mtab)
-        cs_total = len(cstats)
-
-        mt_entry = next((s for s in mtab if s["person_id"] == person_id), None)
+        tab_entry = next((s for s in tab_speakers if s["person_id"] == person_id), None)
+        gen_entry = next((s for s in gen_speakers if s["person_id"] == person_id), None)
         cs_entry = next((s for s in cstats if s["person_id"] == person_id), None)
 
-        master_tab_rank = mt_entry["rank"] if mt_entry else None
+        tab_rank = tab_entry["rank"] if tab_entry else None
+        general_tab_rank = gen_entry["rank"] if gen_entry else None
         critical_stats_rank = cs_entry["rank"] if cs_entry else None
+
+        mtab = self.master_engine.get_master_speaker_tab(min_tournaments=1)
+        mt_entry = next((s for s in mtab if s["person_id"] == person_id), None)
         overall_substantive_avg = mt_entry["master_score"] if mt_entry else None
         speech_average = mt_entry["speech_average"] if mt_entry else None
         avg_of_avgs = mt_entry["avg_of_avgs"] if mt_entry else None
+
+        # Sourced official tab rank (or general tab rank if < 12 rounds, fallback to mtab rank)
+        master_tab_rank = tab_rank or general_tab_rank or (mt_entry["rank"] if mt_entry else None)
+        mt_total = len(tab_speakers) if tab_speakers else (len(mtab) if mtab else 0)
+        cs_total = len(cstats)
+
         avg_of_deviations = cs_entry["avg_of_deviations"] if cs_entry else None
 
         # 5. Fetch all speeches and debates for this debater
@@ -833,4 +848,6 @@ class DebaterProfileEngine:
             trajectory=trajectory,
             positions_breakdown=positions_breakdown,
             adjudication_record=adjudication_record,
+            tab_rank=tab_rank,
+            general_tab_rank=general_tab_rank,
         )

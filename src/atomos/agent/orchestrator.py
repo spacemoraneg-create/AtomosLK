@@ -590,33 +590,33 @@ class AtomosAgent:
                 )
                 return AgentResult(query=query, intent="ADJUDICATOR_LOOKUP", answer=answer, tool_calls=tool_calls)
 
-        # General adjudicators who judged this debater
-        sql = """
-            SELECT 
-                b.adjudicator_raw_name,
-                COUNT(sp.id) as speeches_judged,
-                AVG(sp.total_score) as avg_score_awarded
-            FROM speech_performances sp
-            JOIN adjudicator_ballots b ON sp.ballot_id = b.id
-            WHERE sp.person_id = ? AND b.adjudicator_raw_name IS NOT NULL
-            GROUP BY b.adjudicator_raw_name
-            ORDER BY speeches_judged DESC, avg_score_awarded DESC
-            LIMIT 10
-        """
-        cursor = self._conn.cursor()
-        cursor.execute(sql, (pid,))
-        rows = cursor.fetchall()
+        # General adjudicators who judged this debater via dedicated query engine
+        tool_calls.append({"tool": "get_debater_adjudicator_record", "args": {"debater": name}})
+        adj_record = self._query_engine.get_debater_adjudicator_record(name)
+        if "error" in adj_record or not adj_record.get("judges_summary"):
+            return AgentResult(
+                query=query,
+                intent="ADJUDICATOR_LOOKUP",
+                answer=f"No adjudicator clash history found for {name}.",
+                tool_calls=tool_calls,
+                success=True
+            )
 
-        table_rows = [f"| **{r[0]}** | {r[1]} | **{fmt_val(r[2])}** pts |" for r in rows]
+        table_rows = []
+        for s in adj_record["judges_summary"][:10]:
+            avg_str = f"**{fmt_val(s['average_score_awarded'])}** pts" if s["average_score_awarded"] is not None else "--"
+            table_rows.append(
+                f"| **{s['adjudicator']}** | {s['debates_judged']} | {s['wins']} - {s['losses']} ({s['win_percentage']}%) | {avg_str} | {', '.join(s['tournaments'])} |"
+            )
         table_md = "\n".join(table_rows)
 
         answer = (
-            f"### Adjudicator Record for {name}\n\n"
-            f"| Adjudicator | Speeches Judged | Average Score Awarded |\n"
-            f"| :--- | :--- | :--- |\n"
+            f"### Official Adjudicator Record for {name}\n\n"
+            f"| Adjudicator | Debates Judged | Record (Win - Loss) | Avg Score | Tournaments |\n"
+            f"| :--- | :--- | :--- | :--- | :--- |\n"
             f"{table_md}\n"
         )
-        return AgentResult(query=query, intent="ADJUDICATOR_LOOKUP", answer=answer, tool_calls=tool_calls, data={"rows": rows})
+        return AgentResult(query=query, intent="ADJUDICATOR_LOOKUP", answer=answer, tool_calls=tool_calls, data=adj_record)
 
     # ------------------------------------------------------------------------
     # COMPARISON & CLASH HANDLERS

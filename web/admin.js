@@ -194,6 +194,7 @@
       renderDatabaseVitals(data.database);
       renderTournamentsTable(data.tournaments);
       updateTournamentDropdown(data.tournaments);
+      fetchGitHubSyncStatus();
     } catch (e) {
       console.error('Failed to load admin status:', e);
     }
@@ -292,6 +293,151 @@
         select.appendChild(opt);
       });
     }
+  }
+
+  // =========================================================================
+  // 3.1 DATA PERSISTENCE & GITHUB REPOSITORY SYNC
+  // =========================================================================
+
+  function downloadDatabase() {
+    const token = getStoredToken();
+    if (!token) return;
+    const a = document.createElement('a');
+    a.href = `${API_BASE}/api/admin/database/download?token=${encodeURIComponent(token)}`;
+    a.download = 'atomos.db';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  function downloadWebExport() {
+    const token = getStoredToken();
+    if (!token) return;
+    const a = document.createElement('a');
+    a.href = `${API_BASE}/api/admin/export/download?token=${encodeURIComponent(token)}`;
+    a.download = 'atomos_web_export.zip';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  }
+
+  async function fetchGitHubSyncStatus() {
+    const badge = document.getElementById('githubSyncBadge');
+    try {
+      const res = await fetch(`${API_BASE}/api/admin/github/status`, {
+        headers: getHeaders(),
+      });
+      if (!res.ok) return;
+      const data = await res.json();
+      if (!badge) return;
+      if (data.configured) {
+        badge.textContent = `SYNC READY: ${data.repo} (${data.branch})`;
+        badge.style.color = '#34d399';
+        badge.style.background = 'rgba(52, 211, 153, 0.15)';
+      } else {
+        badge.textContent = 'GITHUB TOKEN NOT CONFIGURED';
+        badge.style.color = '#fbbf24';
+        badge.style.background = 'rgba(251, 191, 36, 0.15)';
+      }
+    } catch (e) {
+      if (badge) {
+        badge.textContent = 'GITHUB STATUS UNKNOWN';
+      }
+    }
+  }
+
+  async function triggerGitHubSync() {
+    const statusBox = document.getElementById('githubSyncStatusBox');
+    const syncBtns = [
+      document.getElementById('adminSyncGithubBtn'),
+      document.getElementById('paneSyncGithubBtn'),
+    ].filter(Boolean);
+
+    let customToken = sessionStorage.getItem('atomos_gh_token') || '';
+    try {
+      const checkRes = await fetch(`${API_BASE}/api/admin/github/status`, {
+        headers: getHeaders(),
+      });
+      if (checkRes.ok) {
+        const checkData = await checkRes.json();
+        if (!checkData.configured && !customToken) {
+          const entered = window.prompt(
+            'GitHub Personal Access Token is required to commit directly to GitHub repository.\n\nEnter GitHub Personal Access Token (repo scope):'
+          );
+          if (!entered || !entered.trim()) {
+            if (statusBox) {
+              showStatusBox(statusBox, 'error', 'GitHub sync cancelled: token was not provided.');
+            }
+            return;
+          }
+          customToken = entered.trim();
+          sessionStorage.setItem('atomos_gh_token', customToken);
+        }
+      }
+    } catch (e) {
+      // Proceed to try sync
+    }
+
+    syncBtns.forEach((b) => {
+      b.disabled = true;
+      b.textContent = 'SYNCING...';
+    });
+
+    if (statusBox) {
+      showStatusBox(statusBox, 'loading', 'Pushing atomos.db and web_export files directly to GitHub...');
+    }
+
+    try {
+      const payload = {};
+      if (customToken) {
+        payload.github_token = customToken;
+      }
+      const res = await fetch(`${API_BASE}/api/admin/github/sync`, {
+        method: 'POST',
+        headers: getHeaders(),
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (res.ok && data.success) {
+        const filesCount = data.synced_files ? data.synced_files.length : 'all';
+        if (statusBox) {
+          showStatusBox(statusBox, 'success', `[SUCCESS] Synchronized ${filesCount} file(s) to GitHub repository (${data.repo} @ ${data.branch}).`);
+        }
+        fetchGitHubSyncStatus();
+      } else {
+        if (statusBox) {
+          showStatusBox(statusBox, 'error', `[SYNC ERROR] ${data.error || 'Failed to synchronize with GitHub'}`);
+        }
+      }
+    } catch (e) {
+      if (statusBox) {
+        showStatusBox(statusBox, 'error', `[NETWORK ERROR] ${e.message}`);
+      }
+    } finally {
+      syncBtns.forEach((b) => {
+        b.disabled = false;
+      });
+      const adminBtn = document.getElementById('adminSyncGithubBtn');
+      if (adminBtn) adminBtn.textContent = 'SYNC TO GITHUB';
+      const paneBtn = document.getElementById('paneSyncGithubBtn');
+      if (paneBtn) paneBtn.textContent = 'PUSH DATABASE TO GITHUB';
+    }
+  }
+
+  function initDataPersistence() {
+    const adminDbBtn = document.getElementById('adminDownloadDbBtn');
+    const paneDbBtn = document.getElementById('paneDownloadDbBtn');
+    const adminExportBtn = document.getElementById('adminDownloadExportBtn');
+    const paneExportBtn = document.getElementById('paneDownloadExportBtn');
+    const adminSyncBtn = document.getElementById('adminSyncGithubBtn');
+    const paneSyncBtn = document.getElementById('paneSyncGithubBtn');
+
+    if (adminDbBtn) adminDbBtn.addEventListener('click', downloadDatabase);
+    if (paneDbBtn) paneDbBtn.addEventListener('click', downloadDatabase);
+    if (adminExportBtn) adminExportBtn.addEventListener('click', downloadWebExport);
+    if (paneExportBtn) paneExportBtn.addEventListener('click', downloadWebExport);
+    if (adminSyncBtn) adminSyncBtn.addEventListener('click', triggerGitHubSync);
+    if (paneSyncBtn) paneSyncBtn.addEventListener('click', triggerGitHubSync);
   }
 
   // =========================================================================
@@ -470,8 +616,8 @@
         <!-- 8 Core Metrics Grid -->
         <div class="bio-stats-grid" style="margin-bottom: 24px;">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #38bdf8;">${p.master_tab_rank ? '#' + p.master_tab_rank : 'UR'}</div>
-            <div class="bio-stat-lbl">Master Tab Rank</div>
+            <div class="bio-stat-val" style="color: #38bdf8;">${(p.tab_rank || p.master_tab_rank) ? '#' + (p.tab_rank || p.master_tab_rank) : 'UR'}</div>
+            <div class="bio-stat-lbl">Official Tab Rank</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val">${p.speech_average ? p.speech_average.toFixed(2) : (p.overall_substantive_avg ? p.overall_substantive_avg.toFixed(2) : '--')}</div>
@@ -1028,11 +1174,6 @@
         const primaryId = btn.getAttribute('data-primary-id');
         const duplicateId = btn.getAttribute('data-duplicate-id');
         const primaryName = btn.getAttribute('data-primary-name');
-        const dupName = btn.getAttribute('data-dup-name');
-
-        const ok = confirm(`Confirm Merge:\n\nMerge duplicate '${dupName}' (#${duplicateId}) into canonical '${primaryName}' (#${primaryId})?\n\nThis will reassign all performances, debates, and ballots, and remove record #${duplicateId}.`);
-        if (!ok) return;
-
         // Immediate responsive button feedback & prevent double clicking
         btn.disabled = true;
         const originalText = btn.innerHTML;
@@ -2072,6 +2213,7 @@
     initTournamentOperations();
     initDiagnosticTests();
     initIdentityMerger();
+    initDataPersistence();
 
     // Verify session state or URL parameters
     const urlParams = new URLSearchParams(window.location.search);

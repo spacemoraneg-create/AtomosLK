@@ -16,7 +16,7 @@ from collections import defaultdict
 from datetime import datetime, timezone
 from pathlib import Path
 from typing import Any, Dict
-from flask import Flask, jsonify, request, send_from_directory
+from flask import Flask, jsonify, request, send_from_directory, send_file
 
 # Ensure src is in sys.path
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
@@ -111,6 +111,14 @@ def create_app(db_conn=None) -> Flask:
         if target_html.is_file():
             return send_from_directory(str(web_dir), f"{filename}.html")
         return send_from_directory(str(web_dir), "index.html")
+
+    @app.after_request
+    def add_cache_control_headers(response):
+        if request.path.startswith("/api/") or request.path.startswith("/data/"):
+            response.headers["Cache-Control"] = "no-cache, no-store, must-revalidate"
+            response.headers["Pragma"] = "no-cache"
+            response.headers["Expires"] = "0"
+        return response
 
     # 1. Health & Vitals
     @app.route("/api/health", methods=["GET"])
@@ -846,6 +854,16 @@ def create_app(db_conn=None) -> Flask:
                         sys.path.insert(0, str(root_dir))
                     from scripts.export_web_data import export_web_data
                     export_web_data(data_export_dir)
+
+                    from atomos.sync import GitHubSyncService
+                    sync_svc = GitHubSyncService()
+                    if sync_svc.is_configured():
+                        db_f = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
+                        sync_svc.sync_database_and_export(
+                            db_path=db_f,
+                            export_dir=data_export_dir,
+                            commit_message=f"chore(data): auto-sync after merge {entity_type} #{duplicate_id} -> #{primary_id}",
+                        )
                 except Exception as exp_err:
                     print(f"[WARN] Async static export after merge encountered an issue: {exp_err}")
 
@@ -875,6 +893,64 @@ def create_app(db_conn=None) -> Flask:
             return jsonify({"success": True, "message": f"Suggestion dismissed."})
         except Exception as e:
             return jsonify({"error": f"Failed to dismiss suggestion: {str(e)}"}), 500
+
+    @app.route("/api/admin/database/download", methods=["GET"])
+    @require_admin
+    def admin_database_download():
+        db_path = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
+        if not db_path.exists():
+            return jsonify({"error": "Database file data/atomos.db not found"}), 404
+        return send_file(
+            db_path,
+            as_attachment=True,
+            download_name="atomos.db",
+            mimetype="application/x-sqlite3",
+        )
+
+    @app.route("/api/admin/export/download", methods=["GET"])
+    @require_admin
+    def admin_export_download():
+        import io, zipfile
+        memory_file = io.BytesIO()
+        with zipfile.ZipFile(memory_file, 'w', zipfile.ZIP_DEFLATED) as zf:
+            for root, _, files in os.walk(data_export_dir):
+                for file in files:
+                    abs_file = Path(root) / file
+                    rel_path = abs_file.relative_to(data_export_dir)
+                    zf.write(abs_file, str(rel_path))
+        memory_file.seek(0)
+        return send_file(
+            memory_file,
+            as_attachment=True,
+            download_name="atomos_web_export.zip",
+            mimetype="application/zip",
+        )
+
+    @app.route("/api/admin/github/status", methods=["GET"])
+    @require_admin
+    def admin_github_status():
+        from atomos.sync import GitHubSyncService
+        token = request.headers.get("X-GitHub-Token") or os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        sync_svc = GitHubSyncService(token=token)
+        return jsonify({
+            "configured": sync_svc.is_configured(),
+            "repo": sync_svc.repo,
+            "branch": sync_svc.branch,
+        })
+
+    @app.route("/api/admin/github/sync", methods=["POST"])
+    @require_admin
+    def admin_github_sync():
+        from atomos.sync import GitHubSyncService
+        payload = request.get_json(force=True, silent=True) or {}
+        token = payload.get("github_token") or request.headers.get("X-GitHub-Token") or os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        message = payload.get("message") or "chore(data): manual sync of database and web export from admin console"
+        
+        sync_svc = GitHubSyncService(token=token)
+        db_path = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
+        res = sync_svc.sync_database_and_export(db_path=db_path, export_dir=data_export_dir, commit_message=message)
+        status_code = 200 if res.get("success") else 400
+        return jsonify(res), status_code
 
     @app.route("/api/admin/institutions/list", methods=["GET"])
     @require_admin
