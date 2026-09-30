@@ -532,10 +532,12 @@ body {
 /* Footer */
 .atomos-footer {
   width: 100%;
-  max-width: 960px;
   display: flex;
   justify-content: flex-end;
-  padding: 14px 8px 0;
+  align-items: center;
+  padding: 18px 4px 12px;
+  box-sizing: border-box;
+  margin-top: auto;
 }
 
 .footer-tag {
@@ -545,6 +547,8 @@ body {
   color: rgba(171, 210, 250, 0.75);
   text-transform: uppercase;
   font-weight: 600;
+  text-align: right;
+  margin-left: auto;
 }
 
 /* ==========================================================================
