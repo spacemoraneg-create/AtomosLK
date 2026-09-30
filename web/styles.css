@@ -3379,13 +3379,31 @@ body {
 
 
 /* ==========================================================================
-   UNIVERSAL MOBILE RESPONSIVE SCALING (768px, 540px, and 480px)
-   Addresses vertical scaling, cramped cards, table wrapping, and subpages
+   SMARTPHONE & MOBILE RESPONSIVE ENGINE
+   Optimized for smartphone portrait aspect ratios (19.5:9 to 20:9, 360px-430px)
+   Apple HIG & Google Material Design 44px+ touch ergonomics
+   Strictly zero emojis, strictly Color Hunt palette
    ========================================================================== */
 
+/* --------------------------------------------------------------------------
+   LEVEL 1: TABLET & BROAD MOBILE LANDSCAPE (<= 768px)
+   -------------------------------------------------------------------------- */
 @media (max-width: 768px) {
+  html, body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
   body {
-    padding: 12px 8px 32px;
+    min-height: 100vh;
+    min-height: 100dvh;
+    padding: max(10px, env(safe-area-inset-top)) max(8px, env(safe-area-inset-right)) max(24px, env(safe-area-inset-bottom)) max(8px, env(safe-area-inset-left));
+    box-sizing: border-box;
+  }
+
+  /* Prevent auto-zooming on iOS inputs */
+  input, select, textarea {
+    font-size: 16px !important;
   }
 
   .atomos-container,
@@ -3397,56 +3415,102 @@ body {
     box-sizing: border-box;
   }
 
-  /* Top Nav */
+  /* Top App Navigation Bar */
   .tabby-nav {
-    padding: 10px 14px;
+    padding: 10px 12px;
     border-radius: 14px;
-    margin-bottom: 14px;
+    margin-bottom: 12px;
     gap: 8px;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .nav-brand {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
   }
 
   .nav-brand-name {
     font-size: 20px;
+    letter-spacing: 0.12em;
   }
 
   .nav-links {
-    gap: 4px;
+    display: flex;
+    gap: 5px;
     width: 100%;
     overflow-x: auto;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
-    padding-bottom: 4px;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 3px;
+  }
+
+  .nav-links::-webkit-scrollbar {
+    display: none;
   }
 
   .nav-link {
-    font-size: 10.5px;
-    padding: 6px 10px;
-    border-radius: 6px;
+    font-size: 11px;
+    padding: 8px 12px;
+    min-height: 38px;
+    border-radius: 8px;
     white-space: nowrap;
     flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    letter-spacing: 0.06em;
   }
 
-  /* Hero Card on Mobile */
+  /* Hero & Top Row Stacking */
   .top-row {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
   }
 
   .hero-card {
     max-width: 100%;
-    min-height: auto;
+    min-height: 350px;
+    border-radius: 20px;
   }
 
   .hero-card-inner {
-    padding: 24px 20px;
+    padding: 26px 22px 22px;
+    height: 100%;
+    box-sizing: border-box;
   }
 
   .hero-title {
-    font-size: 42px;
+    font-size: 46px;
     margin: 4px 0 16px;
+  }
+
+  /* Options Navigation Card */
+  .options-card {
+    padding: 18px 16px;
+    border-radius: 18px;
+    gap: 14px;
+    box-sizing: border-box;
+  }
+
+  .options-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .opt-btn {
+    padding: 14px 12px;
+    min-height: 52px;
+    font-size: 11.5px;
+    border-radius: 12px;
   }
 
   /* Subpage Cards */
@@ -3480,13 +3544,21 @@ body {
     overflow-x: auto;
     flex-wrap: nowrap;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
     padding-bottom: 4px;
+    gap: 6px;
+  }
+
+  .subpage-tabs::-webkit-scrollbar {
+    display: none;
   }
 
   .subpage-tab-btn {
     white-space: nowrap;
     font-size: 11px;
-    padding: 6px 10px;
+    padding: 8px 12px;
+    min-height: 38px;
     flex-shrink: 0;
   }
 
@@ -3501,20 +3573,97 @@ body {
   .mode-switch-btn {
     flex: 1;
     text-align: center;
-    padding: 7px 10px;
-    font-size: 10.5px;
+    padding: 8px 12px;
+    min-height: 38px;
+    font-size: 11px;
   }
 
-  /* Table Containers: eliminate double-scroll lock on mobile */
+  /* Data Table & Sticky Identity Columns */
   .data-table-wrap,
   .table-responsive,
   .table-container,
   .subpage-container .data-table-wrap {
-    max-height: 65vh;
+    max-height: 70vh;
+    max-height: 70dvh;
+    overflow-x: auto;
     -webkit-overflow-scrolling: touch;
+    overscroll-behavior-x: contain;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
+    border-radius: 12px;
+    position: relative;
+  }
+
+  /* Sticky Column 1: Rank (#) */
+  .atomos-table th:first-child,
+  .atomos-table td:first-child,
+  .leaderboard-table th:first-child,
+  .leaderboard-table td:first-child,
+  .data-table th:first-child,
+  .data-table td:first-child {
+    position: sticky;
+    left: 0;
+    z-index: 4;
+    background: #060e2a;
+    width: 38px;
+    min-width: 38px;
+    max-width: 38px;
+    text-align: center;
+  }
+
+  /* Sticky Column 2: Debater / Team Name */
+  .atomos-table th:nth-child(2),
+  .atomos-table td:nth-child(2),
+  .leaderboard-table th:nth-child(2),
+  .leaderboard-table td:nth-child(2),
+  .data-table th:nth-child(2),
+  .data-table td:nth-child(2) {
+    position: sticky;
+    left: 38px;
+    z-index: 4;
+    background: #060e2a;
+    min-width: 125px;
+    max-width: 165px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    box-shadow: 4px 0 10px rgba(0, 0, 0, 0.5);
+  }
+
+  /* Sticky Header Row */
+  .atomos-table thead th,
+  .leaderboard-table thead th,
+  .data-table thead th {
+    position: sticky;
+    top: 0;
+    z-index: 2;
+    background: #091540;
+  }
+
+  /* Sticky Header Overlap on Rank & Name */
+  .atomos-table thead th:first-child,
+  .leaderboard-table thead th:first-child,
+  .data-table thead th:first-child {
+    z-index: 8;
+    background: #091540;
+  }
+
+  .atomos-table thead th:nth-child(2),
+  .leaderboard-table thead th:nth-child(2),
+  .data-table thead th:nth-child(2) {
+    z-index: 8;
+    background: #091540;
+  }
+
+  /* Row Hover Pinned Synchronization */
+  .atomos-table tr:hover td:first-child,
+  .atomos-table tr:hover td:nth-child(2),
+  .leaderboard-table tr:hover td:first-child,
+  .leaderboard-table tr:hover td:nth-child(2),
+  .data-table tr:hover td:first-child,
+  .data-table tr:hover td:nth-child(2) {
+    background: #0d1b4d;
   }
 
   .atomos-table th,
@@ -3524,13 +3673,15 @@ body {
   .data-table th,
   .data-table td {
     padding: 10px 12px;
-    font-size: 12px;
+    font-size: 11.5px;
+    white-space: nowrap;
   }
 
   .atomos-table th,
   .leaderboard-table th,
   .data-table th {
     font-size: 10px;
+    letter-spacing: 0.08em;
   }
 
   /* Bio Pages */
@@ -3575,14 +3726,14 @@ body {
   /* H2H Page */
   .h2h-select-row {
     grid-template-columns: 1fr;
-    gap: 12px;
+    gap: 10px;
   }
 
   .h2h-vs-badge {
     text-align: center;
     font-size: 18px;
     padding: 4px 0;
-    margin: 0 auto;
+    margin: 2px auto;
     justify-self: center;
   }
 
@@ -3594,13 +3745,15 @@ body {
 
   .h2h-category-card {
     padding: 12px 14px;
-    gap: 12px;
+    gap: 10px;
   }
 
   /* Chatbot Console */
   .chat-window {
-    min-height: 400px;
-    height: 62vh;
+    min-height: 420px;
+    height: calc(100dvh - 170px);
+    height: calc(100vh - 170px);
+    border-radius: 16px;
   }
 
   .chat-messages {
@@ -3609,31 +3762,35 @@ body {
   }
 
   .chat-bubble {
-    max-width: 92%;
+    max-width: 90%;
     padding: 10px 14px;
     font-size: 13px;
   }
 
   .chat-bubble.user {
-    max-width: 85%;
+    max-width: 86%;
   }
 
   .chat-input-bar {
     gap: 8px;
     margin-top: 10px;
+    padding: 10px;
   }
 
   .chat-input {
     padding: 10px 12px;
-    font-size: 13px;
+    min-height: 44px;
+    box-sizing: border-box;
   }
 
   .chat-send-btn {
     padding: 10px 16px;
+    min-height: 44px;
     font-size: 12px;
+    font-weight: 700;
   }
 
-  /* Admin Console Mobile Scaling */
+  /* Admin Console */
   .admin-lock-card {
     padding: 24px 16px;
     margin: 16px auto;
@@ -3652,12 +3809,18 @@ body {
     overflow-x: auto;
     white-space: nowrap;
     -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
     padding-bottom: 6px;
     border-bottom: 1px solid rgba(118, 146, 255, 0.2);
   }
 
+  .admin-tabs-nav::-webkit-scrollbar {
+    display: none;
+  }
+
   .admin-tab-btn {
     padding: 8px 12px;
+    min-height: 38px;
     font-size: 11px;
     flex-shrink: 0;
   }
@@ -3720,6 +3883,7 @@ body {
     width: 100%;
     text-align: center;
     justify-content: center;
+    min-height: 44px;
   }
 
   .inst-merge-bar-content {
@@ -3740,6 +3904,7 @@ body {
     width: 100%;
     text-align: center;
     justify-content: center;
+    min-height: 44px;
   }
 
   .inst-teams-grid {
@@ -3747,7 +3912,108 @@ body {
   }
 }
 
+/* --------------------------------------------------------------------------
+   LEVEL 2: SMARTPHONE LANDSCAPE & PHABLET (<= 540px)
+   -------------------------------------------------------------------------- */
 @media (max-width: 540px) {
+  /* Hero Card Portrait Tuning */
+  .hero-card {
+    min-height: 320px;
+    max-width: 100%;
+    border-radius: 18px;
+  }
+
+  .hero-card-inner {
+    padding: 24px 18px 20px;
+    justify-content: space-between;
+  }
+
+  .hero-credit {
+    font-size: 11px;
+    letter-spacing: 0.18em;
+  }
+
+  .hero-title {
+    font-size: clamp(38px, 9.5vw, 46px);
+    margin: 4px 0 14px;
+    line-height: 0.95;
+  }
+
+  .hero-subtitle {
+    font-size: 11.5px;
+    letter-spacing: 0.08em;
+    line-height: 1.35;
+    margin-bottom: 14px;
+  }
+
+  .hero-atom-wrap {
+    max-width: 250px;
+    margin-top: 4px;
+  }
+
+  /* Options Board: 2-column touch tiles */
+  .options-card {
+    padding: 16px 12px;
+    border-radius: 18px;
+    gap: 12px;
+  }
+
+  .options-header {
+    padding-bottom: 10px;
+  }
+
+  .options-title {
+    font-size: 11px;
+    letter-spacing: 0.12em;
+  }
+
+  .options-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .opt-btn {
+    padding: 12px 10px;
+    min-height: 52px;
+    font-size: 11px;
+    letter-spacing: 0.05em;
+    border-radius: 12px;
+    gap: 8px;
+    justify-content: flex-start;
+  }
+
+  .opt-btn svg {
+    width: 16px;
+    height: 16px;
+    flex-shrink: 0;
+  }
+
+  #navBtnAdmin {
+    grid-column: span 2;
+    justify-content: center;
+  }
+
+  /* Circuit High-Level Vitals: 2 columns */
+  .vitals-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+
+  .vital-box {
+    padding: 12px 10px;
+    border-radius: 12px;
+  }
+
+  .vital-num {
+    font-size: clamp(22px, 5.5vw, 26px);
+  }
+
+  .vital-lbl {
+    font-size: 9.5px;
+    letter-spacing: 0.08em;
+  }
+
+  /* Head-to-Head Matching */
   .h2h-category-card {
     grid-template-columns: 1fr 1fr;
     gap: 8px;
@@ -3769,25 +4035,102 @@ body {
   }
 
   .metric-pill-btn {
-    padding: 5px 10px;
+    padding: 6px 12px;
+    min-height: 38px;
     font-size: 10px;
   }
 }
 
-@media (max-width: 480px) {
+/* --------------------------------------------------------------------------
+   LEVEL 3: SMARTPHONE PORTRAIT NATIVE ASPECT RATIO (<= 430px)
+   iPhone 12-16 Pro Max, Plus, Standard & Android Flagships (360px-430px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 430px) {
   body {
-    padding: 10px 6px 28px;
+    padding: max(8px, env(safe-area-inset-top)) max(6px, env(safe-area-inset-right)) max(22px, env(safe-area-inset-bottom)) max(6px, env(safe-area-inset-left));
   }
 
+  .atomos-container,
+  .subpage-container {
+    gap: 12px;
+  }
+
+  .stacked-card,
   .subpage-card {
-    padding: 12px 10px;
-    border-radius: 14px;
+    padding: 14px 10px;
+    border-radius: 16px;
+  }
+
+  /* Hero Card on Standard Phone */
+  .hero-card {
+    min-height: 295px;
+    border-radius: 16px;
+  }
+
+  .hero-card-inner {
+    padding: 20px 16px 18px;
+  }
+
+  .hero-credit {
+    font-size: 10px;
+    letter-spacing: 0.16em;
   }
 
   .hero-title {
-    font-size: 34px;
+    font-size: clamp(34px, 9vw, 42px);
+    margin: 2px 0 10px;
   }
 
+  .hero-subtitle {
+    font-size: 10.5px;
+    letter-spacing: 0.07em;
+    line-height: 1.35;
+    margin-bottom: 12px;
+  }
+
+  .hero-atom-wrap {
+    max-width: 220px;
+  }
+
+  /* Options Board */
+  .options-card {
+    padding: 14px 10px;
+    border-radius: 16px;
+  }
+
+  .options-buttons {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 6px;
+  }
+
+  .opt-btn {
+    padding: 10px 8px;
+    min-height: 48px;
+    font-size: 10px;
+    letter-spacing: 0.04em;
+    gap: 6px;
+    border-radius: 10px;
+  }
+
+  .opt-btn svg {
+    width: 15px;
+    height: 15px;
+  }
+
+  /* Search & Filter Bars */
+  .filter-bar,
+  .bio-search-box {
+    margin-bottom: 10px;
+  }
+
+  .filter-input,
+  .bio-search-input {
+    padding: 10px 12px;
+    min-height: 44px;
+    border-radius: 10px;
+  }
+
+  /* Dossier Profiles */
   .bio-name {
     font-size: 22px;
   }
@@ -3826,6 +4169,31 @@ body {
     font-size: 8.5px;
   }
 
+  /* Sticky Table Context on Phone */
+  .atomos-table th:first-child,
+  .atomos-table td:first-child,
+  .leaderboard-table th:first-child,
+  .leaderboard-table td:first-child,
+  .data-table th:first-child,
+  .data-table td:first-child {
+    width: 34px;
+    min-width: 34px;
+    max-width: 34px;
+    padding: 8px 4px;
+  }
+
+  .atomos-table th:nth-child(2),
+  .atomos-table td:nth-child(2),
+  .leaderboard-table th:nth-child(2),
+  .leaderboard-table td:nth-child(2),
+  .data-table th:nth-child(2),
+  .data-table td:nth-child(2) {
+    left: 34px;
+    min-width: 115px;
+    max-width: 145px;
+    padding: 8px 8px;
+  }
+
   .atomos-table th,
   .atomos-table td,
   .leaderboard-table th,
@@ -3836,8 +4204,30 @@ body {
     font-size: 11px;
   }
 
-  .admin-positions-grid {
-    grid-template-columns: 1fr 1fr;
+  /* Head-to-Head Phone Layout */
+  .h2h-select-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .h2h-vs-badge {
+    margin: 2px auto;
+    font-size: 15px;
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+  }
+
+  .h2h-contender-box {
+    padding: 12px 10px;
+    border-radius: 12px;
+  }
+
+  /* National Pool */
+  .pool-grid-container {
+    grid-template-columns: 1fr;
+    gap: 12px;
+    margin-top: 10px;
   }
 
   .pool-debater-card {
@@ -3856,12 +4246,141 @@ body {
     padding: 3px 6px;
   }
 
+  /* Chatbot Console */
+  .chat-window {
+    min-height: 380px;
+    height: calc(100dvh - 160px);
+    height: calc(100vh - 160px);
+    border-radius: 14px;
+  }
+
+  .chat-messages {
+    padding: 10px 8px;
+    gap: 10px;
+  }
+
+  .chat-bubble {
+    max-width: 92%;
+    padding: 9px 12px;
+    font-size: 12.5px;
+    line-height: 1.4;
+  }
+
+  .chat-bubble.user {
+    max-width: 88%;
+  }
+
   .quick-chips-row {
     gap: 4px;
+    padding: 6px 4px;
   }
 
   .quick-chip {
-    font-size: 10px;
-    padding: 4px 8px;
+    font-size: 9.5px;
+    padding: 5px 8px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .chat-input-bar {
+    padding: 8px;
+    gap: 6px;
+  }
+
+  .chat-input {
+    min-height: 42px;
+    padding: 8px 10px;
+  }
+
+  .chat-send-btn {
+    min-height: 42px;
+    padding: 8px 14px;
+    font-size: 11px;
+  }
+
+  /* Admin Console */
+  .admin-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+
+  .admin-bar-right {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .admin-bar-right .admin-btn {
+    width: 100%;
+    justify-content: center;
+    min-height: 42px;
+  }
+
+  .admin-positions-grid {
+    grid-template-columns: 1fr 1fr;
   }
 }
+
+/* --------------------------------------------------------------------------
+   LEVEL 4: ULTRA-COMPACT SMARTPHONES (<= 375px)
+   iPhone SE, compact Androids (360px)
+   -------------------------------------------------------------------------- */
+@media (max-width: 375px) {
+  .hero-title {
+    font-size: 32px;
+  }
+
+  .hero-card {
+    min-height: 275px;
+  }
+
+  .hero-card-inner {
+    padding: 18px 14px 16px;
+  }
+
+  .opt-btn {
+    font-size: 9.5px;
+    padding: 8px 6px;
+    gap: 4px;
+    min-height: 46px;
+    letter-spacing: 0.02em;
+  }
+
+  .opt-btn svg {
+    width: 13px;
+    height: 13px;
+  }
+
+  .vital-num {
+    font-size: 20px;
+  }
+
+  .vital-lbl {
+    font-size: 9px;
+  }
+
+  .atomos-table th:first-child,
+  .atomos-table td:first-child,
+  .leaderboard-table th:first-child,
+  .leaderboard-table td:first-child,
+  .data-table th:first-child,
+  .data-table td:first-child {
+    width: 30px;
+    min-width: 30px;
+    max-width: 30px;
+    font-size: 9.5px;
+  }
+
+  .atomos-table th:nth-child(2),
+  .atomos-table td:nth-child(2),
+  .leaderboard-table th:nth-child(2),
+  .leaderboard-table td:nth-child(2),
+  .data-table th:nth-child(2),
+  .data-table td:nth-child(2) {
+    left: 30px;
+    min-width: 100px;
+    max-width: 125px;
+    font-size: 10.5px;
+  }
+}
+
