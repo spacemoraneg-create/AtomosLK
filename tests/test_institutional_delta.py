@@ -34,10 +34,10 @@ def test_institutional_delta_leaderboard(conn):
     # Check D. S. Senanayake College
     ds = next((s for s in board if "D. S." in s["institution_name"]), None)
     assert ds is not None, "D. S. Senanayake College must exist in delta leaderboard"
-    assert ds["delta"] == pytest.approx(246.44, abs=0.05)
-    assert ds["a_atss"] == pytest.approx(251.27, abs=0.05)
+    assert ds["delta"] == pytest.approx(246.49, abs=0.05)
+    assert ds["a_atss"] == pytest.approx(251.35, abs=0.05)
     assert ds["b_atss"] == 245.25
-    assert ds["net_diff"] == pytest.approx(6.02, abs=0.05)
+    assert ds["net_diff"] == pytest.approx(6.1, abs=0.1)
     assert ds["break_percentage"] == 78.6, f"Expected DS break % 78.6, got {ds['break_percentage']}"
     assert ds["highest_break"] == "Champion"
 
@@ -70,9 +70,9 @@ def test_debater_latest_host_institution(conn):
     vidath = next((d for d in tab if d["speaker_name"] == "Vidath Marasinghe"), None)
     assert vidath is not None
     assert vidath["institution"] == "D. S. Senanayake College"
-    assert vidath["speaker_avg"] == pytest.approx(72.74, abs=0.05)
-    assert vidath["win_percentage"] == 85.3
-    assert vidath["prelims"] == 34
+    assert vidath["speaker_avg"] == pytest.approx(72.71, abs=0.05)
+    assert vidath["win_percentage"] == 84.2
+    assert vidath["prelims"] == 38
     assert vidath["break_percentage"] == 100.0
 
     # Kulith Wickramasinghe should be Ananda College

@@ -196,15 +196,15 @@ def test_atomos_query_speaker_leaderboard(query_engine):
     assert prelim_lb["metric"] == "prelim_rounds_debated"
     assert prelim_lb["total_returned"] == 10
     top_entry = prelim_lb["leaderboard"][0]
-    # Max prelims across 9 tournaments is 41
-    assert top_entry["prelim_rounds_debated"] == 41
+    # Max prelims across 10 tournaments is 46
+    assert top_entry["prelim_rounds_debated"] == 46
     assert "national_level" in top_entry
 
     # 2. Debates leaderboard
     deb_lb = query_engine.get_speaker_leaderboard(metric="debates", limit=5)
     assert deb_lb["metric"] == "total_debates"
     assert len(deb_lb["leaderboard"]) == 5
-    assert deb_lb["leaderboard"][0]["total_debates"] == 41
+    assert deb_lb["leaderboard"][0]["total_debates"] == 46
     assert "national_level" in deb_lb["leaderboard"][0]
 
     # 3. Master Tab & Critical Stats leaderboards

@@ -132,7 +132,7 @@
   },
   {
     "adjudicator_name": "Senuka Seneviratne",
-    "institution": "TCK",
+    "institution": "RC",
     "aass": 70.303,
     "aatss": 246.367,
     "prop_wins": 30,
@@ -434,7 +434,7 @@
   },
   {
     "adjudicator_name": "Adam Dhilshan",
-    "institution": "GCD",
+    "institution": "Tabbycat Tab",
     "aass": 71.045,
     "aatss": 248.513,
     "prop_wins": 13,
@@ -483,7 +483,7 @@
   },
   {
     "adjudicator_name": "Minithi Hewage",
-    "institution": "NC",
+    "institution": "VV",
     "aass": 69.619,
     "aatss": 242.937,
     "prop_wins": 8,
@@ -608,7 +608,7 @@
   },
   {
     "adjudicator_name": "Methira Padeniya",
-    "institution": "GCD",
+    "institution": "RC",
     "aass": 70.044,
     "aatss": 244.983,
     "prop_wins": 13,
@@ -792,7 +792,7 @@
   },
   {
     "adjudicator_name": "Yasindu Edussuriya",
-    "institution": "GCN",
+    "institution": "GCC",
     "aass": 69.946,
     "aatss": 244.886,
     "prop_wins": 7,
@@ -904,8 +904,43 @@
     "rank": 19
   },
   {
+    "adjudicator_name": "Suchith Tissera",
+    "institution": "VV",
+    "aass": 70.184,
+    "aatss": 245.55,
+    "prop_wins": 5,
+    "opp_wins": 11,
+    "prop_opp_bias": "31.25% Prop / 68.75% Opp",
+    "prop_bias_pct": 31.25,
+    "opp_bias_pct": 68.75,
+    "prelims_adjudicated": 11,
+    "outrounds_adjudicated": 5,
+    "total_rounds_adjudicated": 16,
+    "tournaments_adjudicated": 6,
+    "ballots_count": 16,
+    "_ballot_ids": [
+      964,
+      979,
+      1639,
+      1642,
+      2055,
+      2154,
+      2166,
+      2221,
+      2242,
+      2249,
+      2254,
+      2393,
+      2473,
+      2748,
+      2762,
+      2776
+    ],
+    "rank": 20
+  },
+  {
     "adjudicator_name": "Rudhesh Ram",
-    "institution": "GCD",
+    "institution": "CIS",
     "aass": 70.924,
     "aatss": 248.181,
     "prop_wins": 4,
@@ -935,7 +970,7 @@
       2503,
       2527
     ],
-    "rank": 20
+    "rank": 21
   },
   {
     "adjudicator_name": "Sithma Hewa Waduge",
@@ -966,7 +1001,7 @@
       2370,
       2406
     ],
-    "rank": 21
+    "rank": 22
   },
   {
     "adjudicator_name": "Thithira Jayakody",
@@ -1005,7 +1040,7 @@
       2708,
       2713
     ],
-    "rank": 22
+    "rank": 23
   },
   {
     "adjudicator_name": "Risindu Piyasena",
@@ -1034,7 +1069,7 @@
       2498,
       2608
     ],
-    "rank": 23
+    "rank": 24
   },
   {
     "adjudicator_name": "Gavin Senaratne",
@@ -1065,7 +1100,7 @@
       2686,
       2710
     ],
-    "rank": 24
+    "rank": 25
   },
   {
     "adjudicator_name": "Nimansa Jayasundera",
@@ -1094,11 +1129,11 @@
       2731,
       2789
     ],
-    "rank": 25
+    "rank": 26
   },
   {
     "adjudicator_name": "Jayageeth Basnayake",
-    "institution": "Tabbycat Tab",
+    "institution": "BC",
     "aass": 69.949,
     "aatss": 244.055,
     "prop_wins": 9,
@@ -1132,7 +1167,7 @@
       2660,
       2817
     ],
-    "rank": 26
+    "rank": 27
   },
   {
     "adjudicator_name": "Zaid Hussain",
@@ -1161,11 +1196,11 @@
       2542,
       2546
     ],
-    "rank": 27
+    "rank": 28
   },
   {
     "adjudicator_name": "Sameesha Dissanayake",
-    "institution": "Metho",
+    "institution": "GCC",
     "aass": 69.9,
     "aatss": 244.525,
     "prop_wins": 7,
@@ -1191,11 +1226,11 @@
       2637,
       2666
     ],
-    "rank": 28
+    "rank": 29
   },
   {
     "adjudicator_name": "Thishya Mendis",
-    "institution": "GCN",
+    "institution": "AC",
     "aass": 69.712,
     "aatss": 244.277,
     "prop_wins": 3,
@@ -1219,7 +1254,7 @@
       2391,
       2421
     ],
-    "rank": 29
+    "rank": 30
   },
   {
     "adjudicator_name": "Shenaya Rodrigo",
@@ -1248,7 +1283,7 @@
       2556,
       2680
     ],
-    "rank": 30
+    "rank": 31
   },
   {
     "adjudicator_name": "Rachel Cramer",
@@ -1278,38 +1313,6 @@
       2684,
       2709,
       2712
-    ],
-    "rank": 31
-  },
-  {
-    "adjudicator_name": "Suchith Tissera",
-    "institution": "Tabbycat Tab",
-    "aass": 70.031,
-    "aatss": 245.107,
-    "prop_wins": 4,
-    "opp_wins": 9,
-    "prop_opp_bias": "30.769% Prop / 69.23% Opp",
-    "prop_bias_pct": 30.769,
-    "opp_bias_pct": 69.23,
-    "prelims_adjudicated": 8,
-    "outrounds_adjudicated": 5,
-    "total_rounds_adjudicated": 13,
-    "tournaments_adjudicated": 5,
-    "ballots_count": 13,
-    "_ballot_ids": [
-      964,
-      979,
-      1639,
-      1642,
-      2055,
-      2154,
-      2166,
-      2221,
-      2242,
-      2249,
-      2254,
-      2393,
-      2473
     ],
     "rank": 32
   },
@@ -2631,7 +2634,7 @@
   },
   {
     "adjudicator_name": "Sarala Hapugalle",
-    "institution": "BC",
+    "institution": "Bridgets",
     "aass": 69.527,
     "aatss": 242.666,
     "prop_wins": 1,
@@ -2784,27 +2787,5 @@
       2784
     ],
     "rank": 92
-  },
-  {
-    "adjudicator_name": "Suchith",
-    "institution": "VV",
-    "aass": 70.583,
-    "aatss": 246.583,
-    "prop_wins": 1,
-    "opp_wins": 2,
-    "prop_opp_bias": "33.333% Prop / 66.666% Opp",
-    "prop_bias_pct": 33.333,
-    "opp_bias_pct": 66.666,
-    "prelims_adjudicated": 3,
-    "outrounds_adjudicated": 0,
-    "total_rounds_adjudicated": 3,
-    "tournaments_adjudicated": 1,
-    "ballots_count": 3,
-    "_ballot_ids": [
-      2748,
-      2762,
-      2776
-    ],
-    "rank": 93
   }
 ]

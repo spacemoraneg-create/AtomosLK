@@ -548,6 +548,7 @@
   // =========================================================================
 
   let debaterSearchTimeout = null;
+  let debaterSearchController = null;
 
   function initBioAudit() {
     const input = document.getElementById('adminBioSearchInput');
@@ -559,7 +560,7 @@
         const q = input.value.trim();
         if (clearBtn) clearBtn.classList.toggle('hidden', !q);
         clearTimeout(debaterSearchTimeout);
-        debaterSearchTimeout = setTimeout(() => searchDebaters(q), 220);
+        debaterSearchTimeout = setTimeout(() => searchDebaters(q), 120);
       });
 
       input.addEventListener('keydown', (e) => {
@@ -601,8 +602,15 @@
       return;
     }
 
+    if (debaterSearchController) {
+      debaterSearchController.abort();
+    }
+    debaterSearchController = new AbortController();
+
     try {
-      const res = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}&type=debater&limit=8`);
+      const res = await fetch(`${API_BASE}/api/search?q=${encodeURIComponent(query)}&type=debater&limit=8`, {
+        signal: debaterSearchController.signal
+      });
       if (!res.ok) return;
       const data = await res.json();
       const results = data.results || [];
@@ -2142,9 +2150,11 @@
       if (!input || !hidden || !dropdown || !chip) return;
 
       let debounceTimer = null;
+      let abortController = null;
 
       input.addEventListener('input', () => {
         clearTimeout(debounceTimer);
+        if (abortController) abortController.abort();
         const query = input.value.trim();
         if (!query) {
           dropdown.classList.add('hidden');
@@ -2153,10 +2163,11 @@
 
         debounceTimer = setTimeout(async () => {
           const type = typeSelect ? typeSelect.value : 'person';
+          abortController = new AbortController();
           try {
             const res = await fetch(
               `${API_BASE}/api/admin/entities/search?type=${encodeURIComponent(type)}&q=${encodeURIComponent(query)}&limit=10`,
-              { headers: getHeaders() }
+              { headers: getHeaders(), signal: abortController.signal }
             );
             if (res.status === 401) {
               handleUnauthorized();

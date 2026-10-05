@@ -124,6 +124,9 @@ CANONICAL_ADJUDICATOR_ALIASES = {
     "Thiseni": "Thiseni Mapa",
     "Shalem": "Shalem Sumanthiran",
     "Husnaa": "Husnaa Imtiaz",
+    "Suchith": "Suchith Tissera",
+    "Khanavee": "Khanavee Suthaharan",
+    "Thahira": "Thahira Saheed",
 }
 
 

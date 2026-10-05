@@ -48,11 +48,11 @@ class TestV2UniversalLaw:
         prof = v2.get_debater_v2_profile("Vidath Marasinghe")
         assert prof is not None
 
-        # Verify Vidath Marasinghe substantive preliminary mean (72.74 across 34 prelim rounds)
-        assert round(prof["speaker_avg"], 2) == 72.74
-        assert round(prof["speaker_score"], 2) == 72.74
-        assert prof["prelims_debated"] == 34
-        assert prof["tournaments_debated"] == 7
+        # Verify Vidath Marasinghe substantive preliminary mean across 10 circuit tournaments
+        assert round(prof["speaker_avg"], 2) == 72.71
+        assert round(prof["speaker_score"], 2) == 72.71
+        assert prof["prelims_debated"] == 38
+        assert prof["tournaments_debated"] == 8
 
     def test_sample_stdev(self):
         # Empty and 1-item lists
@@ -160,7 +160,7 @@ class TestV2AdjudicatorsAndTournaments:
 
     def test_tournament_hard_rankings(self, v2):
         tours = v2.get_tournament_hard_rankings(sort_by="atss")
-        assert len(tours) == 9
+        assert len(tours) == 10
         for t in tours:
             assert "atss" in t
             assert "brk_atss" in t
@@ -202,7 +202,7 @@ class TestV2RestApi:
     def test_api_tournaments(self, client):
         r = client.get("/api/v2/leaderboard/tournaments")
         assert r.status_code == 200
-        assert len(r.get_json()["leaderboard"]) == 9
+        assert len(r.get_json()["leaderboard"]) == 10
 
     def test_api_adjudicators(self, client):
         r = client.get("/api/v2/leaderboard/adjudicators")
@@ -237,11 +237,11 @@ class TestV2RestApi:
         pos = prof["position_averages"]
         assert pos["1st"]["count"] == 3
         assert round(pos["1st"]["average"], 2) == 70.67
-        assert pos["2nd"]["count"] == 14
-        assert round(pos["2nd"]["average"], 2) == 71.50
+        assert pos["2nd"]["count"] == 15
+        assert round(pos["2nd"]["average"], 2) == 71.47
         assert pos["3rd"]["count"] == 19
         assert round(pos["3rd"]["average"], 2) == 70.96
         assert pos["Reply"]["count"] == 14
         assert round(pos["Reply"]["average"], 2) == 35.50
-        # Check sum of substantive counts equals 36
-        assert pos["1st"]["count"] + pos["2nd"]["count"] + pos["3rd"]["count"] == 36
+        # Check sum of substantive counts equals 37
+        assert pos["1st"]["count"] + pos["2nd"]["count"] + pos["3rd"]["count"] == 37

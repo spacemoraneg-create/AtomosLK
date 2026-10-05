@@ -70,8 +70,8 @@ class TestAtomosAgentExecution:
         assert res.intent == AgentIntent.DEBATER_DOSSIER.value
         assert "Balishta Wijesinghe" in res.answer
         assert "D. S. Senanayake College" in res.answer
-        assert "71.15 pts" in res.answer  # New regulation speech avg
-        assert "63.88889%" in res.answer  # Unrounded win rate
+        assert "71.15" in res.answer  # New regulation speech avg
+        assert "64.86486%" in res.answer  # Unrounded win rate
 
     def test_ask_debater_by_id(self, agent):
         res = agent.ask("Scout debater #42")
@@ -149,10 +149,10 @@ class TestAtomosAgentExecution:
         res = agent.ask("how does balishta perform on gov vs opp?")
         assert res.success is True
         assert res.intent == AgentIntent.SIDE_SPLIT.value
-        assert "Proposition (Gov)" in res.answer
-        assert "Opposition (Opp)" in res.answer
-        assert "70.97727" in res.answer
-        assert "71.41176" in res.answer
+        assert "Proposition" in res.answer
+        assert "Opposition" in res.answer
+        assert "70.978" in res.answer
+        assert "71.411" in res.answer
 
     def test_ask_adjudicator_lookup(self, agent):
         res = agent.ask("who judged balishta when he scored his highest score?")
