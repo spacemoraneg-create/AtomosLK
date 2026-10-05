@@ -97,6 +97,30 @@
     return `<span class="break-tag break-none">${escapeHtml(pos)}</span>`;
   }
 
+  // Analytics & Event Tracking (Google Analytics 4)
+  function trackEvent(eventName, params = {}) {
+    if (typeof window.gtag === 'function') {
+      try {
+        window.gtag('event', eventName, params);
+      } catch (e) {}
+    }
+  }
+
+  function createSearchTracker(searchType) {
+    let timer = null;
+    return function (term) {
+      clearTimeout(timer);
+      const query = (term || '').trim();
+      if (query.length < 2) return;
+      timer = setTimeout(() => {
+        trackEvent('search', {
+          search_term: query,
+          search_type: searchType,
+        });
+      }, 700);
+    };
+  }
+
   // Fast In-Memory & Session Storage Cache Map
   const dataCache = new Map();
 
@@ -255,16 +279,19 @@
           switcher.querySelectorAll('.subpage-tab-btn').forEach((b) => b.classList.remove('active'));
           btn.classList.add('active');
           currentMetric = btn.getAttribute('data-metric');
+          trackEvent('select_metric', { metric: currentMetric, location: 'home' });
           renderTable();
         });
       });
     }
 
     const searchInput = document.getElementById('speakerSearchInput');
+    const trackHomeSearch = createSearchTracker('home_tab_search');
     if (searchInput) {
       searchInput.addEventListener('input', () => {
         searchQuery = searchInput.value.trim().toLowerCase();
         renderTable();
+        trackHomeSearch(searchInput.value);
       });
     }
 
@@ -464,6 +491,7 @@
           }
 
           updateMetricPills();
+          trackEvent('select_category', { category: activeCategory });
           renderLeaderboard();
         });
       });
@@ -476,15 +504,18 @@
           btn.classList.add('active');
           activeTier = btn.getAttribute('data-tier');
           updateTierBadge();
+          trackEvent('select_tier', { tier: activeTier, category: activeCategory });
           renderLeaderboard();
         });
       });
     }
 
+    const trackLbSearch = createSearchTracker('leaderboard_search');
     if (searchInput) {
       searchInput.addEventListener('input', () => {
         searchQuery = searchInput.value.trim().toLowerCase();
         renderLeaderboard();
+        trackLbSearch(searchInput.value);
       });
     }
 
@@ -1102,10 +1133,12 @@
       });
     }
 
+    const trackBioSearch = createSearchTracker('debater_bio_search');
     if (input && dropdown) {
       input.addEventListener('input', () => {
         if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
         renderMatches(input.value);
+        trackBioSearch(input.value);
       });
 
       input.addEventListener('focus', () => renderMatches(input.value));
@@ -1153,6 +1186,7 @@
 
     async function loadDebaterBio(name) {
       if (!container) return;
+      trackEvent('view_debater', { debater_name: name });
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
 
       let profile = null;
@@ -1442,10 +1476,12 @@
       });
     }
 
+    const trackTeamSearch = createSearchTracker('team_bio_search');
     if (input && dropdown) {
       input.addEventListener('input', () => {
         if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
         renderMatches(input.value);
+        trackTeamSearch(input.value);
       });
 
       input.addEventListener('focus', () => renderMatches(input.value));
@@ -1493,6 +1529,7 @@
 
     async function loadTeamBio(teamName) {
       if (!container) return;
+      trackEvent('view_team', { team_name: teamName });
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
 
       let bio = null;
@@ -1796,10 +1833,12 @@
       });
     }
 
+    const trackInstSearch = createSearchTracker('institution_bio_search');
     if (input && dropdown) {
       input.addEventListener('input', () => {
         if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
         renderMatches(input.value);
+        trackInstSearch(input.value);
       });
 
       input.addEventListener('focus', () => renderMatches(input.value));
@@ -1847,6 +1886,7 @@
 
     async function loadInstitutionBio(instName) {
       if (!container) return;
+      trackEvent('view_institution', { institution_name: instName });
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
 
       let bio = null;
@@ -2094,10 +2134,12 @@
       });
     }
 
+    const trackAdjSearch = createSearchTracker('adjudicator_bio_search');
     if (input && dropdown) {
       input.addEventListener('input', () => {
         if (clearBtn) clearBtn.classList.toggle('hidden', !input.value);
         renderMatches(input.value);
+        trackAdjSearch(input.value);
       });
 
       input.addEventListener('focus', () => renderMatches(input.value));
@@ -2141,6 +2183,7 @@
 
     async function loadAdjudicatorBio(judgeName) {
       if (!container) return;
+      trackEvent('view_adjudicator', { adjudicator_name: judgeName });
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
 
       let bio = null;
@@ -2511,6 +2554,10 @@
       }
 
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Computing 6-metric head-to-head clash...</div>`;
+      trackEvent('view_h2h_matchup', {
+        contender_a: selectedA.name || selectedA.speaker_name,
+        contender_b: selectedB.name || selectedB.speaker_name,
+      });
 
       // Fetch live direct clashes and BRA from server if available
       let directDebates = [];
@@ -2935,6 +2982,7 @@
     if (!messages) return;
 
     if (input) input.value = '';
+    trackEvent('ai_chat_prompt', { prompt_snippet: promptText.substring(0, 80) });
 
     const userMsg = document.createElement('div');
     userMsg.className = 'chat-bubble user';
