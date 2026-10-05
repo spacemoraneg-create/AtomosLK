@@ -11,6 +11,39 @@ DEFAULT_DB_PATH = PROJECT_ROOT / "data" / "atomos.db"
 SCHEMA_PATH = Path(__file__).parent / "schema.sql"
 
 
+def _apply_migrations(conn: sqlite3.Connection) -> None:
+    """Ensure database schema is up-to-date with non-breaking migrations."""
+    cur = conn.cursor()
+    try:
+        cur.execute("PRAGMA table_info(tournaments);")
+        columns = [row["name"] for row in cur.fetchall()]
+        if columns and "hosting_dates" not in columns:
+            cur.execute("ALTER TABLE tournaments ADD COLUMN hosting_dates TEXT;")
+            conn.commit()
+
+        # Seed canonical hosting dates if column is empty for existing tournaments
+        canonical_dates = {
+            1: "June 5–8, 2026",
+            2: "Jan 2–5, 2026",
+            3: "July 17–20, 2026",
+            4: "Aug 22–31, 2026",
+            7: "March 13–16, 2026",
+            10: "June 19–22, 2026",
+            16: "July 3–6, 2026",
+            18: "July 31 – Aug 3, 2026",
+            44: "Sept 18–21, 2026",
+        }
+        for tid, dates in canonical_dates.items():
+            cur.execute(
+                "UPDATE tournaments SET hosting_dates = ? WHERE id = ? AND (hosting_dates IS NULL OR hosting_dates = '');",
+                (dates, tid),
+            )
+        conn.commit()
+    except Exception:
+        # If tournaments table doesn't exist yet, initialize_database will create it
+        pass
+
+
 def get_connection(db_path: Optional[Path] = None, check_same_thread: bool = True) -> sqlite3.Connection:
     """
     Get a SQLite database connection with foreign keys enabled and Row factory configured.
@@ -24,6 +57,7 @@ def get_connection(db_path: Optional[Path] = None, check_same_thread: bool = Tru
     conn.execute("PRAGMA journal_mode = WAL;")
     conn.execute("PRAGMA busy_timeout = 5000;")
     conn.row_factory = sqlite3.Row
+    _apply_migrations(conn)
     return conn
 
 
@@ -35,4 +69,5 @@ def initialize_database(db_path: Optional[Path] = None) -> sqlite3.Connection:
     schema_sql = SCHEMA_PATH.read_text(encoding="utf-8")
     conn.executescript(schema_sql)
     conn.commit()
+    _apply_migrations(conn)
     return conn

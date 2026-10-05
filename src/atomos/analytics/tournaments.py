@@ -83,7 +83,7 @@ class TournamentRankingsEngine:
 
         # Query all active tournaments with contested rounds
         cur.execute("""
-            SELECT t.id, t.slug, t.name
+            SELECT t.id, t.slug, t.name, t.hosting_dates
             FROM tournaments t
             JOIN rounds r ON t.id = r.tournament_id
             JOIN debates d ON r.id = d.round_id
@@ -217,7 +217,7 @@ class TournamentRankingsEngine:
                 "tournament_id": tid,
                 "tournament_slug": slug,
                 "tournament_name": CLEAN_TOURNAMENT_NAMES.get(tid, full_name),
-                "dates": OFFICIAL_TOURNAMENT_DATES.get(tid, "TBD"),
+                "dates": (row[3] if len(row) > 3 and row[3] else None) or OFFICIAL_TOURNAMENT_DATES.get(tid, "TBD"),
                 "apttss": apttss,
                 "apttss_breaking": apttss_breaking,
                 "teams_participated": teams_participated,

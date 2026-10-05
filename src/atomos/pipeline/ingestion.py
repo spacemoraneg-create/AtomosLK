@@ -31,12 +31,14 @@ class IngestionPipeline:
         self,
         target: str,
         skip_extract: bool = False,
+        hosting_dates: Optional[str] = None,
         verbose: bool = True,
     ) -> dict:
         """
         Ingests a tournament by URL or existing slug.
         :param target: Public Tabbycat URL (e.g., https://site.calicotab.com/slug/) or raw directory slug
         :param skip_extract: If True, uses existing raw data in data/raw/<slug>
+        :param hosting_dates: Optional manual dates when the tournament took place (e.g. 'Oct 12–15, 2026')
         :param verbose: Print progress messages
         """
         def log(msg: str):
@@ -86,6 +88,11 @@ class IngestionPipeline:
         normalizer = TournamentNormalizer(conn)
         tournament_id = normalizer.normalize_tournament(raw_dir)
         log(f"Tournament normalized with internal ID {tournament_id}.")
+
+        if hosting_dates and hosting_dates.strip():
+            conn.execute("UPDATE tournaments SET hosting_dates = ? WHERE id = ?", (hosting_dates.strip(), tournament_id))
+            conn.commit()
+            log(f"Persisted manual tournament hosting dates: '{hosting_dates.strip()}'.")
 
         # STEP 3: RECONCILIATION
         log(f"Step 3/4: Reconciling speaker tabs, out-rounds, byes, and walkovers...")

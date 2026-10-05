@@ -256,3 +256,68 @@ def test_institution_merge_validation_errors(test_client):
     )
     assert res_unmerge_bad.status_code == 400
 
+
+def test_admin_update_tournament_dates(test_client):
+    client, token = test_client
+
+    # 1. 401 Unauthorized check
+    res_unauth = client.post("/api/admin/tournaments/1/dates", json={"hosting_dates": "Oct 12–15, 2026"})
+    assert res_unauth.status_code == 401
+
+    # 2. 404 for non-existent tournament
+    res_404 = client.post(
+        "/api/admin/tournaments/999/dates",
+        headers={"X-Admin-Token": token},
+        json={"hosting_dates": "Oct 12–15, 2026"}
+    )
+    assert res_404.status_code == 404
+
+    # 3. Successful date update by ID
+    res_update = client.post(
+        "/api/admin/tournaments/1/dates",
+        headers={"X-Admin-Token": token},
+        json={"hosting_dates": "Oct 12–15, 2026"}
+    )
+    assert res_update.status_code == 200
+    data = res_update.json
+    assert data["success"] is True
+    assert data["hosting_dates"] == "Oct 12–15, 2026"
+    assert data["tournament_id"] == 1
+
+    # 4. Successful date update by slug
+    res_slug = client.post(
+        "/api/admin/tournaments/t2/dates",
+        headers={"X-Admin-Token": token},
+        json={"hosting_dates": "Nov 20–23, 2026"}
+    )
+    assert res_slug.status_code == 200
+    assert res_slug.json["hosting_dates"] == "Nov 20–23, 2026"
+
+    # 5. Status endpoint reflects updated hosting dates
+    res_status = client.get("/api/admin/status", headers={"X-Admin-Token": token})
+    assert res_status.status_code == 200
+    t_list = res_status.json["tournaments"]
+    t1 = next(t for t in t_list if t["id"] == 1)
+    t2 = next(t for t in t_list if t["id"] == 2)
+    assert t1["hosting_dates"] == "Oct 12–15, 2026"
+    assert t2["hosting_dates"] == "Nov 20–23, 2026"
+
+
+def test_github_sync_configuration(test_client):
+    client, token = test_client
+
+    # Check github status endpoint with header
+    res = client.get(
+        "/api/admin/github/status",
+        headers={
+            "X-Admin-Token": token,
+            "X-GitHub-Token": "github_pat_test123",
+        }
+    )
+    assert res.status_code == 200
+    data = res.json
+    assert data["configured"] is True
+    assert data["repo"] == "spacemoraneg-create/AtomosLK"
+    assert data["branch"] == "main"
+
+

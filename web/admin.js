@@ -13,6 +13,7 @@
 
   let currentStatusData = null;
   let pendingDeleteTarget = null;
+  let pendingEditDatesTarget = null;
 
   // DOM Elements
   const lockView = document.getElementById('adminLockView');
@@ -27,10 +28,15 @@
   // Helper for Headers
   function getHeaders() {
     const token = sessionStorage.getItem(TOKEN_KEY) || '';
-    return {
+    const ghToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
+    const headers = {
       'Content-Type': 'application/json',
       'X-Admin-Token': token,
     };
+    if (ghToken) {
+      headers['X-GitHub-Token'] = ghToken;
+    }
+    return headers;
   }
 
   // =========================================================================
@@ -251,7 +257,18 @@
             <td class="monospace">${t.round_count ?? 0}</td>
             <td class="monospace">${t.team_count ?? 0}</td>
             <td class="monospace">${t.speech_count ?? 0}</td>
-            <td style="text-align: center;">
+            <td style="text-align: center; white-space: nowrap;">
+              <button
+                class="admin-btn admin-btn-secondary admin-btn-sm btn-edit-dates-row"
+                data-id="${t.id}"
+                data-slug="${escapeHtml(t.slug)}"
+                data-name="${escapeHtml(t.official_name || t.name)}"
+                data-dates="${escapeHtml(t.hosting_dates || '')}"
+                style="margin-right: 6px;"
+                title="Edit tournament hosting dates"
+              >
+                EDIT DATES
+              </button>
               <button
                 class="admin-btn admin-btn-danger admin-btn-sm btn-delete-row"
                 data-id="${t.id}"
@@ -267,7 +284,17 @@
       })
       .join('');
 
-    // Attach row delete handlers
+    // Attach row handlers
+    tbody.querySelectorAll('.btn-edit-dates-row').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        const id = btn.getAttribute('data-id');
+        const slug = btn.getAttribute('data-slug');
+        const name = btn.getAttribute('data-name');
+        const dates = btn.getAttribute('data-dates');
+        openEditDatesModal(id, slug, name, dates);
+      });
+    });
+
     tbody.querySelectorAll('.btn-delete-row').forEach((btn) => {
       btn.addEventListener('click', () => {
         const id = btn.getAttribute('data-id');
@@ -276,6 +303,25 @@
         openDeleteConfirmation(id, slug, name);
       });
     });
+  }
+
+  function openEditDatesModal(id, slug, name, currentDates) {
+    pendingEditDatesTarget = { id, slug, name, currentDates };
+    const modal = document.getElementById('adminEditDatesModal');
+    const nameEl = document.getElementById('editDatesTournamentName');
+    const inputEl = document.getElementById('editTournamentDatesInput');
+    const statusBox = document.getElementById('editDatesStatusBox');
+
+    if (nameEl) nameEl.textContent = `${name} (${slug})`;
+    if (inputEl) {
+      inputEl.value = currentDates || '';
+      inputEl.focus();
+    }
+    if (statusBox) {
+      statusBox.classList.add('hidden');
+      statusBox.textContent = '';
+    }
+    if (modal) modal.classList.remove('hidden');
   }
 
   function updateTournamentDropdown(tournaments) {
@@ -353,7 +399,7 @@
       document.getElementById('paneSyncGithubBtn'),
     ].filter(Boolean);
 
-    let customToken = sessionStorage.getItem('atomos_gh_token') || '';
+    let customToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
     try {
       const checkRes = await fetch(`${API_BASE}/api/admin/github/status`, {
         headers: getHeaders(),
@@ -362,7 +408,7 @@
         const checkData = await checkRes.json();
         if (!checkData.configured && !customToken) {
           const entered = window.prompt(
-            'GitHub Personal Access Token is required to commit directly to GitHub repository.\n\nEnter GitHub Personal Access Token (repo scope):'
+            'GitHub Personal Access Token is required to commit directly to GitHub repository.\n\nEnter GitHub Personal Access Token (Fine-grained Contents: Read/Write, or Classic repo scope):'
           );
           if (!entered || !entered.trim()) {
             if (statusBox) {
@@ -371,7 +417,10 @@
             return;
           }
           customToken = entered.trim();
+          localStorage.setItem('atomos_gh_token', customToken);
           sessionStorage.setItem('atomos_gh_token', customToken);
+          const ghInput = document.getElementById('adminGhTokenInput');
+          if (ghInput) ghInput.value = customToken;
         }
       }
     } catch (e) {
@@ -438,6 +487,41 @@
     if (paneExportBtn) paneExportBtn.addEventListener('click', downloadWebExport);
     if (adminSyncBtn) adminSyncBtn.addEventListener('click', triggerGitHubSync);
     if (paneSyncBtn) paneSyncBtn.addEventListener('click', triggerGitHubSync);
+
+    // GitHub PAT configuration input
+    const ghTokenInput = document.getElementById('adminGhTokenInput');
+    const saveGhTokenBtn = document.getElementById('saveGhTokenBtn');
+    const clearGhTokenBtn = document.getElementById('clearGhTokenBtn');
+    const statusBox = document.getElementById('githubSyncStatusBox');
+
+    const existingToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
+    if (ghTokenInput && existingToken) {
+      ghTokenInput.value = existingToken;
+    }
+
+    if (saveGhTokenBtn) {
+      saveGhTokenBtn.addEventListener('click', () => {
+        const val = (ghTokenInput ? ghTokenInput.value : '').trim();
+        if (!val) {
+          if (statusBox) showStatusBox(statusBox, 'error', 'Please provide a valid GitHub token before saving.');
+          return;
+        }
+        localStorage.setItem('atomos_gh_token', val);
+        sessionStorage.setItem('atomos_gh_token', val);
+        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token saved in browser storage.');
+        fetchGitHubSyncStatus();
+      });
+    }
+
+    if (clearGhTokenBtn) {
+      clearGhTokenBtn.addEventListener('click', () => {
+        localStorage.removeItem('atomos_gh_token');
+        sessionStorage.removeItem('atomos_gh_token');
+        if (ghTokenInput) ghTokenInput.value = '';
+        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared from browser storage.');
+        fetchGitHubSyncStatus();
+      });
+    }
   }
 
   // =========================================================================
@@ -737,12 +821,14 @@
     // Ingestion
     const startImportBtn = document.getElementById('startImportBtn');
     const importTargetInput = document.getElementById('importTargetInput');
+    const importDatesInput = document.getElementById('importDatesInput');
     const skipExtractCheck = document.getElementById('skipExtractCheck');
     const importStatusBox = document.getElementById('importStatusBox');
 
     if (startImportBtn) {
       startImportBtn.addEventListener('click', async () => {
         const target = (importTargetInput ? importTargetInput.value : '').trim();
+        const hostingDates = (importDatesInput ? importDatesInput.value : '').trim();
         const skipExtract = skipExtractCheck ? skipExtractCheck.checked : false;
 
         if (!target) {
@@ -762,7 +848,7 @@
           const res = await fetch(`${API_BASE}/api/admin/tournaments/import`, {
             method: 'POST',
             headers: getHeaders(),
-            body: JSON.stringify({ target, skip_extract: skipExtract }),
+            body: JSON.stringify({ target, skip_extract: skipExtract, hosting_dates: hostingDates }),
           });
 
           if (res.status === 401) {
@@ -774,6 +860,7 @@
           if (res.ok && data.success) {
             showStatusBox(importStatusBox, 'success', `[SUCCESS] ${data.message}`);
             if (importTargetInput) importTargetInput.value = '';
+            if (importDatesInput) importDatesInput.value = '';
             fetchAdminStatus(); // Refresh tournaments and KPI
           } else {
             showStatusBox(importStatusBox, 'error', `[ERROR] ${data.error || 'Ingestion failed.'}`);
@@ -783,6 +870,61 @@
         } finally {
           startImportBtn.disabled = false;
           startImportBtn.textContent = 'START INGESTION PIPELINE';
+        }
+      });
+    }
+
+    // Edit Dates Modal
+    const editDatesModal = document.getElementById('adminEditDatesModal');
+    const cancelEditDatesBtn = document.getElementById('cancelEditDatesBtn');
+    const confirmEditDatesBtn = document.getElementById('confirmEditDatesBtn');
+    const editTournamentDatesInput = document.getElementById('editTournamentDatesInput');
+    const editDatesStatusBox = document.getElementById('editDatesStatusBox');
+
+    if (cancelEditDatesBtn) {
+      cancelEditDatesBtn.addEventListener('click', () => {
+        if (editDatesModal) editDatesModal.classList.add('hidden');
+        pendingEditDatesTarget = null;
+      });
+    }
+
+    if (confirmEditDatesBtn) {
+      confirmEditDatesBtn.addEventListener('click', async () => {
+        if (!pendingEditDatesTarget) return;
+
+        const updatedDates = (editTournamentDatesInput ? editTournamentDatesInput.value : '').trim();
+        confirmEditDatesBtn.disabled = true;
+        confirmEditDatesBtn.textContent = 'SAVING DATES...';
+        showStatusBox(editDatesStatusBox, 'loading', 'Updating hosting dates in database...');
+
+        try {
+          const res = await fetch(`${API_BASE}/api/admin/tournaments/${encodeURIComponent(pendingEditDatesTarget.id)}/dates`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ hosting_dates: updatedDates }),
+          });
+
+          if (res.status === 401) {
+            handleUnauthorized();
+            return;
+          }
+
+          const data = await res.json();
+          if (res.ok && data.success) {
+            showStatusBox(editDatesStatusBox, 'success', `[SUCCESS] ${data.message}`);
+            setTimeout(() => {
+              if (editDatesModal) editDatesModal.classList.add('hidden');
+              pendingEditDatesTarget = null;
+              fetchAdminStatus();
+            }, 600);
+          } else {
+            showStatusBox(editDatesStatusBox, 'error', `[ERROR] ${data.error || 'Failed to update dates.'}`);
+          }
+        } catch (e) {
+          showStatusBox(editDatesStatusBox, 'error', `[NETWORK ERROR] ${e.message}`);
+        } finally {
+          confirmEditDatesBtn.disabled = false;
+          confirmEditDatesBtn.textContent = 'SAVE DATES';
         }
       });
     }

@@ -51,8 +51,43 @@ def create_app(db_conn=None) -> Flask:
     def add_cors_headers(response):
         response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
-        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Token"
+        response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Token, X-GitHub-Token"
         return response
+
+    def get_request_github_token() -> Optional[str]:
+        req_json = request.get_json(force=True, silent=True) if request.is_json else {}
+        token = (
+            request.headers.get("X-GitHub-Token")
+            or (req_json.get("github_token") if isinstance(req_json, dict) else None)
+            or os.environ.get("GITHUB_TOKEN")
+            or os.environ.get("GH_TOKEN")
+        )
+        return str(token).strip() if token else None
+
+    def trigger_async_export_and_sync(commit_message: str, custom_token: Optional[str] = None):
+        token_to_use = custom_token or get_request_github_token()
+
+        def _worker():
+            try:
+                root_dir = Path(__file__).resolve().parent.parent.parent
+                if str(root_dir) not in sys.path:
+                    sys.path.insert(0, str(root_dir))
+                from scripts.export_web_data import export_web_data
+                export_web_data(data_export_dir)
+
+                from atomos.sync import GitHubSyncService
+                sync_svc = GitHubSyncService(token=token_to_use)
+                if sync_svc.is_configured():
+                    db_f = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
+                    sync_svc.sync_database_and_export(
+                        db_path=db_f,
+                        export_dir=data_export_dir,
+                        commit_message=commit_message,
+                    )
+            except Exception as exp_err:
+                print(f"[WARN] Async static export and sync encountered an issue: {exp_err}")
+
+        threading.Thread(target=_worker, daemon=True).start()
 
     # Static Web Dashboard Frontend Routes
     @app.route("/")
@@ -584,7 +619,7 @@ def create_app(db_conn=None) -> Flask:
 
         # Full tournaments list with live aggregates
         cur.execute("""
-            SELECT t.id, t.slug, t.name, t.year, t.format, t.source_url, t.created_at,
+            SELECT t.id, t.slug, t.name, t.year, t.format, t.source_url, t.hosting_dates, t.created_at,
                    (SELECT COUNT(*) FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = t.id) as debate_count,
                    (SELECT COUNT(*) FROM rounds r WHERE r.tournament_id = t.id) as round_count,
                    (SELECT COUNT(*) FROM teams tm WHERE tm.tournament_id = t.id) as team_count,
@@ -595,7 +630,7 @@ def create_app(db_conn=None) -> Flask:
         raw_tournaments = [dict(row) for row in cur.fetchall()]
         for t in raw_tournaments:
             t["official_name"] = CLEAN_TOURNAMENT_NAMES.get(t["id"], t["name"])
-            t["hosting_dates"] = OFFICIAL_TOURNAMENT_DATES.get(t["id"], "2026")
+            t["hosting_dates"] = t.get("hosting_dates") or OFFICIAL_TOURNAMENT_DATES.get(t["id"], "2026")
             t["chrono_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], 999)
 
         tournaments = sorted(raw_tournaments, key=lambda x: x["chrono_order"])
@@ -630,23 +665,25 @@ def create_app(db_conn=None) -> Flask:
         payload = request.get_json(force=True, silent=True) or {}
         target = payload.get("target", "").strip()
         skip_extract = bool(payload.get("skip_extract", False))
+        hosting_dates = (payload.get("hosting_dates") or "").strip() or None
 
         if not target:
             return jsonify({"error": "Target URL or local slug is required."}), 400
 
         try:
             pipeline = IngestionPipeline(db_path=Path("data/atomos.db"))
-            res = pipeline.ingest_tournament(target=target, skip_extract=skip_extract, verbose=True)
+            res = pipeline.ingest_tournament(
+                target=target,
+                skip_extract=skip_extract,
+                verbose=True,
+                hosting_dates=hosting_dates,
+            )
 
-            # Recompute and export static web payloads
-            try:
-                root_dir = Path(__file__).resolve().parent.parent.parent
-                if str(root_dir) not in sys.path:
-                    sys.path.insert(0, str(root_dir))
-                from scripts.export_web_data import export_web_data
-                export_web_data(Path("data/web_export"))
-            except Exception as exp_err:
-                print(f"[WARN] Web data export after import encountered an issue: {exp_err}")
+            # Trigger static web export and auto-sync to GitHub in background
+            t_label = res.get("slug", target)
+            trigger_async_export_and_sync(
+                commit_message=f"chore(data): auto-sync after importing tournament {t_label}"
+            )
 
             return jsonify({
                 "success": True,
@@ -713,15 +750,10 @@ def create_app(db_conn=None) -> Flask:
             cur.execute("DELETE FROM tournaments WHERE id = ?", (t_id,))
             conn.commit()
 
-            # Refresh static web exports
-            try:
-                root_dir = Path(__file__).resolve().parent.parent.parent
-                if str(root_dir) not in sys.path:
-                    sys.path.insert(0, str(root_dir))
-                from scripts.export_web_data import export_web_data
-                export_web_data(Path("data/web_export"))
-            except Exception as exp_err:
-                print(f"[WARN] Web data export after deletion encountered an issue: {exp_err}")
+            # Refresh static web exports and auto-sync to GitHub
+            trigger_async_export_and_sync(
+                commit_message=f"chore(data): auto-sync after deleting tournament {t_slug}"
+            )
 
             return jsonify({
                 "success": True,
@@ -732,6 +764,46 @@ def create_app(db_conn=None) -> Flask:
         except Exception as e:
             conn.rollback()
             return jsonify({"error": f"Failed to delete tournament: {str(e)}"}), 500
+
+    # 22b. Update Tournament Hosting Dates
+    @app.route("/api/admin/tournaments/<identifier>/dates", methods=["POST"])
+    @require_admin
+    def admin_update_tournament_dates(identifier: str):
+        payload = request.get_json(force=True, silent=True) or {}
+        dates_raw = payload.get("hosting_dates", "")
+        hosting_dates = str(dates_raw).strip() if dates_raw is not None else ""
+
+        cur = conn.cursor()
+        if identifier.isdigit():
+            cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments WHERE id = ?", (int(identifier),))
+        else:
+            cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments WHERE slug = ?", (identifier,))
+        t = cur.fetchone()
+        if not t:
+            return jsonify({"error": f"Tournament '{identifier}' not found in database."}), 404
+
+        t_id = t["id"]
+        t_slug = t["slug"]
+        t_name = t["name"]
+
+        try:
+            cur.execute("UPDATE tournaments SET hosting_dates = ? WHERE id = ?", (hosting_dates or None, t_id))
+            conn.commit()
+
+            trigger_async_export_and_sync(
+                commit_message=f"chore(data): update hosting dates for tournament {t_slug}"
+            )
+
+            return jsonify({
+                "success": True,
+                "message": f"Hosting dates for '{t_name}' updated successfully.",
+                "tournament_id": t_id,
+                "tournament_slug": t_slug,
+                "hosting_dates": hosting_dates or None,
+            })
+        except Exception as e:
+            conn.rollback()
+            return jsonify({"error": f"Failed to update tournament dates: {str(e)}"}), 500
 
     # 23. Diagnostic Testing Runner
     @app.route("/api/admin/run_tests", methods=["POST"])
@@ -846,28 +918,10 @@ def create_app(db_conn=None) -> Flask:
             else:
                 return jsonify({"error": f"Invalid entity type '{entity_type}'. Must be 'person' or 'team'."}), 400
 
-            # Re-export static cache asynchronously so HTTP API responds in milliseconds
-            def _bg_export():
-                try:
-                    root_dir = Path(__file__).resolve().parent.parent.parent
-                    if str(root_dir) not in sys.path:
-                        sys.path.insert(0, str(root_dir))
-                    from scripts.export_web_data import export_web_data
-                    export_web_data(data_export_dir)
-
-                    from atomos.sync import GitHubSyncService
-                    sync_svc = GitHubSyncService()
-                    if sync_svc.is_configured():
-                        db_f = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
-                        sync_svc.sync_database_and_export(
-                            db_path=db_f,
-                            export_dir=data_export_dir,
-                            commit_message=f"chore(data): auto-sync after merge {entity_type} #{duplicate_id} -> #{primary_id}",
-                        )
-                except Exception as exp_err:
-                    print(f"[WARN] Async static export after merge encountered an issue: {exp_err}")
-
-            threading.Thread(target=_bg_export, daemon=True).start()
+            # Re-export static cache and auto-sync to GitHub asynchronously
+            trigger_async_export_and_sync(
+                commit_message=f"chore(data): auto-sync after merge {entity_type} #{duplicate_id} -> #{primary_id}"
+            )
 
             return jsonify(res)
         except ValueError as ve:
@@ -930,7 +984,7 @@ def create_app(db_conn=None) -> Flask:
     @require_admin
     def admin_github_status():
         from atomos.sync import GitHubSyncService
-        token = request.headers.get("X-GitHub-Token") or os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        token = get_request_github_token()
         sync_svc = GitHubSyncService(token=token)
         return jsonify({
             "configured": sync_svc.is_configured(),
@@ -943,7 +997,7 @@ def create_app(db_conn=None) -> Flask:
     def admin_github_sync():
         from atomos.sync import GitHubSyncService
         payload = request.get_json(force=True, silent=True) or {}
-        token = payload.get("github_token") or request.headers.get("X-GitHub-Token") or os.environ.get("GITHUB_TOKEN") or os.environ.get("GH_TOKEN")
+        token = get_request_github_token()
         message = payload.get("message") or "chore(data): manual sync of database and web export from admin console"
         
         sync_svc = GitHubSyncService(token=token)
@@ -1213,18 +1267,10 @@ def create_app(db_conn=None) -> Flask:
 
             conn.commit()
 
-            # Refresh static web data in background thread
-            def run_async_export():
-                try:
-                    root_dir = Path(__file__).resolve().parent.parent.parent
-                    if str(root_dir) not in sys.path:
-                        sys.path.insert(0, str(root_dir))
-                    from scripts.export_web_data import export_web_data
-                    export_web_data(data_export_dir)
-                except Exception as exp_err:
-                    print(f"[WARN] Async web data export encountered an issue: {exp_err}")
-
-            threading.Thread(target=run_async_export, daemon=True).start()
+            # Refresh static web data and sync to GitHub in background thread
+            trigger_async_export_and_sync(
+                commit_message=f"chore(data): auto-sync after institution team merge '{variant_name}' -> '{target_name}'"
+            )
 
             decided_time = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
             return jsonify({
@@ -1272,18 +1318,10 @@ def create_app(db_conn=None) -> Flask:
 
             conn.commit()
 
-            # Refresh static web data in background thread
-            def run_async_export():
-                try:
-                    root_dir = Path(__file__).resolve().parent.parent.parent
-                    if str(root_dir) not in sys.path:
-                        sys.path.insert(0, str(root_dir))
-                    from scripts.export_web_data import export_web_data
-                    export_web_data(data_export_dir)
-                except Exception as exp_err:
-                    print(f"[WARN] Async web data export encountered an issue: {exp_err}")
-
-            threading.Thread(target=run_async_export, daemon=True).start()
+            # Refresh static web data and sync to GitHub in background thread
+            trigger_async_export_and_sync(
+                commit_message=f"chore(data): auto-sync after unmerging institution team '{variant_name}'"
+            )
 
             return jsonify({
                 "success": True,

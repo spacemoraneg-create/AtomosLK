@@ -58,6 +58,7 @@ CREATE TABLE IF NOT EXISTS tournaments (
     season TEXT CHECK(season IN ('1st Term', 'Mid Term', 'End Term', NULL)),
     scoring_scale TEXT DEFAULT '60-80',
     format TEXT DEFAULT 'PURE_OPEN' CHECK(format IN ('PURE_OPEN', 'PURE_NOVICE', 'NOVICE_AND_OPEN')),
+    hosting_dates TEXT,
     extracted_at TIMESTAMP,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );

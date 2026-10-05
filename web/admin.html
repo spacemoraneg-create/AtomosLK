@@ -223,6 +223,31 @@
             </button>
           </div>
           <div id="githubSyncStatusBox" class="admin-status-box hidden" style="margin-top: 14px;"></div>
+
+          <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
+            <label for="adminGhTokenInput" class="admin-form-label" style="display: flex; justify-content: space-between;">
+              <span>GITHUB ACCESS TOKEN (FINE-GRAINED OR CLASSIC)</span>
+              <span style="font-size: 11px; color: rgba(255,255,255,0.5); font-weight: 400; text-transform: none;">Stored locally in browser</span>
+            </label>
+            <div style="display: flex; gap: 8px; margin-top: 6px;">
+              <input
+                type="password"
+                id="adminGhTokenInput"
+                class="admin-text-input"
+                placeholder="github_pat_... or ghp_... (Contents: Read & Write)"
+                style="flex: 1;"
+              />
+              <button id="saveGhTokenBtn" class="admin-btn admin-btn-secondary" style="white-space: nowrap;">
+                SAVE TOKEN
+              </button>
+              <button id="clearGhTokenBtn" class="admin-btn admin-btn-outline" style="white-space: nowrap;">
+                CLEAR
+              </button>
+            </div>
+            <div style="font-size: 11px; color: rgba(255,255,255,0.5); margin-top: 6px; font-family: var(--font-mono);">
+              Recommended: Fine-grained token scoped to repository spacemoraneg-create/AtomosLK with Contents: Read and write.
+            </div>
+          </div>
         </div>
 
         <!-- Ingested Tournaments Table -->
@@ -239,7 +264,7 @@
                 <th style="width: 75px;">ROUNDS</th>
                 <th style="width: 75px;">TEAMS</th>
                 <th style="width: 90px;">SPEECHES</th>
-                <th style="width: 110px; text-align: center;">ACTIONS</th>
+                <th style="width: 175px; text-align: center;">ACTIONS</th>
               </tr>
             </thead>
             <tbody id="adminTournamentsTableBody">
@@ -321,6 +346,16 @@
                 id="importTargetInput"
                 class="admin-text-input"
                 placeholder="https://site.calicotab.com/slug/ or local slug (e.g. ric2026)"
+              />
+            </div>
+
+            <div class="admin-form-group">
+              <label for="importDatesInput" class="admin-form-label">HOSTING DATES (OPTIONAL)</label>
+              <input
+                type="text"
+                id="importDatesInput"
+                class="admin-text-input"
+                placeholder="e.g. Oct 12–15, 2026 or Nov 2026"
               />
             </div>
 
@@ -581,6 +616,32 @@
 
       </div>
 
+    </div>
+
+    <!-- ==================================================================== -->
+    <!-- EDIT DATES MODAL                                                     -->
+    <!-- ==================================================================== -->
+    <div id="adminEditDatesModal" class="admin-modal-backdrop hidden">
+      <div class="admin-modal-card" style="max-width: 480px;">
+        <div class="admin-modal-title" style="color: #7692ff;">EDIT TOURNAMENT DATES</div>
+        <p class="admin-modal-text">
+          Update the display hosting dates for <strong id="editDatesTournamentName">--</strong>.
+        </p>
+        <div class="admin-form-group" style="margin-top: 14px;">
+          <label for="editTournamentDatesInput" class="admin-form-label">HOSTING DATES</label>
+          <input
+            type="text"
+            id="editTournamentDatesInput"
+            class="admin-text-input"
+            placeholder="e.g. Oct 12–15, 2026 or Nov 2026"
+          />
+        </div>
+        <div id="editDatesStatusBox" class="admin-status-box hidden" style="margin-bottom: 14px;"></div>
+        <div class="admin-modal-actions">
+          <button id="cancelEditDatesBtn" class="admin-btn admin-btn-outline">CANCEL</button>
+          <button id="confirmEditDatesBtn" class="admin-btn admin-btn-primary">SAVE DATES</button>
+        </div>
+      </div>
     </div>
 
     <!-- ==================================================================== -->

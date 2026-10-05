@@ -57,11 +57,15 @@ class GitHubSyncService:
             "User-Agent": "Atomos-Cloud-Sync",
         }
 
-        # Verify token access
+        # Verify token access against target repository (supports both Fine-grained and Classic tokens)
         try:
-            user_res = requests.get("https://api.github.com/user", headers=headers, timeout=10)
-            if user_res.status_code == 401:
-                return {"success": False, "error": "Invalid GITHUB_TOKEN: Authentication failed (401)."}
+            repo_res = requests.get(f"https://api.github.com/repos/{self.repo}", headers=headers, timeout=10)
+            if repo_res.status_code == 401:
+                return {"success": False, "error": "Invalid GITHUB_TOKEN: Authentication failed (401). Check token validity."}
+            elif repo_res.status_code == 404:
+                return {"success": False, "error": f"Repository '{self.repo}' not found or token lacks access (404). Ensure token has access to this repository."}
+            elif repo_res.status_code == 403:
+                return {"success": False, "error": f"Access forbidden to '{self.repo}' (403): Ensure token has Contents (Read & Write) permissions."}
         except Exception as e:
             return {"success": False, "error": f"Failed to connect to GitHub API: {str(e)}"}
 

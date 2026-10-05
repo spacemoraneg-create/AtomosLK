@@ -1378,6 +1378,7 @@ class V2MetricsEngine:
                        t.id as tournament_id,
                        t.name as tournament_name,
                        t.slug as tournament_slug,
+                       t.hosting_dates as t_hosting_dates,
                        pt.name as prop_team,
                        pi.name as prop_inst,
                        ot.name as opp_team,
@@ -1412,7 +1413,7 @@ class V2MetricsEngine:
 
                 t_id = row["tournament_id"]
                 t_name = CLEAN_TOURNAMENT_NAMES.get(t_id, row["tournament_name"])
-                dates = OFFICIAL_TOURNAMENT_DATES.get(t_id, "2026")
+                dates = row["t_hosting_dates"] or OFFICIAL_TOURNAMENT_DATES.get(t_id, "2026")
 
                 history.append({
                     "ballot_id": b_id,
@@ -1463,7 +1464,7 @@ class V2MetricsEngine:
         - Prelim debates count
         """
         cur = self.conn.cursor()
-        cur.execute("SELECT id, slug, name FROM tournaments ORDER BY id ASC")
+        cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments ORDER BY id ASC")
         tourneys = cur.fetchall()
 
         # Prelim + Open Knockout rounds count per tournament
@@ -1475,7 +1476,7 @@ class V2MetricsEngine:
             tid = tr["id"]
             slug = tr["slug"]
             name = CLEAN_TOURNAMENT_NAMES.get(tid, tr["name"])
-            dates = OFFICIAL_TOURNAMENT_DATES.get(tid, "2026")
+            dates = tr["hosting_dates"] or OFFICIAL_TOURNAMENT_DATES.get(tid, "2026")
 
             # 1. Team prelim debate scores within tournament
             cur.execute("""
