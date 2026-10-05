@@ -171,12 +171,13 @@
     }
 
     // 2. Fallback to Live Server API if static file unavailable
-    if (!data && fallbackApi && state.isServerOnline) {
+    if (!data && fallbackApi) {
       try {
         const res = await fetch(`${state.apiUrl}${fallbackApi}`);
         if (res.ok) {
           const j = await res.json();
           data = j.leaderboard || j;
+          state.isServerOnline = true;
         }
       } catch (e) {}
     }
@@ -1149,29 +1150,31 @@
     if (debaterParam) {
       loadDebaterBio(debaterParam);
     }
-            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-              Type any debater's name above to view their career record.
-            </div>
-          `;
-        }
-        if (window.history.replaceState) window.history.replaceState(null, '', window.location.pathname);
-      });
-    }
 
     async function loadDebaterBio(name) {
       if (!container) return;
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
 
       let profile = null;
-      if (state.isServerOnline) {
-        try {
-          const res = await fetch(`${state.apiUrl}/api/v2/debaters/${encodeURIComponent(name)}/bio`);
-          if (res.ok) profile = await res.json();
-        } catch (e) {}
-      }
+      try {
+        const res = await fetch(`${state.apiUrl}/api/v2/debaters/${encodeURIComponent(name)}/bio`);
+        if (res.ok) {
+          profile = await res.json();
+          state.isServerOnline = true;
+        }
+      } catch (e) {}
 
-      // If server profile not loaded, find in local datasets
+      // If server profile not loaded, ensure local datasets are loaded before searching
       if (!profile) {
+        if (!state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length) {
+          const [spkGen, spkTab] = await Promise.all([
+            fetchJson('v2_speakers_general.json', '/api/v2/leaderboard/speakers?tier=general'),
+            fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab')
+          ]);
+          if (spkGen) state.v2SpeakersGeneral = spkGen;
+          if (spkTab) state.v2SpeakersTab = spkTab;
+        }
+
         const found = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find((d) => {
           const dn = d.name || d.speaker_name || '';
           return dn.toLowerCase() === name.toLowerCase() || dn.toLowerCase().includes(name.toLowerCase());
@@ -1493,15 +1496,24 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
 
       let bio = null;
-      if (state.isServerOnline) {
-        try {
-          const res = await fetch(`${state.apiUrl}/api/v2/teams/${encodeURIComponent(teamName)}/bio`);
-          if (res.ok) bio = await res.json();
-        } catch (e) {}
-      }
+      try {
+        const res = await fetch(`${state.apiUrl}/api/v2/teams/${encodeURIComponent(teamName)}/bio`);
+        if (res.ok) {
+          bio = await res.json();
+          state.isServerOnline = true;
+        }
+      } catch (e) {}
 
       if (!bio) {
-        // Fallback from teams dataset
+        if (!state.v2TeamsGeneral.length && !state.v2TeamsTab.length) {
+          const [tGen, tTab] = await Promise.all([
+            fetchJson('v2_teams_general.json', '/api/v2/leaderboard/teams?tier=general'),
+            fetchJson('v2_teams_tab.json', '/api/v2/leaderboard/teams?tier=tab')
+          ]);
+          if (tGen) state.v2TeamsGeneral = tGen;
+          if (tTab) state.v2TeamsTab = tTab;
+        }
+
         const found = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab).find(
           (t) => t.team_name.toLowerCase() === teamName.toLowerCase() || t.team_name.toLowerCase().includes(teamName.toLowerCase())
         );
@@ -1838,14 +1850,24 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
 
       let bio = null;
-      if (state.isServerOnline) {
-        try {
-          const res = await fetch(`${state.apiUrl}/api/v2/institutions/${encodeURIComponent(instName)}/bio`);
-          if (res.ok) bio = await res.json();
-        } catch (e) {}
-      }
+      try {
+        const res = await fetch(`${state.apiUrl}/api/v2/institutions/${encodeURIComponent(instName)}/bio`);
+        if (res.ok) {
+          bio = await res.json();
+          state.isServerOnline = true;
+        }
+      } catch (e) {}
 
       if (!bio) {
+        if (!state.v2InstitutionsGeneral.length && !state.v2InstitutionsTab.length) {
+          const [iGen, iTab] = await Promise.all([
+            fetchJson('v2_institutions_general.json', '/api/v2/leaderboard/institutions?tier=general'),
+            fetchJson('v2_institutions_tab.json', '/api/v2/leaderboard/institutions?tier=tab')
+          ]);
+          if (iGen) state.v2InstitutionsGeneral = iGen;
+          if (iTab) state.v2InstitutionsTab = iTab;
+        }
+
         const found = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab).find(
           (i) => i.institution_name.toLowerCase() === instName.toLowerCase() || i.institution_name.toLowerCase().includes(instName.toLowerCase())
         );
@@ -2122,14 +2144,19 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
 
       let bio = null;
-      if (state.isServerOnline) {
-        try {
-          const res = await fetch(`${state.apiUrl}/api/v2/adjudicators/${encodeURIComponent(judgeName)}/bio`);
-          if (res.ok) bio = await res.json();
-        } catch (e) {}
-      }
+      try {
+        const res = await fetch(`${state.apiUrl}/api/v2/adjudicators/${encodeURIComponent(judgeName)}/bio`);
+        if (res.ok) {
+          bio = await res.json();
+          state.isServerOnline = true;
+        }
+      } catch (e) {}
 
       if (!bio) {
+        if (!state.v2Adjudicators.length) {
+          const judges = await fetchJson('v2_adjudicators.json', '/api/v2/leaderboard/adjudicators');
+          if (judges) state.v2Adjudicators = judges;
+        }
         const found = state.v2Adjudicators.find(
           (j) => j.adjudicator_name.toLowerCase() === judgeName.toLowerCase() || j.adjudicator_name.toLowerCase().includes(judgeName.toLowerCase())
         );
@@ -2492,19 +2519,18 @@
       let braA = selectedA.bra !== undefined ? selectedA.bra : null;
       let braB = selectedB.bra !== undefined ? selectedB.bra : null;
 
-      if (state.isServerOnline) {
-        try {
-          const res = await fetch(`${state.apiUrl}/api/h2h?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}&mode=debater`);
-          if (res.ok) {
-            const j = await res.json();
-            directDebates = j.direct_debates || [];
-            aDirectWins = j.a_direct_wins || 0;
-            bDirectWins = j.b_direct_wins || 0;
-            if (j.a_bra !== undefined) braA = j.a_bra;
-            if (j.b_bra !== undefined) braB = j.b_bra;
-          }
-        } catch (e) {}
-      }
+      try {
+        const res = await fetch(`${state.apiUrl}/api/h2h?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}&mode=debater`);
+        if (res.ok) {
+          const j = await res.json();
+          directDebates = j.direct_debates || [];
+          aDirectWins = j.a_direct_wins || 0;
+          bDirectWins = j.b_direct_wins || 0;
+          if (j.a_bra !== undefined) braA = j.a_bra;
+          if (j.b_bra !== undefined) braB = j.b_bra;
+          state.isServerOnline = true;
+        }
+      } catch (e) {}
 
       // Achievement ranking hierarchy
       const achOrder = {
