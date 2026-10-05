@@ -11,7 +11,7 @@ Automates the entire data pipeline from public Tabbycat URL to validated SQLite 
 import sqlite3
 import sys
 from pathlib import Path
-from typing import Optional
+from typing import Callable, Optional
 
 from atomos.database.connection import initialize_database
 from atomos.extractor.tabbycat import TabbycatExtractor
@@ -33,6 +33,7 @@ class IngestionPipeline:
         skip_extract: bool = False,
         hosting_dates: Optional[str] = None,
         verbose: bool = True,
+        progress_callback: Optional[Callable[[str, str], None]] = None,
     ) -> dict:
         """
         Ingests a tournament by URL or existing slug.
@@ -40,10 +41,13 @@ class IngestionPipeline:
         :param skip_extract: If True, uses existing raw data in data/raw/<slug>
         :param hosting_dates: Optional manual dates when the tournament took place (e.g. 'Oct 12–15, 2026')
         :param verbose: Print progress messages
+        :param progress_callback: Optional callback receiving (step_key, message)
         """
-        def log(msg: str):
+        def log(msg: str, step: str = ""):
             if verbose:
                 print(f"[INGEST] {msg}")
+            if progress_callback:
+                progress_callback(step or msg, msg)
 
         # Determine slug and raw directory
         target_str = target.rstrip("/")
@@ -66,7 +70,7 @@ class IngestionPipeline:
                 else:
                     raise ValueError(f"Full URL required for extraction or existing raw directory '{raw_dir}' not found.")
             else:
-                log(f"Step 1/4: Extracting tournament from {base_url} into {raw_base_dir}...")
+                log(f"Step 1/4: Extracting tournament from {base_url} into {raw_base_dir}...", step="EXTRACTING")
                 extractor = TabbycatExtractor()
                 extract_data = extractor.extract_tournament(base_url=base_url, output_dir=raw_base_dir)
                 slug = (
@@ -75,36 +79,36 @@ class IngestionPipeline:
                     or extract_data.get("tournament_slug", slug)
                 )
                 raw_dir = raw_base_dir / slug
-                log(f"Extraction completed successfully for slug '{slug}'.")
+                log(f"Extraction completed successfully for slug '{slug}'.", step="EXTRACTED")
 
         if skip_extract:
-            log(f"Step 1/4: Skipping extraction. Using existing files in {raw_dir}")
+            log(f"Step 1/4: Skipping extraction. Using existing files in {raw_dir}", step="SKIPPED_EXTRACT")
             if not raw_dir.exists():
                 raise FileNotFoundError(f"Raw data directory does not exist: {raw_dir}")
 
         # STEP 2: NORMALIZATION
-        log(f"Step 2/4: Normalizing {slug} into database {self.db_path}...")
+        log(f"Step 2/4: Normalizing {slug} into database {self.db_path}...", step="NORMALIZING")
         conn = initialize_database(self.db_path)
         normalizer = TournamentNormalizer(conn)
         tournament_id = normalizer.normalize_tournament(raw_dir)
-        log(f"Tournament normalized with internal ID {tournament_id}.")
+        log(f"Tournament normalized with internal ID {tournament_id}.", step="NORMALIZED")
 
         if hosting_dates and hosting_dates.strip():
             conn.execute("UPDATE tournaments SET hosting_dates = ? WHERE id = ?", (hosting_dates.strip(), tournament_id))
             conn.commit()
-            log(f"Persisted manual tournament hosting dates: '{hosting_dates.strip()}'.")
+            log(f"Persisted manual tournament hosting dates: '{hosting_dates.strip()}'.", step="DATES_PERSISTED")
 
         # STEP 3: RECONCILIATION
-        log(f"Step 3/4: Reconciling speaker tabs, out-rounds, byes, and walkovers...")
+        log(f"Step 3/4: Reconciling speaker tabs, out-rounds, byes, and walkovers...", step="RECONCILING")
         reconciler = TabReconciler(conn)
         rec_res = reconciler.reconcile_tournament(tournament_id, raw_dir)
         log(f"Reconciliation: {rec_res['reconciled_debates']} ballots backfilled, "
             f"{rec_res['elimination_debates']} out-rounds preserved, "
             f"{rec_res['bye_swing_debates']} byes categorized, "
-            f"{rec_res['walkover_debates']} true walkovers flagged.")
+            f"{rec_res['walkover_debates']} true walkovers flagged.", step="RECONCILED")
 
         # STEP 4: INTEGRITY VALIDATION
-        log("Step 4/4: Running integrity validation gatekeeper...")
+        log("Step 4/4: Running integrity validation gatekeeper...", step="VALIDATING")
         validator = IntegrityValidator(conn)
         report = validator.validate(tournament_id=tournament_id)
 

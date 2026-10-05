@@ -5,7 +5,7 @@
       "name": "Apoorva Jinadasa",
       "institution": "Hillwood College Kandy",
       "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.84,
+      "speaker_score": 72.79,
       "score_source": "Critical Tab",
       "rank_in_tier": 1
     },
@@ -14,7 +14,7 @@
       "name": "Vidath Marasinghe",
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.74,
+      "speaker_score": 72.71,
       "score_source": "Critical Tab",
       "rank_in_tier": 2
     },
@@ -23,7 +23,7 @@
       "name": "Nimuthu Pathiraja",
       "institution": "Trinity College Kandy",
       "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.47,
+      "speaker_score": 72.44,
       "score_source": "Critical Tab",
       "rank_in_tier": 3
     },
@@ -41,7 +41,7 @@
       "name": "Dithira De Silva",
       "institution": "Royal College",
       "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.14,
+      "speaker_score": 72.12,
       "score_source": "Critical Tab",
       "rank_in_tier": 5
     },
@@ -59,7 +59,7 @@
       "name": "Safiya Bakeer Markar",
       "institution": "Bishop's College",
       "national_level": "Nat Pool, Direct",
-      "speaker_score": 72.04,
+      "speaker_score": 72.06,
       "score_source": "Critical Tab",
       "rank_in_tier": 7
     },
@@ -88,7 +88,7 @@
       "name": "Nuhan Gunasekara",
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Trialed",
-      "speaker_score": 72.09,
+      "speaker_score": 72.12,
       "score_source": "Critical Tab",
       "rank_in_tier": 2
     },
@@ -97,7 +97,7 @@
       "name": "Savithru Liyanapathirana",
       "institution": "Royal College",
       "national_level": "Nat Pool, Trialed",
-      "speaker_score": 71.82,
+      "speaker_score": 71.81,
       "score_source": "Critical Tab",
       "rank_in_tier": 3
     },
@@ -120,13 +120,22 @@
       "rank_in_tier": 5
     },
     {
+      "person_id": 18,
+      "name": "Gagana Prabhashwara",
+      "institution": "Ananda College",
+      "national_level": "Nat Pool, Trialed",
+      "speaker_score": 71.53,
+      "score_source": "Critical Tab",
+      "rank_in_tier": 6
+    },
+    {
       "person_id": 4,
       "name": "Sadew Muthuhetti",
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.52,
       "score_source": "Critical Tab",
-      "rank_in_tier": 6
+      "rank_in_tier": 7
     },
     {
       "person_id": 369,
@@ -135,15 +144,6 @@
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.48,
       "score_source": "Critical Tab",
-      "rank_in_tier": 7
-    },
-    {
-      "person_id": 18,
-      "name": "Gagana Prabhashwara",
-      "institution": "Ananda College",
-      "national_level": "Nat Pool, Trialed",
-      "speaker_score": 71.46,
-      "score_source": "Critical Tab",
       "rank_in_tier": 8
     },
     {
@@ -151,7 +151,7 @@
       "name": "Salma Khalid",
       "institution": "Ladies' College",
       "national_level": "Nat Pool, Trialed",
-      "speaker_score": 71.08,
+      "speaker_score": 71.2,
       "score_source": "Critical Tab",
       "rank_in_tier": 9
     }
@@ -171,7 +171,7 @@
       "name": "Salma Lafir",
       "institution": "St. Bridget's Convent",
       "national_level": "Trials",
-      "speaker_score": 71.63,
+      "speaker_score": 71.7,
       "score_source": "Critical Tab",
       "rank_in_tier": 2
     },
@@ -189,7 +189,7 @@
       "name": "Theruni Abeysinghe",
       "institution": "Bishop's College",
       "national_level": "Trials",
-      "speaker_score": 71.29,
+      "speaker_score": 71.3,
       "score_source": "Critical Tab",
       "rank_in_tier": 4
     },

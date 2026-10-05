@@ -16,6 +16,22 @@
     "rank": 1
   },
   {
+    "tournament_id": 45,
+    "slug": "stanleys2026",
+    "name": "Stanley Abeysekera Memorial (Stanley's '26)",
+    "hosting_dates": "Oct 2-3, 2026",
+    "atss": 245.51,
+    "brk_atss": 249.966,
+    "participating_institutions": 22,
+    "participating_teams": 29,
+    "prelims_count": 5,
+    "open_knockouts_count": 0,
+    "prelims_plus_knock": 5,
+    "total_speeches": 624,
+    "prelim_debates": 75,
+    "rank": 2
+  },
+  {
     "tournament_id": 4,
     "slug": "slsdc26",
     "name": "Sri Lanka Schools Debating Championship (SLSDC 2026)",
@@ -29,7 +45,7 @@
     "prelims_plus_knock": 11,
     "total_speeches": 1528,
     "prelim_debates": 192,
-    "rank": 2
+    "rank": 3
   },
   {
     "tournament_id": 44,
@@ -45,7 +61,7 @@
     "prelims_plus_knock": 9,
     "total_speeches": 824,
     "prelim_debates": 94,
-    "rank": 3
+    "rank": 4
   },
   {
     "tournament_id": 2,
@@ -61,7 +77,7 @@
     "prelims_plus_knock": 8,
     "total_speeches": 552,
     "prelim_debates": 60,
-    "rank": 4
+    "rank": 5
   },
   {
     "tournament_id": 10,
@@ -77,7 +93,7 @@
     "prelims_plus_knock": 9,
     "total_speeches": 660,
     "prelim_debates": 85,
-    "rank": 5
+    "rank": 6
   },
   {
     "tournament_id": 16,
@@ -93,7 +109,7 @@
     "prelims_plus_knock": 8,
     "total_speeches": 552,
     "prelim_debates": 60,
-    "rank": 6
+    "rank": 7
   },
   {
     "tournament_id": 7,
@@ -109,7 +125,7 @@
     "prelims_plus_knock": 9,
     "total_speeches": 680,
     "prelim_debates": 85,
-    "rank": 7
+    "rank": 8
   },
   {
     "tournament_id": 3,
@@ -125,7 +141,7 @@
     "prelims_plus_knock": 9,
     "total_speeches": 816,
     "prelim_debates": 108,
-    "rank": 8
+    "rank": 9
   },
   {
     "tournament_id": 1,
@@ -141,6 +157,6 @@
     "prelims_plus_knock": 10,
     "total_speeches": 1286,
     "prelim_debates": 168,
-    "rank": 9
+    "rank": 10
   }
 ]

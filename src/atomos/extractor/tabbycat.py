@@ -8,6 +8,7 @@ Comprehensive extractor for Tabbycat debating tournament instances:
 - Preserves individual speech component marks: Content, Style, Strategy, and totals
 """
 
+import concurrent.futures
 import json
 import os
 import re
@@ -516,15 +517,16 @@ class TabbycatExtractor:
                             if link not in seen_ballots:
                                 seen_ballots.add(link)
 
-                    count = 0
-                    for b_link in sorted(seen_ballots):
-                        if max_ballots_per_round is not None and count >= max_ballots_per_round:
-                            break
+                    ballots_to_fetch = sorted(seen_ballots)
+                    if max_ballots_per_round is not None:
+                        ballots_to_fetch = ballots_to_fetch[:max_ballots_per_round]
+
+                    def _fetch_single_ballot(item: Tuple[int, str]) -> Optional[Dict[str, Any]]:
+                        idx, b_link = item
                         debate_id_m = re.search(r'/results/debate/(\d+)/scoresheets/?', b_link)
-                        debate_id = debate_id_m.group(1) if debate_id_m else f"r{r_num}_{count}"
+                        debate_id = debate_id_m.group(1) if debate_id_m else f"r{r_num}_{idx}"
                         b_url = f"{origin}{b_link}"
-                        
-                        # Cache: check if HTML already exists
+
                         html_file = scoresheets_dir / f"debate_{debate_id}.html"
                         json_file = scoresheets_dir / f"debate_{debate_id}.json"
 
@@ -534,15 +536,21 @@ class TabbycatExtractor:
                             else:
                                 b_html = self.fetch(b_url)
                                 html_file.write_text(b_html, encoding="utf-8")
-                                time.sleep(0.08)
 
                             parsed_record = self.parse_scoresheet_html(b_html, debate_id, b_url)
                             rec_dict = asdict(parsed_record)
                             json_file.write_text(json.dumps(rec_dict, indent=2), encoding="utf-8")
-                            extracted_data["debates"].append(rec_dict)
-                            count += 1
+                            return rec_dict
                         except Exception as d_err:
                             print(f"[EXTRACT WARNING] Failed debate {debate_id} in round {r_num}: {d_err}")
+                            return None
+
+                    with concurrent.futures.ThreadPoolExecutor(max_workers=8) as executor:
+                        fetched_ballots = list(executor.map(_fetch_single_ballot, enumerate(ballots_to_fetch)))
+
+                    for rec in fetched_ballots:
+                        if rec is not None:
+                            extracted_data["debates"].append(rec)
 
         # 6. Generate Complete Provenance Manifest
         manifest = {

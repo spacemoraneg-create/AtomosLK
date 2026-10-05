@@ -321,3 +321,23 @@ def test_github_sync_configuration(test_client):
     assert data["branch"] == "main"
 
 
+def test_admin_import_status_endpoint(test_client):
+    client, token = test_client
+
+    # 1. 401 check
+    res_unauth = client.get("/api/admin/tournaments/import/status")
+    assert res_unauth.status_code == 401
+
+    # 2. Authorized check
+    res = client.get(
+        "/api/admin/tournaments/import/status",
+        headers={"X-Admin-Token": token}
+    )
+    assert res.status_code == 200
+    data = res.json
+    assert "status" in data
+    assert "message" in data
+    assert "step" in data
+
+
+

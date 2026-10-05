@@ -27,6 +27,7 @@ OFFICIAL_TOURNAMENT_DATES = {
     16: "July 3–6, 2026",       # RIC ISDC 2026
     18: "July 31 – Aug 3, 2026", # Chap's '26
     44: "Sept 18–21, 2026",     # Nixon's 2026
+    45: "Oct 2–3, 2026",        # Stanley's '26
 }
 
 CHRONOLOGICAL_TOURNAMENT_ORDER = {
@@ -39,6 +40,7 @@ CHRONOLOGICAL_TOURNAMENT_ORDER = {
     18: 7,  # Chap's '26 (July 31–Aug 3)
     4: 8,   # SLSDC 2026 (Aug 22–31)
     44: 9,  # Nixon's 2026 (Sept 18–21)
+    45: 10, # Stanley's '26 (Oct 2–3)
 }
 
 CLEAN_TOURNAMENT_NAMES = {
@@ -51,6 +53,7 @@ CLEAN_TOURNAMENT_NAMES = {
     16: "RIC ISDC 2026",
     18: "Frances Chapman Memorial (Chap's '26)",
     44: "Lillian Nixon's Memorial (Nixon's 2026)",
+    45: "Stanley Abeysekera Memorial (Stanley's '26)",
 }
 
 

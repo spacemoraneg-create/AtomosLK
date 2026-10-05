@@ -15,6 +15,21 @@
     "rank": 1
   },
   {
+    "tournament_id": 45,
+    "tournament_slug": "stanleys2026",
+    "tournament_name": "Stanley Abeysekera Memorial (Stanley's '26)",
+    "dates": "Oct 2-3, 2026",
+    "apttss": 245.51,
+    "apttss_breaking": 249.966,
+    "teams_participated": 30,
+    "prelim_rounds": 5,
+    "break_structure": "Partial Octos (Top 12)",
+    "speeches_count": 468,
+    "debates_count": 86,
+    "breaking_teams_count": 12,
+    "rank": 2
+  },
+  {
     "tournament_id": 4,
     "tournament_slug": "slsdc26",
     "tournament_name": "Sri Lanka Schools Debating Championship (SLSDC 2026)",
@@ -27,7 +42,7 @@
     "speeches_count": 1146,
     "debates_count": 207,
     "breaking_teams_count": 16,
-    "rank": 2
+    "rank": 3
   },
   {
     "tournament_id": 44,
@@ -42,7 +57,7 @@
     "speeches_count": 618,
     "debates_count": 104,
     "breaking_teams_count": 12,
-    "rank": 3
+    "rank": 4
   },
   {
     "tournament_id": 2,
@@ -57,7 +72,7 @@
     "speeches_count": 414,
     "debates_count": 67,
     "breaking_teams_count": 8,
-    "rank": 4
+    "rank": 5
   },
   {
     "tournament_id": 10,
@@ -72,7 +87,7 @@
     "speeches_count": 500,
     "debates_count": 100,
     "breaking_teams_count": 16,
-    "rank": 5
+    "rank": 6
   },
   {
     "tournament_id": 16,
@@ -87,7 +102,7 @@
     "speeches_count": 414,
     "debates_count": 67,
     "breaking_teams_count": 8,
-    "rank": 6
+    "rank": 7
   },
   {
     "tournament_id": 7,
@@ -102,7 +117,7 @@
     "speeches_count": 510,
     "debates_count": 96,
     "breaking_teams_count": 12,
-    "rank": 7
+    "rank": 8
   },
   {
     "tournament_id": 3,
@@ -117,7 +132,7 @@
     "speeches_count": 612,
     "debates_count": 125,
     "breaking_teams_count": 20,
-    "rank": 8
+    "rank": 9
   },
   {
     "tournament_id": 1,
@@ -132,6 +147,6 @@
     "speeches_count": 965,
     "debates_count": 191,
     "breaking_teams_count": 24,
-    "rank": 9
+    "rank": 10
   }
 ]

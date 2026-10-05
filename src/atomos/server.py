@@ -658,7 +658,20 @@ def create_app(db_conn=None) -> Flask:
             "tournaments": tournaments,
         })
 
-    # 21. Tournament Ingestion Pipeline Trigger
+    # 21. Tournament Ingestion Pipeline Trigger & Status
+    ingestion_job_lock = threading.Lock()
+    ingestion_job_state = {
+        "status": "idle",
+        "target": "",
+        "slug": "",
+        "step": "",
+        "message": "No ingestion active.",
+        "data": None,
+        "error": None,
+        "started_at": None,
+        "finished_at": None,
+    }
+
     @app.route("/api/admin/tournaments/import", methods=["POST"])
     @require_admin
     def admin_import_tournament():
@@ -666,32 +679,83 @@ def create_app(db_conn=None) -> Flask:
         target = payload.get("target", "").strip()
         skip_extract = bool(payload.get("skip_extract", False))
         hosting_dates = (payload.get("hosting_dates") or "").strip() or None
+        req_token = get_request_github_token()
 
         if not target:
             return jsonify({"error": "Target URL or local slug is required."}), 400
 
-        try:
-            pipeline = IngestionPipeline(db_path=Path("data/atomos.db"))
-            res = pipeline.ingest_tournament(
-                target=target,
-                skip_extract=skip_extract,
-                verbose=True,
-                hosting_dates=hosting_dates,
-            )
+        with ingestion_job_lock:
+            if ingestion_job_state["status"] == "running":
+                return jsonify({
+                    "success": False,
+                    "error": f"An ingestion pipeline is already running for '{ingestion_job_state.get('target')}'.",
+                    "status": "running",
+                }), 409
 
-            # Trigger static web export and auto-sync to GitHub in background
-            t_label = res.get("slug", target)
-            trigger_async_export_and_sync(
-                commit_message=f"chore(data): auto-sync after importing tournament {t_label}"
-            )
+            ingestion_job_state["status"] = "running"
+            ingestion_job_state["target"] = target
+            ingestion_job_state["slug"] = target.rstrip("/").split("/")[-1]
+            ingestion_job_state["step"] = "STARTING"
+            ingestion_job_state["message"] = f"Initializing ingestion pipeline for '{target}'..."
+            ingestion_job_state["data"] = None
+            ingestion_job_state["error"] = None
+            ingestion_job_state["started_at"] = time.time()
+            ingestion_job_state["finished_at"] = None
 
-            return jsonify({
-                "success": True,
-                "message": f"Tournament '{res.get('slug', target)}' successfully imported.",
-                "data": res,
-            })
-        except Exception as e:
-            return jsonify({"error": f"Ingestion failed: {str(e)}"}), 500
+        def _worker():
+            try:
+                def _on_progress(step_key: str, msg: str):
+                    with ingestion_job_lock:
+                        ingestion_job_state["step"] = step_key
+                        ingestion_job_state["message"] = msg
+
+                pipeline = IngestionPipeline(db_path=Path("data/atomos.db"))
+                res = pipeline.ingest_tournament(
+                    target=target,
+                    skip_extract=skip_extract,
+                    verbose=True,
+                    hosting_dates=hosting_dates,
+                    progress_callback=_on_progress,
+                )
+
+                t_label = res.get("slug", target)
+                with ingestion_job_lock:
+                    ingestion_job_state["step"] = "SYNCING"
+                    ingestion_job_state["message"] = f"Exporting static web data and syncing to GitHub for '{t_label}'..."
+
+                trigger_async_export_and_sync(
+                    commit_message=f"chore(data): auto-sync after importing tournament {t_label}",
+                    custom_token=req_token,
+                )
+
+                with ingestion_job_lock:
+                    ingestion_job_state["status"] = "success"
+                    ingestion_job_state["step"] = "COMPLETED"
+                    ingestion_job_state["data"] = res
+                    ingestion_job_state["message"] = f"Tournament '{t_label}' successfully imported."
+                    ingestion_job_state["finished_at"] = time.time()
+            except Exception as e:
+                with ingestion_job_lock:
+                    ingestion_job_state["status"] = "error"
+                    ingestion_job_state["step"] = "FAILED"
+                    ingestion_job_state["error"] = str(e)
+                    ingestion_job_state["message"] = f"Ingestion failed: {str(e)}"
+                    ingestion_job_state["finished_at"] = time.time()
+
+        threading.Thread(target=_worker, daemon=True).start()
+
+        return jsonify({
+            "success": True,
+            "status": "running",
+            "message": f"Ingestion pipeline launched in background for '{target}'.",
+            "target": target,
+        })
+
+    @app.route("/api/admin/tournaments/import/status", methods=["GET"])
+    @require_admin
+    def admin_import_status():
+        with ingestion_job_lock:
+            return jsonify(dict(ingestion_job_state))
 
     # 22. Tournament Purge / Deletion (Cascading)
     @app.route("/api/admin/tournaments/<identifier>", methods=["DELETE"])

@@ -5,14 +5,14 @@
     "speaker_name": "Apoorva Jinadasa",
     "institution": "Hillwood College Kandy",
     "national_level": "Nat Pool, Direct",
-    "speaker_score": 72.843,
-    "win_percentage": 81.25,
-    "stdev": 1.011,
-    "prelims_debated": 16,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 16,
-    "total_debates": 16,
-    "total_wins": 13,
+    "speaker_score": 72.785,
+    "win_percentage": 80.952,
+    "stdev": 0.902,
+    "prelims_debated": 21,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 21,
+    "total_debates": 21,
+    "total_wins": 17,
     "highest_achievement": "Semifinalist",
     "rank": 1
   },
@@ -22,14 +22,14 @@
     "speaker_name": "Vidath Marasinghe",
     "institution": "D. S. Senanayake College",
     "national_level": "Nat Pool, Direct",
-    "speaker_score": 72.74,
-    "win_percentage": 85.294,
-    "stdev": 1.194,
-    "prelims_debated": 34,
-    "tournaments_debated": 7,
-    "total_substantive_speeches": 34,
-    "total_debates": 34,
-    "total_wins": 29,
+    "speaker_score": 72.714,
+    "win_percentage": 84.21,
+    "stdev": 1.142,
+    "prelims_debated": 38,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 38,
+    "total_debates": 38,
+    "total_wins": 32,
     "highest_achievement": "Champion",
     "rank": 2
   },
@@ -39,14 +39,14 @@
     "speaker_name": "T. Tharaniharan",
     "institution": "Royal College",
     "national_level": null,
-    "speaker_score": 72.568,
+    "speaker_score": 72.52,
     "win_percentage": 100,
-    "stdev": 0.744,
-    "prelims_debated": 22,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 22,
-    "total_debates": 22,
-    "total_wins": 22,
+    "stdev": 0.714,
+    "prelims_debated": 25,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 25,
+    "total_debates": 25,
+    "total_wins": 25,
     "highest_achievement": "Champion",
     "rank": 3
   },
@@ -56,14 +56,14 @@
     "speaker_name": "Nimuthu Pathiraja",
     "institution": "Trinity College Kandy",
     "national_level": "Nat Pool, Direct",
-    "speaker_score": 72.467,
-    "win_percentage": 75.609,
-    "stdev": 0.945,
-    "prelims_debated": 41,
-    "tournaments_debated": 8,
-    "total_substantive_speeches": 41,
-    "total_debates": 41,
-    "total_wins": 31,
+    "speaker_score": 72.438,
+    "win_percentage": 78.26,
+    "stdev": 0.923,
+    "prelims_debated": 46,
+    "tournaments_debated": 9,
+    "total_substantive_speeches": 46,
+    "total_debates": 46,
+    "total_wins": 36,
     "highest_achievement": "Champion",
     "rank": 4
   },
@@ -90,33 +90,16 @@
     "speaker_name": "Ra'ed Abdul Cader",
     "institution": "Asian International School",
     "national_level": null,
-    "speaker_score": 72.172,
-    "win_percentage": 75.862,
-    "stdev": 0.71,
-    "prelims_debated": 29,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 29,
-    "total_debates": 29,
-    "total_wins": 22,
+    "speaker_score": 72.161,
+    "win_percentage": 73.529,
+    "stdev": 0.735,
+    "prelims_debated": 34,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 34,
+    "total_debates": 34,
+    "total_wins": 25,
     "highest_achievement": "Champion",
     "rank": 6
-  },
-  {
-    "person_id": 333,
-    "name": "Dithira De Silva",
-    "speaker_name": "Dithira De Silva",
-    "institution": "Royal College",
-    "national_level": "Nat Pool, Direct",
-    "speaker_score": 72.142,
-    "win_percentage": 94.285,
-    "stdev": 0.753,
-    "prelims_debated": 35,
-    "tournaments_debated": 7,
-    "total_substantive_speeches": 35,
-    "total_debates": 35,
-    "total_wins": 33,
-    "highest_achievement": "Finalist",
-    "rank": 7
   },
   {
     "person_id": 330,
@@ -133,6 +116,23 @@
     "total_debates": 31,
     "total_wins": 29,
     "highest_achievement": "Champion",
+    "rank": 7
+  },
+  {
+    "person_id": 333,
+    "name": "Dithira De Silva",
+    "speaker_name": "Dithira De Silva",
+    "institution": "Royal College",
+    "national_level": "Nat Pool, Direct",
+    "speaker_score": 72.125,
+    "win_percentage": 95,
+    "stdev": 0.74,
+    "prelims_debated": 40,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 40,
+    "total_debates": 40,
+    "total_wins": 38,
+    "highest_achievement": "Finalist",
     "rank": 8
   },
   {
@@ -141,14 +141,14 @@
     "speaker_name": "Nuhan Gunasekara",
     "institution": "D. S. Senanayake College",
     "national_level": "Nat Pool, Trialed",
-    "speaker_score": 72.09,
-    "win_percentage": 81.818,
-    "stdev": 1.098,
-    "prelims_debated": 22,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 22,
-    "total_debates": 22,
-    "total_wins": 18,
+    "speaker_score": 72.12,
+    "win_percentage": 80,
+    "stdev": 1.082,
+    "prelims_debated": 25,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 25,
+    "total_debates": 25,
+    "total_wins": 20,
     "highest_achievement": "Champion",
     "rank": 9
   },
@@ -175,14 +175,14 @@
     "speaker_name": "Safiya Bakeer Markar",
     "institution": "Bishop's College",
     "national_level": "Nat Pool, Direct",
-    "speaker_score": 72.037,
-    "win_percentage": 81.481,
-    "stdev": 0.46,
-    "prelims_debated": 27,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 27,
-    "total_debates": 27,
-    "total_wins": 22,
+    "speaker_score": 72.064,
+    "win_percentage": 80.645,
+    "stdev": 0.462,
+    "prelims_debated": 31,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 31,
+    "total_debates": 31,
+    "total_wins": 25,
     "highest_achievement": "Champion",
     "rank": 11
   },
@@ -192,14 +192,14 @@
     "speaker_name": "Kaveesha De Silva",
     "institution": "Royal College",
     "national_level": "Nat Pool, Direct",
-    "speaker_score": 71.965,
-    "win_percentage": 75,
-    "stdev": 1.055,
-    "prelims_debated": 36,
-    "tournaments_debated": 7,
-    "total_substantive_speeches": 36,
-    "total_debates": 36,
-    "total_wins": 27,
+    "speaker_score": 71.968,
+    "win_percentage": 77.5,
+    "stdev": 1.006,
+    "prelims_debated": 40,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 40,
+    "total_debates": 40,
+    "total_wins": 31,
     "highest_achievement": "Champion",
     "rank": 12
   },
@@ -226,16 +226,33 @@
     "speaker_name": "Savithru Liyanapathirana",
     "institution": "Royal College",
     "national_level": "Nat Pool, Trialed",
-    "speaker_score": 71.819,
-    "win_percentage": 74.193,
-    "stdev": 1.065,
-    "prelims_debated": 31,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 31,
-    "total_debates": 31,
-    "total_wins": 23,
+    "speaker_score": 71.806,
+    "win_percentage": 76.47,
+    "stdev": 1.027,
+    "prelims_debated": 34,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 34,
+    "total_debates": 34,
+    "total_wins": 26,
     "highest_achievement": "Champion",
     "rank": 14
+  },
+  {
+    "person_id": 57,
+    "name": "Ananya Nandakumar",
+    "speaker_name": "Ananya Nandakumar",
+    "institution": "Elizabeth Moir School",
+    "national_level": null,
+    "speaker_score": 71.78,
+    "win_percentage": 69.444,
+    "stdev": 1.075,
+    "prelims_debated": 36,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 36,
+    "total_debates": 36,
+    "total_wins": 25,
+    "highest_achievement": "Semifinalist",
+    "rank": 15
   },
   {
     "person_id": 14,
@@ -252,24 +269,24 @@
     "total_debates": 20,
     "total_wins": 17,
     "highest_achievement": "Finalist",
-    "rank": 15
+    "rank": 16
   },
   {
-    "person_id": 57,
-    "name": "Ananya Nandakumar",
-    "speaker_name": "Ananya Nandakumar",
-    "institution": "Elizabeth Moir School",
-    "national_level": null,
-    "speaker_score": 71.744,
-    "win_percentage": 70.967,
-    "stdev": 1.128,
+    "person_id": 47,
+    "name": "Salma Lafir",
+    "speaker_name": "Salma Lafir",
+    "institution": "St. Bridget's Convent",
+    "national_level": "Trials",
+    "speaker_score": 71.709,
+    "win_percentage": 64.516,
+    "stdev": 1.243,
     "prelims_debated": 31,
-    "tournaments_debated": 6,
+    "tournaments_debated": 7,
     "total_substantive_speeches": 31,
     "total_debates": 31,
-    "total_wins": 22,
+    "total_wins": 20,
     "highest_achievement": "Semifinalist",
-    "rank": 16
+    "rank": 17
   },
   {
     "person_id": 6,
@@ -286,7 +303,7 @@
     "total_debates": 36,
     "total_wins": 31,
     "highest_achievement": "Champion",
-    "rank": 17
+    "rank": 18
   },
   {
     "person_id": 46,
@@ -303,7 +320,7 @@
     "total_debates": 32,
     "total_wins": 22,
     "highest_achievement": "Semifinalist",
-    "rank": 18
+    "rank": 19
   },
   {
     "person_id": 11,
@@ -320,23 +337,6 @@
     "total_debates": 21,
     "total_wins": 18,
     "highest_achievement": "Finalist",
-    "rank": 19
-  },
-  {
-    "person_id": 47,
-    "name": "Salma Lafir",
-    "speaker_name": "Salma Lafir",
-    "institution": "St. Bridget's Convent",
-    "national_level": "Trials",
-    "speaker_score": 71.642,
-    "win_percentage": 64.285,
-    "stdev": 1.282,
-    "prelims_debated": 28,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 28,
-    "total_debates": 28,
-    "total_wins": 18,
-    "highest_achievement": "Semifinalist",
     "rank": 20
   },
   {
@@ -357,6 +357,57 @@
     "rank": 21
   },
   {
+    "person_id": 35,
+    "name": "Yokith Perera",
+    "speaker_name": "Yokith Perera",
+    "institution": "S. Thomas' College",
+    "national_level": null,
+    "speaker_score": 71.553,
+    "win_percentage": 64.285,
+    "stdev": 1.242,
+    "prelims_debated": 28,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 28,
+    "total_debates": 28,
+    "total_wins": 18,
+    "highest_achievement": "Quarterfinalist",
+    "rank": 22
+  },
+  {
+    "person_id": 18,
+    "name": "Gagana Prabhashwara",
+    "speaker_name": "Gagana Prabhashwara",
+    "institution": "Ananda College",
+    "national_level": "Nat Pool, Trialed",
+    "speaker_score": 71.534,
+    "win_percentage": 62.79,
+    "stdev": 1.043,
+    "prelims_debated": 43,
+    "tournaments_debated": 9,
+    "total_substantive_speeches": 43,
+    "total_debates": 43,
+    "total_wins": 27,
+    "highest_achievement": "Champion",
+    "rank": 23
+  },
+  {
+    "person_id": 16,
+    "name": "Lometh Basnayake",
+    "speaker_name": "Lometh Basnayake",
+    "institution": "Ananda College",
+    "national_level": null,
+    "speaker_score": 71.518,
+    "win_percentage": 65.217,
+    "stdev": 0.902,
+    "prelims_debated": 46,
+    "tournaments_debated": 9,
+    "total_substantive_speeches": 46,
+    "total_debates": 46,
+    "total_wins": 30,
+    "highest_achievement": "Champion",
+    "rank": 24
+  },
+  {
     "person_id": 4,
     "name": "Sadew Muthuhetti",
     "speaker_name": "Sadew Muthuhetti",
@@ -371,7 +422,7 @@
     "total_debates": 39,
     "total_wins": 33,
     "highest_achievement": "Champion",
-    "rank": 22
+    "rank": 25
   },
   {
     "person_id": 369,
@@ -379,67 +430,50 @@
     "speaker_name": "Sonalki Dharmawansa",
     "institution": "Ladies' College",
     "national_level": "Nat Pool, Trialed",
-    "speaker_score": 71.48,
-    "win_percentage": 69.23,
-    "stdev": 0.91,
-    "prelims_debated": 26,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 26,
-    "total_debates": 26,
-    "total_wins": 18,
+    "speaker_score": 71.483,
+    "win_percentage": 67.741,
+    "stdev": 0.861,
+    "prelims_debated": 31,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 31,
+    "total_debates": 31,
+    "total_wins": 21,
     "highest_achievement": "Semifinalist",
-    "rank": 23
+    "rank": 26
   },
   {
-    "person_id": 18,
-    "name": "Gagana Prabhashwara",
-    "speaker_name": "Gagana Prabhashwara",
-    "institution": "Ananda College",
-    "national_level": "Nat Pool, Trialed",
-    "speaker_score": 71.462,
-    "win_percentage": 65,
-    "stdev": 1.046,
-    "prelims_debated": 40,
-    "tournaments_debated": 8,
-    "total_substantive_speeches": 40,
-    "total_debates": 40,
-    "total_wins": 26,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 24
-  },
-  {
-    "person_id": 16,
-    "name": "Lometh Basnayake",
-    "speaker_name": "Lometh Basnayake",
-    "institution": "Ananda College",
+    "person_id": 444,
+    "name": "Dhanuka Wijegoonaratne",
+    "speaker_name": "Dhanuka Wijegoonaratne",
+    "institution": "Gateway College Colombo",
     "national_level": null,
-    "speaker_score": 71.447,
-    "win_percentage": 65.853,
-    "stdev": 0.902,
-    "prelims_debated": 41,
-    "tournaments_debated": 8,
-    "total_substantive_speeches": 41,
-    "total_debates": 41,
-    "total_wins": 27,
-    "highest_achievement": "Champion",
-    "rank": 25
-  },
-  {
-    "person_id": 35,
-    "name": "Yokith Perera",
-    "speaker_name": "Yokith Perera",
-    "institution": "S. Thomas' College",
-    "national_level": null,
-    "speaker_score": 71.395,
-    "win_percentage": 62.5,
-    "stdev": 1.233,
-    "prelims_debated": 24,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 24,
-    "total_debates": 24,
+    "speaker_score": 71.454,
+    "win_percentage": 68.181,
+    "stdev": 0.974,
+    "prelims_debated": 22,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 22,
+    "total_debates": 22,
     "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
-    "rank": 26
+    "rank": 27
+  },
+  {
+    "person_id": 423,
+    "name": "Yaqeen Zuresh",
+    "speaker_name": "Yaqeen Zuresh",
+    "institution": "Asian International School",
+    "national_level": null,
+    "speaker_score": 71.453,
+    "win_percentage": 75,
+    "stdev": 0.826,
+    "prelims_debated": 32,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 32,
+    "total_debates": 32,
+    "total_wins": 24,
+    "highest_achievement": "Champion",
+    "rank": 28
   },
   {
     "person_id": 437,
@@ -456,75 +490,7 @@
     "total_debates": 24,
     "total_wins": 19,
     "highest_achievement": "Champion",
-    "rank": 27
-  },
-  {
-    "person_id": 444,
-    "name": "Dhanuka Wijegoonaratne",
-    "speaker_name": "Dhanuka Wijegoonaratne",
-    "institution": "Gateway College Colombo",
-    "national_level": null,
-    "speaker_score": 71.352,
-    "win_percentage": 64.705,
-    "stdev": 1.027,
-    "prelims_debated": 17,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 17,
-    "total_debates": 17,
-    "total_wins": 11,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 28
-  },
-  {
-    "person_id": 423,
-    "name": "Yaqeen Zuresh",
-    "speaker_name": "Yaqeen Zuresh",
-    "institution": "Asian International School",
-    "national_level": null,
-    "speaker_score": 71.333,
-    "win_percentage": 77.777,
-    "stdev": 0.707,
-    "prelims_debated": 27,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 27,
-    "total_debates": 27,
-    "total_wins": 21,
-    "highest_achievement": "Champion",
     "rank": 29
-  },
-  {
-    "person_id": 20,
-    "name": "Theruni Abeysinghe",
-    "speaker_name": "Theruni Abeysinghe",
-    "institution": "Bishop's College",
-    "national_level": "Trials",
-    "speaker_score": 71.288,
-    "win_percentage": 76.666,
-    "stdev": 1.007,
-    "prelims_debated": 30,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 30,
-    "total_debates": 30,
-    "total_wins": 23,
-    "highest_achievement": "Champion",
-    "rank": 30
-  },
-  {
-    "person_id": 442,
-    "name": "Aiden Thomas",
-    "speaker_name": "Aiden Thomas",
-    "institution": "Gateway College Colombo",
-    "national_level": null,
-    "speaker_score": 71.281,
-    "win_percentage": 68.75,
-    "stdev": 0.773,
-    "prelims_debated": 16,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 16,
-    "total_debates": 16,
-    "total_wins": 11,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 31
   },
   {
     "person_id": 34,
@@ -532,16 +498,33 @@
     "speaker_name": "Yohan Wijesuriya",
     "institution": "S. Thomas' College",
     "national_level": null,
-    "speaker_score": 71.25,
-    "win_percentage": 60,
-    "stdev": 1.186,
-    "prelims_debated": 20,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 20,
-    "total_debates": 20,
-    "total_wins": 12,
+    "speaker_score": 71.333,
+    "win_percentage": 62.5,
+    "stdev": 1.138,
+    "prelims_debated": 24,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 24,
+    "total_debates": 24,
+    "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
-    "rank": 32
+    "rank": 30
+  },
+  {
+    "person_id": 20,
+    "name": "Theruni Abeysinghe",
+    "speaker_name": "Theruni Abeysinghe",
+    "institution": "Bishop's College",
+    "national_level": "Trials",
+    "speaker_score": 71.304,
+    "win_percentage": 74.285,
+    "stdev": 0.965,
+    "prelims_debated": 35,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 35,
+    "total_debates": 35,
+    "total_wins": 26,
+    "highest_achievement": "Champion",
+    "rank": 31
   },
   {
     "person_id": 447,
@@ -549,16 +532,50 @@
     "speaker_name": "Selvendra Jathuran",
     "institution": "Gateway College Dehiwala",
     "national_level": "Trials",
-    "speaker_score": 71.233,
-    "win_percentage": 55,
-    "stdev": 0.987,
-    "prelims_debated": 20,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 20,
-    "total_debates": 20,
-    "total_wins": 11,
+    "speaker_score": 71.226,
+    "win_percentage": 52,
+    "stdev": 0.885,
+    "prelims_debated": 25,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 25,
+    "total_debates": 25,
+    "total_wins": 13,
     "highest_achievement": "Semifinalist",
+    "rank": 32
+  },
+  {
+    "person_id": 54,
+    "name": "Salma Khalid",
+    "speaker_name": "Salma Khalid",
+    "institution": "Ladies' College",
+    "national_level": "Nat Pool, Trialed",
+    "speaker_score": 71.197,
+    "win_percentage": 57.894,
+    "stdev": 1.126,
+    "prelims_debated": 19,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 19,
+    "total_debates": 19,
+    "total_wins": 11,
+    "highest_achievement": "Quarterfinalist",
     "rank": 33
+  },
+  {
+    "person_id": 442,
+    "name": "Aiden Thomas",
+    "speaker_name": "Aiden Thomas",
+    "institution": "Gateway College Colombo",
+    "national_level": null,
+    "speaker_score": 71.142,
+    "win_percentage": 71.428,
+    "stdev": 0.792,
+    "prelims_debated": 21,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 21,
+    "total_debates": 21,
+    "total_wins": 15,
+    "highest_achievement": "Quarterfinalist",
+    "rank": 34
   },
   {
     "person_id": 42,
@@ -566,16 +583,16 @@
     "speaker_name": "Balishta Wijesinghe",
     "institution": "D. S. Senanayake College",
     "national_level": "Trials",
-    "speaker_score": 71.145,
-    "win_percentage": 63.888,
-    "stdev": 1.128,
-    "prelims_debated": 36,
-    "tournaments_debated": 8,
-    "total_substantive_speeches": 36,
-    "total_debates": 36,
-    "total_wins": 23,
+    "speaker_score": 71.141,
+    "win_percentage": 64.864,
+    "stdev": 1.112,
+    "prelims_debated": 37,
+    "tournaments_debated": 9,
+    "total_substantive_speeches": 37,
+    "total_debates": 37,
+    "total_wins": 24,
     "highest_achievement": "Champion",
-    "rank": 34
+    "rank": 35
   },
   {
     "person_id": 331,
@@ -592,7 +609,7 @@
     "total_debates": 30,
     "total_wins": 24,
     "highest_achievement": "Champion",
-    "rank": 35
+    "rank": 36
   },
   {
     "person_id": 585,
@@ -609,23 +626,6 @@
     "total_debates": 22,
     "total_wins": 14,
     "highest_achievement": "Semifinalist",
-    "rank": 36
-  },
-  {
-    "person_id": 54,
-    "name": "Salma Khalid",
-    "speaker_name": "Salma Khalid",
-    "institution": "Ladies' College",
-    "national_level": "Nat Pool, Trialed",
-    "speaker_score": 71.083,
-    "win_percentage": 60,
-    "stdev": 1.245,
-    "prelims_debated": 15,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 15,
-    "total_debates": 15,
-    "total_wins": 9,
-    "highest_achievement": "Quarterfinalist",
     "rank": 37
   },
   {
@@ -646,6 +646,23 @@
     "rank": 38
   },
   {
+    "person_id": 24,
+    "name": "Thejini Gamage",
+    "speaker_name": "Thejini Gamage",
+    "institution": "Visakha Vidyalaya",
+    "national_level": null,
+    "speaker_score": 71.015,
+    "win_percentage": 65.116,
+    "stdev": 1.043,
+    "prelims_debated": 43,
+    "tournaments_debated": 9,
+    "total_substantive_speeches": 43,
+    "total_debates": 43,
+    "total_wins": 28,
+    "highest_achievement": "Finalist",
+    "rank": 39
+  },
+  {
     "person_id": 357,
     "name": "Binara Kulasekara",
     "speaker_name": "Binara Kulasekara",
@@ -660,7 +677,7 @@
     "total_debates": 17,
     "total_wins": 12,
     "highest_achievement": "Champion",
-    "rank": 39
+    "rank": 40
   },
   {
     "person_id": 587,
@@ -677,7 +694,7 @@
     "total_debates": 22,
     "total_wins": 14,
     "highest_achievement": "Semifinalist",
-    "rank": 40
+    "rank": 41
   },
   {
     "person_id": 49,
@@ -694,7 +711,7 @@
     "total_debates": 17,
     "total_wins": 10,
     "highest_achievement": "Octofinalist",
-    "rank": 41
+    "rank": 42
   },
   {
     "person_id": 15,
@@ -711,41 +728,7 @@
     "total_debates": 31,
     "total_wins": 21,
     "highest_achievement": "Champion",
-    "rank": 42
-  },
-  {
-    "person_id": 24,
-    "name": "Thejini Gamage",
-    "speaker_name": "Thejini Gamage",
-    "institution": "Visakha Vidyalaya",
-    "national_level": null,
-    "speaker_score": 70.938,
-    "win_percentage": 65.789,
-    "stdev": 1.066,
-    "prelims_debated": 38,
-    "tournaments_debated": 8,
-    "total_substantive_speeches": 38,
-    "total_debates": 38,
-    "total_wins": 25,
-    "highest_achievement": "Finalist",
     "rank": 43
-  },
-  {
-    "person_id": 58,
-    "name": "Sasaru Bandara",
-    "speaker_name": "Sasaru Bandara",
-    "institution": "Elizabeth Moir School",
-    "national_level": null,
-    "speaker_score": 70.934,
-    "win_percentage": 70.833,
-    "stdev": 1.151,
-    "prelims_debated": 24,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 24,
-    "total_debates": 24,
-    "total_wins": 17,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 44
   },
   {
     "person_id": 28,
@@ -762,41 +745,24 @@
     "total_debates": 23,
     "total_wins": 16,
     "highest_achievement": "Quarterfinalist",
-    "rank": 45
+    "rank": 44
   },
   {
-    "person_id": 364,
-    "name": "John Dimittri Soosaipillai",
-    "speaker_name": "John Dimittri Soosaipillai",
-    "institution": "Colombo International School",
+    "person_id": 58,
+    "name": "Sasaru Bandara",
+    "speaker_name": "Sasaru Bandara",
+    "institution": "Elizabeth Moir School",
     "national_level": null,
-    "speaker_score": 70.929,
-    "win_percentage": 56.25,
-    "stdev": 0.914,
-    "prelims_debated": 32,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 32,
-    "total_debates": 32,
-    "total_wins": 18,
+    "speaker_score": 70.928,
+    "win_percentage": 68.965,
+    "stdev": 1.063,
+    "prelims_debated": 29,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 29,
+    "total_debates": 29,
+    "total_wins": 20,
     "highest_achievement": "Quarterfinalist",
-    "rank": 46
-  },
-  {
-    "person_id": 1,
-    "name": "Abeesha Wickramasinghe",
-    "speaker_name": "Abeesha Wickramasinghe",
-    "institution": "Trinity College Kandy",
-    "national_level": null,
-    "speaker_score": 70.908,
-    "win_percentage": 72.5,
-    "stdev": 0.778,
-    "prelims_debated": 40,
-    "tournaments_debated": 8,
-    "total_substantive_speeches": 40,
-    "total_debates": 40,
-    "total_wins": 29,
-    "highest_achievement": "Champion",
-    "rank": 47
+    "rank": 45
   },
   {
     "person_id": 370,
@@ -804,16 +770,84 @@
     "speaker_name": "Mikaela Schoorman",
     "institution": "Ladies' College",
     "national_level": null,
-    "speaker_score": 70.881,
-    "win_percentage": 61.111,
-    "stdev": 1.049,
+    "speaker_score": 70.92,
+    "win_percentage": 60.975,
+    "stdev": 1.04,
+    "prelims_debated": 41,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 41,
+    "total_debates": 41,
+    "total_wins": 25,
+    "highest_achievement": "Quarterfinalist",
+    "rank": 46
+  },
+  {
+    "person_id": 364,
+    "name": "John Dimittri Soosaipillai",
+    "speaker_name": "John Dimittri Soosaipillai",
+    "institution": "Colombo International School",
+    "national_level": null,
+    "speaker_score": 70.909,
+    "win_percentage": 55.555,
+    "stdev": 0.898,
     "prelims_debated": 36,
     "tournaments_debated": 7,
     "total_substantive_speeches": 36,
     "total_debates": 36,
-    "total_wins": 22,
+    "total_wins": 20,
     "highest_achievement": "Quarterfinalist",
+    "rank": 47
+  },
+  {
+    "person_id": 1,
+    "name": "Abeesha Wickramasinghe",
+    "speaker_name": "Abeesha Wickramasinghe",
+    "institution": "Trinity College Kandy",
+    "national_level": null,
+    "speaker_score": 70.893,
+    "win_percentage": 75,
+    "stdev": 0.761,
+    "prelims_debated": 44,
+    "tournaments_debated": 9,
+    "total_substantive_speeches": 44,
+    "total_debates": 44,
+    "total_wins": 33,
+    "highest_achievement": "Champion",
     "rank": 48
+  },
+  {
+    "person_id": 25,
+    "name": "Chesanga Welagedara",
+    "speaker_name": "Chesanga Welagedara",
+    "institution": "Visakha Vidyalaya",
+    "national_level": null,
+    "speaker_score": 70.755,
+    "win_percentage": 66.666,
+    "stdev": 1.093,
+    "prelims_debated": 30,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 30,
+    "total_debates": 30,
+    "total_wins": 20,
+    "highest_achievement": "Finalist",
+    "rank": 49
+  },
+  {
+    "person_id": 589,
+    "name": "Nirav Tejwani",
+    "speaker_name": "Nirav Tejwani",
+    "institution": "Colombo International School",
+    "national_level": null,
+    "speaker_score": 70.75,
+    "win_percentage": 50,
+    "stdev": 1.14,
+    "prelims_debated": 18,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 18,
+    "total_debates": 18,
+    "total_wins": 9,
+    "highest_achievement": "Partial Octofinalist",
+    "rank": 50
   },
   {
     "person_id": 838,
@@ -830,24 +864,7 @@
     "total_debates": 16,
     "total_wins": 9,
     "highest_achievement": "Semifinalist",
-    "rank": 49
-  },
-  {
-    "person_id": 589,
-    "name": "Nirav Tejwani",
-    "speaker_name": "Nirav Tejwani",
-    "institution": "Colombo International School",
-    "national_level": null,
-    "speaker_score": 70.714,
-    "win_percentage": 50,
-    "stdev": 1.235,
-    "prelims_debated": 14,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 14,
-    "total_debates": 14,
-    "total_wins": 7,
-    "highest_achievement": "Partial Octofinalist",
-    "rank": 50
+    "rank": 51
   },
   {
     "person_id": 26,
@@ -864,7 +881,24 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Quarterfinalist",
-    "rank": 51
+    "rank": 52
+  },
+  {
+    "person_id": 21,
+    "name": "Nethini Samarakoon",
+    "speaker_name": "Nethini Samarakoon",
+    "institution": "Bishop's College",
+    "national_level": null,
+    "speaker_score": 70.68,
+    "win_percentage": 70.27,
+    "stdev": 0.834,
+    "prelims_debated": 37,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 37,
+    "total_debates": 37,
+    "total_wins": 26,
+    "highest_achievement": "Champion",
+    "rank": 53
   },
   {
     "person_id": 92,
@@ -881,24 +915,7 @@
     "total_debates": 12,
     "total_wins": 7,
     "highest_achievement": "Quarterfinalist",
-    "rank": 52
-  },
-  {
-    "person_id": 21,
-    "name": "Nethini Samarakoon",
-    "speaker_name": "Nethini Samarakoon",
-    "institution": "Bishop's College",
-    "national_level": null,
-    "speaker_score": 70.656,
-    "win_percentage": 72.727,
-    "stdev": 0.842,
-    "prelims_debated": 33,
-    "tournaments_debated": 7,
-    "total_substantive_speeches": 33,
-    "total_debates": 33,
-    "total_wins": 24,
-    "highest_achievement": "Champion",
-    "rank": 53
+    "rank": 54
   },
   {
     "person_id": 138,
@@ -915,7 +932,7 @@
     "total_debates": 24,
     "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
-    "rank": 54
+    "rank": 55
   },
   {
     "person_id": 883,
@@ -932,7 +949,7 @@
     "total_debates": 27,
     "total_wins": 13,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 55
+    "rank": 56
   },
   {
     "person_id": 443,
@@ -949,7 +966,7 @@
     "total_debates": 15,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 56
+    "rank": 57
   },
   {
     "person_id": 9,
@@ -966,23 +983,6 @@
     "total_debates": 27,
     "total_wins": 18,
     "highest_achievement": "Quarterfinalist",
-    "rank": 57
-  },
-  {
-    "person_id": 25,
-    "name": "Chesanga Welagedara",
-    "speaker_name": "Chesanga Welagedara",
-    "institution": "Visakha Vidyalaya",
-    "national_level": null,
-    "speaker_score": 70.626,
-    "win_percentage": 68,
-    "stdev": 1.117,
-    "prelims_debated": 25,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 25,
-    "total_debates": 25,
-    "total_wins": 17,
-    "highest_achievement": "Finalist",
     "rank": 58
   },
   {
@@ -1003,6 +1003,23 @@
     "rank": 59
   },
   {
+    "person_id": 446,
+    "name": "Haroon Rishard",
+    "speaker_name": "Haroon Rishard",
+    "institution": "Elizabeth Moir School",
+    "national_level": null,
+    "speaker_score": 70.579,
+    "win_percentage": 75,
+    "stdev": 1.347,
+    "prelims_debated": 24,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 24,
+    "total_debates": 24,
+    "total_wins": 18,
+    "highest_achievement": "Quarterfinalist",
+    "rank": 60
+  },
+  {
     "person_id": 70,
     "name": "Anithra De Livera",
     "speaker_name": "Anithra De Livera",
@@ -1016,23 +1033,6 @@
     "total_substantive_speeches": 17,
     "total_debates": 17,
     "total_wins": 10,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 60
-  },
-  {
-    "person_id": 446,
-    "name": "Haroon Rishard",
-    "speaker_name": "Haroon Rishard",
-    "institution": "Elizabeth Moir School",
-    "national_level": null,
-    "speaker_score": 70.469,
-    "win_percentage": 78.947,
-    "stdev": 1.474,
-    "prelims_debated": 19,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 19,
-    "total_debates": 19,
-    "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
     "rank": 61
   },
@@ -1071,6 +1071,40 @@
     "rank": 63
   },
   {
+    "person_id": 13,
+    "name": "Thilini Paranavidhana",
+    "speaker_name": "Thilini Paranavidhana",
+    "institution": "Hillwood College Kandy",
+    "national_level": null,
+    "speaker_score": 70.315,
+    "win_percentage": 73.684,
+    "stdev": 1.132,
+    "prelims_debated": 19,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 19,
+    "total_debates": 19,
+    "total_wins": 14,
+    "highest_achievement": "Semifinalist",
+    "rank": 64
+  },
+  {
+    "person_id": 91,
+    "name": "Ruhath Rajakaruna",
+    "speaker_name": "Ruhath Rajakaruna",
+    "institution": "Ananda College",
+    "national_level": null,
+    "speaker_score": 70.295,
+    "win_percentage": 57.575,
+    "stdev": 1.339,
+    "prelims_debated": 33,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 33,
+    "total_debates": 33,
+    "total_wins": 19,
+    "highest_achievement": "Champion",
+    "rank": 65
+  },
+  {
     "person_id": 591,
     "name": "Rasheedah Jiffrey",
     "speaker_name": "Rasheedah Jiffrey",
@@ -1085,7 +1119,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 64
+    "rank": 66
   },
   {
     "person_id": 86,
@@ -1102,24 +1136,24 @@
     "total_debates": 18,
     "total_wins": 11,
     "highest_achievement": "Finalist",
-    "rank": 65
+    "rank": 67
   },
   {
-    "person_id": 91,
-    "name": "Ruhath Rajakaruna",
-    "speaker_name": "Ruhath Rajakaruna",
-    "institution": "Ananda College",
+    "person_id": 76,
+    "name": "Nisuli Liyanage",
+    "speaker_name": "Nisuli Liyanage",
+    "institution": "Visakha Vidyalaya",
     "national_level": null,
-    "speaker_score": 70.241,
-    "win_percentage": 56.666,
-    "stdev": 1.393,
-    "prelims_debated": 30,
-    "tournaments_debated": 7,
-    "total_substantive_speeches": 30,
-    "total_debates": 30,
-    "total_wins": 17,
+    "speaker_score": 70.26,
+    "win_percentage": 44,
+    "stdev": 1.608,
+    "prelims_debated": 25,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 25,
+    "total_debates": 25,
+    "total_wins": 11,
     "highest_achievement": "Quarterfinalist",
-    "rank": 66
+    "rank": 68
   },
   {
     "person_id": 460,
@@ -1136,7 +1170,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 67
+    "rank": 69
   },
   {
     "person_id": 375,
@@ -1144,33 +1178,33 @@
     "speaker_name": "Venuk Singhapura",
     "institution": "Gateway College Dehiwala",
     "national_level": null,
-    "speaker_score": 70.225,
-    "win_percentage": 47.058,
-    "stdev": 1.357,
-    "prelims_debated": 17,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 17,
-    "total_debates": 17,
-    "total_wins": 8,
+    "speaker_score": 70.23,
+    "win_percentage": 47.619,
+    "stdev": 1.219,
+    "prelims_debated": 21,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 21,
+    "total_debates": 21,
+    "total_wins": 10,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 68
+    "rank": 70
   },
   {
-    "person_id": 76,
-    "name": "Nisuli Liyanage",
-    "speaker_name": "Nisuli Liyanage",
-    "institution": "Visakha Vidyalaya",
+    "person_id": 171,
+    "name": "Shenuli Abeysinghe",
+    "speaker_name": "Shenuli Abeysinghe",
+    "institution": "St. Bridget's Convent",
     "national_level": null,
-    "speaker_score": 70.181,
-    "win_percentage": 45.454,
-    "stdev": 1.687,
-    "prelims_debated": 22,
+    "speaker_score": 70.19,
+    "win_percentage": 61.904,
+    "stdev": 1.005,
+    "prelims_debated": 21,
     "tournaments_debated": 4,
-    "total_substantive_speeches": 22,
-    "total_debates": 22,
-    "total_wins": 10,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 69
+    "total_substantive_speeches": 21,
+    "total_debates": 21,
+    "total_wins": 13,
+    "highest_achievement": "Partial Octofinalist",
+    "rank": 71
   },
   {
     "person_id": 48,
@@ -1187,7 +1221,7 @@
     "total_debates": 12,
     "total_wins": 6,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 70
+    "rank": 72
   },
   {
     "person_id": 37,
@@ -1204,41 +1238,24 @@
     "total_debates": 17,
     "total_wins": 11,
     "highest_achievement": "Quarterfinalist",
-    "rank": 71
-  },
-  {
-    "person_id": 171,
-    "name": "Shenuli Abeysinghe",
-    "speaker_name": "Shenuli Abeysinghe",
-    "institution": "St. Bridget's Convent",
-    "national_level": null,
-    "speaker_score": 70.093,
-    "win_percentage": 62.5,
-    "stdev": 0.82,
-    "prelims_debated": 16,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 16,
-    "total_debates": 16,
-    "total_wins": 10,
-    "highest_achievement": "Partial Octofinalist",
-    "rank": 72
-  },
-  {
-    "person_id": 13,
-    "name": "Thilini Paranavidhana",
-    "speaker_name": "Thilini Paranavidhana",
-    "institution": "Hillwood College Kandy",
-    "national_level": null,
-    "speaker_score": 70.071,
-    "win_percentage": 71.428,
-    "stdev": 1.206,
-    "prelims_debated": 14,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 14,
-    "total_debates": 14,
-    "total_wins": 10,
-    "highest_achievement": "Semifinalist",
     "rank": 73
+  },
+  {
+    "person_id": 84,
+    "name": "Kumal Seniru Premathunga",
+    "speaker_name": "Kumal Seniru Premathunga",
+    "institution": "IC",
+    "national_level": null,
+    "speaker_score": 70.055,
+    "win_percentage": 50,
+    "stdev": 1.457,
+    "prelims_debated": 36,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 36,
+    "total_debates": 36,
+    "total_wins": 18,
+    "highest_achievement": "Octofinalist",
+    "rank": 74
   },
   {
     "person_id": 73,
@@ -1254,23 +1271,6 @@
     "total_substantive_speeches": 13,
     "total_debates": 13,
     "total_wins": 8,
-    "highest_achievement": "Octofinalist",
-    "rank": 74
-  },
-  {
-    "person_id": 84,
-    "name": "Kumal Seniru Premathunga",
-    "speaker_name": "Kumal Seniru Premathunga",
-    "institution": "Isipathana College",
-    "national_level": null,
-    "speaker_score": 70,
-    "win_percentage": 51.612,
-    "stdev": 1.538,
-    "prelims_debated": 31,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 31,
-    "total_debates": 31,
-    "total_wins": 16,
     "highest_achievement": "Octofinalist",
     "rank": 75
   },
@@ -1292,38 +1292,21 @@
     "rank": 76
   },
   {
-    "person_id": 63,
-    "name": "Senaya Alwis",
-    "speaker_name": "Senaya Alwis",
-    "institution": "Holy Family Convent",
-    "national_level": null,
-    "speaker_score": 69.983,
-    "win_percentage": 50,
-    "stdev": 1.684,
-    "prelims_debated": 30,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 30,
-    "total_debates": 30,
-    "total_wins": 15,
-    "highest_achievement": "Double Partial Octofinalist",
-    "rank": 77
-  },
-  {
     "person_id": 148,
     "name": "Reema Azziyan",
     "speaker_name": "Reema Azziyan",
     "institution": "St. Bridget's Convent",
     "national_level": null,
-    "speaker_score": 69.972,
-    "win_percentage": 61.111,
-    "stdev": 1.612,
-    "prelims_debated": 36,
-    "tournaments_debated": 7,
-    "total_substantive_speeches": 36,
-    "total_debates": 36,
-    "total_wins": 22,
+    "speaker_score": 69.987,
+    "win_percentage": 60.975,
+    "stdev": 1.563,
+    "prelims_debated": 41,
+    "tournaments_debated": 8,
+    "total_substantive_speeches": 41,
+    "total_debates": 41,
+    "total_wins": 25,
     "highest_achievement": "Semifinalist",
-    "rank": 78
+    "rank": 77
   },
   {
     "person_id": 72,
@@ -1340,6 +1323,23 @@
     "total_debates": 17,
     "total_wins": 10,
     "highest_achievement": "Quarterfinalist",
+    "rank": 78
+  },
+  {
+    "person_id": 61,
+    "name": "Thenumi Mendis",
+    "speaker_name": "Thenumi Mendis",
+    "institution": "Holy Family Convent",
+    "national_level": null,
+    "speaker_score": 69.964,
+    "win_percentage": 47.619,
+    "stdev": 1.725,
+    "prelims_debated": 21,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 21,
+    "total_debates": 21,
+    "total_wins": 10,
+    "highest_achievement": "Double Partial Octofinalist",
     "rank": 79
   },
   {
@@ -1377,6 +1377,23 @@
     "rank": 81
   },
   {
+    "person_id": 63,
+    "name": "Senaya Alwis",
+    "speaker_name": "Senaya Alwis",
+    "institution": "Holy Family Convent",
+    "national_level": null,
+    "speaker_score": 69.921,
+    "win_percentage": 48.571,
+    "stdev": 1.586,
+    "prelims_debated": 35,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 35,
+    "total_debates": 35,
+    "total_wins": 17,
+    "highest_achievement": "Double Partial Octofinalist",
+    "rank": 82
+  },
+  {
     "person_id": 449,
     "name": "Kavinaaya Sriharan",
     "speaker_name": "Kavinaaya Sriharan",
@@ -1391,23 +1408,6 @@
     "total_debates": 12,
     "total_wins": 7,
     "highest_achievement": "Partial Octofinalist",
-    "rank": 82
-  },
-  {
-    "person_id": 61,
-    "name": "Thenumi Mendis",
-    "speaker_name": "Thenumi Mendis",
-    "institution": "Holy Family Convent",
-    "national_level": null,
-    "speaker_score": 69.906,
-    "win_percentage": 50,
-    "stdev": 1.925,
-    "prelims_debated": 16,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 16,
-    "total_debates": 16,
-    "total_wins": 8,
-    "highest_achievement": "Double Partial Octofinalist",
     "rank": 83
   },
   {
@@ -1445,6 +1445,23 @@
     "rank": 85
   },
   {
+    "person_id": 469,
+    "name": "Akanksha Samarawickrama",
+    "speaker_name": "Akanksha Samarawickrama",
+    "institution": "Asian International School",
+    "national_level": null,
+    "speaker_score": 69.808,
+    "win_percentage": 41.176,
+    "stdev": 1.95,
+    "prelims_debated": 34,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 34,
+    "total_debates": 34,
+    "total_wins": 14,
+    "highest_achievement": "Semifinalist",
+    "rank": 86
+  },
+  {
     "person_id": 619,
     "name": "Shiyara Perera",
     "speaker_name": "Shiyara Perera",
@@ -1459,7 +1476,24 @@
     "total_debates": 18,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 86
+    "rank": 87
+  },
+  {
+    "person_id": 99,
+    "name": "Ranuki Ranadeera",
+    "speaker_name": "Ranuki Ranadeera",
+    "institution": "Holy Family Convent",
+    "national_level": null,
+    "speaker_score": 69.767,
+    "win_percentage": 46.428,
+    "stdev": 1.988,
+    "prelims_debated": 28,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 28,
+    "total_debates": 28,
+    "total_wins": 13,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 88
   },
   {
     "person_id": 31,
@@ -1476,24 +1510,7 @@
     "total_debates": 22,
     "total_wins": 14,
     "highest_achievement": "Quarterfinalist",
-    "rank": 87
-  },
-  {
-    "person_id": 99,
-    "name": "Ranuki Ranadeera",
-    "speaker_name": "Ranuki Ranadeera",
-    "institution": "Holy Family Convent",
-    "national_level": null,
-    "speaker_score": 69.76,
-    "win_percentage": 47.826,
-    "stdev": 2.168,
-    "prelims_debated": 23,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 23,
-    "total_debates": 23,
-    "total_wins": 11,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 88
+    "rank": 89
   },
   {
     "person_id": 126,
@@ -1510,7 +1527,7 @@
     "total_debates": 14,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 89
+    "rank": 90
   },
   {
     "person_id": 402,
@@ -1527,7 +1544,24 @@
     "total_debates": 32,
     "total_wins": 14,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 90
+    "rank": 91
+  },
+  {
+    "person_id": 118,
+    "name": "Sanuthi Pathiraja",
+    "speaker_name": "Sanuthi Pathiraja",
+    "institution": "Hillwood College Kandy",
+    "national_level": null,
+    "speaker_score": 69.725,
+    "win_percentage": 54.838,
+    "stdev": 1.471,
+    "prelims_debated": 31,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 31,
+    "total_debates": 31,
+    "total_wins": 17,
+    "highest_achievement": "Semifinalist",
+    "rank": 92
   },
   {
     "person_id": 590,
@@ -1544,24 +1578,7 @@
     "total_debates": 27,
     "total_wins": 17,
     "highest_achievement": "Finalist",
-    "rank": 91
-  },
-  {
-    "person_id": 469,
-    "name": "Akanksha Samarawickrama",
-    "speaker_name": "Akanksha Samarawickrama",
-    "institution": "Asian International School",
-    "national_level": null,
-    "speaker_score": 69.677,
-    "win_percentage": 41.935,
-    "stdev": 1.968,
-    "prelims_debated": 31,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 31,
-    "total_debates": 31,
-    "total_wins": 13,
-    "highest_achievement": "Semifinalist",
-    "rank": 92
+    "rank": 93
   },
   {
     "person_id": 455,
@@ -1578,23 +1595,6 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 93
-  },
-  {
-    "person_id": 82,
-    "name": "Sanuka Semitha Godagedara",
-    "speaker_name": "Sanuka Semitha Godagedara",
-    "institution": "Isipathana College",
-    "national_level": null,
-    "speaker_score": 69.645,
-    "win_percentage": 51.612,
-    "stdev": 1.669,
-    "prelims_debated": 31,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 31,
-    "total_debates": 31,
-    "total_wins": 16,
-    "highest_achievement": "Octofinalist",
     "rank": 94
   },
   {
@@ -1615,6 +1615,40 @@
     "rank": 95
   },
   {
+    "person_id": 82,
+    "name": "Sanuka Semitha Godagedara",
+    "speaker_name": "Sanuka Semitha Godagedara",
+    "institution": "IC",
+    "national_level": null,
+    "speaker_score": 69.625,
+    "win_percentage": 50,
+    "stdev": 1.644,
+    "prelims_debated": 36,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 36,
+    "total_debates": 36,
+    "total_wins": 18,
+    "highest_achievement": "Octofinalist",
+    "rank": 96
+  },
+  {
+    "person_id": 111,
+    "name": "Yunal Bandara",
+    "speaker_name": "Yunal Bandara",
+    "institution": "Nalanda College",
+    "national_level": null,
+    "speaker_score": 69.611,
+    "win_percentage": 38.888,
+    "stdev": 1.581,
+    "prelims_debated": 36,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 36,
+    "total_debates": 36,
+    "total_wins": 14,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 97
+  },
+  {
     "person_id": 137,
     "name": "Riham Riyal",
     "speaker_name": "Riham Riyal",
@@ -1629,7 +1663,7 @@
     "total_debates": 13,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 96
+    "rank": 98
   },
   {
     "person_id": 143,
@@ -1646,7 +1680,24 @@
     "total_debates": 15,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 97
+    "rank": 99
+  },
+  {
+    "person_id": 64,
+    "name": "Rasandi Perera",
+    "speaker_name": "Rasandi Perera",
+    "institution": "Holy Family Convent",
+    "national_level": null,
+    "speaker_score": 69.541,
+    "win_percentage": 50,
+    "stdev": 1.096,
+    "prelims_debated": 12,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 12,
+    "total_debates": 12,
+    "total_wins": 6,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 100
   },
   {
     "person_id": 45,
@@ -1663,41 +1714,7 @@
     "total_debates": 13,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 98
-  },
-  {
-    "person_id": 83,
-    "name": "Nehan Aydin",
-    "speaker_name": "Nehan Aydin",
-    "institution": "Isipathana College",
-    "national_level": null,
-    "speaker_score": 69.5,
-    "win_percentage": 52,
-    "stdev": 1.541,
-    "prelims_debated": 25,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 25,
-    "total_debates": 25,
-    "total_wins": 13,
-    "highest_achievement": "Octofinalist",
-    "rank": 99
-  },
-  {
-    "person_id": 111,
-    "name": "Yunal Bandara",
-    "speaker_name": "Yunal Bandara",
-    "institution": "Nalanda College",
-    "national_level": null,
-    "speaker_score": 69.5,
-    "win_percentage": 40.625,
-    "stdev": 1.596,
-    "prelims_debated": 32,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 32,
-    "total_debates": 32,
-    "total_wins": 13,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 100
+    "rank": 101
   },
   {
     "person_id": 98,
@@ -1714,24 +1731,24 @@
     "total_debates": 30,
     "total_wins": 14,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 101
+    "rank": 102
   },
   {
-    "person_id": 118,
-    "name": "Sanuthi Pathiraja",
-    "speaker_name": "Sanuthi Pathiraja",
-    "institution": "Hillwood College Kandy",
+    "person_id": 83,
+    "name": "Nehan Aydin",
+    "speaker_name": "Nehan Aydin",
+    "institution": "IC",
     "national_level": null,
-    "speaker_score": 69.48,
-    "win_percentage": 50,
-    "stdev": 1.479,
-    "prelims_debated": 26,
-    "tournaments_debated": 6,
-    "total_substantive_speeches": 26,
-    "total_debates": 26,
-    "total_wins": 13,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 102
+    "speaker_score": 69.482,
+    "win_percentage": 48.275,
+    "stdev": 1.514,
+    "prelims_debated": 29,
+    "tournaments_debated": 7,
+    "total_substantive_speeches": 29,
+    "total_debates": 29,
+    "total_wins": 14,
+    "highest_achievement": "Octofinalist",
+    "rank": 103
   },
   {
     "person_id": 121,
@@ -1748,7 +1765,7 @@
     "total_debates": 22,
     "total_wins": 7,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 103
+    "rank": 104
   },
   {
     "person_id": 618,
@@ -1765,7 +1782,7 @@
     "total_debates": 18,
     "total_wins": 8,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 104
+    "rank": 105
   },
   {
     "person_id": 142,
@@ -1782,7 +1799,7 @@
     "total_debates": 17,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 105
+    "rank": 106
   },
   {
     "person_id": 79,
@@ -1799,7 +1816,7 @@
     "total_debates": 15,
     "total_wins": 8,
     "highest_achievement": "Double Partial Octofinalist",
-    "rank": 106
+    "rank": 107
   },
   {
     "person_id": 478,
@@ -1816,7 +1833,7 @@
     "total_debates": 26,
     "total_wins": 14,
     "highest_achievement": "Octofinalist",
-    "rank": 107
+    "rank": 108
   },
   {
     "person_id": 75,
@@ -1824,16 +1841,16 @@
     "speaker_name": "Dehemi Belpage",
     "institution": "Visakha Vidyalaya",
     "national_level": null,
-    "speaker_score": 69.386,
-    "win_percentage": 36.363,
-    "stdev": 1.353,
-    "prelims_debated": 22,
-    "tournaments_debated": 5,
-    "total_substantive_speeches": 22,
-    "total_debates": 22,
-    "total_wins": 8,
+    "speaker_score": 69.375,
+    "win_percentage": 41.666,
+    "stdev": 1.345,
+    "prelims_debated": 24,
+    "tournaments_debated": 6,
+    "total_substantive_speeches": 24,
+    "total_debates": 24,
+    "total_wins": 10,
     "highest_achievement": "Quarterfinalist",
-    "rank": 108
+    "rank": 109
   },
   {
     "person_id": 363,
@@ -1850,7 +1867,7 @@
     "total_debates": 15,
     "total_wins": 8,
     "highest_achievement": "Octofinalist",
-    "rank": 109
+    "rank": 110
   },
   {
     "person_id": 140,
@@ -1867,7 +1884,7 @@
     "total_debates": 22,
     "total_wins": 11,
     "highest_achievement": "Quarterfinalist",
-    "rank": 110
+    "rank": 111
   },
   {
     "person_id": 468,
@@ -1884,7 +1901,7 @@
     "total_debates": 30,
     "total_wins": 12,
     "highest_achievement": "Semifinalist",
-    "rank": 111
+    "rank": 112
   },
   {
     "person_id": 488,
@@ -1901,7 +1918,7 @@
     "total_debates": 16,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 112
+    "rank": 113
   },
   {
     "person_id": 214,
@@ -1918,7 +1935,7 @@
     "total_debates": 21,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 113
+    "rank": 114
   },
   {
     "person_id": 94,
@@ -1935,7 +1952,24 @@
     "total_debates": 22,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 114
+    "rank": 115
+  },
+  {
+    "person_id": 448,
+    "name": "Darun Bhupesh",
+    "speaker_name": "Darun Bhupesh",
+    "institution": "Gateway College Dehiwala",
+    "national_level": null,
+    "speaker_score": 69.178,
+    "win_percentage": 57.142,
+    "stdev": 1.295,
+    "prelims_debated": 14,
+    "tournaments_debated": 3,
+    "total_substantive_speeches": 14,
+    "total_debates": 14,
+    "total_wins": 8,
+    "highest_achievement": "Semifinalist",
+    "rank": 116
   },
   {
     "person_id": 110,
@@ -1952,7 +1986,7 @@
     "total_debates": 32,
     "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 115
+    "rank": 117
   },
   {
     "person_id": 191,
@@ -1969,7 +2003,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 116
+    "rank": 118
   },
   {
     "person_id": 480,
@@ -1977,16 +2011,16 @@
     "speaker_name": "Tharuka Fernando",
     "institution": "Ananda College",
     "national_level": null,
-    "speaker_score": 69.104,
+    "speaker_score": 69.083,
     "win_percentage": 33.333,
-    "stdev": 1.267,
-    "prelims_debated": 12,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 12,
-    "total_debates": 12,
-    "total_wins": 4,
+    "stdev": 1.186,
+    "prelims_debated": 15,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 15,
+    "total_debates": 15,
+    "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 117
+    "rank": 119
   },
   {
     "person_id": 629,
@@ -1996,14 +2030,31 @@
     "national_level": null,
     "speaker_score": 69,
     "win_percentage": 50,
-    "stdev": 1.637,
-    "prelims_debated": 12,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 12,
-    "total_debates": 12,
-    "total_wins": 6,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 118
+    "stdev": 1.519,
+    "prelims_debated": 14,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 14,
+    "total_debates": 14,
+    "total_wins": 7,
+    "highest_achievement": "Semifinalist",
+    "rank": 120
+  },
+  {
+    "person_id": 90,
+    "name": "Sethula Senhas",
+    "speaker_name": "Sethula Senhas",
+    "institution": "Ananda College",
+    "national_level": null,
+    "speaker_score": 68.928,
+    "win_percentage": 42.857,
+    "stdev": 1.527,
+    "prelims_debated": 21,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 21,
+    "total_debates": 21,
+    "total_wins": 9,
+    "highest_achievement": "Champion",
+    "rank": 121
   },
   {
     "person_id": 445,
@@ -2020,7 +2071,7 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 119
+    "rank": 122
   },
   {
     "person_id": 119,
@@ -2037,7 +2088,7 @@
     "total_debates": 19,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 120
+    "rank": 123
   },
   {
     "person_id": 95,
@@ -2054,7 +2105,7 @@
     "total_debates": 22,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 121
+    "rank": 124
   },
   {
     "person_id": 96,
@@ -2071,7 +2122,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 122
+    "rank": 125
   },
   {
     "person_id": 215,
@@ -2088,24 +2139,7 @@
     "total_debates": 21,
     "total_wins": 9,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 123
-  },
-  {
-    "person_id": 90,
-    "name": "Sethula Senhas",
-    "speaker_name": "Sethula Senhas",
-    "institution": "Ananda College",
-    "national_level": null,
-    "speaker_score": 68.75,
-    "win_percentage": 38.888,
-    "stdev": 1.583,
-    "prelims_debated": 18,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 18,
-    "total_debates": 18,
-    "total_wins": 7,
-    "highest_achievement": "Quarterfinalist",
-    "rank": 124
+    "rank": 126
   },
   {
     "person_id": 489,
@@ -2122,7 +2156,7 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 125
+    "rank": 127
   },
   {
     "person_id": 77,
@@ -2139,7 +2173,7 @@
     "total_debates": 24,
     "total_wins": 9,
     "highest_achievement": "Quarterfinalist",
-    "rank": 126
+    "rank": 128
   },
   {
     "person_id": 149,
@@ -2156,24 +2190,24 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 127
+    "rank": 129
   },
   {
-    "person_id": 244,
-    "name": "Ewin Wellawa",
-    "speaker_name": "Ewin Wellawa",
-    "institution": "Ananda College",
+    "person_id": 165,
+    "name": "Ruvindi Rathnasiri",
+    "speaker_name": "Ruvindi Rathnasiri",
+    "institution": "Visakha Vidyalaya",
     "national_level": null,
-    "speaker_score": 68.566,
-    "win_percentage": 26.666,
-    "stdev": 1.265,
-    "prelims_debated": 15,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 15,
-    "total_debates": 15,
-    "total_wins": 4,
+    "speaker_score": 68.562,
+    "win_percentage": 37.5,
+    "stdev": 1.824,
+    "prelims_debated": 16,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 16,
+    "total_debates": 16,
+    "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 128
+    "rank": 130
   },
   {
     "person_id": 467,
@@ -2190,24 +2224,24 @@
     "total_debates": 14,
     "total_wins": 4,
     "highest_achievement": "Semifinalist",
-    "rank": 129
+    "rank": 131
   },
   {
-    "person_id": 165,
-    "name": "Ruvindi Rathnasiri",
-    "speaker_name": "Ruvindi Rathnasiri",
+    "person_id": 150,
+    "name": "Nethanya Mathew",
+    "speaker_name": "Nethanya Mathew",
     "institution": "Visakha Vidyalaya",
     "national_level": null,
     "speaker_score": 68.466,
-    "win_percentage": 33.333,
-    "stdev": 1.846,
+    "win_percentage": 40,
+    "stdev": 1.903,
     "prelims_debated": 15,
-    "tournaments_debated": 3,
+    "tournaments_debated": 4,
     "total_substantive_speeches": 15,
     "total_debates": 15,
-    "total_wins": 5,
+    "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 130
+    "rank": 132
   },
   {
     "person_id": 406,
@@ -2224,7 +2258,41 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 131
+    "rank": 133
+  },
+  {
+    "person_id": 244,
+    "name": "Ewin Wellawa",
+    "speaker_name": "Ewin Wellawa",
+    "institution": "Ananda College",
+    "national_level": null,
+    "speaker_score": 68.394,
+    "win_percentage": 26.315,
+    "stdev": 1.586,
+    "prelims_debated": 19,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 19,
+    "total_debates": 19,
+    "total_wins": 5,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 134
+  },
+  {
+    "person_id": 151,
+    "name": "Perashmi Gunaratna",
+    "speaker_name": "Perashmi Gunaratna",
+    "institution": "Visakha Vidyalaya",
+    "national_level": null,
+    "speaker_score": 68.368,
+    "win_percentage": 26.315,
+    "stdev": 1.963,
+    "prelims_debated": 19,
+    "tournaments_debated": 5,
+    "total_substantive_speeches": 19,
+    "total_debates": 19,
+    "total_wins": 5,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 135
   },
   {
     "person_id": 604,
@@ -2241,24 +2309,7 @@
     "total_debates": 12,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 132
-  },
-  {
-    "person_id": 151,
-    "name": "Perashmi Gunaratna",
-    "speaker_name": "Perashmi Gunaratna",
-    "institution": "Visakha Vidyalaya",
-    "national_level": null,
-    "speaker_score": 68.218,
-    "win_percentage": 31.25,
-    "stdev": 2.105,
-    "prelims_debated": 16,
-    "tournaments_debated": 4,
-    "total_substantive_speeches": 16,
-    "total_debates": 16,
-    "total_wins": 5,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 133
+    "rank": 136
   },
   {
     "person_id": 113,
@@ -2275,7 +2326,7 @@
     "total_debates": 14,
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 134
+    "rank": 137
   },
   {
     "person_id": 216,
@@ -2292,7 +2343,24 @@
     "total_debates": 16,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 135
+    "rank": 138
+  },
+  {
+    "person_id": 155,
+    "name": "Binuthi Dissanayake",
+    "speaker_name": "Binuthi Dissanayake",
+    "institution": "Hillwood College Kandy",
+    "national_level": null,
+    "speaker_score": 67.8,
+    "win_percentage": 20,
+    "stdev": 2.273,
+    "prelims_debated": 20,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 20,
+    "total_debates": 20,
+    "total_wins": 4,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 139
   },
   {
     "person_id": 633,
@@ -2309,24 +2377,24 @@
     "total_debates": 12,
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 136
+    "rank": 140
   },
   {
-    "person_id": 155,
-    "name": "Binuthi Dissanayake",
-    "speaker_name": "Binuthi Dissanayake",
-    "institution": "Hillwood College Kandy",
+    "person_id": 656,
+    "name": "Navinu Hewadikaram",
+    "speaker_name": "Navinu Hewadikaram",
+    "institution": "Ananda College",
     "national_level": null,
-    "speaker_score": 67.687,
-    "win_percentage": 25,
-    "stdev": 2.489,
+    "speaker_score": 67.781,
+    "win_percentage": 18.75,
+    "stdev": 2.632,
     "prelims_debated": 16,
-    "tournaments_debated": 3,
+    "tournaments_debated": 4,
     "total_substantive_speeches": 16,
     "total_debates": 16,
-    "total_wins": 4,
+    "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 137
+    "rank": 141
   },
   {
     "person_id": 753,
@@ -2343,7 +2411,24 @@
     "total_debates": 17,
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 138
+    "rank": 142
+  },
+  {
+    "person_id": 624,
+    "name": "Caelan Elliot Dayananda",
+    "speaker_name": "Caelan Elliot Dayananda",
+    "institution": "Asian International School",
+    "national_level": null,
+    "speaker_score": 67.562,
+    "win_percentage": 37.5,
+    "stdev": 2.286,
+    "prelims_debated": 16,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 16,
+    "total_debates": 16,
+    "total_wins": 6,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 143
   },
   {
     "person_id": 659,
@@ -2360,24 +2445,7 @@
     "total_debates": 14,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 139
-  },
-  {
-    "person_id": 656,
-    "name": "Navinu Hewadikaram",
-    "speaker_name": "Navinu Hewadikaram",
-    "institution": "Ananda College",
-    "national_level": null,
-    "speaker_score": 67.461,
-    "win_percentage": 23.076,
-    "stdev": 2.809,
-    "prelims_debated": 13,
-    "tournaments_debated": 3,
-    "total_substantive_speeches": 13,
-    "total_debates": 13,
-    "total_wins": 3,
-    "highest_achievement": "Preliminary Rounds",
-    "rank": 140
+    "rank": 144
   },
   {
     "person_id": 180,
@@ -2394,6 +2462,23 @@
     "total_debates": 12,
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
-    "rank": 141
+    "rank": 145
+  },
+  {
+    "person_id": 504,
+    "name": "Thasira Sanudaya Aththanapola",
+    "speaker_name": "Thasira Sanudaya Aththanapola",
+    "institution": "Nalanda College",
+    "national_level": null,
+    "speaker_score": 67.083,
+    "win_percentage": 25,
+    "stdev": 1.794,
+    "prelims_debated": 12,
+    "tournaments_debated": 4,
+    "total_substantive_speeches": 12,
+    "total_debates": 12,
+    "total_wins": 3,
+    "highest_achievement": "Preliminary Rounds",
+    "rank": 146
   }
 ]

@@ -39,6 +39,25 @@
     return headers;
   }
 
+  // Safe JSON Parser avoiding Unexpected token '<' crashes on 502/504 HTML
+  async function parseFetchResponse(res) {
+    const contentType = res.headers.get('content-type') || '';
+    if (contentType.includes('application/json')) {
+      try {
+        return await res.json();
+      } catch (e) {
+        throw new Error('Malformed JSON payload received from server.');
+      }
+    }
+    const text = await res.text();
+    if (res.status === 504 || res.status === 502) {
+      throw new Error(`Server gateway timeout (HTTP ${res.status}). The operation is running in the background.`);
+    }
+    const titleMatch = text.match(/<title>(.*?)<\/title>/i);
+    const title = titleMatch ? titleMatch[1] : `HTTP ${res.status}`;
+    throw new Error(`Server returned non-JSON response (${title}).`);
+  }
+
   // =========================================================================
   // 1. AUTHENTICATION & SESSION MANAGEMENT
   // =========================================================================
@@ -841,8 +860,46 @@
         showStatusBox(
           importStatusBox,
           'loading',
-          `[PIPELINE ACTIVE] Ingesting '${target}' (Extract -> Normalize -> Reconcile -> Validate)...`
+          `[PIPELINE ACTIVE] Initializing ingestion pipeline for '${target}'...`
         );
+
+        let pollInterval = null;
+
+        const pollStatus = async () => {
+          try {
+            const statusRes = await fetch(`${API_BASE}/api/admin/tournaments/import/status`, {
+              headers: getHeaders(),
+            });
+            if (statusRes.status === 401) {
+              clearInterval(pollInterval);
+              handleUnauthorized();
+              return;
+            }
+            const job = await parseFetchResponse(statusRes);
+            if (job.status === 'running') {
+              showStatusBox(
+                importStatusBox,
+                'loading',
+                `[PIPELINE ACTIVE] ${job.message || 'Processing tournament data...'}`
+              );
+            } else if (job.status === 'success') {
+              clearInterval(pollInterval);
+              showStatusBox(importStatusBox, 'success', `[SUCCESS] ${job.message}`);
+              if (importTargetInput) importTargetInput.value = '';
+              if (importDatesInput) importDatesInput.value = '';
+              startImportBtn.disabled = false;
+              startImportBtn.textContent = 'START INGESTION PIPELINE';
+              fetchAdminStatus();
+            } else if (job.status === 'error') {
+              clearInterval(pollInterval);
+              showStatusBox(importStatusBox, 'error', `[ERROR] ${job.error || job.message || 'Ingestion failed.'}`);
+              startImportBtn.disabled = false;
+              startImportBtn.textContent = 'START INGESTION PIPELINE';
+            }
+          } catch (err) {
+            console.warn('Status poll warning:', err);
+          }
+        };
 
         try {
           const res = await fetch(`${API_BASE}/api/admin/tournaments/import`, {
@@ -853,21 +910,22 @@
 
           if (res.status === 401) {
             handleUnauthorized();
+            startImportBtn.disabled = false;
+            startImportBtn.textContent = 'START INGESTION PIPELINE';
             return;
           }
 
-          const data = await res.json();
+          const data = await parseFetchResponse(res);
           if (res.ok && data.success) {
-            showStatusBox(importStatusBox, 'success', `[SUCCESS] ${data.message}`);
-            if (importTargetInput) importTargetInput.value = '';
-            if (importDatesInput) importDatesInput.value = '';
-            fetchAdminStatus(); // Refresh tournaments and KPI
+            showStatusBox(importStatusBox, 'loading', `[PIPELINE ACTIVE] ${data.message}`);
+            pollInterval = setInterval(pollStatus, 1500);
           } else {
             showStatusBox(importStatusBox, 'error', `[ERROR] ${data.error || 'Ingestion failed.'}`);
+            startImportBtn.disabled = false;
+            startImportBtn.textContent = 'START INGESTION PIPELINE';
           }
         } catch (e) {
           showStatusBox(importStatusBox, 'error', `[NETWORK ERROR] ${e.message}`);
-        } finally {
           startImportBtn.disabled = false;
           startImportBtn.textContent = 'START INGESTION PIPELINE';
         }

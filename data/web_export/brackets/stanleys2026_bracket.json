@@ -1,0 +1,349 @@
+{
+  "tournament_name": "Stanley's '26 | Welcome to Rev. Dr. Stanley Abeysekera Memorial Debating Championship 2026",
+  "tournament_slug": "stanleys2026",
+  "total_elimination_stages": 4,
+  "champion": {
+    "team": "AC A",
+    "institution": "Ananda College"
+  },
+  "runner_up": {
+    "team": "RC A",
+    "institution": "Royal College"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Partial Octofinals",
+      "round_number": 8,
+      "motion": "This house supports the narrative that artists have a strong obligation to take political stances throughout their career",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 9969,
+          "venue": "Octofinals @ Room 4",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , Sanithma Jayasooriya)"
+          ]
+        },
+        {
+          "debate_id": 9971,
+          "venue": "Octofinals @ Room 3",
+          "proposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "STC A",
+            "winner_institution": "S. Thomas' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne , amnah jiffrey)"
+          ]
+        },
+        {
+          "debate_id": 9973,
+          "venue": "Octofinals @ Room 1",
+          "proposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "LC A",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Kaveesha Mallawaarachchi , Yasindu Edussuriya)"
+          ]
+        },
+        {
+          "debate_id": 9975,
+          "venue": "Octofinals @ Room 2",
+          "proposition": {
+            "team_name": "BC Gold",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "GCC Blue",
+            "institution": "Gateway College Colombo",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "BC Gold",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sanura Silva)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 9,
+      "motion": "THW make the Z-score cutoffs for state university admissions through National Advanced Level Examination equal for all districts",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 9977,
+          "venue": "Quarterfinals @ Room 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , amnah jiffrey)"
+          ]
+        },
+        {
+          "debate_id": 9979,
+          "venue": "Quarterfinals @ Room 4",
+          "proposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Kaveesha Mallawaarachchi , Yasindu Edussuriya)"
+          ]
+        },
+        {
+          "debate_id": 9981,
+          "venue": "Quarterfinals @ Room 3",
+          "proposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "HCK A",
+            "winner_institution": "Hillwood College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Methira Padeniya , Nethma Madawala)"
+          ]
+        },
+        {
+          "debate_id": 9983,
+          "venue": "Quarterfinals @ Room 2",
+          "proposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC Gold",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "BC Gold",
+            "winner_institution": "Bishop's College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka Seneviratne)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 10,
+      "motion": "THW ban the creation of all artificial conscious beings",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 9985,
+          "venue": "Semifinals @ Room 2",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shakeeb Mohideen , Kaveesha Mallawaarachchi , Yasindu Edussuriya , amnah jiffrey)"
+          ]
+        },
+        {
+          "debate_id": 9987,
+          "venue": "Semifinals @ Room 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC Gold",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sanithma Jayasooriya , Akindu Athauda , Methira Padeniya , Nethma Madawala , Senuka Seneviratne)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 11,
+      "motion": "THP a world in which smell was humanity's primary sense, instead of vision.",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 9989,
+          "venue": "Grand Final @ Room 1",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu Athauda , Jayageeth Basnayake , Nethma Madawala , Sanithma Jayasooriya , amnah jiffrey)"
+          ]
+        }
+      ]
+    }
+  ]
+}

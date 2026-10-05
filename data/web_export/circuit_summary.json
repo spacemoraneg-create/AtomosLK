@@ -1,21 +1,21 @@
 {
-  "total_persons": 800,
-  "total_institutions": 70,
-  "total_tournaments": 9,
-  "total_debates_debated": 1012,
-  "total_speeches": 7410,
-  "total_valid_speeches": 6972,
-  "total_prelim_rounds": 900,
-  "total_knockout_rounds": 112,
+  "total_persons": 843,
+  "total_institutions": 73,
+  "total_tournaments": 10,
+  "total_debates_debated": 1096,
+  "total_speeches": 8034,
+  "total_valid_speeches": 7596,
+  "total_prelim_rounds": 973,
+  "total_knockout_rounds": 123,
   "national_side_balance": {
-    "total_decisions": 1035,
-    "prop_wins": 496,
-    "opp_wins": 539,
+    "total_decisions": 1124,
+    "prop_wins": 548,
+    "opp_wins": 576,
     "ties": 0,
-    "prop_win_rate": 47.92271,
-    "opp_win_rate": 52.07729,
+    "prop_win_rate": 48.75445,
+    "opp_win_rate": 51.24555,
     "dominant_side": "Opposition",
-    "bias_margin": 2.07729,
-    "bias_classification": "SLIGHT_OPP_BIAS"
+    "bias_margin": 1.24555,
+    "bias_classification": "BALANCED"
   }
 }

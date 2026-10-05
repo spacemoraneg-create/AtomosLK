@@ -151,6 +151,11 @@
       "type": "debater"
     },
     {
+      "id": 980,
+      "name": "Adam",
+      "type": "debater"
+    },
+    {
       "id": 269,
       "name": "Adam Dhilshan",
       "type": "debater"
@@ -158,6 +163,11 @@
     {
       "id": 80,
       "name": "Adam Marcellus",
+      "type": "debater"
+    },
+    {
+      "id": 981,
+      "name": "Adarsh",
       "type": "debater"
     },
     {
@@ -246,6 +256,11 @@
       "type": "debater"
     },
     {
+      "id": 986,
+      "name": "Akarsha Daniels",
+      "type": "debater"
+    },
+    {
       "id": 104,
       "name": "Akein",
       "type": "debater"
@@ -278,6 +293,11 @@
     {
       "id": 89,
       "name": "Akitha Dinuwara",
+      "type": "debater"
+    },
+    {
+      "id": 975,
+      "name": "Akshara Krishnapradeep",
       "type": "debater"
     },
     {
@@ -416,6 +436,11 @@
       "type": "debater"
     },
     {
+      "id": 965,
+      "name": "Anithra",
+      "type": "debater"
+    },
+    {
       "id": 70,
       "name": "Anithra De Livera",
       "type": "debater"
@@ -503,6 +528,11 @@
     {
       "id": 396,
       "name": "Arshad Shaheed",
+      "type": "debater"
+    },
+    {
+      "id": 983,
+      "name": "Arshalya",
       "type": "debater"
     },
     {
@@ -656,6 +686,11 @@
       "type": "debater"
     },
     {
+      "id": 990,
+      "name": "Binuga",
+      "type": "debater"
+    },
+    {
       "id": 840,
       "name": "Binuga Kumadapperuma",
       "type": "debater"
@@ -736,6 +771,11 @@
       "type": "debater"
     },
     {
+      "id": 998,
+      "name": "Chamudi Gunasekara",
+      "type": "debater"
+    },
+    {
       "id": 629,
       "name": "Chanaya Rathnayake",
       "type": "debater"
@@ -743,6 +783,11 @@
     {
       "id": 721,
       "name": "Chanidu Rathnayake",
+      "type": "debater"
+    },
+    {
+      "id": 964,
+      "name": "Chaniel",
       "type": "debater"
     },
     {
@@ -758,6 +803,11 @@
     {
       "id": 326,
       "name": "Charu Perera",
+      "type": "debater"
+    },
+    {
+      "id": 979,
+      "name": "Chathil",
       "type": "debater"
     },
     {
@@ -783,6 +833,11 @@
     {
       "id": 339,
       "name": "Cheka Mendis",
+      "type": "debater"
+    },
+    {
+      "id": 989,
+      "name": "Chenul Jayakody",
       "type": "debater"
     },
     {
@@ -881,8 +936,18 @@
       "type": "debater"
     },
     {
+      "id": 985,
+      "name": "Danyal Markhar",
+      "type": "debater"
+    },
+    {
       "id": 448,
       "name": "Darun Bhupesh",
+      "type": "debater"
+    },
+    {
+      "id": 1004,
+      "name": "Dasidu Fernando",
       "type": "debater"
     },
     {
@@ -943,6 +1008,11 @@
     {
       "id": 6,
       "name": "Didumika Peiris",
+      "type": "debater"
+    },
+    {
+      "id": 963,
+      "name": "Didumika Pieris",
       "type": "debater"
     },
     {
@@ -1061,6 +1131,11 @@
       "type": "debater"
     },
     {
+      "id": 988,
+      "name": "Dojitha Bandara",
+      "type": "debater"
+    },
+    {
       "id": 112,
       "name": "Dojitha Dissanayake",
       "type": "debater"
@@ -1118,6 +1193,11 @@
     {
       "id": 828,
       "name": "Ethan Fernando",
+      "type": "debater"
+    },
+    {
+      "id": 970,
+      "name": "Evan Wijeratne",
       "type": "debater"
     },
     {
@@ -1226,6 +1306,11 @@
       "type": "debater"
     },
     {
+      "id": 987,
+      "name": "Hajerah Hizbulla",
+      "type": "debater"
+    },
+    {
       "id": 30,
       "name": "Hajerah Hizbullah",
       "type": "debater"
@@ -1283,6 +1368,11 @@
     {
       "id": 725,
       "name": "Heshitha Abeyratne",
+      "type": "debater"
+    },
+    {
+      "id": 995,
+      "name": "Hima",
       "type": "debater"
     },
     {
@@ -1416,6 +1506,11 @@
       "type": "debater"
     },
     {
+      "id": 994,
+      "name": "Jayden",
+      "type": "debater"
+    },
+    {
       "id": 733,
       "name": "Jayden Matthew George",
       "type": "debater"
@@ -1528,6 +1623,11 @@
     {
       "id": 560,
       "name": "Kaveesha Mallawaarachchi",
+      "type": "debater"
+    },
+    {
+      "id": 968,
+      "name": "Kavinaaya Srihaaran",
       "type": "debater"
     },
     {
@@ -1941,13 +2041,28 @@
       "type": "debater"
     },
     {
+      "id": 1005,
+      "name": "Matthew De Zylva",
+      "type": "debater"
+    },
+    {
       "id": 961,
       "name": "Mauli Kularatne",
       "type": "debater"
     },
     {
+      "id": 999,
+      "name": "Mauli kularatne",
+      "type": "debater"
+    },
+    {
       "id": 807,
       "name": "Mayon Vithanage",
+      "type": "debater"
+    },
+    {
+      "id": 969,
+      "name": "Meera Keshaban",
       "type": "debater"
     },
     {
@@ -2071,6 +2186,11 @@
       "type": "debater"
     },
     {
+      "id": 977,
+      "name": "Missaka Ranathunga",
+      "type": "debater"
+    },
+    {
       "id": 51,
       "name": "Mithila Rozairo",
       "type": "debater"
@@ -2171,6 +2291,11 @@
       "type": "debater"
     },
     {
+      "id": 973,
+      "name": "Navidi Madawala",
+      "type": "debater"
+    },
+    {
       "id": 563,
       "name": "Navidi Perera",
       "type": "debater"
@@ -2208,6 +2333,11 @@
     {
       "id": 39,
       "name": "Nehan Wijesundara",
+      "type": "debater"
+    },
+    {
+      "id": 976,
+      "name": "Nehan Wijesundera",
       "type": "debater"
     },
     {
@@ -2426,6 +2556,11 @@
       "type": "debater"
     },
     {
+      "id": 993,
+      "name": "Omika",
+      "type": "debater"
+    },
+    {
       "id": 434,
       "name": "Oneli de Silva",
       "type": "debater"
@@ -2593,6 +2728,11 @@
     {
       "id": 162,
       "name": "Rakin Mohideen",
+      "type": "debater"
+    },
+    {
+      "id": 974,
+      "name": "Randini Handuneththi",
       "type": "debater"
     },
     {
@@ -2911,6 +3051,11 @@
       "type": "debater"
     },
     {
+      "id": 1000,
+      "name": "Sarah Kaushalie",
+      "type": "debater"
+    },
+    {
       "id": 338,
       "name": "Sarah Mulaffar",
       "type": "debater"
@@ -2998,6 +3143,11 @@
     {
       "id": 329,
       "name": "Savithru Liyanapathirana",
+      "type": "debater"
+    },
+    {
+      "id": 972,
+      "name": "Sayumi Wijesooriya",
       "type": "debater"
     },
     {
@@ -3126,6 +3276,11 @@
       "type": "debater"
     },
     {
+      "id": 996,
+      "name": "Shahir",
+      "type": "debater"
+    },
+    {
       "id": 192,
       "name": "Shahir Ali",
       "type": "debater"
@@ -3211,8 +3366,18 @@
       "type": "debater"
     },
     {
+      "id": 966,
+      "name": "Shaviru Kasthuriarachchi",
+      "type": "debater"
+    },
+    {
       "id": 910,
       "name": "Shaviru Kasturiarachchi",
+      "type": "debater"
+    },
+    {
+      "id": 992,
+      "name": "Shawin",
       "type": "debater"
     },
     {
@@ -3248,6 +3413,11 @@
     {
       "id": 171,
       "name": "Shenuli Abeysinghe",
+      "type": "debater"
+    },
+    {
+      "id": 982,
+      "name": "Shiyara",
       "type": "debater"
     },
     {
@@ -3356,6 +3526,11 @@
       "type": "debater"
     },
     {
+      "id": 1001,
+      "name": "Suchith",
+      "type": "debater"
+    },
+    {
       "id": 309,
       "name": "Suchith Tissera",
       "type": "debater"
@@ -3446,6 +3621,11 @@
       "type": "debater"
     },
     {
+      "id": 967,
+      "name": "Tharuli Rupasinghe",
+      "type": "debater"
+    },
+    {
       "id": 11,
       "name": "Tharuli Silva",
       "type": "debater"
@@ -3483,6 +3663,11 @@
     {
       "id": 936,
       "name": "Thedara Fernando",
+      "type": "debater"
+    },
+    {
+      "id": 978,
+      "name": "Thejana Munasinge",
       "type": "debater"
     },
     {
@@ -3631,8 +3816,18 @@
       "type": "debater"
     },
     {
+      "id": 991,
+      "name": "Umanda Premaratne",
+      "type": "debater"
+    },
+    {
       "id": 674,
       "name": "Umar Abdul Karim",
+      "type": "debater"
+    },
+    {
+      "id": 971,
+      "name": "Umar Atheeque",
       "type": "debater"
     },
     {
@@ -3886,6 +4081,11 @@
       "type": "debater"
     },
     {
+      "id": 984,
+      "name": "Yousuf Ameer",
+      "type": "debater"
+    },
+    {
       "id": 10,
       "name": "Yuhansee Tenara Athukorala",
       "type": "debater"
@@ -3931,6 +4131,11 @@
       "type": "debater"
     },
     {
+      "id": 1002,
+      "name": "Yunna Nasees",
+      "type": "debater"
+    },
+    {
       "id": 262,
       "name": "Yureshi Samarasinghe",
       "type": "debater"
@@ -3971,6 +4176,11 @@
       "type": "debater"
     },
     {
+      "id": 1003,
+      "name": "Zaid Mohammed",
+      "type": "debater"
+    },
+    {
       "id": 161,
       "name": "Zaid Umar",
       "type": "debater"
@@ -3998,6 +4208,11 @@
     {
       "id": 518,
       "name": "kaveesha Kariyawasam",
+      "type": "debater"
+    },
+    {
+      "id": 997,
+      "name": "shayaan",
       "type": "debater"
     }
   ],
@@ -4036,6 +4251,18 @@
       "id": 2,
       "name": "D. S. Senanayake College",
       "code": "DS",
+      "type": "institution"
+    },
+    {
+      "id": 78,
+      "name": "D.S. Senanayake College",
+      "code": "DSC",
+      "type": "institution"
+    },
+    {
+      "id": 80,
+      "name": "DCK",
+      "code": "DCK",
       "type": "institution"
     },
     {
@@ -4174,6 +4401,12 @@
       "id": 24,
       "name": "Jaffna Ladies' College",
       "code": "JLC",
+      "type": "institution"
+    },
+    {
+      "id": 79,
+      "name": "KGHS",
+      "code": "KGHS",
       "type": "institution"
     },
     {
@@ -4476,6 +4709,12 @@
       "id": 44,
       "name": "Nixon's 2026 | Welcome to Lillian Nixon's Memorial Debating Championship 2026",
       "slug": "nixons2026",
+      "type": "tournament"
+    },
+    {
+      "id": 45,
+      "name": "Stanley's '26 | Welcome to Rev. Dr. Stanley Abeysekera Memorial Debating Championship 2026",
+      "slug": "stanleys2026",
       "type": "tournament"
     }
   ]
