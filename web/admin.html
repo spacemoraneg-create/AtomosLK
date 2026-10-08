@@ -13,7 +13,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Admin Command Console - Atomos V3</title>
-  <link rel="stylesheet" href="styles.css?v=7" />
+  <link rel="stylesheet" href="styles.css?v=9" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="assets/logo_icon.png" />
@@ -33,7 +33,7 @@
   <header class="tabby-nav">
     <div class="nav-brand">
       <a href="index.html" class="nav-brand-link" aria-label="Atomos V3 Home">
-        <img class="nav-brand-logo" src="assets/logo_full.png" alt="Atomos - Automated Statistics" />
+        <img class="nav-brand-logo" src="assets/logo_nav.png?v=9" alt="Atomos - Automated Statistics" />
       </a>
     </div>
     <nav class="nav-links">
@@ -58,7 +58,7 @@
     <div id="adminLockView" class="subpage-card admin-lock-card">
       <div class="admin-lock-header">
         <div style="display: flex; justify-content: center; margin-bottom: 18px;">
-          <img src="assets/logo_full.png" alt="Atomos - Automated Statistics" style="height: 54px; width: auto; object-fit: contain;" />
+          <img src="assets/logo_nav.png?v=9" alt="Atomos - Automated Statistics" style="height: 54px; width: auto; object-fit: contain;" />
         </div>
         <div class="subpage-title" style="margin-bottom: 6px; font-size: 20px; justify-content: center;">
           <span>Administrative Access</span>
@@ -104,7 +104,7 @@
           </div>
           <div class="admin-tags-row">
             <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399; font-weight: 700;">AUTHENTICATED</span>
-            <span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: #5171ff;">SESSION ACTIVE</span>
+            <span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: #afd4e6;">SESSION ACTIVE</span>
             <span class="badge-count" style="background: rgba(245, 158, 11, 0.15); color: #fbbf24;">SYNTHETIC BALLOTS: 0</span>
           </div>
         </div>
@@ -115,7 +115,7 @@
           <button id="adminDownloadExportBtn" class="admin-btn admin-btn-secondary" title="Download current static JSON export zip bundle">
             EXPORT ZIP
           </button>
-          <button id="adminSyncGithubBtn" class="admin-btn admin-btn-secondary" title="Sync database & static export directly to GitHub repository" style="border-color: #5171ff; color: #5171ff;">
+          <button id="adminSyncGithubBtn" class="admin-btn admin-btn-secondary" title="Sync database & static export directly to GitHub repository" style="border-color: #afd4e6; color: #afd4e6;">
             SYNC TO GITHUB
           </button>
           <button id="adminRefreshBtn" class="admin-btn admin-btn-secondary" title="Refresh all database metrics">
@@ -155,7 +155,7 @@
         <!-- Live KPI Stats Grid -->
         <div class="bio-stats-grid" style="margin-bottom: 24px;">
           <div class="bio-stat-tile">
-            <div id="kpiTournaments" class="bio-stat-val" style="color: #5171ff;">--</div>
+            <div id="kpiTournaments" class="bio-stat-val" style="color: #afd4e6;">--</div>
             <div class="bio-stat-lbl">Ingested Tournaments</div>
           </div>
           <div class="bio-stat-tile">
@@ -223,9 +223,9 @@
         <div class="admin-box" style="margin-bottom: 28px;">
           <div class="admin-box-title" style="display: flex; justify-content: space-between; align-items: center;">
             <span>DATA PERSISTENCE & GITHUB REPOSITORY SYNCHRONIZATION</span>
-            <span id="githubSyncBadge" class="badge-count" style="background: rgba(81, 113, 255, 0.15); color: #5171ff;">CHECKING GITHUB STATUS...</span>
+            <span id="githubSyncBadge" class="badge-count" style="background: rgba(81, 113, 255, 0.15); color: #afd4e6;">CHECKING GITHUB STATUS...</span>
           </div>
-          <div style="font-size: 13px; color: #415582; margin-bottom: 16px; line-height: 1.5;">
+          <div style="font-size: 13px; color: #cbe6f4; margin-bottom: 16px; line-height: 1.5;">
             Render free-tier web services have ephemeral storage that resets upon sleep or container restart. Use the tools below to permanently persist your database merges directly to your GitHub repository or download the SQLite database locally.
           </div>
           <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
@@ -235,7 +235,7 @@
             <button id="paneDownloadExportBtn" class="admin-btn admin-btn-secondary">
               DOWNLOAD STATIC EXPORT (ZIP)
             </button>
-            <button id="paneSyncGithubBtn" class="admin-btn admin-btn-secondary" style="border-color: #5171ff; color: #5171ff;">
+            <button id="paneSyncGithubBtn" class="admin-btn admin-btn-secondary" style="border-color: #afd4e6; color: #afd4e6;">
               PUSH DATABASE TO GITHUB
             </button>
           </div>
@@ -244,7 +244,7 @@
           <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.08);">
             <label for="adminGhTokenInput" class="admin-form-label" style="display: flex; justify-content: space-between;">
               <span>GITHUB ACCESS TOKEN (FINE-GRAINED OR CLASSIC)</span>
-              <span style="font-size: 11px; color: #415582; font-weight: 400; text-transform: none;">Stored locally in browser</span>
+              <span style="font-size: 11px; color: #cbe6f4; font-weight: 400; text-transform: none;">Stored locally in browser</span>
             </label>
             <div style="display: flex; gap: 8px; margin-top: 6px;">
               <input
@@ -261,7 +261,7 @@
                 CLEAR
               </button>
             </div>
-            <div style="font-size: 11px; color: #415582; margin-top: 6px; font-family: var(--font-mono);">
+            <div style="font-size: 11px; color: #cbe6f4; margin-top: 6px; font-family: var(--font-mono);">
               Recommended: Fine-grained token scoped to repository spacemoraneg-create/AtomosLK with Contents: Read and write.
             </div>
           </div>
@@ -286,7 +286,7 @@
             </thead>
             <tbody id="adminTournamentsTableBody">
               <tr>
-                <td colspan="9" style="text-align: center; padding: 24px; color: #415582;">
+                <td colspan="9" style="text-align: center; padding: 24px; color: #cbe6f4;">
                   Loading tournament records...
                 </td>
               </tr>
@@ -303,7 +303,7 @@
         
         <div class="admin-box" style="margin-bottom: 20px;">
           <div class="admin-box-title">DEBATER DATA CONFIRMATION & AUDIT</div>
-          <p style="font-size: 13px; color: #415582; margin-bottom: 14px; line-height: 1.5;">
+          <p style="font-size: 13px; color: #cbe6f4; margin-bottom: 14px; line-height: 1.5;">
             Search any debater below to directly inspect their live database record, exact speech position counts (1st, 2nd, 3rd, Reply), averages, and chronological tournament progression to confirm data accuracy.
           </p>
 
@@ -324,7 +324,7 @@
 
           <!-- Quick Audit Debater Chips -->
           <div class="admin-chips-row">
-            <span style="font-size: 11px; color: #415582; font-family: var(--font-mono); margin-right: 6px;">QUICK AUDIT:</span>
+            <span style="font-size: 11px; color: #cbe6f4; font-family: var(--font-mono); margin-right: 6px;">QUICK AUDIT:</span>
             <button class="admin-chip-btn" data-name="Vidath Marasinghe">Vidath Marasinghe</button>
             <button class="admin-chip-btn" data-name="Apoorva Ekanayake">Apoorva Ekanayake</button>
             <button class="admin-chip-btn" data-name="Balishta Wijesinghe">Balishta Wijesinghe</button>
@@ -335,7 +335,7 @@
 
         <!-- Bio Profile Container -->
         <div id="adminBioProfileContainer">
-          <div class="bio-empty-state" style="text-align: center; padding: 48px 20px; color: #415582; font-family: var(--font-mono);">
+          <div class="bio-empty-state" style="text-align: center; padding: 48px 20px; color: #cbe6f4; font-family: var(--font-mono);">
             Select a debater above to confirm their raw database records, positions, and tournament trajectory.
           </div>
         </div>
@@ -352,7 +352,7 @@
           <!-- Ingestion Card -->
           <div class="admin-box">
             <div class="admin-box-title">IMPORT / INGEST TOURNAMENT</div>
-            <p style="font-size: 13px; color: #415582; line-height: 1.5; margin-bottom: 16px;">
+            <p style="font-size: 13px; color: #cbe6f4; line-height: 1.5; margin-bottom: 16px;">
               Enter a public Tabbycat URL or local folder name to run the ingestion pipeline (Extract, Normalize, Reconcile, and Validate).
             </p>
 
@@ -393,7 +393,7 @@
           <!-- Purge / Delete Card -->
           <div class="admin-box">
             <div class="admin-box-title" style="color: #f87171;">PURGE / DELETE TOURNAMENT</div>
-            <p style="font-size: 13px; color: #415582; line-height: 1.5; margin-bottom: 16px;">
+            <p style="font-size: 13px; color: #cbe6f4; line-height: 1.5; margin-bottom: 16px;">
               Safely remove an ingested tournament from the SQLite database. Cascades across all associated rounds, debates, adjudicator ballots, and speech performances, and automatically refreshes all static web exports.
             </p>
 
@@ -422,7 +422,7 @@
         
         <div class="admin-box" style="margin-bottom: 20px;">
           <div class="admin-box-title">DIAGNOSTIC TESTS & INTEGRITY RUNNER</div>
-          <p style="font-size: 13px; color: #415582; line-height: 1.5; margin-bottom: 16px;">
+          <p style="font-size: 13px; color: #cbe6f4; line-height: 1.5; margin-bottom: 16px;">
             Run diagnostic tests against the active database to verify foreign keys, score boundaries (60-80), winner margins, and ranking consistency.
           </p>
 
@@ -465,7 +465,7 @@
         
         <div class="admin-box" style="margin-bottom: 20px;">
           <div class="admin-box-title">IDENTITY MERGER & RESOLUTION ENGINE</div>
-          <p style="font-size: 13px; color: #415582; line-height: 1.5; margin-bottom: 16px;">
+          <p style="font-size: 13px; color: #cbe6f4; line-height: 1.5; margin-bottom: 16px;">
             Identify and merge duplicate Person identities (typos, single-name expansions) and Team identities (acronyms vs full names) with full foreign key cascading across all tournament records.
           </p>
 
@@ -481,14 +481,14 @@
 
           <!-- Suggestions List -->
           <div id="mergeSuggestionsContainer" class="merge-suggestions-grid">
-            <div style="text-align: center; padding: 32px; color: #415582;">Loading candidate duplicate suggestions...</div>
+            <div style="text-align: center; padding: 32px; color: #cbe6f4;">Loading candidate duplicate suggestions...</div>
           </div>
         </div>
 
         <!-- Institution Team Explorer & Merger -->
         <div class="admin-box" style="margin-bottom: 20px;">
           <div class="admin-box-title">INSTITUTION TEAM NAMES EXPLORER & MERGER</div>
-          <p style="font-size: 13px; color: #415582; line-height: 1.5; margin-bottom: 16px;">
+          <p style="font-size: 13px; color: #cbe6f4; line-height: 1.5; margin-bottom: 16px;">
             Inspect every distinct name a school has competed under across tournaments. Select a canonical target team and a variant name to unify them with complete database cascading and visual confirmation.
           </p>
 
@@ -511,7 +511,7 @@
 
           <!-- Quick Institution Filter Chips -->
           <div class="admin-chips-row" style="margin-bottom: 16px;">
-            <span style="font-size: 11px; color: #415582; font-family: var(--font-mono); margin-right: 6px;">QUICK SELECT:</span>
+            <span style="font-size: 11px; color: #cbe6f4; font-family: var(--font-mono); margin-right: 6px;">QUICK SELECT:</span>
             <button class="admin-chip-btn inst-chip" data-inst="Royal College">Royal College</button>
             <button class="admin-chip-btn inst-chip" data-inst="Trinity College Kandy">Trinity</button>
             <button class="admin-chip-btn inst-chip" data-inst="Ananda College">Ananda</button>
@@ -536,7 +536,7 @@
                 <button id="btnClearSelectedTarget" class="inst-merge-clear-btn hidden" title="Remove target">&times;</button>
               </div>
               <div class="inst-merge-arrow">
-                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#5171ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#afd4e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                   <line x1="5" y1="12" x2="19" y2="12"></line>
                   <polyline points="12 5 19 12 12 19"></polyline>
                 </svg>
@@ -559,7 +559,7 @@
 
           <!-- Results Grid Container (Distinct Team Names) -->
           <div id="instTeamsResultsContainer">
-            <div style="text-align: center; padding: 36px 20px; color: #6b82af; font-family: var(--font-mono); font-size: 13px;">
+            <div style="text-align: center; padding: 36px 20px; color: #afd4e6; font-family: var(--font-mono); font-size: 13px;">
               Type or select an institution above to inspect every name the school has competed under.
             </div>
           </div>
@@ -576,7 +576,7 @@
         <!-- Manual Identity Merger with Live Autocomplete -->
         <div class="admin-box">
           <div class="admin-box-title">MANUAL IDENTITY MERGER</div>
-          <p style="font-size: 13px; color: #415582; line-height: 1.5; margin-bottom: 16px;">
+          <p style="font-size: 13px; color: #cbe6f4; line-height: 1.5; margin-bottom: 16px;">
             Search and merge any two debaters or teams by name, school, or ID. The duplicate entity will be permanently removed and merged into the canonical target with complete foreign key re-mapping.
           </p>
 
@@ -640,7 +640,7 @@
     <!-- ==================================================================== -->
     <div id="adminEditDatesModal" class="admin-modal-backdrop hidden">
       <div class="admin-modal-card" style="max-width: 480px;">
-        <div class="admin-modal-title" style="color: #5171ff;">EDIT TOURNAMENT DATES</div>
+        <div class="admin-modal-title" style="color: #afd4e6;">EDIT TOURNAMENT DATES</div>
         <p class="admin-modal-text">
           Update the display hosting dates for <strong id="editDatesTournamentName">--</strong>.
         </p>
@@ -685,25 +685,25 @@
     <!-- ==================================================================== -->
     <div id="instTeamMergeConfirmModal" class="admin-modal-backdrop hidden">
       <div class="admin-modal-card" style="border-color: rgba(81, 113, 255, 0.4); box-shadow: 0 24px 48px rgba(32, 64, 150, 0.25), 0 0 24px rgba(81, 113, 255, 0.15); max-width: 520px;">
-        <div class="admin-modal-title" style="color: #5171ff;">CONFIRM TEAM IDENTITY MERGE</div>
+        <div class="admin-modal-title" style="color: #afd4e6;">CONFIRM TEAM IDENTITY MERGE</div>
         <p id="instTeamMergeModalMessage" class="admin-modal-text">
           Review the canonical merge details below before executing this relational merge.
         </p>
-        <div class="admin-box" style="margin-bottom: 16px; background: #eaf4fa; padding: 14px;">
-          <div style="font-size: 13px; margin-bottom: 8px; color: #162b60;">
-            <strong>Institution:</strong> <span id="modalInstName" style="color: #5171ff;">--</span>
+        <div class="admin-box" style="margin-bottom: 16px; background: rgba(24, 42, 128, 0.55); padding: 14px;">
+          <div style="font-size: 13px; margin-bottom: 8px; color: #ffffff;">
+            <strong>Institution:</strong> <span id="modalInstName" style="color: #afd4e6;">--</span>
           </div>
-          <div style="font-size: 13px; margin-bottom: 8px; color: #162b60;">
-            <strong>Canonical Target (Keep):</strong> <span id="modalTargetName" style="color: #059669; font-weight: 700;">--</span>
+          <div style="font-size: 13px; margin-bottom: 8px; color: #ffffff;">
+            <strong>Canonical Target (Keep):</strong> <span id="modalTargetName" style="color: #34d399; font-weight: 700;">--</span>
           </div>
-          <div style="font-size: 13px; margin-bottom: 8px; color: #162b60;">
-            <strong>Variant to Merge:</strong> <span id="modalVariantName" style="color: #e11d48; font-weight: 700;">--</span>
+          <div style="font-size: 13px; margin-bottom: 8px; color: #ffffff;">
+            <strong>Variant to Merge:</strong> <span id="modalVariantName" style="color: #fda4af; font-weight: 700;">--</span>
           </div>
-          <div style="font-size: 12px; color: #415582; line-height: 1.4;">
-            <strong>Affected Tournaments:</strong> <span id="modalAffectedTours" class="monospace" style="color: #162b60;">--</span>
+          <div style="font-size: 12px; color: #cbe6f4; line-height: 1.4;">
+            <strong>Affected Tournaments:</strong> <span id="modalAffectedTours" class="monospace" style="color: #ffffff;">--</span>
           </div>
         </div>
-        <div class="admin-modal-alert" style="background: rgba(81, 113, 255, 0.1); border-left-color: #5171ff; color: #415582;">
+        <div class="admin-modal-alert" style="background: rgba(81, 113, 255, 0.1); border-left-color: #afd4e6; color: #cbe6f4;">
           CONFIRMATION EFFECT: All debate records, speaker performances, and leaderboards under the variant name will be unified under the canonical target across the entire season.
         </div>
         <div class="admin-modal-actions">
@@ -719,7 +719,7 @@
     </footer>
   </main>
 
-  <script src="admin.js?v=7"></script>
+  <script src="admin.js?v=8"></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f88322e0730e4449a5bb81b8e7aad80f"}'></script>
   <!-- End Cloudflare Web Analytics -->

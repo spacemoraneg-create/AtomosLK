@@ -255,7 +255,7 @@
     if (!tbody) return;
 
     if (!tournaments || tournaments.length === 0) {
-      tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: #415582;">No tournaments ingested in database.</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: #cbe6f4;">No tournaments ingested in database.</td></tr>`;
       return;
     }
 
@@ -263,11 +263,11 @@
       .map((t) => {
         return `
           <tr>
-            <td class="monospace" style="color: #5171ff; font-weight: 700;">#${t.chrono_order ?? t.id}</td>
+            <td class="monospace" style="color: #afd4e6; font-weight: 700;">#${t.chrono_order ?? t.id}</td>
             <td class="monospace">${escapeHtml(t.slug)}</td>
             <td style="font-weight: 500;">
               <div>${escapeHtml(t.official_name || t.name)}</div>
-              <div style="font-size: 11px; color: #5171ff; font-family: var(--font-mono); margin-top: 2px;">
+              <div style="font-size: 11px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">
                 ${t.hosting_dates ? escapeHtml(t.hosting_dates) : '2026'} · ${t.source_url ? escapeHtml(t.source_url) : 'Local Tab Archive'}
               </div>
             </td>
@@ -616,7 +616,7 @@
       const results = data.results || [];
 
       if (results.length === 0) {
-        suggestions.innerHTML = '<div style="padding: 12px; color: #415582; font-size: 13px; text-align: center;">No matching debaters found in database.</div>';
+        suggestions.innerHTML = '<div style="padding: 12px; color: #cbe6f4; font-size: 13px; text-align: center;">No matching debaters found in database.</div>';
         suggestions.classList.remove('hidden');
         return;
       }
@@ -626,7 +626,7 @@
           return `
             <div class="bio-autocomplete-item" data-name="${escapeHtml(r.canonical_name || r.name)}">
               <div class="bio-ac-name">${escapeHtml(r.canonical_name || r.name)}</div>
-              <div class="bio-ac-inst">${escapeHtml(r.institution || 'Independent')} ${r.national_level ? `&bull; <span style="color: #5171ff;">${escapeHtml(r.national_level)}</span>` : ''}</div>
+              <div class="bio-ac-inst">${escapeHtml(r.institution || 'Independent')} ${r.national_level ? `&bull; <span style="color: #afd4e6;">${escapeHtml(r.national_level)}</span>` : ''}</div>
             </div>
           `;
         })
@@ -655,7 +655,7 @@
     if (!container) return;
 
     container.innerHTML = `
-      <div style="text-align: center; padding: 40px; color: #5171ff; font-family: var(--font-mono);">
+      <div style="text-align: center; padding: 40px; color: #afd4e6; font-family: var(--font-mono);">
         Loading career profile and ballot breakdown for ${escapeHtml(name)}...
       </div>
     `;
@@ -696,7 +696,7 @@
     };
 
     const natBadge = p.national_level
-      ? `<span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: #5171ff; margin-left: 8px;">${escapeHtml(p.national_level)}</span>`
+      ? `<span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: #afd4e6; margin-left: 8px;">${escapeHtml(p.national_level)}</span>`
       : '';
 
     const tournaments = p.tournaments || [];
@@ -727,7 +727,7 @@
         <!-- 8 Core Metrics Grid -->
         <div class="bio-stats-grid" style="margin-bottom: 24px;">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #5171ff;">${(p.tab_rank || p.master_tab_rank) ? '#' + (p.tab_rank || p.master_tab_rank) : 'UR'}</div>
+            <div class="bio-stat-val" style="color: #afd4e6;">${(p.tab_rank || p.master_tab_rank) ? '#' + (p.tab_rank || p.master_tab_rank) : 'UR'}</div>
             <div class="bio-stat-lbl">Official Tab Rank</div>
           </div>
           <div class="bio-stat-tile">
@@ -764,14 +764,14 @@
         <div class="admin-box" style="margin-bottom: 24px; background: rgba(15, 23, 42, 0.7);">
           <div class="admin-box-title" style="display: flex; justify-content: space-between; align-items: center;">
             <span>SPEAKER POSITION BREAKDOWN AUDIT</span>
-            <span style="font-size: 11px; color: #415582; font-weight: 400; text-transform: none;">
+            <span style="font-size: 11px; color: #cbe6f4; font-weight: 400; text-transform: none;">
               Counted strictly from official tournament scoresheets
             </span>
           </div>
 
           <div class="admin-positions-grid">
             <div class="admin-pos-tile">
-              <div class="admin-pos-badge" style="background: rgba(81, 113, 255, 0.2); color: #5171ff;">1st SPEECH</div>
+              <div class="admin-pos-badge" style="background: rgba(81, 113, 255, 0.2); color: #afd4e6;">1st SPEECH</div>
               <div class="admin-pos-count">${pos['1st']?.count ?? 0}</div>
               <div class="admin-pos-sub">Avg: ${pos['1st']?.avg !== null && pos['1st']?.avg !== undefined ? pos['1st'].avg.toFixed(2) : '--'} pts</div>
             </div>
@@ -808,7 +808,7 @@
               </tr>
             </thead>
             <tbody>
-              ${tournaments.length === 0 ? '<tr><td colspan="6" style="text-align: center; padding: 18px; color: #415582;">No tournament entries recorded.</td></tr>' : ''}
+              ${tournaments.length === 0 ? '<tr><td colspan="6" style="text-align: center; padding: 18px; color: #cbe6f4;">No tournament entries recorded.</td></tr>' : ''}
               ${tournaments
                 .map((t) => {
                   const qualBadge = t.is_eligible
@@ -824,7 +824,7 @@
                       <td class="monospace">${escapeHtml(t.team_name || '--')}</td>
                       <td>${qualBadge}</td>
                       <td class="monospace" style="font-size: 12px; color: #0c1a3d;">${scoresList}</td>
-                      <td class="monospace" style="font-weight: 600; color: #5171ff;">
+                      <td class="monospace" style="font-weight: 600; color: #afd4e6;">
                         ${t.tournament_average !== null && t.tournament_average !== undefined ? t.tournament_average.toFixed(2) : '--'}
                       </td>
                       <td style="font-size: 12px; color: #34d399;">${escapeHtml(t.highest_stage || '--')}</td>
@@ -1244,7 +1244,7 @@
   async function fetchMergeSuggestions(silent = false) {
     const container = document.getElementById('mergeSuggestionsContainer');
     if (container && !silent) {
-      container.innerHTML = `<div style="text-align: center; padding: 32px; color: #415582;"><div class="spinner"></div> Scanning database for candidate duplicate identities...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 32px; color: #cbe6f4;"><div class="spinner"></div> Scanning database for candidate duplicate identities...</div>`;
     }
 
     try {
@@ -1289,7 +1289,7 @@
 
     if (items.length === 0) {
       container.innerHTML = `
-        <div style="text-align: center; padding: 40px; color: #415582; font-family: var(--font-mono);">
+        <div style="text-align: center; padding: 40px; color: #cbe6f4; font-family: var(--font-mono);">
           No candidate duplicate suggestions found for this category. All identities appear resolved.
         </div>
       `;
@@ -1309,12 +1309,12 @@
           <div class="merge-card-header">
             <div>
               <div class="merge-card-type">
-                <span class="badge-count" style="background: rgba(81, 113, 255, 0.15); color: #5171ff;">${escapeHtml(s.type.toUpperCase())}</span>
-                <span style="font-weight: 600; color: #162b60; font-size: 13px;">${escapeHtml(s.match_type)}</span>
+                <span class="badge-count" style="background: rgba(81, 113, 255, 0.15); color: #afd4e6;">${escapeHtml(s.type.toUpperCase())}</span>
+                <span style="font-weight: 600; color: #ffffff; font-size: 13px;">${escapeHtml(s.match_type)}</span>
               </div>
-              ${s.reason ? `<div style="font-size: 11px; color: #415582; margin-top: 4px;">${escapeHtml(s.reason)}</div>` : ''}
+              ${s.reason ? `<div style="font-size: 11px; color: #cbe6f4; margin-top: 4px;">${escapeHtml(s.reason)}</div>` : ''}
             </div>
-            <div class="merge-card-conf" style="font-family: var(--font-mono); font-size: 11.5px; color: #059669; font-weight: 700;">
+            <div class="merge-card-conf" style="font-family: var(--font-mono); font-size: 11.5px; color: #34d399; font-weight: 700;">
               ${s.confidence}% MATCH
             </div>
           </div>
@@ -1333,7 +1333,7 @@
 
             <!-- Arrow Indicator -->
             <div class="merge-arrow-col">
-              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#5171ff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#afd4e6" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12 5 19 12 12 19"></polyline>
               </svg>
@@ -1609,7 +1609,7 @@
       const auditSection = document.getElementById('instConfirmedMergesSection');
 
       if (container) {
-        container.innerHTML = `<div style="text-align: center; padding: 36px; color: #415582;"><div class="spinner"></div> Loading distinct team names for '${escapeHtml(trimmed)}'...</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 36px; color: #cbe6f4;"><div class="spinner"></div> Loading distinct team names for '${escapeHtml(trimmed)}'...</div>`;
       }
 
       try {
@@ -1660,7 +1660,7 @@
 
       if (teamNames.length === 0) {
         container.innerHTML = `
-          <div style="padding: 24px; text-align: center; color: #415582; font-family: var(--font-mono);">
+          <div style="padding: 24px; text-align: center; color: #cbe6f4; font-family: var(--font-mono);">
             No debate teams recorded for institution '${escapeHtml(inst.name)}'.
           </div>
         `;
@@ -1669,10 +1669,10 @@
 
       let html = `
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 14px; flex-wrap: wrap; gap: 8px; border-bottom: 1px solid rgba(81, 113, 255, 0.12); padding-bottom: 10px;">
-          <div style="font-size: 15px; font-weight: 700; color: #162b60;">
-            ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(81, 113, 255,0.15); color: #5171ff; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
+          <div style="font-size: 15px; font-weight: 700; color: #ffffff;">
+            ${escapeHtml(inst.name)} ${inst.code ? `<span class="badge-count" style="background: rgba(81, 113, 255,0.15); color: #afd4e6; margin-left: 6px;">${escapeHtml(inst.code)}</span>` : ''}
           </div>
-          <div style="font-family: var(--font-mono); font-size: 12px; color: #5171ff; font-weight: 600;">
+          <div style="font-family: var(--font-mono); font-size: 12px; color: #afd4e6; font-weight: 600;">
             ${teamNames.length} Distinct Team Names across ${currentInstData.total_instances || 0} Tournament Entries
           </div>
         </div>
@@ -1693,9 +1693,9 @@
               <div>
                 <div class="inst-team-name">
                   <span>${escapeHtml(tn.name)}</span>
-                  ${tn.tier ? `<span class="badge-count" style="background: rgba(81, 113, 255,0.15); color: #5171ff;">TIER ${escapeHtml(tn.tier)}</span>` : ''}
+                  ${tn.tier ? `<span class="badge-count" style="background: rgba(81, 113, 255,0.15); color: #afd4e6;">TIER ${escapeHtml(tn.tier)}</span>` : ''}
                 </div>
-                <div style="font-family: var(--font-mono); font-size: 11px; color: #415582; margin-top: 3px;">
+                <div style="font-family: var(--font-mono); font-size: 11px; color: #cbe6f4; margin-top: 3px;">
                   Fielded in ${tn.instance_count} ${tn.instance_count === 1 ? 'Tournament' : 'Tournaments'}
                 </div>
               </div>
@@ -1708,13 +1708,13 @@
                           ? `<span class="badge-count" style="background: rgba(52,211,153,0.25); color: #34d399; font-weight: 800;">TARGET</span>` 
                           : (isVariant 
                               ? `<span class="badge-count" style="background: rgba(248,113,113,0.25); color: #f87171; font-weight: 800;">VARIANT</span>` 
-                              : `<span class="badge-count" style="background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(81, 113, 255, 0.2); color: #415582;">STANDALONE</span>`)))}
+                              : `<span class="badge-count" style="background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(81, 113, 255, 0.2); color: #cbe6f4;">STANDALONE</span>`)))}
               </div>
             </div>
 
             <!-- Tournaments List -->
             <div style="margin: 2px 0 6px;">
-              <div style="font-family: var(--font-mono); font-size: 10px; color: #6b82af; text-transform: uppercase; margin-bottom: 4px;">Tournaments Competed:</div>
+              <div style="font-family: var(--font-mono); font-size: 10px; color: #afd4e6; text-transform: uppercase; margin-bottom: 4px;">Tournaments Competed:</div>
               <div>
                 ${tn.tournaments.map(tour => `<span class="inst-tour-tag">${escapeHtml(tour.name)}</span>`).join('')}
               </div>
@@ -1747,8 +1747,8 @@
             ${tn.is_merged ? `
               <div class="inst-merged-into-box">
                 <div>
-                  <span style="color: #415582;">Merged Under:</span>
-                  <strong style="color: #5171ff; margin-left: 6px;">${escapeHtml(tn.merged_into)}</strong>
+                  <span style="color: #cbe6f4;">Merged Under:</span>
+                  <strong style="color: #afd4e6; margin-left: 6px;">${escapeHtml(tn.merged_into)}</strong>
                 </div>
                 <button class="admin-btn admin-btn-outline admin-btn-sm btn-inst-unmerge" data-variant-name="${escapeHtml(tn.name)}" style="padding: 4px 10px; font-size: 11px;">
                   UNMERGE
@@ -1833,12 +1833,12 @@
         <div class="inst-audit-row">
           <div>
             <strong style="color: #34d399;">${escapeHtml(m.target_canonical_name)}</strong>
-            <span style="color: #6b82af; margin: 0 8px;">&larr;</span>
+            <span style="color: #afd4e6; margin: 0 8px;">&larr;</span>
             <strong style="color: #f87171;">${escapeHtml(m.variant_name)}</strong>
             <span class="badge-count" style="margin-left: 10px; background: rgba(16,185,129,0.15); color: #34d399; font-weight: 700;">CONFIRMED UNIFIED</span>
           </div>
           <div style="display: flex; align-items: center; gap: 12px;">
-            <span style="color: #415582; font-family: var(--font-mono); font-size: 11px;">${m.decided_at || ''}</span>
+            <span style="color: #cbe6f4; font-family: var(--font-mono); font-size: 11px;">${m.decided_at || ''}</span>
             <button class="admin-btn admin-btn-outline admin-btn-sm btn-inst-unmerge-audit" data-variant-name="${escapeHtml(m.variant_name)}" style="padding: 3px 8px; font-size: 11px;">
               UNMERGE
             </button>
@@ -2064,7 +2064,7 @@
         const container = document.getElementById('instTeamsResultsContainer');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 36px 20px; color: #6b82af; font-family: var(--font-mono); font-size: 13px;">
+            <div style="text-align: center; padding: 36px 20px; color: #afd4e6; font-family: var(--font-mono); font-size: 13px;">
               Type or select an institution above to inspect every name the school has competed under.
             </div>
           `;
@@ -2180,7 +2180,7 @@
 
             if (results.length === 0) {
               dropdown.innerHTML = `
-                <div style="padding: 12px; font-family: var(--font-mono); font-size: 12px; color: #415582; text-align: center;">
+                <div style="padding: 12px; font-family: var(--font-mono); font-size: 12px; color: #cbe6f4; text-align: center;">
                   No matching ${escapeHtml(type)} records found.
                 </div>
               `;
@@ -2200,7 +2200,7 @@
                         <span>${escapeHtml(pName)}</span>
                         <span class="entity-auto-badge">#${r.id}</span>
                       </div>
-                      <div class="entity-auto-sub">${escapeHtml(inst)} ${r.national_level ? `&bull; <span style="color: #5171ff;">${escapeHtml(r.national_level)}</span>` : ''}</div>
+                      <div class="entity-auto-sub">${escapeHtml(inst)} ${r.national_level ? `&bull; <span style="color: #afd4e6;">${escapeHtml(r.national_level)}</span>` : ''}</div>
                     </div>
                     <div class="entity-auto-stats">${speeches} speeches</div>
                   </div>
@@ -2219,7 +2219,7 @@
                         <span class="entity-auto-badge">#${r.id}</span>
                       </div>
                       <div class="entity-auto-sub">${escapeHtml(tour)} &bull; ${escapeHtml(inst)}</div>
-                      ${members ? `<div style="font-size: 11px; color: #415582; margin-top: 2px;">${members}</div>` : ''}
+                      ${members ? `<div style="font-size: 11px; color: #cbe6f4; margin-top: 2px;">${members}</div>` : ''}
                     </div>
                     <div class="entity-auto-stats">${speeches} sp.</div>
                   </div>
