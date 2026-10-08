@@ -1,6 +1,6 @@
 /**
- * ATOMOS V2 - CLIENT ENGINE & APPLICATION CONTROLLER
- * Powering Canva Home Page + Subpages with Complete Multi Purpose Analytics
+ * ATOMOS V3 - CLIENT ENGINE & APPLICATION CONTROLLER
+ * Powering Home Page + Subpages with Complete Multi Purpose Analytics
  */
 
 (function () {
@@ -354,7 +354,7 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.6);">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: #415582;">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
         return;
       }
 
@@ -369,11 +369,11 @@
             <td>
               <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
             </td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'speaker_score' ? '800; color: #7692ff;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'win_percentage' ? '800; color: #7692ff;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'stdev' ? '800; color: #7692ff;' : '600;'}">${fmt(s.stdev, 2)}</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'prelims_debated' ? '800; color: #7692ff;' : '600;'}">${s.prelims_debated}</td>
-            <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${s.tournaments_debated}</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'speaker_score' ? '800; color: #5171ff;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'win_percentage' ? '800; color: #5171ff;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'stdev' ? '800; color: #5171ff;' : '600;'}">${fmt(s.stdev, 2)}</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'prelims_debated' ? '800; color: #5171ff;' : '600;'}">${s.prelims_debated}</td>
+            <td style="text-align: right; font-family: var(--font-mono); color: #415582;">${s.tournaments_debated}</td>
             <td>${getNatStatusTag(s.national_level)}</td>
           </tr>
         `;
@@ -583,7 +583,7 @@
 
       metricToolbar.innerHTML = `
         <div class="metric-pills-bar">
-          <span style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.5); margin-right: 4px;">RANK BY:</span>
+          <span style="font-family: var(--font-mono); font-size: 11px; color: #415582; margin-right: 4px;">RANK BY:</span>
           ${pills.map((p) => `
             <button class="metric-pill-btn${p.id === activeMetric ? ' active' : ''}" data-metric="${p.id}">
               ${p.label}
@@ -671,7 +671,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No debaters match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">No debaters match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -703,11 +703,11 @@
                   <td>
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'speaker_score' ? '800; color: #7692ff;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #7692ff;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'stdev' ? '800; color: #7692ff;' : '600;'}">${fmt(s.stdev, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'prelims_debated' ? '800; color: #7692ff;' : '600;'}">${s.prelims_debated}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${s.tournaments_debated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'speaker_score' ? '800; color: #5171ff;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #5171ff;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'stdev' ? '800; color: #5171ff;' : '600;'}">${fmt(s.stdev, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'prelims_debated' ? '800; color: #5171ff;' : '600;'}">${s.prelims_debated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: #415582;">${s.tournaments_debated}</td>
                   <td>${getNatStatusTag(s.national_level)}</td>
                 </tr>
               `;
@@ -764,7 +764,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No teams match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">No teams match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -793,10 +793,10 @@
                   <td>
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(t.institution)}">${escapeHtml(t.institution)}</a>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'atss' ? '800; color: #7692ff;' : '600;'}">${fmt(t.atss, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #7692ff;' : '600;'}">${fmt(t.win_percentage, 1)}%</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'awpt' ? '800; color: #7692ff;' : '600;'}">${fmt(t.awpt, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${t.tournaments_debated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'atss' ? '800; color: #5171ff;' : '600;'}">${fmt(t.atss, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #5171ff;' : '600;'}">${fmt(t.win_percentage, 1)}%</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'awpt' ? '800; color: #5171ff;' : '600;'}">${fmt(t.awpt, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: #415582;">${t.tournaments_debated}</td>
                   <td style="text-align: center;">${getBreakBadge(t.highest_achievement)}</td>
                 </tr>
               `).join('')}
@@ -843,7 +843,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No institutions match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">No institutions match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -878,14 +878,14 @@
                     <td style="text-align: center;">${getRankBadge(i._trueRank)}</td>
                     <td>
                       <a class="table-link" href="institution_bio.html?inst=${encodeURIComponent(i.institution_name)}">${escapeHtml(i.institution_name)}</a>
-                      ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(118, 146, 255, 0.2); color: #abd2fa; font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
+                      ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(81, 113, 255, 0.2); color: #415582; font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
                     </td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'delta' ? '800; color: #7692ff;' : '700;'}">${fmt(i.delta, 2)}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'a_atss' ? '800; color: #7692ff;' : '600;'}">${aTeamLink}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'b_atss' ? '800; color: #7692ff;' : '600;'}">${bTeamLink}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'delta' ? '800; color: #5171ff;' : '700;'}">${fmt(i.delta, 2)}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'a_atss' ? '800; color: #5171ff;' : '600;'}">${aTeamLink}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'b_atss' ? '800; color: #5171ff;' : '600;'}">${bTeamLink}</td>
                     <td style="text-align: right;">${netDiffHtml}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #7692ff;' : '600;'}">${fmt(i.win_percentage, 1)}%</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'pool_count' ? '800; color: #7692ff;' : '600;'}">${i.pool_count}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #5171ff;' : '600;'}">${fmt(i.win_percentage, 1)}%</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'pool_count' ? '800; color: #5171ff;' : '600;'}">${i.pool_count}</td>
                   </tr>
                 `;
               }).join('')}
@@ -948,9 +948,9 @@
               ${list.map((t) => `
                 <tr>
                   <td style="text-align: center;">${getRankBadge(t._trueRank)}</td>
-                  <td style="font-weight: 700; color: #ffffff;">${escapeHtml(t.name)}</td>
-                  <td style="font-family: var(--font-mono); font-size: 11px; color: rgba(255,255,255,0.65);">${escapeHtml(t.hosting_dates)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #7692ff;">${fmt(t.atss, 2)}</td>
+                  <td style="font-weight: 700; color: #162b60;">${escapeHtml(t.name)}</td>
+                  <td style="font-family: var(--font-mono); font-size: 11px; color: #415582;">${escapeHtml(t.hosting_dates)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #5171ff;">${fmt(t.atss, 2)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${fmt(t.brk_atss, 2)}</td>
                   <td style="text-align: right; font-family: var(--font-mono);">${t.participating_institutions}</td>
                   <td style="text-align: right; font-family: var(--font-mono);">${t.participating_teams}</td>
@@ -1000,7 +1000,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">No adjudicators match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">No adjudicators match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -1026,14 +1026,14 @@
                   <td>
                     <a class="table-link" href="adjudicator_bio.html?judge=${encodeURIComponent(j.adjudicator_name)}">${escapeHtml(j.adjudicator_name)}</a>
                   </td>
-                  <td style="color: rgba(255,255,255,0.75);">${escapeHtml(j.institution)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aass' ? '800; color: #7692ff;' : '600;'}">${fmt(j.aass, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aatss' ? '800; color: #7692ff;' : '600;'}">${fmt(j.aatss, 2)}</td>
+                  <td style="color: #415582;">${escapeHtml(j.institution)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aass' ? '800; color: #5171ff;' : '600;'}">${fmt(j.aass, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aatss' ? '800; color: #5171ff;' : '600;'}">${fmt(j.aatss, 2)}</td>
                   <td style="text-align: center; font-family: var(--font-mono); font-size: 11px;">
-                    <span style="color: #7692ff; font-weight: 700;">${fmt(j.prop_bias_pct)}% P</span> / <span style="color: #f43f5e; font-weight: 700;">${fmt(j.opp_bias_pct)}% O</span>
+                    <span style="color: #5171ff; font-weight: 700;">${fmt(j.prop_bias_pct)}% P</span> / <span style="color: #f43f5e; font-weight: 700;">${fmt(j.opp_bias_pct)}% O</span>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'debates' ? '800; color: #7692ff;' : '600;'}">${j.prelims_adjudicated}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: rgba(255,255,255,0.7);">${j.tournaments_adjudicated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'debates' ? '800; color: #5171ff;' : '600;'}">${j.prelims_adjudicated}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); color: #415582;">${j.tournaments_adjudicated}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -1074,7 +1074,7 @@
       let dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #7692ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #5171ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1102,7 +1102,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching debaters found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #415582; font-size: 13px; text-align: center;">No matching debaters found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1151,7 +1151,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: #415582; font-family: var(--font-mono);">
               Type any debater's name above to view their career record.
             </div>
           `;
@@ -1187,7 +1187,7 @@
     async function loadDebaterBio(name) {
       if (!container) return;
       trackEvent('view_debater', { debater_name: name });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
 
       let profile = null;
       try {
@@ -1232,7 +1232,7 @@
       }
 
       if (!profile) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Debater "${escapeHtml(name)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">Debater "${escapeHtml(name)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -1281,11 +1281,11 @@
             <h2 class="bio-name">${escapeHtml(profile.canonical_name)}</h2>
             <div style="display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; font-size: 13.5px;">
               <div>
-                <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">MOST DEBATED TEAM: </span>
+                <span style="color: #415582; font-family: var(--font-mono); font-size: 11px;">MOST DEBATED TEAM: </span>
                 <a class="table-link" href="team_bio.html?team=${encodeURIComponent(profile.most_debated_team)}">${escapeHtml(profile.most_debated_team)}</a>
               </div>
               <div>
-                <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">LATEST SCHOOL: </span>
+                <span style="color: #415582; font-family: var(--font-mono); font-size: 11px;">LATEST SCHOOL: </span>
                 <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(profile.latest_institution)}">${escapeHtml(profile.latest_institution)}</a>
               </div>
             </div>
@@ -1296,29 +1296,29 @@
         <!-- 1. First Box Stats Seen (5 Core Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${fmt(profile.speaker_avg, 2)}</div>
+            <div class="bio-stat-val" style="color: #5171ff;">${fmt(profile.speaker_avg, 2)}</div>
             <div class="bio-stat-lbl">SPEAKER AVG</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Universal Substantive Mean</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Universal Substantive Mean</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #34d399;">${fmt(profile.win_percentage, 1)}%</div>
             <div class="bio-stat-lbl">WIN %</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Debates Contested</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Debates Contested</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #fbbf24;">${fmt(profile.stdev, 2)}</div>
             <div class="bio-stat-lbl">STDEV</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Speech Score Deviation</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Speech Score Deviation</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${profile.prelims_debated}</div>
+            <div class="bio-stat-val" style="color: #5171ff;">${profile.prelims_debated}</div>
             <div class="bio-stat-lbl">PRELIMS DEBATED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Preliminary Speeches</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Preliminary Speeches</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #c084fc;">${profile.tournaments_debated}</div>
             <div class="bio-stat-lbl">TOURNAMENTS</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Events Debated</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Events Debated</div>
           </div>
         </div>
 
@@ -1329,24 +1329,24 @@
         </div>
         <div class="bio-stats-grid bio-positions-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #7692ff;">${pos1}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: #5171ff;">${pos1}</div>
             <div class="bio-stat-lbl">1ST SPEAKER AVG</div>
-            ${count1 ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${count1}</div>` : ''}
+            ${count1 ? `<div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">${count1}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #7692ff;">${pos2}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: #5171ff;">${pos2}</div>
             <div class="bio-stat-lbl">2ND SPEAKER AVG</div>
-            ${count2 ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${count2}</div>` : ''}
+            ${count2 ? `<div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">${count2}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #7692ff;">${pos3}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: #5171ff;">${pos3}</div>
             <div class="bio-stat-lbl">3RD SPEAKER AVG</div>
-            ${count3 ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${count3}</div>` : ''}
+            ${count3 ? `<div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">${count3}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #a855f7;">${posReply}</div>
             <div class="bio-stat-lbl">REPLY SPEAKER AVG</div>
-            ${countReply ? `<div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">${countReply}</div>` : ''}
+            ${countReply ? `<div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">${countReply}</div>` : ''}
           </div>
         </div>
 
@@ -1360,7 +1360,7 @@
             <div class="trajectory-card" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
               <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
                 <div class="t-info-title">${escapeHtml(t.tournament_name)}</div>
-                <div style="font-family: var(--font-mono); font-size: 13px; color: #7692ff; font-weight: 700;">
+                <div style="font-family: var(--font-mono); font-size: 13px; color: #5171ff; font-weight: 700;">
                   Event Avg: ${fmt(t.tournament_average, 2)} pts (${t.speeches_count} prelim speeches)
                 </div>
               </div>
@@ -1380,7 +1380,7 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">SCORE:</span>
-                        <span style="font-weight: 700; color: ${isReply ? '#d8b4fe' : '#7692ff'};">${fmt(r.score, 1)}</span>
+                        <span style="font-weight: 700; color: ${isReply ? '#d8b4fe' : '#5171ff'};">${fmt(r.score, 1)}</span>
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">JUDGE:</span>
@@ -1395,7 +1395,7 @@
                 `;}).join('')}
               </div>
             </div>
-          `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
+          `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
         </div>
       `;
     }
@@ -1417,7 +1417,7 @@
       let dataset = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab);
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #7692ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading team records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #5171ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading team records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1445,7 +1445,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching teams found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #415582; font-size: 13px; text-align: center;">No matching teams found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1494,7 +1494,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: #415582; font-family: var(--font-mono);">
               Type any team name above to inspect ATSS, lineups, break achievements, and tournament progressions.
             </div>
           `;
@@ -1530,7 +1530,7 @@
     async function loadTeamBio(teamName) {
       if (!container) return;
       trackEvent('view_team', { team_name: teamName });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
 
       let bio = null;
       try {
@@ -1572,7 +1572,7 @@
       }
 
       if (!bio) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Team "${escapeHtml(teamName)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">Team "${escapeHtml(teamName)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -1599,41 +1599,41 @@
           <div class="bio-name-group">
             <h2 class="bio-name">${escapeHtml(bio.team_name)}</h2>
             <div style="font-size: 15px; margin-top: 4px;">
-              <span style="color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 11px;">REPRESENTING: </span>
+              <span style="color: #415582; font-family: var(--font-mono); font-size: 11px;">REPRESENTING: </span>
               <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(bio.institution)}">${escapeHtml(bio.institution)}</a>
             </div>
           </div>
           <div>
-            <span class="badge-count" style="background: rgba(118, 146, 255, 0.2); color: #7692ff;">TEAM TAB ELIGIBLE</span>
+            <span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: #5171ff;">TEAM TAB ELIGIBLE</span>
           </div>
         </div>
 
         <!-- 1. First Box Seen (5 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${fmt(bio.atss, 2)}</div>
+            <div class="bio-stat-val" style="color: #5171ff;">${fmt(bio.atss, 2)}</div>
             <div class="bio-stat-lbl">ATSS</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Avg Total Speaker Score</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Avg Total Speaker Score</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
             <div class="bio-stat-lbl">WIN %</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Total Debates Won</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Total Debates Won</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #fbbf24;">${fmt(bio.stdev, 2)}</div>
             <div class="bio-stat-lbl">STDEV</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Match Score Standard Deviation</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Match Score Standard Deviation</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${bio.prelims_debated} <span style="font-size: 16px; color: rgba(255,255,255,0.4);">/ ${bio.tournaments_debated}</span></div>
+            <div class="bio-stat-val" style="color: #5171ff;">${bio.prelims_debated} <span style="font-size: 16px; color: #6b82af;">/ ${bio.tournaments_debated}</span></div>
             <div class="bio-stat-lbl">PRELIMS & TOURNAMENTS</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Prelim Matches / Tourneys</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Prelim Matches / Tourneys</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #c084fc;">${fmt(bio.wins_per_tournament, 2)}</div>
             <div class="bio-stat-lbl">WINS PER TOURNAMENT</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Avg Wins / Tournament</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Avg Wins / Tournament</div>
           </div>
         </div>
 
@@ -1646,14 +1646,14 @@
           ${achievements.length > 0 ? achievements.map((a) => `
             <div class="achievement-card">
               <div>
-                <strong style="color: #ffffff;">${escapeHtml(a.tournament_name)}</strong>
-                <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+                <strong style="color: #162b60;">${escapeHtml(a.tournament_name)}</strong>
+                <div style="font-size: 11px; color: #415582; font-family: var(--font-mono);">
                   Tournament ATSS: ${fmt(a.tournament_atss !== undefined ? a.tournament_atss : a.atss, 2)}
                 </div>
               </div>
               <div>${getBreakBadge(a.highest_break || a.highest_stage)}</div>
             </div>
-          `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No elimination break stages recorded.</div>`}
+          `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No elimination break stages recorded.</div>`}
         </div>
 
         <!-- 3. Lineup Analytics (Top 5 Win % & Top 5 ATSS 3-Debater Combinations) -->
@@ -1672,15 +1672,15 @@
               ${(bio.top_win_lineups || []).length > 0 ? (bio.top_win_lineups || []).map((l, idx) => `
                 <div class="lineup-card">
                   <div class="lineup-names">
-                    <span style="color: rgba(255,255,255,0.4); margin-right: 6px;">#${idx + 1}</span>
+                    <span style="color: #6b82af; margin-right: 6px;">#${idx + 1}</span>
                     ${l.lineup.map(n => `<a class="table-link" href="bio.html?debater=${encodeURIComponent(n)}">${escapeHtml(n)}</a>`).join(' · ')}
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-top: 2px;">
+                    <div style="font-size: 11px; color: #415582; font-family: var(--font-mono); margin-top: 2px;">
                       ${l.debates_count} debates together
                     </div>
                   </div>
-                  <div class="lineup-stat" style="color: #34d399;">${fmt(l.win_percentage, 1)}%</div>
+                  <div class="lineup-stat" style="color: #059669;">${fmt(l.win_percentage, 1)}%</div>
                 </div>
-              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
+              `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
             </div>
           </div>
 
@@ -1694,15 +1694,15 @@
               ${(bio.top_atss_lineups || []).length > 0 ? (bio.top_atss_lineups || []).map((l, idx) => `
                 <div class="lineup-card">
                   <div class="lineup-names">
-                    <span style="color: rgba(255,255,255,0.4); margin-right: 6px;">#${idx + 1}</span>
+                    <span style="color: #6b82af; margin-right: 6px;">#${idx + 1}</span>
                     ${l.lineup.map(n => `<a class="table-link" href="bio.html?debater=${encodeURIComponent(n)}">${escapeHtml(n)}</a>`).join(' · ')}
-                    <div style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); margin-top: 2px;">
+                    <div style="font-size: 11px; color: #415582; font-family: var(--font-mono); margin-top: 2px;">
                       ${l.debates_count} debates together
                     </div>
                   </div>
-                  <div class="lineup-stat" style="color: #7692ff;">${fmt(l.atss, 2)}</div>
+                  <div class="lineup-stat" style="color: #5171ff;">${fmt(l.atss, 2)}</div>
                 </div>
-              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
+              `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
             </div>
           </div>
         </div>
@@ -1717,10 +1717,10 @@
             <div class="trajectory-card" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
               <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
                 <div>
-                  <strong style="color: #ffffff; font-size: 14px;">${escapeHtml(t.tournament_name)}</strong>
+                  <strong style="color: #162b60; font-size: 14px;">${escapeHtml(t.tournament_name)}</strong>
                   <span style="margin-left: 8px;">${getBreakBadge(t.highest_break || t.highest_stage)}</span>
                 </div>
-                <div style="font-family: var(--font-mono); font-size: 13px; color: #7692ff; font-weight: 700;">
+                <div style="font-family: var(--font-mono); font-size: 13px; color: #5171ff; font-weight: 700;">
                   Event ATSS: ${fmt(t.tournament_atss !== undefined ? t.tournament_atss : t.atss, 2)} pts (${t.debates_count || (t.debates || t.rounds || []).length} debates)
                 </div>
               </div>
@@ -1740,7 +1740,7 @@
                         </div>
                         <div class="tooltip-row">
                           <span class="tooltip-label">SCORE:</span>
-                          <span style="font-weight: 700; color: #7692ff;">${fmt(d.team_score, 1)}</span>
+                          <span style="font-weight: 700; color: #5171ff;">${fmt(d.team_score, 1)}</span>
                         </div>
                         <div class="tooltip-row">
                           <span class="tooltip-label">SIDE:</span>
@@ -1752,7 +1752,7 @@
                 }).join('')}
               </div>
             </div>
-          `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
+          `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
         </div>
       `;
     }
@@ -1774,7 +1774,7 @@
       let dataset = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab);
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #7692ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading institution records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #5171ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading institution records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1802,7 +1802,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching institutions found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #415582; font-size: 13px; text-align: center;">No matching institutions found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1851,7 +1851,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: #415582; font-family: var(--font-mono);">
               Type any institution name above to inspect Delta, A/B team ATSS, roster, and veteran vs new debater pool.
             </div>
           `;
@@ -1887,7 +1887,7 @@
     async function loadInstitutionBio(instName) {
       if (!container) return;
       trackEvent('view_institution', { institution_name: instName });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
 
       let bio = null;
       try {
@@ -1930,7 +1930,7 @@
       }
 
       if (!bio) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Institution "${escapeHtml(instName)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">Institution "${escapeHtml(instName)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -1950,7 +1950,7 @@
         <div class="bio-profile-header">
           <div class="bio-name-group">
             <h2 class="bio-name">${escapeHtml(bio.institution_name)}</h2>
-            <div style="font-size: 13.5px; color: rgba(255,255,255,0.6); font-family: var(--font-mono); margin-top: 4px;">
+            <div style="font-size: 13.5px; color: #415582; font-family: var(--font-mono); margin-top: 4px;">
               ${bio.code ? `CODE: ${escapeHtml(bio.code)} · ` : ''}TOTAL DEBATERS FIELDED: ${bio.pool_count}
             </div>
           </div>
@@ -1962,31 +1962,31 @@
         <!-- 1. First Box Seen (5 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${fmt(bio.delta, 2)}</div>
+            <div class="bio-stat-val" style="color: #5171ff;">${fmt(bio.delta, 2)}</div>
             <div class="bio-stat-lbl">DELTA</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">(0.8*A + 1.2*B) / 2</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">(0.8*A + 1.2*B) / 2</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #ffffff;">${teamsFielded.length}</div>
+            <div class="bio-stat-val" style="color: #162b60;">${teamsFielded.length}</div>
             <div class="bio-stat-lbl">TEAMS FIELDED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Active Circuit Rosters</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Active Circuit Rosters</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff; font-size: 20px;">
+            <div class="bio-stat-val" style="color: #5171ff; font-size: 20px;">
               A: ${fmt(bio.a_atss, 1)}<br />
-              <span style="color: #c084fc;">B: ${bio.b_atss ? fmt(bio.b_atss, 1) : '-'}</span>
+              <span style="color: #7e22ce;">B: ${bio.b_atss ? fmt(bio.b_atss, 1) : '-'}</span>
             </div>
             <div class="bio-stat-lbl">A & B TEAM ATSS</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
+            <div class="bio-stat-val" style="color: #059669;">${fmt(bio.win_percentage, 1)}%</div>
             <div class="bio-stat-lbl">WIN RATE</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">All Debates Contested</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">All Debates Contested</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #fbbf24;">${bio.pool_count}</div>
+            <div class="bio-stat-val" style="color: #d97706;">${bio.pool_count}</div>
             <div class="bio-stat-lbl">DEBATER POOL</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Eligible Debaters Fielded</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Eligible Debaters Fielded</div>
           </div>
         </div>
 
@@ -2000,7 +2000,7 @@
             <a class="opt-btn" href="team_bio.html?team=${encodeURIComponent(t)}" style="padding: 10px 18px; font-size: 12px; border-radius: 10px;">
               ${escapeHtml(t)}
             </a>
-          `).join('') : '<div style="color: rgba(255,255,255,0.5); font-style: italic;">No teams recorded.</div>'}
+          `).join('') : '<div style="color: #415582; font-style: italic;">No teams recorded.</div>'}
         </div>
 
         <!-- 2. Debater Pool Graph: Veterans (>= 2 tourneys) vs New Debaters (1 tourney) -->
@@ -2020,15 +2020,15 @@
                 <div class="pool-debater-card">
                   <div>
                     <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(v.name)}">${escapeHtml(v.name)}</a>
-                    <div style="font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">
+                    <div style="font-size: 10.5px; color: #6b82af; font-family: var(--font-mono);">
                       ${v.prelims} prelims debated
                     </div>
                   </div>
-                  <div style="font-family: var(--font-mono); font-weight: 700; color: #7692ff;">
+                  <div style="font-family: var(--font-mono); font-weight: 700; color: #5171ff;">
                     ${v.tournaments} Tourneys
                   </div>
                 </div>
-              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No veteran debaters recorded.</div>`}
+              `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No veteran debaters recorded.</div>`}
             </div>
           </div>
 
@@ -2043,7 +2043,7 @@
                 <div class="pool-debater-card">
                   <div>
                     <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(n.name)}">${escapeHtml(n.name)}</a>
-                    <div style="font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">
+                    <div style="font-size: 10.5px; color: #6b82af; font-family: var(--font-mono);">
                       1 tournament debated
                     </div>
                   </div>
@@ -2051,7 +2051,7 @@
                     ${n.prelims} Prelims
                   </div>
                 </div>
-              `).join('') : `<div style="color: rgba(255,255,255,0.5); padding: 12px; font-style: italic;">No new debaters recorded.</div>`}
+              `).join('') : `<div style="color: #415582; padding: 12px; font-style: italic;">No new debaters recorded.</div>`}
             </div>
           </div>
         </div>
@@ -2075,7 +2075,7 @@
       let dataset = state.v2Adjudicators || [];
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #7692ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading adjudicator records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #5171ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading adjudicator records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -2103,7 +2103,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching adjudicators found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: #415582; font-size: 13px; text-align: center;">No matching adjudicators found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -2152,7 +2152,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: #415582; font-family: var(--font-mono);">
               Type any adjudicator's name above to inspect AASS, AATSS, Prop/Opp bias, and judging history.
             </div>
           `;
@@ -2184,7 +2184,7 @@
     async function loadAdjudicatorBio(judgeName) {
       if (!container) return;
       trackEvent('view_adjudicator', { adjudicator_name: judgeName });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
 
       let bio = null;
       try {
@@ -2207,7 +2207,7 @@
       }
 
       if (!bio) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);">Adjudicator "${escapeHtml(judgeName)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;">Adjudicator "${escapeHtml(judgeName)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -2227,7 +2227,7 @@
         <div class="bio-profile-header">
           <div class="bio-name-group">
             <h2 class="bio-name">${escapeHtml(bio.adjudicator_name)}</h2>
-            <div style="font-size: 15px; color: rgba(255,255,255,0.7); margin-top: 4px;">
+            <div style="font-size: 15px; color: #415582; margin-top: 4px;">
               ${escapeHtml(bio.institution || 'Independent Adjudicator')}
             </div>
           </div>
@@ -2239,34 +2239,34 @@
         <!-- 1. Key Metrics Grid (6 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${bio.aass ? fmt(bio.aass, 2) : '-'}</div>
+            <div class="bio-stat-val" style="color: #5171ff;">${bio.aass ? fmt(bio.aass, 2) : '-'}</div>
             <div class="bio-stat-lbl">AASS (SUBSTANTIVE MEAN)</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Awarded Speaker Avg</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Awarded Speaker Avg</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #34d399;">${bio.aatss ? fmt(bio.aatss, 2) : '-'}</div>
             <div class="bio-stat-lbl">AATSS (TEAM AVG)</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Awarded Team Avg</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Awarded Team Avg</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
             <div class="bio-stat-lbl">PROP / OPP WIN BIAS</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #7692ff;">${bio.prelims_adjudicated || 0}</div>
+            <div class="bio-stat-val" style="color: #5171ff;">${bio.prelims_adjudicated || 0}</div>
             <div class="bio-stat-lbl">PRELIMS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #fbbf24;">${bio.outrounds_adjudicated || 0}</div>
             <div class="bio-stat-lbl">KNOCKOUTS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Elimination Panels</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Elimination Panels</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #c084fc;">${bio.tournaments_adjudicated || 0}</div>
             <div class="bio-stat-lbl">TOURNAMENTS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: rgba(255,255,255,0.4); font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
+            <div style="font-size: 9.5px; color: #6b82af; font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
           </div>
         </div>
 
@@ -2278,7 +2278,7 @@
         <div class="roster-box" style="margin-bottom: 24px;">
           <div class="bias-container">
             <div class="bias-labels">
-              <span style="color: #7692ff; font-weight: 700;">PROPOSITION: ${propPctStr}% (${bio.prop_wins || 0} wins)</span>
+              <span style="color: #5171ff; font-weight: 700;">PROPOSITION: ${propPctStr}% (${bio.prop_wins || 0} wins)</span>
               <span style="color: #f43f5e; font-weight: 700;">OPPOSITION: ${oppPctStr}% (${bio.opp_wins || 0} wins)</span>
             </div>
             <div class="bias-bar-wrap">
@@ -2309,30 +2309,30 @@
                 ${bio.judging_history.map((h) => {
                   const isKnockout = h.round_type === 'ELIMINATION';
                   const roundBadge = isKnockout
-                    ? `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(251, 191, 36, 0.2); color: #fbbf24; font-weight: 700;">${escapeHtml(h.round_name)}</span>`
-                    : `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(118, 146, 255, 0.15); color: #7692ff; font-weight: 600;">${escapeHtml(h.round_name)}</span>`;
+                    ? `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(217, 119, 6, 0.16); color: #b45309; font-weight: 700;">${escapeHtml(h.round_name)}</span>`
+                    : `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(81, 113, 255, 0.15); color: #5171ff; font-weight: 600;">${escapeHtml(h.round_name)}</span>`;
 
-                  const winnerColor = h.winner_side === 'Proposition' ? '#7692ff' : (h.winner_side === 'Opposition' ? '#f43f5e' : 'rgba(255,255,255,0.7)');
+                  const winnerColor = h.winner_side === 'Proposition' ? '#5171ff' : (h.winner_side === 'Opposition' ? '#e11d48' : '#415582');
                   const marginText = h.win_margin ? ` (${fmt(h.win_margin, 1)} pts)` : '';
 
                   const panelText = h.is_panel && h.panel_members && h.panel_members.length > 0
-                    ? `<div style="font-size: 11px; color: rgba(255,255,255,0.85);"><span style="color: #c084fc; font-weight: 700;">PANEL:</span> ${h.panel_members.map(m => escapeHtml(m)).join(', ')}</div>`
-                    : `<span style="font-size: 11px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">Solo Chair</span>`;
+                    ? `<div style="font-size: 11px; color: #162b60;"><span style="color: #7e22ce; font-weight: 700;">PANEL:</span> ${h.panel_members.map(m => escapeHtml(m)).join(', ')}</div>`
+                    : `<span style="font-size: 11px; color: #415582; font-family: var(--font-mono);">Solo Chair</span>`;
 
                   return `
                     <tr>
-                      <td style="font-weight: 600; color: #ffffff;">
+                      <td style="font-weight: 600; color: #162b60;">
                         <div>${escapeHtml(h.tournament_name)}</div>
-                        <div style="font-size: 10.5px; color: rgba(255,255,255,0.45); font-family: var(--font-mono);">${escapeHtml(h.tournament_dates || '')}</div>
+                        <div style="font-size: 10.5px; color: #6b82af; font-family: var(--font-mono);">${escapeHtml(h.tournament_dates || '')}</div>
                       </td>
                       <td>${roundBadge}</td>
                       <td>
                         <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px;">
                           <a class="table-link" href="team_bio.html?team=${encodeURIComponent(h.prop_team)}">${escapeHtml(h.prop_team)}</a>
-                          <span style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono);">(Prop)</span>
-                          <span style="color: rgba(255,255,255,0.3);">vs</span>
+                          <span style="font-size: 10px; color: #6b82af; font-family: var(--font-mono);">(Prop)</span>
+                          <span style="color: #6b82af;">vs</span>
                           <a class="table-link" href="team_bio.html?team=${encodeURIComponent(h.opp_team)}">${escapeHtml(h.opp_team)}</a>
-                          <span style="font-size: 10px; color: rgba(255,255,255,0.4); font-family: var(--font-mono);">(Opp)</span>
+                          <span style="font-size: 10px; color: #6b82af; font-family: var(--font-mono);">(Opp)</span>
                         </div>
                       </td>
                       <td style="text-align: center; font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; color: ${winnerColor};">
@@ -2346,7 +2346,7 @@
             </table>
           </div>
         ` : `
-          <div class="roster-box" style="text-align: center; padding: 24px; color: rgba(255,255,255,0.5); font-family: var(--font-mono); font-size: 12px; margin-bottom: 24px;">
+          <div class="roster-box" style="text-align: center; padding: 24px; color: #415582; font-family: var(--font-mono); font-size: 12px; margin-bottom: 24px;">
             Detailed round matchups recorded under standard preliminary scoring ballots.
           </div>
         `}
@@ -2381,7 +2381,7 @@
         let dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
 
         if (isDataLoading && dataset.length === 0) {
-          dropdown.innerHTML = `<div style="padding: 12px; color: #7692ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
+          dropdown.innerHTML = `<div style="padding: 12px; color: #5171ff; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
           dropdown.classList.remove('hidden');
           return;
         }
@@ -2409,7 +2409,7 @@
         matches = matches.slice(0, 15);
 
         if (matches.length === 0) {
-          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255,255,255,0.5); font-size: 13px; text-align: center;">No matching debaters found.</div>`;
+          dropdown.innerHTML = `<div style="padding: 12px; color: #415582; font-size: 13px; text-align: center;">No matching debaters found.</div>`;
           dropdown.classList.remove('hidden');
           return;
         }
@@ -2524,9 +2524,9 @@
 
       if (!selectedA && !selectedB) {
         container.innerHTML = `
-          <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: rgba(255,255,255,0.5); font-family: var(--font-mono);">
-            <div style="font-size: 16px; color: #7692ff; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // 6 CORE METRICS</div>
-            <div style="font-size: 13px; max-width: 520px; margin: 0 auto; line-height: 1.6; color: rgba(255,255,255,0.65);">
+          <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: #415582; font-family: var(--font-mono);">
+            <div style="font-size: 16px; color: #5171ff; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // 6 CORE METRICS</div>
+            <div style="font-size: 13px; max-width: 520px; margin: 0 auto; line-height: 1.6; color: #415582;">
               Select Contender 1 and Contender 2 above to compare them across the 6 official circuit metrics: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
             </div>
           </div>
@@ -2535,17 +2535,17 @@
       }
 
       if (selectedA && !selectedB) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255,255,255,0.6);">Contender 1 (${escapeHtml(selectedA.name)}) selected. Select Contender 2 above.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: #415582;">Contender 1 (${escapeHtml(selectedA.name)}) selected. Select Contender 2 above.</div>`;
         return;
       }
 
       if (!selectedA && selectedB) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255,255,255,0.6);">Contender 2 (${escapeHtml(selectedB.name)}) selected. Select Contender 1 above.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: #415582;">Contender 2 (${escapeHtml(selectedB.name)}) selected. Select Contender 1 above.</div>`;
         return;
       }
 
       if (selectedA.name.toLowerCase() === selectedB.name.toLowerCase()) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255,255,255,0.6);">Please select two different debaters to compare.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: #415582;">Please select two different debaters to compare.</div>`;
         return;
       }
 
@@ -2553,7 +2553,7 @@
         window.history.replaceState(null, '', `${window.location.pathname}?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}`);
       }
 
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255,255,255,0.6);"><div class="spinner"></div> Computing 6-metric head-to-head clash...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #415582;"><div class="spinner"></div> Computing 6-metric head-to-head clash...</div>`;
       trackEvent('view_h2h_matchup', {
         contender_a: selectedA.name || selectedA.speaker_name,
         contender_b: selectedB.name || selectedB.speaker_name,
@@ -2641,10 +2641,10 @@
       if (w6 === 'B') scoreB++;
 
       let bannerTitle = '';
-      let bannerColor = '#7692ff';
+      let bannerColor = '#5171ff';
       if (scoreA > scoreB) {
         bannerTitle = `${escapeHtml(selectedA.name)} LEADS ${scoreA} - ${scoreB}`;
-        bannerColor = '#7692ff';
+        bannerColor = '#5171ff';
       } else if (scoreB > scoreA) {
         bannerTitle = `${escapeHtml(selectedB.name)} LEADS ${scoreB} - ${scoreA}`;
         bannerColor = '#f43f5e';
@@ -2689,11 +2689,11 @@
 
       container.innerHTML = `
         <div class="h2h-prediction-banner">
-          <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: rgba(255,255,255,0.7); margin-bottom: 6px;">
+          <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #415582; margin-bottom: 6px;">
             6-METRIC HEAD TO HEAD RESULT
           </div>
           <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
-          <div style="font-size: 13px; color: rgba(255,255,255,0.85); margin-top: 6px;">
+          <div style="font-size: 13px; color: #0c1a3d; margin-top: 6px;">
             Judged strictly across: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Tournament Clashes.
           </div>
         </div>
@@ -2701,7 +2701,7 @@
         <div class="h2h-stat-compare">
           <!-- 1. Speaker Score -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #7692ff;">${fmt(selectedA.speaker_score, 2)}</div>
+            <div class="h2h-cat-val" style="color: #5171ff;">${fmt(selectedA.speaker_score, 2)}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">1. SPEAKER SCORE</span>
@@ -2718,7 +2718,7 @@
 
           <!-- 2. Win % -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #7692ff;">${fmt(selectedA.win_percentage, 1)}%</div>
+            <div class="h2h-cat-val" style="color: #5171ff;">${fmt(selectedA.win_percentage, 1)}%</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">2. WIN %</span>
@@ -2735,7 +2735,7 @@
 
           <!-- 3. Break Rank Avg (BRA) -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #7692ff;">${braA !== null ? fmt(braA, 2) : '-'}</div>
+            <div class="h2h-cat-val" style="color: #5171ff;">${braA !== null ? fmt(braA, 2) : '-'}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">3. BREAK RANK AVG (BRA)</span>
@@ -2753,7 +2753,7 @@
 
           <!-- 4. Prelims Debated -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #7692ff;">${selectedA.prelims_debated}</div>
+            <div class="h2h-cat-val" style="color: #5171ff;">${selectedA.prelims_debated}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">4. PRELIMS DEBATED</span>
@@ -2770,7 +2770,7 @@
 
           <!-- 5. Highest Achievement -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="font-size: 11.5px; color: #7692ff;">${achA}</div>
+            <div class="h2h-cat-val" style="font-size: 11.5px; color: #5171ff;">${achA}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">5. HIGHEST ACHIEVEMENT</span>
@@ -2787,7 +2787,7 @@
 
           <!-- 6. Head to Head in Tournaments -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #7692ff;">${aDirectWins}</div>
+            <div class="h2h-cat-val" style="color: #5171ff;">${aDirectWins}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">6. HEAD TO HEAD IN TOURNAMENTS</span>
@@ -2813,13 +2813,13 @@
               <div class="h2h-matchup-card">
                 <div class="h2h-matchup-header">
                   <span class="h2h-matchup-tour">${escapeHtml(m.tournament_name)} - ${escapeHtml(m.round_name)}</span>
-                  <span class="h2h-matchup-outcome" style="color: ${m.a_won ? '#7692ff' : '#f43f5e'};">
+                  <span class="h2h-matchup-outcome" style="color: ${m.a_won ? '#5171ff' : '#f43f5e'};">
                     ${m.a_won ? escapeHtml(selectedA.name) + ' WON' : escapeHtml(selectedB.name) + ' WON'}
                   </span>
                 </div>
                 <div class="h2h-matchup-body">
                   <div class="h2h-matchup-team">${escapeHtml(m.team_a)} (${m.side_a})</div>
-                  <div style="font-family: var(--font-mono); font-weight: 700; color: rgba(255,255,255,0.4);">VS</div>
+                  <div style="font-family: var(--font-mono); font-weight: 700; color: #6b82af;">VS</div>
                   <div class="h2h-matchup-team" style="text-align: right;">${escapeHtml(m.team_b)} (${m.side_b})</div>
                 </div>
               </div>
@@ -2869,7 +2869,7 @@
 
       function renderItems(arr, tagClass) {
         if (arr.length === 0) {
-          return `<div style="text-align: center; padding: 20px; color: rgba(255,255,255,0.4); font-size: 12px;">No debaters match.</div>`;
+          return `<div style="text-align: center; padding: 20px; color: #6b82af; font-size: 12px;">No debaters match.</div>`;
         }
         return arr.map(d => `
           <div class="pool-debater-card">
@@ -2884,7 +2884,7 @@
             </div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
               <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level || '')}</span>
-              ${d.speaker_score ? `<span style="font-size: 11px; font-family: var(--font-mono); color: #7692ff; font-weight: 600;">Avg: ${fmt(d.speaker_score, 3)} pts <span style="color: rgba(255,255,255,0.4); font-size: 9.5px; text-transform: uppercase;">(${escapeHtml(d.score_source || 'Tab')})</span></span>` : ''}
+              ${d.speaker_score ? `<span style="font-size: 11px; font-family: var(--font-mono); color: #5171ff; font-weight: 600;">Avg: ${fmt(d.speaker_score, 3)} pts <span style="color: #6b82af; font-size: 9.5px; text-transform: uppercase;">(${escapeHtml(d.score_source || 'Tab')})</span></span>` : ''}
             </div>
           </div>
         `).join('');
@@ -3096,7 +3096,7 @@
         output.push(`<div style="margin: 3px 0 3px 14px;">• ${formatInlineMarkdown(line.slice(2))}</div>`);
       } else if (/^\d+\.\s+/.test(line)) {
         const match = line.match(/^(\d+\.)\s+(.*)$/);
-        output.push(`<div style="margin: 3px 0 3px 14px;"><strong style="color: #7692ff;">${match[1]}</strong> ${formatInlineMarkdown(match[2])}</div>`);
+        output.push(`<div style="margin: 3px 0 3px 14px;"><strong style="color: #5171ff;">${match[1]}</strong> ${formatInlineMarkdown(match[2])}</div>`);
       } else {
         output.push(`<div>${formatInlineMarkdown(line)}</div>`);
       }
