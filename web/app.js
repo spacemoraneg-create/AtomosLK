@@ -2873,18 +2873,18 @@
         }
         return arr.map(d => `
           <div class="pool-debater-card">
-            <div style="display: flex; align-items: center; gap: 12px;">
+            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
               <span class="pool-rank-badge">#${d.rank_in_tier || '-'}</span>
-              <div>
+              <div style="min-width: 0;">
                 <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(d.name)}">${escapeHtml(d.name)}</a>
                 <div>
                   <a class="pool-debater-inst" href="institution_bio.html?inst=${encodeURIComponent(d.institution || '')}">${escapeHtml(d.institution || 'Independent')}</a>
                 </div>
               </div>
             </div>
-            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 4px;">
+            <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;">
               <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level || '')}</span>
-              ${d.speaker_score ? `<span style="font-size: 11px; font-family: var(--font-mono); color: #afd4e6; font-weight: 600;">Avg: ${fmt(d.speaker_score, 3)} pts <span style="color: #afd4e6; font-size: 9.5px; text-transform: uppercase;">(${escapeHtml(d.score_source || 'Tab')})</span></span>` : ''}
+              ${d.speaker_score ? `<span style="font-size: 10.5px; font-family: var(--font-mono); color: #afd4e6; font-weight: 600; white-space: nowrap;">Avg: ${fmt(d.speaker_score, 2)} pts <span style="color: #afd4e6; font-size: 9px; text-transform: uppercase;">(${escapeHtml(d.score_source || 'Tab')})</span></span>` : ''}
             </div>
           </div>
         `).join('');

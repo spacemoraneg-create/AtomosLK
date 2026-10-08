@@ -456,28 +456,77 @@ body {
   margin-top: 4px;
 }
 
-/* Data Tables */
+/* Data Tables - Separate Scrollable Tab Within Page */
 .data-table-wrap,
 .table-responsive,
 .table-container {
   width: 100%;
   max-width: 100%;
   box-sizing: border-box;
-  overflow: hidden;
+  max-height: 462px;
+  overflow-y: auto;
+  overflow-x: hidden;
   border-radius: 16px;
+  clip-path: inset(0 round 16px);
   background: linear-gradient(180deg, rgba(34, 57, 172, 0.94) 0%, rgba(24, 42, 136, 0.97) 100%);
   border: 1.5px solid rgba(175, 212, 230, 0.38);
   box-shadow: 0 12px 32px rgba(8, 16, 58, 0.42);
+}
+
+.subpage-container .data-table-wrap {
+  max-height: 546px;
+}
+
+.data-table-wrap::-webkit-scrollbar,
+.table-responsive::-webkit-scrollbar,
+.table-container::-webkit-scrollbar,
+.pool-tier-body::-webkit-scrollbar,
+.roster-list::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+
+.data-table-wrap::-webkit-scrollbar-track,
+.table-responsive::-webkit-scrollbar-track,
+.table-container::-webkit-scrollbar-track,
+.pool-tier-body::-webkit-scrollbar-track,
+.roster-list::-webkit-scrollbar-track {
+  background: transparent;
+  margin-block: 10px;
+  margin-inline: 10px;
+}
+
+.data-table-wrap::-webkit-scrollbar-thumb,
+.table-responsive::-webkit-scrollbar-thumb,
+.table-container::-webkit-scrollbar-thumb,
+.pool-tier-body::-webkit-scrollbar-thumb,
+.roster-list::-webkit-scrollbar-thumb {
+  background: rgba(175, 212, 230, 0.42);
+  border-radius: 999px;
+}
+
+.data-table-wrap::-webkit-scrollbar-thumb:hover,
+.table-responsive::-webkit-scrollbar-thumb:hover,
+.table-container::-webkit-scrollbar-thumb:hover,
+.pool-tier-body::-webkit-scrollbar-thumb:hover,
+.roster-list::-webkit-scrollbar-thumb:hover {
+  background: rgba(175, 212, 230, 0.72);
+}
+
+.data-table-wrap::-webkit-scrollbar-corner,
+.table-responsive::-webkit-scrollbar-corner,
+.table-container::-webkit-scrollbar-corner {
+  background: transparent;
 }
 
 .atomos-table,
 .leaderboard-table,
 .data-table {
   width: 100%;
-  min-width: 680px;
+  min-width: 0;
   table-layout: auto;
   border-collapse: collapse;
-  font-size: 13px;
+  font-size: 12.5px;
   text-align: left;
 }
 
@@ -486,14 +535,17 @@ body {
 .leaderboard-table th,
 .data-table th {
   font-family: var(--font-mono);
-  font-size: 11px;
+  font-size: 10.5px;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff;
-  padding: 13px 18px;
+  padding: 12px 12px;
   background: linear-gradient(180deg, #5979ff 0%, #4160ec 100%);
   border-bottom: 1.5px solid rgba(175, 212, 230, 0.5);
+  position: sticky;
+  top: 0;
+  z-index: 20;
   white-space: nowrap;
   box-shadow: 0 4px 12px rgba(12, 24, 82, 0.35);
 }
@@ -501,7 +553,7 @@ body {
 .atomos-table td,
 .leaderboard-table td,
 .data-table td {
-  padding: 13px 18px;
+  padding: 11px 12px;
   border-bottom: 1px solid rgba(175, 212, 230, 0.14);
   white-space: nowrap;
   color: #f0f8ff;
@@ -2786,17 +2838,20 @@ body {
   padding: 12px;
   display: flex;
   flex-direction: column;
-  gap: 8px;
+  gap: 7px;
+  max-height: 660px;
+  overflow-y: auto;
 }
 
 .pool-debater-card {
   background: rgba(34, 58, 168, 0.72);
   border: 1px solid rgba(175, 212, 230, 0.24);
   border-radius: 10px;
-  padding: 10px 14px;
+  padding: 8px 12px;
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 8px;
   transition: all 0.15s ease;
 }
 
@@ -2808,9 +2863,10 @@ body {
 
 .pool-debater-name {
   font-weight: 700;
-  font-size: 13px;
+  font-size: 12.5px;
   color: #ffffff;
   text-decoration: none;
+  white-space: nowrap;
 }
 
 .pool-debater-name:hover {
@@ -2932,6 +2988,8 @@ body {
   display: flex;
   flex-direction: column;
   gap: 6px;
+  max-height: 400px;
+  overflow-y: auto;
 }
 
 /* Bias bar for judges */
@@ -3784,14 +3842,17 @@ body {
   .table-responsive,
   .table-container,
   .subpage-container .data-table-wrap {
+    max-height: 70vh;
+    max-height: 70dvh;
     overflow-x: auto;
-    overflow-y: visible;
+    overflow-y: auto;
     -webkit-overflow-scrolling: touch;
     overscroll-behavior-x: contain;
     width: 100%;
     max-width: 100%;
     box-sizing: border-box;
     border-radius: 12px;
+    clip-path: inset(0 round 12px);
     position: relative;
   }
 
