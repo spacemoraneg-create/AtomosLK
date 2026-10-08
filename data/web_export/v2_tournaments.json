@@ -32,6 +32,22 @@
     "rank": 2
   },
   {
+    "tournament_id": 2,
+    "slug": "aisdc26",
+    "name": "AIS Debating Championship (AISDC 2026)",
+    "hosting_dates": "Jan 2–5, 2026",
+    "atss": 244.873,
+    "brk_atss": 250.062,
+    "participating_institutions": 14,
+    "participating_teams": 22,
+    "prelims_count": 5,
+    "open_knockouts_count": 3,
+    "prelims_plus_knock": 8,
+    "total_speeches": 552,
+    "prelim_debates": 60,
+    "rank": 3
+  },
+  {
     "tournament_id": 4,
     "slug": "slsdc26",
     "name": "Sri Lanka Schools Debating Championship (SLSDC 2026)",
@@ -45,7 +61,7 @@
     "prelims_plus_knock": 11,
     "total_speeches": 1528,
     "prelim_debates": 192,
-    "rank": 3
+    "rank": 4
   },
   {
     "tournament_id": 44,
@@ -61,22 +77,6 @@
     "prelims_plus_knock": 9,
     "total_speeches": 824,
     "prelim_debates": 94,
-    "rank": 4
-  },
-  {
-    "tournament_id": 2,
-    "slug": "aisdc26",
-    "name": "AIS Debating Championship (AISDC 2026)",
-    "hosting_dates": "Jan 2–5, 2026",
-    "atss": 244.683,
-    "brk_atss": 250.062,
-    "participating_institutions": 14,
-    "participating_teams": 23,
-    "prelims_count": 5,
-    "open_knockouts_count": 3,
-    "prelims_plus_knock": 8,
-    "total_speeches": 552,
-    "prelim_debates": 60,
     "rank": 5
   },
   {
