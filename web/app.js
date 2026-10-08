@@ -1030,7 +1030,7 @@
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aass' ? '800; color: #afd4e6;' : '600;'}">${fmt(j.aass, 2)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aatss' ? '800; color: #afd4e6;' : '600;'}">${fmt(j.aatss, 2)}</td>
                   <td style="text-align: center; font-family: var(--font-mono); font-size: 11px;">
-                    <span style="color: #afd4e6; font-weight: 700;">${fmt(j.prop_bias_pct)}% P</span> / <span style="color: #f43f5e; font-weight: 700;">${fmt(j.opp_bias_pct)}% O</span>
+                    <span style="color: #afd4e6; font-weight: 700;">${fmt(j.prop_bias_pct)}% P</span> / <span style="color: #fda4af; font-weight: 700;">${fmt(j.opp_bias_pct)}% O</span>
                   </td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'debates' ? '800; color: #afd4e6;' : '600;'}">${j.prelims_adjudicated}</td>
                   <td style="text-align: right; font-family: var(--font-mono); color: #cbe6f4;">${j.tournaments_adjudicated}</td>
@@ -1316,7 +1316,7 @@
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Preliminary Speeches</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #c084fc;">${profile.tournaments_debated}</div>
+            <div class="bio-stat-val" style="color: #e9d5ff;">${profile.tournaments_debated}</div>
             <div class="bio-stat-lbl">TOURNAMENTS</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Events Debated</div>
           </div>
@@ -1344,7 +1344,7 @@
             ${count3 ? `<div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">${count3}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #a855f7;">${posReply}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: #e9d5ff;">${posReply}</div>
             <div class="bio-stat-lbl">REPLY SPEAKER AVG</div>
             ${countReply ? `<div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">${countReply}</div>` : ''}
           </div>
@@ -1369,7 +1369,7 @@
                   const isReply = r.speech_type === 'REPLY';
                   return `
                   <div class="round-hover-trigger">
-                    <span class="score-pill" style="cursor: pointer; ${isReply ? 'background: rgba(168, 85, 247, 0.15); border-color: rgba(168, 85, 247, 0.4); color: #d8b4fe;' : ''}">
+                    <span class="score-pill" style="cursor: pointer; ${isReply ? 'background: rgba(192, 132, 252, 0.28); border-color: rgba(233, 213, 255, 0.55); color: #f3e8ff;' : ''}">
                       ${isReply ? 'Reply: ' : ''}${fmt(r.score, 1)}
                     </span>
                     <div class="round-tooltip">
@@ -1380,7 +1380,7 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">SCORE:</span>
-                        <span style="font-weight: 700; color: ${isReply ? '#d8b4fe' : '#afd4e6'};">${fmt(r.score, 1)}</span>
+                        <span style="font-weight: 700; color: ${isReply ? '#f3e8ff' : '#afd4e6'};">${fmt(r.score, 1)}</span>
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">JUDGE:</span>
@@ -1388,7 +1388,7 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">POSITION:</span>
-                        <span style="color: ${isReply ? '#c084fc' : '#34d399'};">${escapeHtml(r.position)}</span>
+                        <span style="color: ${isReply ? '#e9d5ff' : '#a7f3d0'}; font-weight: 700;">${escapeHtml(r.position)}</span>
                       </div>
                     </div>
                   </div>
@@ -1631,7 +1631,7 @@
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Prelim Matches / Tourneys</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #c084fc;">${fmt(bio.wins_per_tournament, 2)}</div>
+            <div class="bio-stat-val" style="color: #e9d5ff;">${fmt(bio.wins_per_tournament, 2)}</div>
             <div class="bio-stat-lbl">WINS PER TOURNAMENT</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Avg Wins / Tournament</div>
           </div>
@@ -2232,7 +2232,7 @@
             </div>
           </div>
           <div>
-            <span class="badge-count" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">ADJUDICATOR</span>
+            <span class="badge-count" style="background: rgba(192, 132, 252, 0.28); border: 1px solid rgba(233, 213, 255, 0.45); color: #f3e8ff;">ADJUDICATOR</span>
           </div>
         </div>
 
@@ -2249,7 +2249,7 @@
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Awarded Team Avg</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #f43f5e; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
+            <div class="bio-stat-val" style="color: #fda4af; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
             <div class="bio-stat-lbl">PROP / OPP WIN BIAS</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
           </div>
@@ -2264,7 +2264,7 @@
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Elimination Panels</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #c084fc;">${bio.tournaments_adjudicated || 0}</div>
+            <div class="bio-stat-val" style="color: #e9d5ff;">${bio.tournaments_adjudicated || 0}</div>
             <div class="bio-stat-lbl">TOURNAMENTS ADJUDICATED</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
           </div>
@@ -2279,7 +2279,7 @@
           <div class="bias-container">
             <div class="bias-labels">
               <span style="color: #afd4e6; font-weight: 700;">PROPOSITION: ${propPctStr}% (${bio.prop_wins || 0} wins)</span>
-              <span style="color: #f43f5e; font-weight: 700;">OPPOSITION: ${oppPctStr}% (${bio.opp_wins || 0} wins)</span>
+              <span style="color: #fda4af; font-weight: 700;">OPPOSITION: ${oppPctStr}% (${bio.opp_wins || 0} wins)</span>
             </div>
             <div class="bias-bar-wrap">
               <div class="bias-bar-prop" style="width: ${propPct}%;"></div>
@@ -2647,7 +2647,7 @@
         bannerColor = '#afd4e6';
       } else if (scoreB > scoreA) {
         bannerTitle = `${escapeHtml(selectedB.name)} LEADS ${scoreB} - ${scoreA}`;
-        bannerColor = '#f43f5e';
+        bannerColor = '#fda4af';
       } else {
         bannerTitle = `EVEN CLASH TIED ${scoreA} - ${scoreB}`;
         bannerColor = '#fbbf24';
@@ -2693,7 +2693,7 @@
             6-METRIC HEAD TO HEAD RESULT
           </div>
           <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
-          <div style="font-size: 13px; color: #0c1a3d; margin-top: 6px;">
+          <div style="font-size: 13px; color: #e4f3fb; margin-top: 6px;">
             Judged strictly across: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Tournament Clashes.
           </div>
         </div>
@@ -2713,7 +2713,7 @@
               </div>
               <div class="h2h-cat-subtext">Speaker average across substantive speeches</div>
             </div>
-            <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.speaker_score, 2)}</div>
+            <div class="h2h-cat-val" style="color: #fda4af;">${fmt(selectedB.speaker_score, 2)}</div>
           </div>
 
           <!-- 2. Win % -->
@@ -2730,7 +2730,7 @@
               </div>
               <div class="h2h-cat-subtext">Match win rate across contested debates</div>
             </div>
-            <div class="h2h-cat-val" style="color: #f43f5e;">${fmt(selectedB.win_percentage, 1)}%</div>
+            <div class="h2h-cat-val" style="color: #fda4af;">${fmt(selectedB.win_percentage, 1)}%</div>
           </div>
 
           <!-- 3. Break Rank Avg (BRA) -->
@@ -2747,7 +2747,7 @@
               </div>
               <div class="h2h-cat-subtext">Average preliminary break seed (Lower is better)</div>
             </div>
-            <div class="h2h-cat-val" style="color: #f43f5e;">${braB !== null ? fmt(braB, 2) : '-'}</div>
+            <div class="h2h-cat-val" style="color: #fda4af;">${braB !== null ? fmt(braB, 2) : '-'}</div>
           </div>
 
 
@@ -2765,7 +2765,7 @@
               </div>
               <div class="h2h-cat-subtext">Preliminary speeches completed</div>
             </div>
-            <div class="h2h-cat-val" style="color: #f43f5e;">${selectedB.prelims_debated}</div>
+            <div class="h2h-cat-val" style="color: #fda4af;">${selectedB.prelims_debated}</div>
           </div>
 
           <!-- 5. Highest Achievement -->
@@ -2782,7 +2782,7 @@
               </div>
               <div class="h2h-cat-subtext">Peak elimination progression</div>
             </div>
-            <div class="h2h-cat-val" style="font-size: 11.5px; color: #f43f5e;">${achB}</div>
+            <div class="h2h-cat-val" style="font-size: 11.5px; color: #fda4af;">${achB}</div>
           </div>
 
           <!-- 6. Head to Head in Tournaments -->
@@ -2799,7 +2799,7 @@
               </div>
               <div class="h2h-cat-subtext">${directDebates.length} direct debate matchup${directDebates.length === 1 ? '' : 's'} contested</div>
             </div>
-            <div class="h2h-cat-val" style="color: #f43f5e;">${bDirectWins}</div>
+            <div class="h2h-cat-val" style="color: #fda4af;">${bDirectWins}</div>
           </div>
         </div>
 

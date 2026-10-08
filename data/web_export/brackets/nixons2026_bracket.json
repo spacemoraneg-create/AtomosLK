@@ -7,7 +7,7 @@
     "institution": "Royal College"
   },
   "runner_up": {
-    "team": "TCK Red",
+    "team": "TCK A",
     "institution": "Trinity College Kandy"
   },
   "is_same_institution_closeout": false,
@@ -56,14 +56,14 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "VV",
+            "team_name": "VV A",
             "institution": "Visakha Vidyalaya",
             "team_score": null,
             "lineup": []
           },
           "result": {
             "winner_side": "Opposition",
-            "winner_team": "VV",
+            "winner_team": "VV A",
             "winner_institution": "Visakha Vidyalaya",
             "decision": "1-0",
             "margin": null,
@@ -77,20 +77,20 @@
           "debate_id": 9803,
           "venue": "Octofinals @ Room 02",
           "proposition": {
-            "team_name": "BSC",
+            "team_name": "BSC A",
             "institution": "The British School in Colombo",
             "team_score": null,
             "lineup": []
           },
           "opposition": {
-            "team_name": "Moir",
+            "team_name": "Moir A",
             "institution": "Elizabeth Moir School",
             "team_score": null,
             "lineup": []
           },
           "result": {
             "winner_side": "Proposition",
-            "winner_team": "BSC",
+            "winner_team": "BSC A",
             "winner_institution": "The British School in Colombo",
             "decision": "1-0",
             "margin": null,
@@ -173,7 +173,7 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "VV",
+            "team_name": "VV A",
             "institution": "Visakha Vidyalaya",
             "team_score": null,
             "lineup": []
@@ -200,14 +200,14 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "TCK Red",
+            "team_name": "TCK A",
             "institution": "Trinity College Kandy",
             "team_score": null,
             "lineup": []
           },
           "result": {
             "winner_side": "Opposition",
-            "winner_team": "TCK Red",
+            "winner_team": "TCK A",
             "winner_institution": "Trinity College Kandy",
             "decision": "1-0",
             "margin": null,
@@ -227,7 +227,7 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "BSC",
+            "team_name": "BSC A",
             "institution": "The British School in Colombo",
             "team_score": null,
             "lineup": []
@@ -263,7 +263,7 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "TCK Red",
+            "team_name": "TCK A",
             "institution": "Trinity College Kandy",
             "team_score": null,
             "lineup": []

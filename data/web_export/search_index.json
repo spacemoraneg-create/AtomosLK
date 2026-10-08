@@ -931,11 +931,6 @@
       "type": "debater"
     },
     {
-      "id": 756,
-      "name": "Danyal Marikar",
-      "type": "debater"
-    },
-    {
       "id": 985,
       "name": "Danyal Markhar",
       "type": "debater"
@@ -1008,11 +1003,6 @@
     {
       "id": 6,
       "name": "Didumika Peiris",
-      "type": "debater"
-    },
-    {
-      "id": 963,
-      "name": "Didumika Pieris",
       "type": "debater"
     },
     {
@@ -1303,11 +1293,6 @@
     {
       "id": 487,
       "name": "Hajarah Akiel",
-      "type": "debater"
-    },
-    {
-      "id": 987,
-      "name": "Hajerah Hizbulla",
       "type": "debater"
     },
     {
@@ -1623,11 +1608,6 @@
     {
       "id": 560,
       "name": "Kaveesha Mallawaarachchi",
-      "type": "debater"
-    },
-    {
-      "id": 968,
-      "name": "Kavinaaya Srihaaran",
       "type": "debater"
     },
     {
@@ -2051,11 +2031,6 @@
       "type": "debater"
     },
     {
-      "id": 999,
-      "name": "Mauli kularatne",
-      "type": "debater"
-    },
-    {
       "id": 807,
       "name": "Mayon Vithanage",
       "type": "debater"
@@ -2291,11 +2266,6 @@
       "type": "debater"
     },
     {
-      "id": 973,
-      "name": "Navidi Madawala",
-      "type": "debater"
-    },
-    {
       "id": 563,
       "name": "Navidi Perera",
       "type": "debater"
@@ -2328,11 +2298,6 @@
     {
       "id": 83,
       "name": "Nehan Aydin",
-      "type": "debater"
-    },
-    {
-      "id": 39,
-      "name": "Nehan Wijesundara",
       "type": "debater"
     },
     {
@@ -3616,11 +3581,6 @@
       "type": "debater"
     },
     {
-      "id": 967,
-      "name": "Tharuli Rupasinghe",
-      "type": "debater"
-    },
-    {
       "id": 11,
       "name": "Tharuli Silva",
       "type": "debater"
@@ -3808,11 +3768,6 @@
     {
       "id": 153,
       "name": "Umanda Premarathne",
-      "type": "debater"
-    },
-    {
-      "id": 991,
-      "name": "Umanda Premaratne",
       "type": "debater"
     },
     {
@@ -4076,11 +4031,6 @@
       "type": "debater"
     },
     {
-      "id": 984,
-      "name": "Yousuf Ameer",
-      "type": "debater"
-    },
-    {
       "id": 10,
       "name": "Yuhansee Tenara Athukorala",
       "type": "debater"
@@ -4123,11 +4073,6 @@
     {
       "id": 918,
       "name": "Yuneli Prathapasinghe",
-      "type": "debater"
-    },
-    {
-      "id": 1002,
-      "name": "Yunna Nasees",
       "type": "debater"
     },
     {
@@ -4249,21 +4194,9 @@
       "type": "institution"
     },
     {
-      "id": 78,
-      "name": "D.S. Senanayake College",
-      "code": "DSC",
-      "type": "institution"
-    },
-    {
-      "id": 80,
-      "name": "DCK",
-      "code": "DCK",
-      "type": "institution"
-    },
-    {
       "id": 28,
       "name": "Daybridge International School",
-      "code": "Daybridge",
+      "code": "DIS",
       "type": "institution"
     },
     {
@@ -4321,21 +4254,9 @@
       "type": "institution"
     },
     {
-      "id": 74,
-      "name": "HC",
-      "code": "HC",
-      "type": "institution"
-    },
-    {
-      "id": 73,
-      "name": "HIS",
-      "code": "HIS",
-      "type": "institution"
-    },
-    {
       "id": 21,
       "name": "Hejaaz International School",
-      "code": "Hejaaz",
+      "code": "HIS",
       "type": "institution"
     },
     {
@@ -4347,7 +4268,7 @@
     {
       "id": 27,
       "name": "Hindu College",
-      "code": "Hindu",
+      "code": "HC",
       "type": "institution"
     },
     {
@@ -4369,12 +4290,6 @@
       "type": "institution"
     },
     {
-      "id": 72,
-      "name": "IC",
-      "code": "IC",
-      "type": "institution"
-    },
-    {
       "id": 41,
       "name": "Ilma International Girls' School",
       "code": "IIGS",
@@ -4383,7 +4298,7 @@
     {
       "id": 16,
       "name": "Isipathana College",
-      "code": "Isipathana",
+      "code": "IC",
       "type": "institution"
     },
     {
@@ -4399,21 +4314,9 @@
       "type": "institution"
     },
     {
-      "id": 79,
-      "name": "KGHS",
-      "code": "KGHS",
-      "type": "institution"
-    },
-    {
-      "id": 71,
-      "name": "Ku/ Maliyadeva Balika Vidyalaya",
-      "code": "KMBW",
-      "type": "institution"
-    },
-    {
       "id": 29,
       "name": "Kurunegala Maliyadeva Balika Vidyalaya",
-      "code": "Maliyadeva",
+      "code": "KMBV",
       "type": "institution"
     },
     {
@@ -4432,12 +4335,6 @@
       "id": 44,
       "name": "Loyola college",
       "code": "LOC",
-      "type": "institution"
-    },
-    {
-      "id": 77,
-      "name": "Lyceum International School",
-      "code": "LISW",
       "type": "institution"
     },
     {
@@ -4593,12 +4490,6 @@
     {
       "id": 23,
       "name": "Sussex College Kurunegala",
-      "code": "Sussex",
-      "type": "institution"
-    },
-    {
-      "id": 70,
-      "name": "Sussex College,Kurunegala",
       "code": "SCK",
       "type": "institution"
     },

@@ -357,20 +357,20 @@
     "institution": "D. S. Senanayake College",
     "institution_name": "D. S. Senanayake College",
     "national_level": "Nat Pool, Trialed",
-    "speaker_avg": 71.71,
-    "win_percentage": 86.1,
-    "prelims": 36,
+    "speaker_avg": 71.73,
+    "win_percentage": 85.0,
+    "prelims": 40,
     "break_percentage": 100.0,
-    "tournaments": 7,
-    "avg": 71.71078,
-    "speech_avg": 71.71078,
-    "cumulative_speech_avg": 71.71078,
-    "avg_of_avgs": 71.72976,
+    "tournaments": 8,
+    "avg": 71.72807,
+    "speech_avg": 71.72807,
+    "cumulative_speech_avg": 71.72807,
+    "avg_of_avgs": 71.74792,
     "regulation": "new",
-    "avg_of_deviations": 0.84004,
-    "win_rate_debated": 86.11111,
-    "prelim_rounds_debated": 36,
-    "eligible_tournaments": 7,
+    "avg_of_deviations": 0.81623,
+    "win_rate_debated": 85.0,
+    "prelim_rounds_debated": 40,
+    "eligible_tournaments": 8,
     "rank": 17
   },
   {
@@ -402,8 +402,8 @@
     "institution_name": "St. Bridget's Convent",
     "national_level": null,
     "speaker_avg": 71.67,
-    "win_percentage": 68.8,
-    "prelims": 32,
+    "win_percentage": 67.6,
+    "prelims": 34,
     "break_percentage": 83.3,
     "tournaments": 6,
     "avg": 71.67188,
@@ -412,8 +412,8 @@
     "avg_of_avgs": 71.6881,
     "regulation": "new",
     "avg_of_deviations": 0.95901,
-    "win_rate_debated": 68.75,
-    "prelim_rounds_debated": 32,
+    "win_rate_debated": 67.64706,
+    "prelim_rounds_debated": 34,
     "eligible_tournaments": 6,
     "rank": 19
   },
@@ -1540,10 +1540,32 @@
     "rank": 70
   },
   {
+    "person_id": 30,
+    "speaker_name": "Hajerah Hizbullah",
+    "institution": "Ladies' College",
+    "institution_name": "Ladies' College",
+    "national_level": null,
+    "speaker_avg": 70.12,
+    "win_percentage": 50.0,
+    "prelims": 12,
+    "break_percentage": 66.7,
+    "tournaments": 3,
+    "avg": 70.125,
+    "speech_avg": 70.125,
+    "cumulative_speech_avg": 70.125,
+    "avg_of_avgs": 70.15,
+    "regulation": "new",
+    "avg_of_deviations": 0.79271,
+    "win_rate_debated": 50.0,
+    "prelim_rounds_debated": 12,
+    "eligible_tournaments": 3,
+    "rank": 71
+  },
+  {
     "person_id": 84,
     "speaker_name": "Kumal Seniru Premathunga",
-    "institution": "IC",
-    "institution_name": "IC",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
     "national_level": null,
     "speaker_avg": 70.06,
     "win_percentage": 50.0,
@@ -1559,7 +1581,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 36,
     "eligible_tournaments": 7,
-    "rank": 71
+    "rank": 72
   },
   {
     "person_id": 37,
@@ -1581,7 +1603,7 @@
     "win_rate_debated": 64.70588,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 3,
-    "rank": 72
+    "rank": 73
   },
   {
     "person_id": 69,
@@ -1603,7 +1625,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 73
+    "rank": 74
   },
   {
     "person_id": 148,
@@ -1625,7 +1647,7 @@
     "win_rate_debated": 60.97561,
     "prelim_rounds_debated": 41,
     "eligible_tournaments": 8,
-    "rank": 74
+    "rank": 75
   },
   {
     "person_id": 72,
@@ -1647,7 +1669,7 @@
     "win_rate_debated": 58.82353,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 4,
-    "rank": 75
+    "rank": 76
   },
   {
     "person_id": 61,
@@ -1669,7 +1691,7 @@
     "win_rate_debated": 47.61905,
     "prelim_rounds_debated": 21,
     "eligible_tournaments": 4,
-    "rank": 76
+    "rank": 77
   },
   {
     "person_id": 144,
@@ -1691,7 +1713,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 38,
     "eligible_tournaments": 9,
-    "rank": 77
+    "rank": 78
   },
   {
     "person_id": 725,
@@ -1713,7 +1735,7 @@
     "win_rate_debated": 33.33333,
     "prelim_rounds_debated": 9,
     "eligible_tournaments": 3,
-    "rank": 78
+    "rank": 79
   },
   {
     "person_id": 139,
@@ -1735,7 +1757,7 @@
     "win_rate_debated": 46.66667,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 79
+    "rank": 80
   },
   {
     "person_id": 63,
@@ -1757,7 +1779,7 @@
     "win_rate_debated": 48.57143,
     "prelim_rounds_debated": 35,
     "eligible_tournaments": 7,
-    "rank": 80
+    "rank": 81
   },
   {
     "person_id": 87,
@@ -1779,7 +1801,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 81
+    "rank": 82
   },
   {
     "person_id": 402,
@@ -1801,7 +1823,7 @@
     "win_rate_debated": 43.75,
     "prelim_rounds_debated": 32,
     "eligible_tournaments": 6,
-    "rank": 82
+    "rank": 83
   },
   {
     "person_id": 146,
@@ -1823,7 +1845,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 83
+    "rank": 84
   },
   {
     "person_id": 469,
@@ -1845,7 +1867,7 @@
     "win_rate_debated": 41.17647,
     "prelim_rounds_debated": 34,
     "eligible_tournaments": 7,
-    "rank": 84
+    "rank": 85
   },
   {
     "person_id": 619,
@@ -1867,7 +1889,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 85
+    "rank": 86
   },
   {
     "person_id": 31,
@@ -1889,7 +1911,7 @@
     "win_rate_debated": 63.63636,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 4,
-    "rank": 86
+    "rank": 87
   },
   {
     "person_id": 99,
@@ -1911,7 +1933,7 @@
     "win_rate_debated": 46.42857,
     "prelim_rounds_debated": 28,
     "eligible_tournaments": 6,
-    "rank": 87
+    "rank": 88
   },
   {
     "person_id": 126,
@@ -1933,7 +1955,7 @@
     "win_rate_debated": 35.71429,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 88
+    "rank": 89
   },
   {
     "person_id": 118,
@@ -1955,7 +1977,7 @@
     "win_rate_debated": 54.83871,
     "prelim_rounds_debated": 31,
     "eligible_tournaments": 7,
-    "rank": 89
+    "rank": 90
   },
   {
     "person_id": 590,
@@ -1977,7 +1999,7 @@
     "win_rate_debated": 62.96296,
     "prelim_rounds_debated": 27,
     "eligible_tournaments": 6,
-    "rank": 90
+    "rank": 91
   },
   {
     "person_id": 455,
@@ -1999,13 +2021,35 @@
     "win_rate_debated": 41.66667,
     "prelim_rounds_debated": 12,
     "eligible_tournaments": 3,
-    "rank": 91
+    "rank": 92
+  },
+  {
+    "person_id": 449,
+    "speaker_name": "Kavinaaya Sriharan",
+    "institution": "Colombo International School",
+    "institution_name": "Colombo International School",
+    "national_level": null,
+    "speaker_avg": 69.64,
+    "win_percentage": 56.2,
+    "prelims": 16,
+    "break_percentage": 33.3,
+    "tournaments": 3,
+    "avg": 69.64286,
+    "speech_avg": 69.64286,
+    "cumulative_speech_avg": 69.64286,
+    "avg_of_avgs": 69.60833,
+    "regulation": "new",
+    "avg_of_deviations": 1.08345,
+    "win_rate_debated": 56.25,
+    "prelim_rounds_debated": 16,
+    "eligible_tournaments": 3,
+    "rank": 93
   },
   {
     "person_id": 82,
     "speaker_name": "Sanuka Semitha Godagedara",
-    "institution": "IC",
-    "institution_name": "IC",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
     "national_level": null,
     "speaker_avg": 69.62,
     "win_percentage": 50.0,
@@ -2021,7 +2065,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 36,
     "eligible_tournaments": 7,
-    "rank": 92
+    "rank": 94
   },
   {
     "person_id": 111,
@@ -2043,7 +2087,7 @@
     "win_rate_debated": 38.88889,
     "prelim_rounds_debated": 36,
     "eligible_tournaments": 7,
-    "rank": 93
+    "rank": 95
   },
   {
     "person_id": 137,
@@ -2065,7 +2109,29 @@
     "win_rate_debated": 30.76923,
     "prelim_rounds_debated": 13,
     "eligible_tournaments": 3,
-    "rank": 94
+    "rank": 96
+  },
+  {
+    "person_id": 98,
+    "speaker_name": "Navidhi Madawala",
+    "institution": "Holy Family Convent",
+    "institution_name": "Holy Family Convent",
+    "national_level": null,
+    "speaker_avg": 69.56,
+    "win_percentage": 45.7,
+    "prelims": 35,
+    "break_percentage": 0.0,
+    "tournaments": 7,
+    "avg": 69.56429,
+    "speech_avg": 69.56429,
+    "cumulative_speech_avg": 69.56429,
+    "avg_of_avgs": 69.47449,
+    "regulation": "new",
+    "avg_of_deviations": 0.94114,
+    "win_rate_debated": 45.71429,
+    "prelim_rounds_debated": 35,
+    "eligible_tournaments": 7,
+    "rank": 97
   },
   {
     "person_id": 143,
@@ -2087,7 +2153,7 @@
     "win_rate_debated": 40.0,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 95
+    "rank": 98
   },
   {
     "person_id": 45,
@@ -2109,7 +2175,7 @@
     "win_rate_debated": 61.53846,
     "prelim_rounds_debated": 13,
     "eligible_tournaments": 3,
-    "rank": 96
+    "rank": 99
   },
   {
     "person_id": 140,
@@ -2131,7 +2197,7 @@
     "win_rate_debated": 50.0,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 4,
-    "rank": 97
+    "rank": 100
   },
   {
     "person_id": 214,
@@ -2153,35 +2219,13 @@
     "win_rate_debated": 42.85714,
     "prelim_rounds_debated": 21,
     "eligible_tournaments": 4,
-    "rank": 98
-  },
-  {
-    "person_id": 98,
-    "speaker_name": "Navidhi Madawala",
-    "institution": "Holy Family Convent",
-    "institution_name": "Holy Family Convent",
-    "national_level": null,
-    "speaker_avg": 69.49,
-    "win_percentage": 46.7,
-    "prelims": 30,
-    "break_percentage": 0.0,
-    "tournaments": 6,
-    "avg": 69.49167,
-    "speech_avg": 69.49167,
-    "cumulative_speech_avg": 69.49167,
-    "avg_of_avgs": 69.3869,
-    "regulation": "new",
-    "avg_of_deviations": 1.0453,
-    "win_rate_debated": 46.66667,
-    "prelim_rounds_debated": 30,
-    "eligible_tournaments": 6,
-    "rank": 99
+    "rank": 101
   },
   {
     "person_id": 83,
     "speaker_name": "Nehan Aydin",
-    "institution": "IC",
-    "institution_name": "IC",
+    "institution": "Isipathana College",
+    "institution_name": "Isipathana College",
     "national_level": null,
     "speaker_avg": 69.48,
     "win_percentage": 48.3,
@@ -2197,7 +2241,29 @@
     "win_rate_debated": 48.27586,
     "prelim_rounds_debated": 29,
     "eligible_tournaments": 7,
-    "rank": 100
+    "rank": 102
+  },
+  {
+    "person_id": 468,
+    "speaker_name": "Yoosuf Ameer",
+    "institution": "Asian International School",
+    "institution_name": "Asian International School",
+    "national_level": null,
+    "speaker_avg": 69.48,
+    "win_percentage": 40.0,
+    "prelims": 35,
+    "break_percentage": 0.0,
+    "tournaments": 7,
+    "avg": 69.47857,
+    "speech_avg": 69.47857,
+    "cumulative_speech_avg": 69.47857,
+    "avg_of_avgs": 69.34031,
+    "regulation": "new",
+    "avg_of_deviations": 0.95243,
+    "win_rate_debated": 40.0,
+    "prelim_rounds_debated": 35,
+    "eligible_tournaments": 7,
+    "rank": 103
   },
   {
     "person_id": 618,
@@ -2219,7 +2285,7 @@
     "win_rate_debated": 44.44444,
     "prelim_rounds_debated": 18,
     "eligible_tournaments": 4,
-    "rank": 101
+    "rank": 104
   },
   {
     "person_id": 142,
@@ -2241,7 +2307,7 @@
     "win_rate_debated": 52.94118,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 4,
-    "rank": 102
+    "rank": 105
   },
   {
     "person_id": 79,
@@ -2263,7 +2329,7 @@
     "win_rate_debated": 53.33333,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 103
+    "rank": 106
   },
   {
     "person_id": 478,
@@ -2285,7 +2351,7 @@
     "win_rate_debated": 53.84615,
     "prelim_rounds_debated": 26,
     "eligible_tournaments": 5,
-    "rank": 104
+    "rank": 107
   },
   {
     "person_id": 75,
@@ -2307,7 +2373,7 @@
     "win_rate_debated": 41.66667,
     "prelim_rounds_debated": 24,
     "eligible_tournaments": 5,
-    "rank": 105
+    "rank": 108
   },
   {
     "person_id": 121,
@@ -2329,7 +2395,7 @@
     "win_rate_debated": 31.81818,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 5,
-    "rank": 106
+    "rank": 109
   },
   {
     "person_id": 363,
@@ -2351,29 +2417,7 @@
     "win_rate_debated": 53.33333,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 107
-  },
-  {
-    "person_id": 468,
-    "speaker_name": "Yoosuf Ameer",
-    "institution": "Asian International School",
-    "institution_name": "Asian International School",
-    "national_level": null,
-    "speaker_avg": 69.36,
-    "win_percentage": 40.0,
-    "prelims": 30,
-    "break_percentage": 0.0,
-    "tournaments": 6,
-    "avg": 69.35833,
-    "speech_avg": 69.35833,
-    "cumulative_speech_avg": 69.35833,
-    "avg_of_avgs": 69.19702,
-    "regulation": "new",
-    "avg_of_deviations": 0.88386,
-    "win_rate_debated": 40.0,
-    "prelim_rounds_debated": 30,
-    "eligible_tournaments": 6,
-    "rank": 108
+    "rank": 110
   },
   {
     "person_id": 616,
@@ -2395,7 +2439,7 @@
     "win_rate_debated": 18.18182,
     "prelim_rounds_debated": 11,
     "eligible_tournaments": 3,
-    "rank": 109
+    "rank": 111
   },
   {
     "person_id": 488,
@@ -2417,7 +2461,7 @@
     "win_rate_debated": 31.25,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 110
+    "rank": 112
   },
   {
     "person_id": 94,
@@ -2439,7 +2483,7 @@
     "win_rate_debated": 40.90909,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 4,
-    "rank": 111
+    "rank": 113
   },
   {
     "person_id": 448,
@@ -2461,7 +2505,7 @@
     "win_rate_debated": 57.14286,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 112
+    "rank": 114
   },
   {
     "person_id": 110,
@@ -2483,7 +2527,7 @@
     "win_rate_debated": 40.625,
     "prelim_rounds_debated": 32,
     "eligible_tournaments": 6,
-    "rank": 113
+    "rank": 115
   },
   {
     "person_id": 191,
@@ -2505,7 +2549,7 @@
     "win_rate_debated": 41.66667,
     "prelim_rounds_debated": 12,
     "eligible_tournaments": 3,
-    "rank": 114
+    "rank": 116
   },
   {
     "person_id": 166,
@@ -2527,7 +2571,7 @@
     "win_rate_debated": 18.18182,
     "prelim_rounds_debated": 11,
     "eligible_tournaments": 3,
-    "rank": 115
+    "rank": 117
   },
   {
     "person_id": 480,
@@ -2549,7 +2593,7 @@
     "win_rate_debated": 33.33333,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 3,
-    "rank": 116
+    "rank": 118
   },
   {
     "person_id": 90,
@@ -2571,7 +2615,7 @@
     "win_rate_debated": 42.85714,
     "prelim_rounds_debated": 21,
     "eligible_tournaments": 5,
-    "rank": 117
+    "rank": 119
   },
   {
     "person_id": 119,
@@ -2593,7 +2637,7 @@
     "win_rate_debated": 31.57895,
     "prelim_rounds_debated": 19,
     "eligible_tournaments": 4,
-    "rank": 118
+    "rank": 120
   },
   {
     "person_id": 215,
@@ -2615,7 +2659,7 @@
     "win_rate_debated": 42.85714,
     "prelim_rounds_debated": 21,
     "eligible_tournaments": 4,
-    "rank": 119
+    "rank": 121
   },
   {
     "person_id": 95,
@@ -2637,7 +2681,7 @@
     "win_rate_debated": 40.90909,
     "prelim_rounds_debated": 22,
     "eligible_tournaments": 4,
-    "rank": 120
+    "rank": 122
   },
   {
     "person_id": 96,
@@ -2659,7 +2703,7 @@
     "win_rate_debated": 28.57143,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 4,
-    "rank": 121
+    "rank": 123
   },
   {
     "person_id": 489,
@@ -2681,7 +2725,7 @@
     "win_rate_debated": 28.57143,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 122
+    "rank": 124
   },
   {
     "person_id": 77,
@@ -2703,7 +2747,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 24,
     "eligible_tournaments": 5,
-    "rank": 123
+    "rank": 125
   },
   {
     "person_id": 149,
@@ -2725,7 +2769,7 @@
     "win_rate_debated": 28.57143,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 124
+    "rank": 126
   },
   {
     "person_id": 150,
@@ -2747,7 +2791,7 @@
     "win_rate_debated": 40.0,
     "prelim_rounds_debated": 15,
     "eligible_tournaments": 4,
-    "rank": 125
+    "rank": 127
   },
   {
     "person_id": 165,
@@ -2769,7 +2813,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 126
+    "rank": 128
   },
   {
     "person_id": 244,
@@ -2791,7 +2835,7 @@
     "win_rate_debated": 26.31579,
     "prelim_rounds_debated": 19,
     "eligible_tournaments": 4,
-    "rank": 127
+    "rank": 129
   },
   {
     "person_id": 151,
@@ -2813,7 +2857,7 @@
     "win_rate_debated": 26.31579,
     "prelim_rounds_debated": 19,
     "eligible_tournaments": 5,
-    "rank": 128
+    "rank": 130
   },
   {
     "person_id": 467,
@@ -2835,7 +2879,7 @@
     "win_rate_debated": 28.57143,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 129
+    "rank": 131
   },
   {
     "person_id": 113,
@@ -2857,7 +2901,7 @@
     "win_rate_debated": 35.71429,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 130
+    "rank": 132
   },
   {
     "person_id": 155,
@@ -2879,7 +2923,7 @@
     "win_rate_debated": 20.0,
     "prelim_rounds_debated": 20,
     "eligible_tournaments": 4,
-    "rank": 131
+    "rank": 133
   },
   {
     "person_id": 656,
@@ -2901,7 +2945,7 @@
     "win_rate_debated": 18.75,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 4,
-    "rank": 132
+    "rank": 134
   },
   {
     "person_id": 624,
@@ -2923,7 +2967,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 4,
-    "rank": 133
+    "rank": 135
   },
   {
     "person_id": 216,
@@ -2945,7 +2989,7 @@
     "win_rate_debated": 37.5,
     "prelim_rounds_debated": 16,
     "eligible_tournaments": 3,
-    "rank": 134
+    "rank": 136
   },
   {
     "person_id": 659,
@@ -2967,7 +3011,7 @@
     "win_rate_debated": 14.28571,
     "prelim_rounds_debated": 14,
     "eligible_tournaments": 3,
-    "rank": 135
+    "rank": 137
   },
   {
     "person_id": 753,
@@ -2989,6 +3033,6 @@
     "win_rate_debated": 35.29412,
     "prelim_rounds_debated": 17,
     "eligible_tournaments": 3,
-    "rank": 136
+    "rank": 138
   }
 ]

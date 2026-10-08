@@ -445,11 +445,12 @@ class IdentityResolver:
 
         try:
             cur.execute("UPDATE speech_performances SET team_id = ? WHERE team_id = ?", (primary_id, duplicate_id))
-            cur.execute("UPDATE team_members SET team_id = ? WHERE team_id = ?", (primary_id, duplicate_id))
+            cur.execute("UPDATE OR IGNORE team_members SET team_id = ? WHERE team_id = ?", (primary_id, duplicate_id))
+            cur.execute("DELETE FROM team_members WHERE team_id = ?", (duplicate_id,))
             cur.execute("UPDATE debates SET prop_team_id = ? WHERE prop_team_id = ?", (primary_id, duplicate_id))
             cur.execute("UPDATE debates SET opp_team_id = ? WHERE opp_team_id = ?", (primary_id, duplicate_id))
             cur.execute("UPDATE debates SET walkover_winner_id = ? WHERE walkover_winner_id = ?", (primary_id, duplicate_id))
-
+            cur.execute("DELETE FROM team_resolutions WHERE team_id = ?", (duplicate_id,))
             cur.execute("DELETE FROM teams WHERE id = ?", (duplicate_id,))
             self.conn.commit()
 

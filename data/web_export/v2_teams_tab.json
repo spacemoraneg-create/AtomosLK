@@ -330,6 +330,21 @@
     "rank": 22
   },
   {
+    "team_name": "IC A",
+    "institution": "Isipathana College",
+    "atss": 243.613,
+    "win_percentage": 50,
+    "awpt": 2.666,
+    "wins_per_prelim": 0.5,
+    "stdev": 4.737,
+    "tournaments_debated": 6,
+    "prelims_debated": 32,
+    "total_wins": 16,
+    "highest_achievement": "Octofinalist",
+    "achievement_rank": 6,
+    "rank": 23
+  },
+  {
     "team_name": "VV B",
     "institution": "Visakha Vidyalaya",
     "atss": 243.601,
@@ -342,7 +357,7 @@
     "total_wins": 13,
     "highest_achievement": "Quarterfinalist",
     "achievement_rank": 4,
-    "rank": 23
+    "rank": 24
   },
   {
     "team_name": "TCK B",
@@ -357,7 +372,7 @@
     "total_wins": 13,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 24
+    "rank": 25
   },
   {
     "team_name": "Metho A",
@@ -372,7 +387,7 @@
     "total_wins": 12,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 25
+    "rank": 26
   },
   {
     "team_name": "SPC A",
@@ -387,21 +402,6 @@
     "total_wins": 14,
     "highest_achievement": "Double Partial Octofinalist",
     "achievement_rank": 7,
-    "rank": 26
-  },
-  {
-    "team_name": "IC A",
-    "institution": "Isipathana College",
-    "atss": 243.145,
-    "win_percentage": 50,
-    "awpt": 2.75,
-    "wins_per_prelim": 0.5,
-    "stdev": 5.339,
-    "tournaments_debated": 4,
-    "prelims_debated": 22,
-    "total_wins": 11,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
     "rank": 27
   },
   {
@@ -557,13 +557,13 @@
   {
     "team_name": "DIS A",
     "institution": "Daybridge International School",
-    "atss": 233.45,
-    "win_percentage": 27.272,
-    "awpt": 1,
-    "wins_per_prelim": 0.272,
-    "stdev": 5.25,
-    "tournaments_debated": 3,
-    "prelims_debated": 11,
+    "atss": 234.425,
+    "win_percentage": 18.75,
+    "awpt": 0.75,
+    "wins_per_prelim": 0.187,
+    "stdev": 6.309,
+    "tournaments_debated": 4,
+    "prelims_debated": 16,
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,

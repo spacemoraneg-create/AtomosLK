@@ -104,20 +104,20 @@
           "debate_id": 9975,
           "venue": "Octofinals @ Room 2",
           "proposition": {
-            "team_name": "BC Gold",
+            "team_name": "BC A",
             "institution": "Bishop's College",
             "team_score": null,
             "lineup": []
           },
           "opposition": {
-            "team_name": "GCC Blue",
+            "team_name": "GCC A",
             "institution": "Gateway College Colombo",
             "team_score": null,
             "lineup": []
           },
           "result": {
             "winner_side": "Proposition",
-            "winner_team": "BC Gold",
+            "winner_team": "BC A",
             "winner_institution": "Bishop's College",
             "decision": "1-0",
             "margin": null,
@@ -227,14 +227,14 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "BC Gold",
+            "team_name": "BC A",
             "institution": "Bishop's College",
             "team_score": null,
             "lineup": []
           },
           "result": {
             "winner_side": "Opposition",
-            "winner_team": "BC Gold",
+            "winner_team": "BC A",
             "winner_institution": "Bishop's College",
             "decision": "1-0",
             "margin": null,
@@ -290,7 +290,7 @@
             "lineup": []
           },
           "opposition": {
-            "team_name": "BC Gold",
+            "team_name": "BC A",
             "institution": "Bishop's College",
             "team_score": null,
             "lineup": []

@@ -375,21 +375,6 @@
     "rank": 25
   },
   {
-    "team_name": "IC A",
-    "institution": "IC",
-    "atss": 244.55,
-    "win_percentage": 50,
-    "awpt": 2.5,
-    "wins_per_prelim": 0.5,
-    "stdev": 3.183,
-    "tournaments_debated": 2,
-    "prelims_debated": 10,
-    "total_wins": 5,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
-    "rank": 26
-  },
-  {
     "team_name": "STC B",
     "institution": "S. Thomas' College",
     "atss": 244.25,
@@ -402,7 +387,7 @@
     "total_wins": 12,
     "highest_achievement": "Octofinalist",
     "achievement_rank": 6,
-    "rank": 27
+    "rank": 26
   },
   {
     "team_name": "BC B",
@@ -417,7 +402,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 28
+    "rank": 27
   },
   {
     "team_name": "Moir B",
@@ -432,7 +417,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 29
+    "rank": 28
   },
   {
     "team_name": "HFC B",
@@ -447,7 +432,7 @@
     "total_wins": 6,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 30
+    "rank": 29
   },
   {
     "team_name": "HFC Blue",
@@ -462,6 +447,21 @@
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
+    "rank": 30
+  },
+  {
+    "team_name": "IC A",
+    "institution": "Isipathana College",
+    "atss": 243.613,
+    "win_percentage": 50,
+    "awpt": 2.666,
+    "wins_per_prelim": 0.5,
+    "stdev": 4.737,
+    "tournaments_debated": 6,
+    "prelims_debated": 32,
+    "total_wins": 16,
+    "highest_achievement": "Octofinalist",
+    "achievement_rank": 6,
     "rank": 31
   },
   {
@@ -540,21 +540,6 @@
     "rank": 36
   },
   {
-    "team_name": "IC A",
-    "institution": "Isipathana College",
-    "atss": 243.145,
-    "win_percentage": 50,
-    "awpt": 2.75,
-    "wins_per_prelim": 0.5,
-    "stdev": 5.339,
-    "tournaments_debated": 4,
-    "prelims_debated": 22,
-    "total_wins": 11,
-    "highest_achievement": "Octofinalist",
-    "achievement_rank": 6,
-    "rank": 37
-  },
-  {
     "team_name": "BC Purple",
     "institution": "Bishop's College",
     "atss": 242.571,
@@ -567,7 +552,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 38
+    "rank": 37
   },
   {
     "team_name": "HFC A",
@@ -582,7 +567,7 @@
     "total_wins": 13,
     "highest_achievement": "Double Partial Octofinalist",
     "achievement_rank": 7,
-    "rank": 39
+    "rank": 38
   },
   {
     "team_name": "NC Maroon",
@@ -597,7 +582,7 @@
     "total_wins": 7,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 40
+    "rank": 39
   },
   {
     "team_name": "IIGS A",
@@ -612,7 +597,7 @@
     "total_wins": 5,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 41
+    "rank": 40
   },
   {
     "team_name": "AC B",
@@ -627,7 +612,7 @@
     "total_wins": 15,
     "highest_achievement": "Quarterfinalist",
     "achievement_rank": 4,
-    "rank": 42
+    "rank": 41
   },
   {
     "team_name": "GCD B",
@@ -642,7 +627,7 @@
     "total_wins": 2,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 43
+    "rank": 42
   },
   {
     "team_name": "AV A",
@@ -657,7 +642,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 44
+    "rank": 43
   },
   {
     "team_name": "MLC A",
@@ -672,7 +657,7 @@
     "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 45
+    "rank": 44
   },
   {
     "team_name": "SJC A",
@@ -687,7 +672,7 @@
     "total_wins": 12,
     "highest_achievement": "Double Partial Octofinalist",
     "achievement_rank": 7,
-    "rank": 46
+    "rank": 45
   },
   {
     "team_name": "GCC B",
@@ -702,7 +687,7 @@
     "total_wins": 4,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 47
+    "rank": 46
   },
   {
     "team_name": "DBV A",
@@ -715,6 +700,21 @@
     "tournaments_debated": 4,
     "prelims_debated": 22,
     "total_wins": 9,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 47
+  },
+  {
+    "team_name": "SCK A",
+    "institution": "Sussex College Kurunegala",
+    "atss": 240.25,
+    "win_percentage": 30,
+    "awpt": 1.5,
+    "wins_per_prelim": 0.3,
+    "stdev": 8.241,
+    "tournaments_debated": 2,
+    "prelims_debated": 10,
+    "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
     "rank": 48
@@ -1005,6 +1005,21 @@
     "rank": 67
   },
   {
+    "team_name": "DIS A",
+    "institution": "Daybridge International School",
+    "atss": 234.425,
+    "win_percentage": 18.75,
+    "awpt": 0.75,
+    "wins_per_prelim": 0.187,
+    "stdev": 6.309,
+    "tournaments_debated": 4,
+    "prelims_debated": 16,
+    "total_wins": 3,
+    "highest_achievement": "Preliminary Rounds",
+    "achievement_rank": 8,
+    "rank": 68
+  },
+  {
     "team_name": "DS C",
     "institution": "D. S. Senanayake College",
     "atss": 233.75,
@@ -1017,7 +1032,7 @@
     "total_wins": 1,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
-    "rank": 68
+    "rank": 69
   },
   {
     "team_name": "Logos A",
@@ -1030,21 +1045,6 @@
     "tournaments_debated": 2,
     "prelims_debated": 10,
     "total_wins": 4,
-    "highest_achievement": "Preliminary Rounds",
-    "achievement_rank": 8,
-    "rank": 69
-  },
-  {
-    "team_name": "DIS A",
-    "institution": "Daybridge International School",
-    "atss": 233.45,
-    "win_percentage": 27.272,
-    "awpt": 1,
-    "wins_per_prelim": 0.272,
-    "stdev": 5.25,
-    "tournaments_debated": 3,
-    "prelims_debated": 11,
-    "total_wins": 3,
     "highest_achievement": "Preliminary Rounds",
     "achievement_rank": 8,
     "rank": 70

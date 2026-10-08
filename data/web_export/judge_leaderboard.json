@@ -938,18 +938,32 @@
     "rank": 67
   },
   {
-    "adjudicator_name": "Kavodi Kulunumini Ranasinghe",
-    "institution": "Independent / Circuit Adjudicator",
+    "adjudicator_name": "Mauli kularatne",
+    "institution": "DSC",
     "debates_judged": 4,
     "tournaments_count": 2,
     "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
-    "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 69.2292,
-    "strictness_label": "Strict / Low-Scoring (-1.97 pts vs circuit)",
-    "avg_win_margin": -4.125,
+    "prop_win_pct": 75.0,
+    "opp_win_pct": 25.0,
+    "side_bias": "Proposition Leaning (75.0% Prop)",
+    "avg_substantive_score": 70.8333,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -0.25,
     "rank": 68
+  },
+  {
+    "adjudicator_name": "Mauli kularatne",
+    "institution": "DSC",
+    "debates_judged": 4,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 75.0,
+    "opp_win_pct": 25.0,
+    "side_bias": "Proposition Leaning (75.0% Prop)",
+    "avg_substantive_score": 70.8333,
+    "strictness_label": "Circuit Standard (Moderate)",
+    "avg_win_margin": -0.25,
+    "rank": 69
   },
   {
     "adjudicator_name": "Kavodi Kulunumini Ranasinghe",
@@ -963,7 +977,21 @@
     "avg_substantive_score": 69.2292,
     "strictness_label": "Strict / Low-Scoring (-1.97 pts vs circuit)",
     "avg_win_margin": -4.125,
-    "rank": 69
+    "rank": 70
+  },
+  {
+    "adjudicator_name": "Kavodi Kulunumini Ranasinghe",
+    "institution": "Independent / Circuit Adjudicator",
+    "debates_judged": 4,
+    "tournaments_count": 2,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.2292,
+    "strictness_label": "Strict / Low-Scoring (-1.97 pts vs circuit)",
+    "avg_win_margin": -4.125,
+    "rank": 71
   },
   {
     "adjudicator_name": "Buthmini Mohotty",
@@ -977,7 +1005,7 @@
     "avg_substantive_score": 66.3958,
     "strictness_label": "Strict / Low-Scoring (-4.80 pts vs circuit)",
     "avg_win_margin": -1.625,
-    "rank": 70
+    "rank": 72
   },
   {
     "adjudicator_name": "Buthmini Mohotti",
@@ -991,7 +1019,7 @@
     "avg_substantive_score": 66.3958,
     "strictness_label": "Strict / Low-Scoring (-4.80 pts vs circuit)",
     "avg_win_margin": -1.625,
-    "rank": 71
+    "rank": 73
   },
   {
     "adjudicator_name": "Official Panel Decision (Mevindu Asuramanna)",
@@ -1005,7 +1033,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 72
+    "rank": 74
   },
   {
     "adjudicator_name": "Shailee Siriwardhana",
@@ -1019,7 +1047,7 @@
     "avg_substantive_score": 69.0833,
     "strictness_label": "Strict / Low-Scoring (-2.12 pts vs circuit)",
     "avg_win_margin": 3.1667,
-    "rank": 73
+    "rank": 75
   },
   {
     "adjudicator_name": "Sarala Hapugalle",
@@ -1033,7 +1061,7 @@
     "avg_substantive_score": 69.5278,
     "strictness_label": "Strict / Low-Scoring (-1.67 pts vs circuit)",
     "avg_win_margin": 0.3333,
-    "rank": 74
+    "rank": 76
   },
   {
     "adjudicator_name": "Sarah Mulaffar",
@@ -1047,7 +1075,7 @@
     "avg_substantive_score": 68.25,
     "strictness_label": "Strict / Low-Scoring (-2.95 pts vs circuit)",
     "avg_win_margin": -2.6667,
-    "rank": 75
+    "rank": 77
   },
   {
     "adjudicator_name": "Movinya Katulanda",
@@ -1061,7 +1089,7 @@
     "avg_substantive_score": 69.6667,
     "strictness_label": "Strict / Low-Scoring (-1.53 pts vs circuit)",
     "avg_win_margin": -5.5,
-    "rank": 76
+    "rank": 78
   },
   {
     "adjudicator_name": "Hirupama Bandara",
@@ -1075,7 +1103,7 @@
     "avg_substantive_score": 69.8611,
     "strictness_label": "Strict / Low-Scoring (-1.34 pts vs circuit)",
     "avg_win_margin": 1.0,
-    "rank": 77
+    "rank": 79
   },
   {
     "adjudicator_name": "Dasidu Fernando",
@@ -1089,7 +1117,7 @@
     "avg_substantive_score": 68.7222,
     "strictness_label": "Strict / Low-Scoring (-2.48 pts vs circuit)",
     "avg_win_margin": -5.6667,
-    "rank": 78
+    "rank": 80
   },
   {
     "adjudicator_name": "Chamodi Bopage",
@@ -1103,7 +1131,7 @@
     "avg_substantive_score": 66.4167,
     "strictness_label": "Strict / Low-Scoring (-4.78 pts vs circuit)",
     "avg_win_margin": 3.1667,
-    "rank": 79
+    "rank": 81
   },
   {
     "adjudicator_name": "Amani Almeida",
@@ -1117,7 +1145,7 @@
     "avg_substantive_score": 70.25,
     "strictness_label": "Strict / Low-Scoring (-0.95 pts vs circuit)",
     "avg_win_margin": -4.5,
-    "rank": 80
+    "rank": 82
   },
   {
     "adjudicator_name": "Dineth Keragala",
@@ -1131,7 +1159,7 @@
     "avg_substantive_score": 71.2222,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 7.1667,
-    "rank": 81
+    "rank": 83
   },
   {
     "adjudicator_name": "Official Panel Decision (Thithira Jayakody)",
@@ -1145,7 +1173,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 82
+    "rank": 84
   },
   {
     "adjudicator_name": "Official Panel Decision (Suchith Tissera)",
@@ -1159,7 +1187,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 83
+    "rank": 85
   },
   {
     "adjudicator_name": "Official Panel Decision (Savith Wijesundara)",
@@ -1173,7 +1201,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 84
+    "rank": 86
   },
   {
     "adjudicator_name": "Official Panel Decision (Kaveesha Mallawaarachchi , Yasindu Edussuriya)",
@@ -1187,7 +1215,7 @@
     "avg_substantive_score": 71.4286,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": 0.0,
-    "rank": 85
+    "rank": 87
   },
   {
     "adjudicator_name": "Virul Abeysuriya",
@@ -1201,7 +1229,7 @@
     "avg_substantive_score": 67.0833,
     "strictness_label": "Strict / Low-Scoring (-4.12 pts vs circuit)",
     "avg_win_margin": 6.0,
-    "rank": 86
+    "rank": 88
   },
   {
     "adjudicator_name": "Shavindi Pieris",
@@ -1215,7 +1243,7 @@
     "avg_substantive_score": 70.8333,
     "strictness_label": "Circuit Standard (Moderate)",
     "avg_win_margin": -4.0,
-    "rank": 87
+    "rank": 89
   },
   {
     "adjudicator_name": "Savindya Thalagahawatte",
@@ -1229,7 +1257,7 @@
     "avg_substantive_score": 70.5417,
     "strictness_label": "Strict / Low-Scoring (-0.66 pts vs circuit)",
     "avg_win_margin": 0.25,
-    "rank": 88
+    "rank": 90
   },
   {
     "adjudicator_name": "Sanumi Gamage",
@@ -1243,7 +1271,7 @@
     "avg_substantive_score": 69.5,
     "strictness_label": "Strict / Low-Scoring (-1.70 pts vs circuit)",
     "avg_win_margin": -15.75,
-    "rank": 89
+    "rank": 91
   },
   {
     "adjudicator_name": "Ranudi Jayasinghe",
@@ -1257,7 +1285,7 @@
     "avg_substantive_score": 70.375,
     "strictness_label": "Strict / Low-Scoring (-0.82 pts vs circuit)",
     "avg_win_margin": -0.75,
-    "rank": 90
+    "rank": 92
   },
   {
     "adjudicator_name": "Piyavi Randev Sapukotanage",
@@ -1271,7 +1299,7 @@
     "avg_substantive_score": 68.7917,
     "strictness_label": "Strict / Low-Scoring (-2.41 pts vs circuit)",
     "avg_win_margin": -3.25,
-    "rank": 91
+    "rank": 93
   },
   {
     "adjudicator_name": "Oneli de Silva",
@@ -1285,7 +1313,7 @@
     "avg_substantive_score": 68.9167,
     "strictness_label": "Strict / Low-Scoring (-2.28 pts vs circuit)",
     "avg_win_margin": 0.5,
-    "rank": 92
+    "rank": 94
   },
   {
     "adjudicator_name": "Omar Hazari",
@@ -1299,7 +1327,7 @@
     "avg_substantive_score": 69.0,
     "strictness_label": "Strict / Low-Scoring (-2.20 pts vs circuit)",
     "avg_win_margin": 0.0,
-    "rank": 93
+    "rank": 95
   },
   {
     "adjudicator_name": "Official Reconstructed (Vidath Marasinghe)",
@@ -1313,7 +1341,7 @@
     "avg_substantive_score": 69.9091,
     "strictness_label": "Strict / Low-Scoring (-1.29 pts vs circuit)",
     "avg_win_margin": 23.0,
-    "rank": 94
+    "rank": 96
   },
   {
     "adjudicator_name": "Mohammed Aadhil Amhar",
@@ -1327,7 +1355,7 @@
     "avg_substantive_score": 67.6667,
     "strictness_label": "Strict / Low-Scoring (-3.53 pts vs circuit)",
     "avg_win_margin": -2.0,
-    "rank": 95
+    "rank": 97
   },
   {
     "adjudicator_name": "Migara",
@@ -1341,35 +1369,35 @@
     "avg_substantive_score": 68.2083,
     "strictness_label": "Strict / Low-Scoring (-2.99 pts vs circuit)",
     "avg_win_margin": 0.0,
-    "rank": 96
-  },
-  {
-    "adjudicator_name": "Mevindu Asuramana",
-    "institution": "Moir",
-    "debates_judged": 2,
-    "tournaments_count": 1,
-    "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
-    "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 69.5833,
-    "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
-    "avg_win_margin": 4.0,
-    "rank": 97
-  },
-  {
-    "adjudicator_name": "Mevindu Asuramana",
-    "institution": "Moir",
-    "debates_judged": 2,
-    "tournaments_count": 1,
-    "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
-    "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 69.5833,
-    "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
-    "avg_win_margin": 4.0,
     "rank": 98
+  },
+  {
+    "adjudicator_name": "Mevindu Asuramana",
+    "institution": "Moir",
+    "debates_judged": 2,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.5833,
+    "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
+    "avg_win_margin": 4.0,
+    "rank": 99
+  },
+  {
+    "adjudicator_name": "Mevindu Asuramana",
+    "institution": "Moir",
+    "debates_judged": 2,
+    "tournaments_count": 1,
+    "outrounds_judged": 0,
+    "prop_win_pct": 50.0,
+    "opp_win_pct": 50.0,
+    "side_bias": "Balanced (Near 50/50)",
+    "avg_substantive_score": 69.5833,
+    "strictness_label": "Strict / Low-Scoring (-1.62 pts vs circuit)",
+    "avg_win_margin": 4.0,
+    "rank": 100
   },
   {
     "adjudicator_name": "Mayon Vithanage",
@@ -1383,34 +1411,6 @@
     "avg_substantive_score": 67.7917,
     "strictness_label": "Strict / Low-Scoring (-3.41 pts vs circuit)",
     "avg_win_margin": 12.75,
-    "rank": 99
-  },
-  {
-    "adjudicator_name": "Mauli kularatne",
-    "institution": "DSC",
-    "debates_judged": 2,
-    "tournaments_count": 1,
-    "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
-    "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 71.4167,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": -5.5,
-    "rank": 100
-  },
-  {
-    "adjudicator_name": "Mauli kularatne",
-    "institution": "DSC",
-    "debates_judged": 2,
-    "tournaments_count": 1,
-    "outrounds_judged": 0,
-    "prop_win_pct": 50.0,
-    "opp_win_pct": 50.0,
-    "side_bias": "Balanced (Near 50/50)",
-    "avg_substantive_score": 71.4167,
-    "strictness_label": "Circuit Standard (Moderate)",
-    "avg_win_margin": -5.5,
     "rank": 101
   },
   {

@@ -786,7 +786,7 @@
               <div class="admin-pos-sub">Avg: ${pos['3rd']?.avg !== null && pos['3rd']?.avg !== undefined ? pos['3rd'].avg.toFixed(2) : '--'} pts</div>
             </div>
             <div class="admin-pos-tile">
-              <div class="admin-pos-badge" style="background: rgba(168, 85, 247, 0.2); color: #c084fc;">REPLY SPEECH</div>
+              <div class="admin-pos-badge" style="background: rgba(192, 132, 252, 0.28); color: #f3e8ff; border: 1px solid rgba(233, 213, 255, 0.45);">REPLY SPEECH</div>
               <div class="admin-pos-count">${pos['Reply']?.count ?? 0}</div>
               <div class="admin-pos-sub">Avg: ${pos['Reply']?.avg !== null && pos['Reply']?.avg !== undefined ? pos['Reply'].avg.toFixed(2) : '--'} pts</div>
             </div>
@@ -813,7 +813,7 @@
                 .map((t) => {
                   const qualBadge = t.is_eligible
                     ? '<span class="nat-tag nat-direct" style="font-size: 10px;">QUALIFIED</span>'
-                    : '<span class="nat-tag" style="background: rgba(244, 63, 94, 0.2); color: #f43f5e; font-size: 10px;">INELIGIBLE</span>';
+                    : '<span class="nat-tag" style="background: rgba(244, 63, 94, 0.32); color: #ffe4e6; border: 1px solid rgba(253, 164, 175, 0.5); font-size: 10px;">INELIGIBLE</span>';
                   const scoresList = (t.prelim_substantive_scores || []).map((s) => s.toFixed(1)).join(', ') || 'None';
 
                   return `
@@ -823,11 +823,11 @@
                       </td>
                       <td class="monospace">${escapeHtml(t.team_name || '--')}</td>
                       <td>${qualBadge}</td>
-                      <td class="monospace" style="font-size: 12px; color: #0c1a3d;">${scoresList}</td>
+                      <td class="monospace" style="font-size: 12px; color: #e4f3fb;">${scoresList}</td>
                       <td class="monospace" style="font-weight: 600; color: #afd4e6;">
                         ${t.tournament_average !== null && t.tournament_average !== undefined ? t.tournament_average.toFixed(2) : '--'}
                       </td>
-                      <td style="font-size: 12px; color: #34d399;">${escapeHtml(t.highest_stage || '--')}</td>
+                      <td style="font-size: 12px; color: #a7f3d0; font-weight: 600;">${escapeHtml(t.highest_stage || '--')}</td>
                     </tr>
                   `;
                 })
@@ -1701,14 +1701,14 @@
               </div>
               <div>
                 ${tn.is_merged 
-                  ? `<span class="badge-count" style="background: rgba(16,185,129,0.2); color: #34d399; font-weight: 700;">MERGED INTO ${escapeHtml(tn.merged_into)}</span>` 
+                  ? `<span class="badge-count" style="background: rgba(16, 185, 129, 0.32); border: 1px solid rgba(167, 243, 208, 0.55); color: #ecfdf5; font-weight: 700;">MERGED INTO ${escapeHtml(tn.merged_into)}</span>` 
                   : (tn.merged_variants && tn.merged_variants.length > 0 
-                      ? `<span class="badge-count" style="background: rgba(52,211,153,0.25); color: #34d399; font-weight: 800;">CANONICAL FLAGSHIP</span>` 
+                      ? `<span class="badge-count" style="background: rgba(16, 185, 129, 0.35); border: 1px solid rgba(167, 243, 208, 0.65); color: #ecfdf5; font-weight: 800;">CANONICAL FLAGSHIP</span>` 
                       : (isTarget 
-                          ? `<span class="badge-count" style="background: rgba(52,211,153,0.25); color: #34d399; font-weight: 800;">TARGET</span>` 
+                          ? `<span class="badge-count" style="background: rgba(16, 185, 129, 0.38); border: 1px solid rgba(167, 243, 208, 0.7); color: #ecfdf5; font-weight: 800;">TARGET</span>` 
                           : (isVariant 
-                              ? `<span class="badge-count" style="background: rgba(248,113,113,0.25); color: #f87171; font-weight: 800;">VARIANT</span>` 
-                              : `<span class="badge-count" style="background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(81, 113, 255, 0.2); color: #cbe6f4;">STANDALONE</span>`)))}
+                              ? `<span class="badge-count" style="background: rgba(244, 63, 94, 0.38); border: 1px solid rgba(253, 164, 175, 0.7); color: #fff1f2; font-weight: 800;">VARIANT</span>` 
+                              : `<span class="badge-count" style="background: rgba(18, 34, 108, 0.78); border: 1px solid rgba(175, 212, 230, 0.42); color: #e4f3fb;">STANDALONE</span>`)))}
               </div>
             </div>
 
@@ -1736,9 +1736,9 @@
             <!-- Confirmed Merged Variants Info -->
             ${tn.merged_variants && tn.merged_variants.length > 0 ? `
               <div class="inst-confirmed-merged-box">
-                <span style="font-size: 10.5px; font-weight: 700; color: #34d399; font-family: var(--font-mono); text-transform: uppercase;">Confirmed Merged Variants:</span>
+                <span style="font-size: 10.5px; font-weight: 700; color: #a7f3d0; font-family: var(--font-mono); text-transform: uppercase;">Confirmed Merged Variants:</span>
                 <div style="margin-top: 4px;">
-                  ${tn.merged_variants.map(v => `<span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399; font-weight: 700; margin-right: 4px; margin-bottom: 2px; display: inline-block;">${escapeHtml(v)}</span>`).join('')}
+                  ${tn.merged_variants.map(v => `<span class="badge-count" style="background: rgba(16, 185, 129, 0.32); border: 1px solid rgba(167, 243, 208, 0.55); color: #ecfdf5; font-weight: 700; margin-right: 4px; margin-bottom: 2px; display: inline-block;">${escapeHtml(v)}</span>`).join('')}
                 </div>
               </div>
             ` : ''}
@@ -1832,10 +1832,10 @@
       listContainer.innerHTML = merges.map((m) => `
         <div class="inst-audit-row">
           <div>
-            <strong style="color: #34d399;">${escapeHtml(m.target_canonical_name)}</strong>
+            <strong style="color: #a7f3d0;">${escapeHtml(m.target_canonical_name)}</strong>
             <span style="color: #afd4e6; margin: 0 8px;">&larr;</span>
-            <strong style="color: #f87171;">${escapeHtml(m.variant_name)}</strong>
-            <span class="badge-count" style="margin-left: 10px; background: rgba(16,185,129,0.15); color: #34d399; font-weight: 700;">CONFIRMED UNIFIED</span>
+            <strong style="color: #fda4af;">${escapeHtml(m.variant_name)}</strong>
+            <span class="badge-count" style="margin-left: 10px; background: rgba(16, 185, 129, 0.3); border: 1px solid rgba(167, 243, 208, 0.5); color: #ecfdf5; font-weight: 700;">CONFIRMED UNIFIED</span>
           </div>
           <div style="display: flex; align-items: center; gap: 12px;">
             <span style="color: #cbe6f4; font-family: var(--font-mono); font-size: 11px;">${m.decided_at || ''}</span>
@@ -1868,7 +1868,7 @@
       const dupLbl = document.getElementById('instSelectedDuplicateLabel');
 
       if (selectedTargetTeamName) {
-        targetLbl.innerHTML = `<strong>${escapeHtml(selectedTargetTeamName)}</strong> <span class="badge-count" style="background: rgba(52,211,153,0.2); color: #34d399; font-weight: 700;">KEEP</span>`;
+        targetLbl.innerHTML = `<strong>${escapeHtml(selectedTargetTeamName)}</strong> <span class="badge-count" style="background: rgba(16, 185, 129, 0.32); border: 1px solid rgba(167, 243, 208, 0.55); color: #ecfdf5; font-weight: 700;">KEEP</span>`;
         if (clearTargetBtn) clearTargetBtn.classList.remove('hidden');
       } else {
         targetLbl.textContent = 'None selected (Click [Set as Target] on any card)';
@@ -1876,7 +1876,7 @@
       }
 
       if (selectedVariantTeamName) {
-        dupLbl.innerHTML = `<strong>${escapeHtml(selectedVariantTeamName)}</strong> <span class="badge-count" style="background: rgba(248,113,113,0.2); color: #f87171; font-weight: 700;">UNIFY</span>`;
+        dupLbl.innerHTML = `<strong>${escapeHtml(selectedVariantTeamName)}</strong> <span class="badge-count" style="background: rgba(244, 63, 94, 0.35); border: 1px solid rgba(253, 164, 175, 0.6); color: #fff1f2; font-weight: 700;">UNIFY</span>`;
         if (clearDuplicateBtn) clearDuplicateBtn.classList.remove('hidden');
       } else {
         dupLbl.textContent = 'None selected (Click [Set as Variant] on any card)';
@@ -1885,7 +1885,7 @@
 
       if (confirmMergeBtn) {
         if (selectedTargetTeamName && selectedVariantTeamName) {
-          if (selectedTargetTeamName.toLowerCase() === selectedVariantTeamName.toLowerCase()) {
+          if (selectedTargetTeamName === selectedVariantTeamName) {
             confirmMergeBtn.disabled = true;
             confirmMergeBtn.textContent = 'CANNOT MERGE IDENTICAL NAMES';
           } else {

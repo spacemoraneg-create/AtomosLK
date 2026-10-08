@@ -1164,8 +1164,15 @@ def create_app(db_conn=None) -> Flask:
                 name = r["name"]
                 g = grouped[name]
                 g["name"] = name
-                g["canonical_name"] = r["canonical_name"] or name
-                g["tier"] = r["tier"] or ("A" if name.endswith(" A") else ("B" if name.endswith(" B") else None))
+                row_canon = (r["canonical_name"] or "").strip()
+                if row_canon and row_canon != name:
+                    g["canonical_name"] = row_canon
+                elif not g["canonical_name"]:
+                    g["canonical_name"] = row_canon or name
+                if r["tier"]:
+                    g["tier"] = r["tier"]
+                elif not g["tier"]:
+                    g["tier"] = "A" if name.endswith(" A") else ("B" if name.endswith(" B") else None)
                 g["instance_count"] += 1
                 g["team_ids"].append(r["id"])
 
@@ -1200,12 +1207,13 @@ def create_app(db_conn=None) -> Flask:
             """, (inst_id,))
             confirmed_merges = [dict(row) for row in cur.fetchall()]
 
-            # Also ensure confirmed log reflects in grouping
+            # Ensure confirmed merges reflected in grouping even if variant was absorbed
             for cm in confirmed_merges:
                 tgt = cm["target_canonical_name"]
                 var = cm["variant_name"]
-                if tgt in grouped and var in grouped:
+                if tgt in grouped:
                     grouped[tgt]["merged_variants"].add(var)
+                if var in grouped:
                     grouped[var]["canonical_name"] = tgt
 
             team_names = []
@@ -1251,7 +1259,7 @@ def create_app(db_conn=None) -> Flask:
             if not inst_id or not target_name or not variant_name:
                 return jsonify({"error": "institution_id, target_canonical_name, and variant_name are required."}), 400
 
-            if target_name.lower() == variant_name.lower():
+            if target_name == variant_name:
                 return jsonify({"error": "Target canonical name and variant name cannot be identical."}), 400
 
             cur = conn.cursor()
@@ -1267,13 +1275,14 @@ def create_app(db_conn=None) -> Flask:
                 tier_row = cur.fetchone()
                 tier = tier_row[0] if tier_row else ("A" if target_name.endswith(" A") else ("B" if target_name.endswith(" B") else "A"))
 
-            # Find all variant teams
+            # Find all variant teams (including any teams whose canonical_name currently points to variant_name)
             cur.execute("""
                 SELECT t.id, t.tournament_id, tour.name as tour_name
                 FROM teams t
                 JOIN tournaments tour ON t.tournament_id = tour.id
-                WHERE t.institution_id = ? AND (t.name = ? OR t.canonical_name = ?)
-            """, (inst_id, variant_name, variant_name))
+                WHERE t.institution_id = ? AND (t.name = ? OR t.canonical_name = ? OR LOWER(t.name) = LOWER(?) OR LOWER(t.canonical_name) = LOWER(?))
+                  AND t.name != ?
+            """, (inst_id, variant_name, variant_name, variant_name, variant_name, target_name))
             variant_teams = cur.fetchall()
             if not variant_teams:
                 return jsonify({"error": f"No team entries found with name '{variant_name}'."}), 404
@@ -1298,10 +1307,12 @@ def create_app(db_conn=None) -> Flask:
                 if target_in_same:
                     t_id = target_in_same["id"]
                     cur.execute("UPDATE speech_performances SET team_id = ? WHERE team_id = ?", (t_id, v_id))
-                    cur.execute("UPDATE team_members SET team_id = ? WHERE team_id = ?", (t_id, v_id))
+                    cur.execute("UPDATE OR IGNORE team_members SET team_id = ? WHERE team_id = ?", (t_id, v_id))
+                    cur.execute("DELETE FROM team_members WHERE team_id = ?", (v_id,))
                     cur.execute("UPDATE debates SET prop_team_id = ? WHERE prop_team_id = ?", (t_id, v_id))
                     cur.execute("UPDATE debates SET opp_team_id = ? WHERE opp_team_id = ?", (t_id, v_id))
                     cur.execute("UPDATE debates SET walkover_winner_id = ? WHERE walkover_winner_id = ?", (t_id, v_id))
+                    cur.execute("DELETE FROM team_resolutions WHERE team_id = ?", (v_id,))
                     cur.execute("DELETE FROM teams WHERE id = ?", (v_id,))
                     same_tournament_merged += 1
                 else:
@@ -1310,7 +1321,15 @@ def create_app(db_conn=None) -> Flask:
                     cur.execute("""
                         INSERT INTO team_resolutions (team_id, canonical_name, tier, institution_id, status, confidence, reason, reviewed_by_user, decided_at)
                         VALUES (?, ?, ?, ?, 'CONFIRMED', 1.0, 'Manual admin team name merge', 1, CURRENT_TIMESTAMP)
-                        ON CONFLICT(id) DO NOTHING
+                        ON CONFLICT(team_id) DO UPDATE SET
+                            canonical_name = excluded.canonical_name,
+                            tier = excluded.tier,
+                            institution_id = excluded.institution_id,
+                            status = 'CONFIRMED',
+                            confidence = 1.0,
+                            reason = 'Manual admin team name merge',
+                            reviewed_by_user = 1,
+                            decided_at = CURRENT_TIMESTAMP
                     """, (v_id, target_name, tier, inst_id))
 
             # Record in confirmed_team_merges
@@ -1328,6 +1347,12 @@ def create_app(db_conn=None) -> Flask:
                 INSERT OR REPLACE INTO confirmed_team_merges (institution_id, target_canonical_name, variant_name, decided_at)
                 VALUES (?, ?, ?, CURRENT_TIMESTAMP)
             """, (inst_id, target_name, variant_name))
+            # Update any transitive merges that previously pointed to variant_name
+            cur.execute("""
+                UPDATE confirmed_team_merges
+                SET target_canonical_name = ?, decided_at = CURRENT_TIMESTAMP
+                WHERE institution_id = ? AND target_canonical_name = ? AND variant_name != ?
+            """, (target_name, inst_id, variant_name, target_name))
 
             conn.commit()
 
@@ -1374,6 +1399,11 @@ def create_app(db_conn=None) -> Flask:
                 UPDATE teams SET canonical_name = name
                 WHERE institution_id = ? AND name = ?
             """, (inst_id, variant_name))
+
+            cur.execute("""
+                UPDATE team_resolutions SET canonical_name = ?
+                WHERE team_id IN (SELECT id FROM teams WHERE institution_id = ? AND name = ?)
+            """, (variant_name, inst_id, variant_name))
 
             cur.execute("""
                 DELETE FROM confirmed_team_merges

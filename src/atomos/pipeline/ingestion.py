@@ -107,6 +107,71 @@ class IngestionPipeline:
             f"{rec_res['bye_swing_debates']} byes categorized, "
             f"{rec_res['walkover_debates']} true walkovers flagged.", step="RECONCILED")
 
+        # STEP 3.5: TEAM RESOLUTION & MERGE PROPAGATION
+        try:
+            from atomos.normalizer.team_resolver import TeamResolver
+            cur_tr = conn.cursor()
+            # 1. Propagate confirmed_team_merges and historical canonical mappings for same (institution_id, name)
+            cur_tr.execute("""
+                SELECT id, institution_id, name FROM teams
+                WHERE tournament_id = ? AND (canonical_name IS NULL OR tier IS NULL)
+            """, (tournament_id,))
+            unresolved_rows = cur_tr.fetchall()
+            tr_engine = TeamResolver(conn)
+            for u_row in unresolved_rows:
+                u_id, u_inst, u_name = u_row["id"], u_row["institution_id"], u_row["name"]
+                if not u_inst:
+                    continue
+                # Check confirmed_team_merges first
+                cur_tr.execute("""
+                    SELECT name FROM sqlite_master WHERE type='table' AND name='confirmed_team_merges'
+                """)
+                has_cm = cur_tr.fetchone() is not None
+                matched_canon, matched_tier = None, None
+                if has_cm:
+                    cur_tr.execute("""
+                        SELECT target_canonical_name FROM confirmed_team_merges
+                        WHERE institution_id = ? AND LOWER(variant_name) = LOWER(?)
+                        LIMIT 1
+                    """, (u_inst, u_name))
+                    cm_row = cur_tr.fetchone()
+                    if cm_row:
+                        matched_canon = cm_row[0]
+                if not matched_canon:
+                    cur_tr.execute("""
+                        SELECT canonical_name, tier FROM teams
+                        WHERE institution_id = ? AND LOWER(name) = LOWER(?) AND canonical_name IS NOT NULL AND id != ?
+                        ORDER BY id DESC LIMIT 1
+                    """, (u_inst, u_name, u_id))
+                    hist_row = cur_tr.fetchone()
+                    if hist_row:
+                        matched_canon, matched_tier = hist_row[0], hist_row[1]
+                if matched_canon:
+                    if not matched_tier:
+                        matched_tier = "B" if matched_canon.endswith(" B") else ("C" if matched_canon.endswith(" C") else "A")
+                    tr_engine.resolve_team(
+                        team_id=u_id,
+                        canonical_name=matched_canon,
+                        tier=matched_tier,
+                        reason="Propagated from historical institution team merge",
+                        reviewed_by_user=True,
+                        confidence=1.0,
+                        status="CONFIRMED",
+                    )
+            # 2. Run TeamResolver for any remaining unresolved teams
+            for cand in tr_engine.find_candidate_resolutions(unresolved_only=True):
+                tr_engine.resolve_team(
+                    team_id=cand.team.id,
+                    canonical_name=cand.suggested_canonical_name,
+                    tier=cand.suggested_tier,
+                    reason=cand.reason,
+                    reviewed_by_user=False,
+                    confidence=cand.confidence,
+                    status="CONFIRMED",
+                )
+        except Exception as tr_err:
+            log(f"Note: Team auto-resolution warning: {tr_err}")
+
         # STEP 4: INTEGRITY VALIDATION
         log("Step 4/4: Running integrity validation gatekeeper...", step="VALIDATING")
         validator = IntegrityValidator(conn)
