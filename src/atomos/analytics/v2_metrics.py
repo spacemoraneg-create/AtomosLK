@@ -164,6 +164,14 @@ class V2MetricsEngine:
     def __init__(self, conn: sqlite3.Connection):
         self.conn = conn
         self.conn.row_factory = sqlite3.Row
+        self._elo_cache: Optional[Dict[str, Dict[Any, Dict[str, Any]]]] = None
+
+    def _get_international_elos(self) -> Dict[str, Dict[Any, Dict[str, Any]]]:
+        """Lazily computes and caches the 3-tier International Standard Elo ratings."""
+        if self._elo_cache is None:
+            from atomos.analytics.ratings import EloRatingEngine
+            self._elo_cache = EloRatingEngine(self.conn).compute_all_international_elos()
+        return self._elo_cache
 
     def _get_all_team_and_debater_achievements(self) -> Tuple[Dict[int, str], Dict[str, str], Dict[int, str]]:
         """
@@ -430,6 +438,8 @@ class V2MetricsEngine:
             person_debates[r["person_id"]].append(r["won"])
 
         _, _, person_ach = self._get_all_team_and_debater_achievements()
+        elos = self._get_international_elos()
+        debater_elos = elos.get("debaters", {})
         speakers: List[Dict[str, Any]] = []
 
         for pid, tours in person_rounds.items():
@@ -454,6 +464,10 @@ class V2MetricsEngine:
             wins = sum(deb_list)
             win_pct = truncate_3(wins / debates * 100.0) if debates > 0 else 0.0
 
+            d_elo = debater_elos.get(pid, {})
+            elo_val = d_elo.get("elo", 1500.0)
+            peak_elo_val = d_elo.get("peak_elo", 1500.0)
+
             speakers.append({
                 "person_id": pid,
                 "name": name,
@@ -461,6 +475,8 @@ class V2MetricsEngine:
                 "institution": inst,
                 "national_level": nat,
                 "speaker_score": truncate_3(mean_score),
+                "elo": elo_val,
+                "peak_elo": peak_elo_val,
                 "win_percentage": win_pct,
                 "stdev": stdev,
                 "prelims_debated": speech_count,
@@ -484,7 +500,9 @@ class V2MetricsEngine:
                 return 3
             return 4
 
-        if sort_by in ("win_pct", "win_percentage", "win_rate"):
+        if sort_by in ("elo", "rating"):
+            speakers.sort(key=lambda s: (-(s["elo"] or 1500.0), -(s["speaker_score"] or 0), -s["win_percentage"]))
+        elif sort_by in ("win_pct", "win_percentage", "win_rate"):
             speakers.sort(key=lambda s: (-s["win_percentage"], -(s["speaker_score"] or 0), -s["prelims_debated"]))
         elif sort_by in ("stdev", "std", "consistency"):
             speakers.sort(key=lambda s: (s["stdev"] if s["stdev"] is not None else 999, -(s["speaker_score"] or 0)))
@@ -525,6 +543,8 @@ class V2MetricsEngine:
         cur = self.conn.cursor()
 
         raw_team_ach, canonical_team_ach, _ = self._get_all_team_and_debater_achievements()
+        elos = self._get_international_elos()
+        team_elos = elos.get("teams", {})
 
         # Query all teams with canonical alias mapping
         cur.execute("""
@@ -612,11 +632,16 @@ class V2MetricsEngine:
             wins_per_prelim = truncate_3(total_wins / prelims_debated) if prelims_debated else 0.0
 
             highest_achieve = canonical_team_ach.get(cname, "Preliminary Rounds")
+            t_elo = team_elos.get(cname, {})
+            elo_val = t_elo.get("elo", 1500.0)
+            peak_elo_val = t_elo.get("peak_elo", 1500.0)
 
             teams_res.append({
                 "team_name": cname,
                 "institution": inst_name,
                 "atss": atss,
+                "elo": elo_val,
+                "peak_elo": peak_elo_val,
                 "win_percentage": win_pct,
                 "awpt": awpt,
                 "wins_per_prelim": wins_per_prelim,
@@ -629,7 +654,9 @@ class V2MetricsEngine:
             })
 
         # Multi-metric sorting
-        if sort_by in ("win_pct", "win_percentage", "win_rate"):
+        if sort_by in ("elo", "rating"):
+            teams_res.sort(key=lambda t: (-(t["elo"] or 1500.0), -(t["atss"] or 0), -t["win_percentage"]))
+        elif sort_by in ("win_pct", "win_percentage", "win_rate"):
             teams_res.sort(key=lambda t: (-t["win_percentage"], -(t["atss"] or 0)))
         elif sort_by in ("awpt", "wins_per_tournament"):
             teams_res.sort(key=lambda t: (-t["awpt"], -(t["atss"] or 0)))
@@ -899,11 +926,14 @@ class V2MetricsEngine:
         highest_achieve = canonical_team_ach.get(canonical_team_name, "Preliminary Rounds")
 
         team_bra, team_breaks = self._calculate_team_bra(canonical_team_name)
+        t_elo = self._get_international_elos().get("teams", {}).get(canonical_team_name, {})
 
         return {
             "team_name": canonical_team_name,
             "institution": institution_name,
             "atss": overall_atss,
+            "elo": t_elo.get("elo", 1500.0),
+            "peak_elo": t_elo.get("peak_elo", 1500.0),
             "win_percentage": overall_win_pct,
             "stdev": overall_stdev,
             "bra": team_bra,
@@ -1080,12 +1110,18 @@ class V2MetricsEngine:
             pool_cnt = cur.fetchone()["pool_cnt"] or 0
 
             team_names = set(t["name"] for t in teams)
+            elos = self._get_international_elos()
+            inst_elo = elos.get("institutions", {}).get(iid) or elos.get("institutions_by_name", {}).get(iname.lower(), {})
+            elo_val = inst_elo.get("elo", 1500.0)
+            peak_elo_val = inst_elo.get("peak_elo", 1500.0)
 
             institutions.append({
                 "institution_id": iid,
                 "institution_name": iname,
                 "code": icode,
                 "delta": delta,
+                "elo": elo_val,
+                "peak_elo": peak_elo_val,
                 "a_team_name": a_team_name,
                 "a_atss": a_atss,
                 "b_team_name": b_team_name,
@@ -1099,7 +1135,9 @@ class V2MetricsEngine:
             })
 
         # Apply multi-metric sorting
-        if sort_by == "a_atss":
+        if sort_by in ("elo", "rating"):
+            institutions.sort(key=lambda x: (-(x["elo"] or 1500.0), -(x["delta"] or 0), -x["win_percentage"]))
+        elif sort_by == "a_atss":
             institutions.sort(key=lambda x: (-(x["a_atss"] or 0), -(x["delta"] or 0)))
         elif sort_by == "b_atss":
             # Show institutions with B team first, sorted by B ATSS
@@ -1185,11 +1223,16 @@ class V2MetricsEngine:
             else:
                 new_debaters.append(d_dict)
 
+        elos = self._get_international_elos()
+        inst_elo = elos.get("institutions", {}).get(iid) or elos.get("institutions_by_name", {}).get(iname.lower(), {})
+
         return {
             "institution_id": iid,
             "institution_name": iname,
             "code": icode,
             "delta": inst_meta["delta"] if inst_meta else 0.0,
+            "elo": inst_elo.get("elo", inst_meta["elo"] if inst_meta and "elo" in inst_meta else 1500.0),
+            "peak_elo": inst_elo.get("peak_elo", inst_meta["peak_elo"] if inst_meta and "peak_elo" in inst_meta else 1500.0),
             "a_team_name": inst_meta["a_team_name"] if inst_meta else None,
             "a_atss": inst_meta["a_atss"] if inst_meta else 0.0,
             "b_team_name": inst_meta["b_team_name"] if inst_meta else None,
@@ -1670,6 +1713,7 @@ class V2MetricsEngine:
                     score_src = "Tab"
 
             final_score = truncate_3(float(score)) if score is not None else 0.0
+            d_elo_pool = self._get_international_elos().get("debaters", {}).get(pid, {})
 
             entry = {
                 "person_id": pid,
@@ -1677,6 +1721,8 @@ class V2MetricsEngine:
                 "institution": r["institution"],
                 "national_level": r["national_level"],
                 "speaker_score": final_score,
+                "elo": d_elo_pool.get("elo", 1500.0),
+                "peak_elo": d_elo_pool.get("peak_elo", 1500.0),
                 "score_source": score_src or "Tab",
             }
             lvl = (r["national_level"] or "").lower()
@@ -1763,7 +1809,8 @@ class V2MetricsEngine:
             ORDER BY spk_cnt DESC LIMIT 1
         """, (pid,))
         tm_r = cur.fetchone()
-        most_debated_team = tm_r["team_name"] if tm_r else "Unknown"
+        raw_most_team = tm_r["team_name"] if tm_r else "Unknown"
+        most_debated_team = CANONICAL_TEAM_ALIASES.get(raw_most_team, raw_most_team)
 
         # Preliminary substantive speech scores with paneled ballot averaging and Iron Man resolution
         cur.execute("""
@@ -1908,6 +1955,7 @@ class V2MetricsEngine:
 
         _, _, person_ach = self._get_all_team_and_debater_achievements()
         debater_bra, debater_breaks = self._calculate_debater_bra(pid)
+        d_elo = self._get_international_elos().get("debaters", {}).get(pid, {})
 
         return {
             "person_id": pid,
@@ -1917,6 +1965,8 @@ class V2MetricsEngine:
             "most_debated_team": most_debated_team,
             "speaker_avg": spk_avg,
             "speaker_score": spk_avg,
+            "elo": d_elo.get("elo", 1500.0),
+            "peak_elo": d_elo.get("peak_elo", 1500.0),
             "win_percentage": win_pct,
             "stdev": stdev,
             "bra": debater_bra,

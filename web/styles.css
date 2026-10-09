@@ -540,7 +540,7 @@ body {
   letter-spacing: 0.08em;
   text-transform: uppercase;
   color: #ffffff;
-  padding: 12px 12px;
+  padding: 12px 10px;
   background: linear-gradient(180deg, #5979ff 0%, #4160ec 100%);
   border-bottom: 1.5px solid rgba(175, 212, 230, 0.5);
   position: sticky;
@@ -553,7 +553,7 @@ body {
 .atomos-table td,
 .leaderboard-table td,
 .data-table td {
-  padding: 11px 12px;
+  padding: 11px 10px;
   border-bottom: 1px solid rgba(175, 212, 230, 0.14);
   white-space: nowrap;
   color: #f0f8ff;
@@ -1185,7 +1185,7 @@ body {
 
 .bio-stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(136px, 1fr));
   gap: 12px;
   margin-bottom: 24px;
 }

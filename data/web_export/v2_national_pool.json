@@ -6,6 +6,8 @@
       "institution": "Hillwood College Kandy",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.79,
+      "elo": 1688.981,
+      "peak_elo": 1700.009,
       "score_source": "Critical Tab",
       "rank_in_tier": 1
     },
@@ -15,6 +17,8 @@
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.71,
+      "elo": 1743.405,
+      "peak_elo": 1821.94,
       "score_source": "Critical Tab",
       "rank_in_tier": 2
     },
@@ -24,6 +28,8 @@
       "institution": "Trinity College Kandy",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.44,
+      "elo": 1717.724,
+      "peak_elo": 1740.222,
       "score_source": "Critical Tab",
       "rank_in_tier": 3
     },
@@ -33,6 +39,8 @@
       "institution": "Ladies' College",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.35,
+      "elo": 1653.12,
+      "peak_elo": 1684.414,
       "score_source": "Critical Tab",
       "rank_in_tier": 4
     },
@@ -42,6 +50,8 @@
       "institution": "Royal College",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.12,
+      "elo": 1796.494,
+      "peak_elo": 1820.051,
       "score_source": "Critical Tab",
       "rank_in_tier": 5
     },
@@ -51,6 +61,8 @@
       "institution": "Visakha Vidyalaya",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.07,
+      "elo": 1684.8,
+      "peak_elo": 1703.044,
       "score_source": "Critical Tab",
       "rank_in_tier": 6
     },
@@ -60,6 +72,8 @@
       "institution": "Bishop's College",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 72.06,
+      "elo": 1760.793,
+      "peak_elo": 1783.958,
       "score_source": "Critical Tab",
       "rank_in_tier": 7
     },
@@ -69,6 +83,8 @@
       "institution": "Royal College",
       "national_level": "Nat Pool, Direct",
       "speaker_score": 71.97,
+      "elo": 1787.239,
+      "peak_elo": 1810.448,
       "score_source": "Critical Tab",
       "rank_in_tier": 8
     }
@@ -80,6 +96,8 @@
       "institution": "Royal College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 72.13,
+      "elo": 1776.297,
+      "peak_elo": 1804.367,
       "score_source": "Critical Tab",
       "rank_in_tier": 1
     },
@@ -89,6 +107,8 @@
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 72.12,
+      "elo": 1681.115,
+      "peak_elo": 1745.807,
       "score_source": "Critical Tab",
       "rank_in_tier": 2
     },
@@ -98,6 +118,8 @@
       "institution": "Royal College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.81,
+      "elo": 1787.406,
+      "peak_elo": 1787.406,
       "score_source": "Critical Tab",
       "rank_in_tier": 3
     },
@@ -107,6 +129,8 @@
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.73,
+      "elo": 1714.132,
+      "peak_elo": 1775.544,
       "score_source": "Critical Tab",
       "rank_in_tier": 4
     },
@@ -116,6 +140,8 @@
       "institution": "Hillwood College Kandy",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.67,
+      "elo": 1692.251,
+      "peak_elo": 1710.413,
       "score_source": "Critical Tab",
       "rank_in_tier": 5
     },
@@ -125,6 +151,8 @@
       "institution": "Ananda College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.53,
+      "elo": 1701.815,
+      "peak_elo": 1701.815,
       "score_source": "Critical Tab",
       "rank_in_tier": 6
     },
@@ -134,6 +162,8 @@
       "institution": "D. S. Senanayake College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.52,
+      "elo": 1753.442,
+      "peak_elo": 1819.647,
       "score_source": "Critical Tab",
       "rank_in_tier": 7
     },
@@ -143,6 +173,8 @@
       "institution": "Ladies' College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.48,
+      "elo": 1615.22,
+      "peak_elo": 1643.301,
       "score_source": "Critical Tab",
       "rank_in_tier": 8
     },
@@ -152,6 +184,8 @@
       "institution": "Ladies' College",
       "national_level": "Nat Pool, Trialed",
       "speaker_score": 71.2,
+      "elo": 1598.866,
+      "peak_elo": 1608.691,
       "score_source": "Critical Tab",
       "rank_in_tier": 9
     }
@@ -163,6 +197,8 @@
       "institution": "Hillwood College Kandy",
       "national_level": "Trials",
       "speaker_score": 71.75,
+      "elo": 1679.926,
+      "peak_elo": 1703.476,
       "score_source": "Critical Tab",
       "rank_in_tier": 1
     },
@@ -172,6 +208,8 @@
       "institution": "St. Bridget's Convent",
       "national_level": "Trials",
       "speaker_score": 71.7,
+      "elo": 1650.538,
+      "peak_elo": 1650.538,
       "score_source": "Critical Tab",
       "rank_in_tier": 2
     },
@@ -181,6 +219,8 @@
       "institution": "Ladies' College",
       "national_level": "Trials",
       "speaker_score": 71.6,
+      "elo": 1618.75,
+      "peak_elo": 1650.356,
       "score_source": "Critical Tab",
       "rank_in_tier": 3
     },
@@ -190,6 +230,8 @@
       "institution": "Bishop's College",
       "national_level": "Trials",
       "speaker_score": 71.3,
+      "elo": 1739.826,
+      "peak_elo": 1762.167,
       "score_source": "Critical Tab",
       "rank_in_tier": 4
     },
@@ -199,6 +241,8 @@
       "institution": "Gateway College Dehiwala",
       "national_level": "Trials",
       "speaker_score": 71.23,
+      "elo": 1539.994,
+      "peak_elo": 1568.014,
       "score_source": "Critical Tab",
       "rank_in_tier": 5
     },
@@ -208,6 +252,8 @@
       "institution": "D. S. Senanayake College",
       "national_level": "Trials",
       "speaker_score": 71.15,
+      "elo": 1657.089,
+      "peak_elo": 1685.177,
       "score_source": "Critical Tab",
       "rank_in_tier": 6
     },
@@ -217,6 +263,8 @@
       "institution": "Royal College",
       "national_level": "Trials",
       "speaker_score": 71,
+      "elo": 1626.486,
+      "peak_elo": 1643.353,
       "score_source": "Critical Tab",
       "rank_in_tier": 7
     },
@@ -226,6 +274,8 @@
       "institution": "D. S. Senanayake College",
       "national_level": "Trials",
       "speaker_score": 70.46,
+      "elo": 1597.492,
+      "peak_elo": 1637.423,
       "score_source": "Critical Tab",
       "rank_in_tier": 8
     }

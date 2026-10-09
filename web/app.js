@@ -185,7 +185,10 @@
 
     // 1. Static Precomputed File Priority (Fastest, zero SQLite queries, CDN/browser cacheable)
     try {
-      const res = await fetch(`data/web_export/${filename}`);
+      let res = await fetch(`data/web_export/${filename}`);
+      if (!res.ok) {
+        res = await fetch(`../data/web_export/${filename}`);
+      }
       if (res.ok) data = await res.json();
     } catch (e) {
       try {
@@ -302,7 +305,9 @@
       let list = state.v2SpeakersTab.slice();
 
       // Sort based on currentMetric
-      if (currentMetric === 'stdev') {
+      if (currentMetric === 'elo') {
+        list.sort((a, b) => (b.elo || 1500) - (a.elo || 1500) || b.speaker_score - a.speaker_score);
+      } else if (currentMetric === 'stdev') {
         // Lower is better for stdev
         list.sort((a, b) => a.stdev - b.stdev);
       } else if (currentMetric === 'win_percentage') {
@@ -354,7 +359,7 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 24px; color: #cbe6f4;">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 24px; color: #cbe6f4;">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
         return;
       }
 
@@ -370,6 +375,7 @@
               <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
             </td>
             <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'speaker_score' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
+            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(s.elo || 1500, 1)}</td>
             <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
             <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'stdev' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.stdev, 2)}</td>
             <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'prelims_debated' ? '800; color: #afd4e6;' : '600;'}">${s.prelims_debated}</td>
@@ -541,6 +547,7 @@
       if (activeCategory === 'individual') {
         pills = [
           { id: 'speaker_score', label: 'Speaker Score' },
+          { id: 'elo', label: 'ELO' },
           { id: 'win_percentage', label: 'Win %' },
           { id: 'prelims_debated', label: 'Prelims Debated' },
           { id: 'stdev', label: 'Stdev' },
@@ -549,6 +556,7 @@
       } else if (activeCategory === 'teams') {
         pills = [
           { id: 'atss', label: 'ATSS' },
+          { id: 'elo', label: 'ELO' },
           { id: 'win_percentage', label: 'Win %' },
           { id: 'awpt', label: 'AWPT (Wins / Tour)' },
           { id: 'achievement', label: 'Highest Achievement' },
@@ -556,6 +564,7 @@
       } else if (activeCategory === 'institutions') {
         pills = [
           { id: 'delta', label: 'Delta' },
+          { id: 'elo', label: 'ELO' },
           { id: 'a_atss', label: 'A Team ATSS' },
           { id: 'b_atss', label: 'B Team ATSS' },
           { id: 'net_diff', label: 'Net Diff' },
@@ -623,7 +632,9 @@
     function renderIndividualTable(container) {
       let list = (activeTier === 'tab' ? state.v2SpeakersTab : state.v2SpeakersGeneral).slice();
 
-      if (activeMetric === 'stdev') {
+      if (activeMetric === 'elo') {
+        list.sort((a, b) => (b.elo || 1500) - (a.elo || 1500) || b.speaker_score - a.speaker_score);
+      } else if (activeMetric === 'stdev') {
         list.sort((a, b) => a.stdev - b.stdev);
       } else if (activeMetric === 'win_percentage') {
         list.sort((a, b) => b.win_percentage - a.win_percentage || b.speaker_score - a.speaker_score);
@@ -684,6 +695,7 @@
                 <th>SPEAKER</th>
                 <th>INSTITUTION</th>
                 <th style="text-align: right;">SPEAKER SCORE</th>
+                <th style="text-align: right;">ELO</th>
                 <th style="text-align: right;">WIN %</th>
                 <th style="text-align: right;">STDEV</th>
                 <th style="text-align: right;">PRELIMS</th>
@@ -704,6 +716,7 @@
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
                   </td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'speaker_score' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(s.elo || 1500, 1)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'stdev' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.stdev, 2)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'prelims_debated' ? '800; color: #afd4e6;' : '600;'}">${s.prelims_debated}</td>
@@ -727,7 +740,9 @@
         "Double Partial Octofinalist": 7, "Preliminary Rounds": 8, "Unranked": 9
       };
 
-      if (activeMetric === 'win_percentage') {
+      if (activeMetric === 'elo') {
+        list.sort((a, b) => (b.elo || 1500) - (a.elo || 1500) || b.atss - a.atss);
+      } else if (activeMetric === 'win_percentage') {
         list.sort((a, b) => b.win_percentage - a.win_percentage || b.atss - a.atss);
       } else if (activeMetric === 'awpt') {
         list.sort((a, b) => b.awpt - a.awpt || b.atss - a.atss);
@@ -777,6 +792,7 @@
                 <th>TEAM NAME</th>
                 <th>INSTITUTION</th>
                 <th style="text-align: right;">ATSS</th>
+                <th style="text-align: right;">ELO</th>
                 <th style="text-align: right;">WIN %</th>
                 <th style="text-align: right;">AWPT</th>
                 <th style="text-align: right;">TOURNAMENTS</th>
@@ -794,6 +810,7 @@
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(t.institution)}">${escapeHtml(t.institution)}</a>
                   </td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'atss' ? '800; color: #afd4e6;' : '600;'}">${fmt(t.atss, 2)}</td>
+                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(t.elo || 1500, 1)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(t.win_percentage, 1)}%</td>
                   <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'awpt' ? '800; color: #afd4e6;' : '600;'}">${fmt(t.awpt, 2)}</td>
                   <td style="text-align: right; font-family: var(--font-mono); color: #cbe6f4;">${t.tournaments_debated}</td>
@@ -809,7 +826,9 @@
     function renderInstitutionsTable(container) {
       let list = (activeTier === 'tab' ? state.v2InstitutionsTab : state.v2InstitutionsGeneral).slice();
 
-      if (activeMetric === 'a_atss') {
+      if (activeMetric === 'elo') {
+        list.sort((a, b) => (b.elo || 1500) - (a.elo || 1500) || b.delta - a.delta);
+      } else if (activeMetric === 'a_atss') {
         list.sort((a, b) => b.a_atss - a.a_atss || b.delta - a.delta);
       } else if (activeMetric === 'b_atss') {
         list.sort((a, b) => (b.b_atss || 0) - (a.b_atss || 0) || b.delta - a.delta);
@@ -855,6 +874,7 @@
                 <th style="width: 44px; text-align: center;">#</th>
                 <th>INSTITUTION</th>
                 <th style="text-align: right;">DELTA</th>
+                <th style="text-align: right;">ELO</th>
                 <th style="text-align: right;">A TEAM ATSS</th>
                 <th style="text-align: right;">B TEAM ATSS</th>
                 <th style="text-align: right;">NET DIFF</th>
@@ -881,6 +901,7 @@
                       ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(81, 113, 255, 0.2); color: #cbe6f4; font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
                     </td>
                     <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'delta' ? '800; color: #afd4e6;' : '700;'}">${fmt(i.delta, 2)}</td>
+                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(i.elo || 1500, 1)}</td>
                     <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'a_atss' ? '800; color: #afd4e6;' : '600;'}">${aTeamLink}</td>
                     <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'b_atss' ? '800; color: #afd4e6;' : '600;'}">${bTeamLink}</td>
                     <td style="text-align: right;">${netDiffHtml}</td>
@@ -1114,7 +1135,7 @@
             <div class="h2h-auto-inst">${escapeHtml(d.institution || 'Independent')}</div>
           </div>
           <div class="h2h-auto-meta">
-            <span class="h2h-auto-stat">Avg: ${fmt(d.speaker_score, 2)}</span>
+            <span class="h2h-auto-stat">Avg: ${fmt(d.speaker_score, 2)} · ELO: ${fmt(d.elo || 1500, 0)}</span>
           </div>
         </div>
       `).join('');
@@ -1221,6 +1242,8 @@
             latest_institution: found.institution,
             most_debated_team: 'Circuit Team',
             speaker_avg: found.speaker_score,
+            elo: found.elo || 1500,
+            peak_elo: found.peak_elo || found.elo || 1500,
             win_percentage: found.win_percentage,
             stdev: found.stdev,
             prelims_debated: found.prelims_debated,
@@ -1293,12 +1316,17 @@
           <div>${getNatStatusTag(profile.national_level)}</div>
         </div>
 
-        <!-- 1. First Box Stats Seen (5 Core Metrics) -->
+        <!-- 1. First Box Stats Seen (6 Core Metrics incl. International Standard Debater Elo) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #afd4e6;">${fmt(profile.speaker_avg, 2)}</div>
             <div class="bio-stat-lbl">SPEAKER AVG</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Universal Substantive Mean</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #6ee7b7;">${fmt(profile.elo || 1500, 1)}</div>
+            <div class="bio-stat-lbl">DEBATER ELO</div>
+            <div style="font-size: 9.5px; color: #a7f3d0; font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(profile.peak_elo || profile.elo || 1500, 1)}</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #34d399;">${fmt(profile.win_percentage, 1)}%</div>
@@ -1457,7 +1485,7 @@
             <div class="h2h-auto-inst">${escapeHtml(t.institution || 'Independent')}</div>
           </div>
           <div class="h2h-auto-meta">
-            <span class="h2h-auto-stat">ATSS: ${fmt(t.atss, 2)}</span>
+            <span class="h2h-auto-stat">ATSS: ${fmt(t.atss, 2)} · ELO: ${fmt(t.elo || 1500, 0)}</span>
           </div>
         </div>
       `).join('');
@@ -1559,6 +1587,8 @@
             team_name: found.team_name,
             institution: found.institution,
             atss: found.atss,
+            elo: found.elo || 1500,
+            peak_elo: found.peak_elo || found.elo || 1500,
             win_percentage: found.win_percentage,
             stdev: found.stdev || 2.4,
             prelims_debated: found.prelims_debated || found.total_debates,
@@ -1608,12 +1638,17 @@
           </div>
         </div>
 
-        <!-- 1. First Box Seen (5 Metrics) -->
+        <!-- 1. First Box Seen (6 Metrics incl. International Standard Team Elo) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #afd4e6;">${fmt(bio.atss, 2)}</div>
             <div class="bio-stat-lbl">ATSS</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Avg Total Speaker Score</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #6ee7b7;">${fmt(bio.elo || 1500, 1)}</div>
+            <div class="bio-stat-lbl">TEAM ELO</div>
+            <div style="font-size: 9.5px; color: #a7f3d0; font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(bio.peak_elo || bio.elo || 1500, 1)}</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
@@ -1814,7 +1849,7 @@
             <div class="h2h-auto-inst">${i.code ? `[${i.code}]` : ''} Delta: ${fmt(i.delta, 2)}</div>
           </div>
           <div class="h2h-auto-meta">
-            <span class="h2h-auto-stat">A: ${fmt(i.a_atss, 2)}</span>
+            <span class="h2h-auto-stat">A: ${fmt(i.a_atss, 2)} · ELO: ${fmt(i.elo || 1500, 0)}</span>
           </div>
         </div>
       `).join('');
@@ -1921,6 +1956,8 @@
             b_team_name: found.b_team_name,
             b_atss: found.b_atss,
             win_percentage: found.win_percentage,
+            elo: found.elo || 1500.0,
+            peak_elo: found.peak_elo || found.elo || 1500.0,
             teams_list: found.teams_list || [],
             pool_count: found.pool_count || 0,
             veterans: [],
@@ -1959,12 +1996,17 @@
           </div>
         </div>
 
-        <!-- 1. First Box Seen (5 Metrics) -->
+        <!-- 1. First Box Seen (6 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #afd4e6;">${fmt(bio.delta, 2)}</div>
             <div class="bio-stat-lbl">DELTA</div>
             <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">(0.8*A + 1.2*B) / 2</div>
+          </div>
+          <div class="bio-stat-tile">
+            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.elo || 1500, 1)}</div>
+            <div class="bio-stat-lbl">INSTITUTION ELO</div>
+            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(bio.peak_elo || bio.elo || 1500, 1)}</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #ffffff;">${teamsFielded.length}</div>
@@ -2421,7 +2463,7 @@
               <div class="h2h-auto-inst">${escapeHtml(d.institution || 'Independent')}</div>
             </div>
             <div class="h2h-auto-meta">
-              <span class="h2h-auto-stat">Avg: ${fmt(d.speaker_score, 2)}</span>
+              <span class="h2h-auto-stat">Avg: ${fmt(d.speaker_score, 2)} · ELO: ${fmt(d.elo || 1500, 0)}</span>
             </div>
           </div>
         `).join('');
@@ -2525,9 +2567,9 @@
       if (!selectedA && !selectedB) {
         container.innerHTML = `
           <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: #cbe6f4; font-family: var(--font-mono);">
-            <div style="font-size: 16px; color: #afd4e6; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // 6 CORE METRICS</div>
-            <div style="font-size: 13px; max-width: 520px; margin: 0 auto; line-height: 1.6; color: #cbe6f4;">
-              Select Contender 1 and Contender 2 above to compare them across the 6 official circuit metrics: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
+            <div style="font-size: 16px; color: #afd4e6; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // CORE CIRCUIT METRICS + ELO</div>
+            <div style="font-size: 13px; max-width: 560px; margin: 0 auto; line-height: 1.6; color: #cbe6f4;">
+              Select Contender 1 and Contender 2 above to compare them across Speaker Score, International Elo Rating, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
             </div>
           </div>
         `;
@@ -2553,7 +2595,7 @@
         window.history.replaceState(null, '', `${window.location.pathname}?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}`);
       }
 
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Computing 6-metric head-to-head clash...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Computing head-to-head clash...</div>`;
       trackEvent('view_h2h_matchup', {
         contender_a: selectedA.name || selectedA.speaker_name,
         contender_b: selectedB.name || selectedB.speaker_name,
@@ -2591,18 +2633,28 @@
       const rankAchA = achOrder[achA] || 8;
       const rankAchB = achOrder[achB] || 8;
 
-      // 6 Categories Comparison:
+      const eloA = selectedA.elo !== undefined ? selectedA.elo : 1500.0;
+      const eloB = selectedB.elo !== undefined ? selectedB.elo : 1500.0;
+      const expectedProbA = (1.0 / (1.0 + Math.pow(10.0, (eloB - eloA) / 400.0))) * 100.0;
+      const expectedProbB = 100.0 - expectedProbA;
+
+      // Categories Comparison:
       // 1. Speaker Score (higher better)
       let w1 = 'TIE';
       if (selectedA.speaker_score > selectedB.speaker_score) w1 = 'A';
       else if (selectedB.speaker_score > selectedA.speaker_score) w1 = 'B';
 
-      // 2. Win % (higher better)
+      // 2. Debater Elo Rating (higher better)
+      let wElo = 'TIE';
+      if (eloA > eloB) wElo = 'A';
+      else if (eloB > eloA) wElo = 'B';
+
+      // 3. Win % (higher better)
       let w2 = 'TIE';
       if (selectedA.win_percentage > selectedB.win_percentage) w2 = 'A';
       else if (selectedB.win_percentage > selectedA.win_percentage) w2 = 'B';
 
-      // 3. Break Rank Avg (BRA) - lower seed rank is better! (e.g. 1st seed > 4th seed)
+      // 4. Break Rank Avg (BRA) - lower seed rank is better! (e.g. 1st seed > 4th seed)
       let w3 = 'TIE';
       if (braA !== null && braB !== null) {
         if (braA < braB) w3 = 'A';
@@ -2616,17 +2668,17 @@
         w3 = 'NONE';
       }
 
-      // 4. Prelims Debated (higher better)
+      // 5. Prelims Debated (higher better)
       let w4 = 'TIE';
       if (selectedA.prelims_debated > selectedB.prelims_debated) w4 = 'A';
       else if (selectedB.prelims_debated > selectedA.prelims_debated) w4 = 'B';
 
-      // 5. Highest Achievement (lower rank order is better)
+      // 6. Highest Achievement (lower rank order is better)
       let w5 = 'TIE';
       if (rankAchA < rankAchB) w5 = 'A';
       else if (rankAchB < rankAchA) w5 = 'B';
 
-      // 6. Head to Head in Tournaments
+      // 7. Head to Head in Tournaments
       let w6 = 'NONE';
       if (directDebates.length > 0) {
         if (aDirectWins > bDirectWins) w6 = 'A';
@@ -2634,7 +2686,7 @@
         else w6 = 'TIE';
       }
 
-      const allCat = [w1, w2, w3, w4, w5];
+      const allCat = [w1, wElo, w2, w3, w4, w5];
       let scoreA = allCat.filter(w => w === 'A').length;
       let scoreB = allCat.filter(w => w === 'B').length;
       if (w6 === 'A') scoreA++;
@@ -2674,6 +2726,7 @@
       }
 
       const b1 = getBar(selectedA.speaker_score, selectedB.speaker_score, true);
+      const bElo = { a: expectedProbA, b: expectedProbB };
       const b2 = getBar(selectedA.win_percentage, selectedB.win_percentage, true);
       let b3 = { a: 50, b: 50 };
       if (braA !== null && braB !== null) {
@@ -2690,11 +2743,11 @@
       container.innerHTML = `
         <div class="h2h-prediction-banner">
           <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #cbe6f4; margin-bottom: 6px;">
-            6-METRIC HEAD TO HEAD RESULT
+            HEAD TO HEAD RESULT · ELO WIN EXPECTANCY: ${fmt(expectedProbA, 1)}% VS ${fmt(expectedProbB, 1)}%
           </div>
           <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
           <div style="font-size: 13px; color: #e4f3fb; margin-top: 6px;">
-            Judged strictly across: Speaker Score, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Tournament Clashes.
+            Judged across: Speaker Score, International Elo, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Tournament Clashes.
           </div>
         </div>
 
@@ -2716,12 +2769,29 @@
             <div class="h2h-cat-val" style="color: #fda4af;">${fmt(selectedB.speaker_score, 2)}</div>
           </div>
 
-          <!-- 2. Win % -->
+          <!-- 2. Debater Elo Rating -->
+          <div class="h2h-category-card">
+            <div class="h2h-cat-val" style="color: #afd4e6;">${fmt(eloA, 1)}</div>
+            <div class="h2h-cat-center">
+              <div class="h2h-cat-title-row">
+                <span class="h2h-cat-title">2. INTERNATIONAL ELO</span>
+                ${badge(wElo)}
+              </div>
+              <div class="h2h-cat-bar">
+                <div class="h2h-cat-bar-a" style="width: ${bElo.a}%;"></div>
+                <div class="h2h-cat-bar-b" style="width: ${bElo.b}%;"></div>
+              </div>
+              <div class="h2h-cat-subtext">Expected Win Share: ${fmt(expectedProbA, 1)}% vs ${fmt(expectedProbB, 1)}%</div>
+            </div>
+            <div class="h2h-cat-val" style="color: #fda4af;">${fmt(eloB, 1)}</div>
+          </div>
+
+          <!-- 3. Win % -->
           <div class="h2h-category-card">
             <div class="h2h-cat-val" style="color: #afd4e6;">${fmt(selectedA.win_percentage, 1)}%</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">2. WIN %</span>
+                <span class="h2h-cat-title">3. WIN %</span>
                 ${badge(w2)}
               </div>
               <div class="h2h-cat-bar">
@@ -2733,12 +2803,12 @@
             <div class="h2h-cat-val" style="color: #fda4af;">${fmt(selectedB.win_percentage, 1)}%</div>
           </div>
 
-          <!-- 3. Break Rank Avg (BRA) -->
+          <!-- 4. Break Rank Avg (BRA) -->
           <div class="h2h-category-card">
             <div class="h2h-cat-val" style="color: #afd4e6;">${braA !== null ? fmt(braA, 2) : '-'}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">3. BREAK RANK AVG (BRA)</span>
+                <span class="h2h-cat-title">4. BREAK RANK AVG (BRA)</span>
                 ${badge(w3)}
               </div>
               <div class="h2h-cat-bar">
@@ -2751,12 +2821,12 @@
           </div>
 
 
-          <!-- 4. Prelims Debated -->
+          <!-- 5. Prelims Debated -->
           <div class="h2h-category-card">
             <div class="h2h-cat-val" style="color: #afd4e6;">${selectedA.prelims_debated}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">4. PRELIMS DEBATED</span>
+                <span class="h2h-cat-title">5. PRELIMS DEBATED</span>
                 ${badge(w4)}
               </div>
               <div class="h2h-cat-bar">
@@ -2768,12 +2838,12 @@
             <div class="h2h-cat-val" style="color: #fda4af;">${selectedB.prelims_debated}</div>
           </div>
 
-          <!-- 5. Highest Achievement -->
+          <!-- 6. Highest Achievement -->
           <div class="h2h-category-card">
             <div class="h2h-cat-val" style="font-size: 11.5px; color: #afd4e6;">${achA}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">5. HIGHEST ACHIEVEMENT</span>
+                <span class="h2h-cat-title">6. HIGHEST ACHIEVEMENT</span>
                 ${badge(w5)}
               </div>
               <div class="h2h-cat-bar">
@@ -2785,12 +2855,12 @@
             <div class="h2h-cat-val" style="font-size: 11.5px; color: #fda4af;">${achB}</div>
           </div>
 
-          <!-- 6. Head to Head in Tournaments -->
+          <!-- 7. Head to Head in Tournaments -->
           <div class="h2h-category-card">
             <div class="h2h-cat-val" style="color: #afd4e6;">${aDirectWins}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">6. HEAD TO HEAD IN TOURNAMENTS</span>
+                <span class="h2h-cat-title">7. HEAD TO HEAD IN TOURNAMENTS</span>
                 ${badge(w6)}
               </div>
               <div class="h2h-cat-bar">
@@ -2884,7 +2954,7 @@
             </div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;">
               <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level || '')}</span>
-              ${d.speaker_score ? `<span style="font-size: 10.5px; font-family: var(--font-mono); color: #afd4e6; font-weight: 600; white-space: nowrap;">Avg: ${fmt(d.speaker_score, 2)} pts <span style="color: #afd4e6; font-size: 9px; text-transform: uppercase;">(${escapeHtml(d.score_source || 'Tab')})</span></span>` : ''}
+              ${d.speaker_score ? `<span style="font-size: 10.5px; font-family: var(--font-mono); color: #afd4e6; font-weight: 600; white-space: nowrap;">Avg: ${fmt(d.speaker_score, 2)} · <span style="color: #34d399;">ELO: ${fmt(d.elo || 1500, 0)}</span></span>` : ''}
             </div>
           </div>
         `).join('');

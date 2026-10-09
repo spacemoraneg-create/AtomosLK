@@ -13,7 +13,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Atomos V3 - Automated Debating Statistics and Archival System</title>
-  <link rel="stylesheet" href="styles.css?v=12" />
+  <link rel="stylesheet" href="styles.css?v=13" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="assets/logo_icon.png" />
@@ -49,7 +49,7 @@
             <div class="hero-full-logo-box">
               <img
                 class="hero-full-logo-img"
-                src="assets/logo_hero.png?v=12"
+                src="assets/logo_hero.png?v=13"
                 alt="Atomos - Automated Statistics"
               />
             </div>
@@ -175,6 +175,7 @@
         <div class="subpage-tabs-bar" style="border-bottom: none; margin-bottom: 12px; padding-bottom: 0;">
           <div class="subpage-tabs" id="homeMetricSwitcher">
             <button class="subpage-tab-btn active" data-metric="speaker_score">SPEAKER SCORE</button>
+            <button class="subpage-tab-btn" data-metric="elo">ELO</button>
             <button class="subpage-tab-btn" data-metric="win_percentage">WIN %</button>
             <button class="subpage-tab-btn" data-metric="stdev">STDEV</button>
             <button class="subpage-tab-btn" data-metric="prelims_debated">PRELIMS DEBATED</button>
@@ -202,6 +203,7 @@
                 <th>SPEAKER</th>
                 <th>INSTITUTION</th>
                 <th style="text-align: right;" id="thSpeakerScore">SPEAKER SCORE</th>
+                <th style="text-align: right;" id="thElo">ELO</th>
                 <th style="text-align: right;" id="thWinPct">WIN %</th>
                 <th style="text-align: right;" id="thStdev">STDEV</th>
                 <th style="text-align: right;" id="thPrelims">PRELIMS</th>
@@ -210,7 +212,7 @@
               </tr>
             </thead>
             <tbody id="homeMultiStatsBody">
-              <tr><td colspan="9" style="text-align: center; padding: 24px; color: #cbe6f4;">Loading Multi Purpose Leaderboard...</td></tr>
+              <tr><td colspan="10" style="text-align: center; padding: 24px; color: #cbe6f4;">Loading Multi Purpose Leaderboard...</td></tr>
             </tbody>
           </table>
         </div>
@@ -227,7 +229,7 @@
 
   </div>
 
-  <script src="app.js?v=12"></script>
+  <script src="app.js?v=13"></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f88322e0730e4449a5bb81b8e7aad80f"}'></script>
   <!-- End Cloudflare Web Analytics -->
