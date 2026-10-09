@@ -145,8 +145,7 @@
       width: clamp(240px, 27vw, 390px);
       height: auto;
       object-fit: contain;
-      opacity: 0.94;
-      filter: drop-shadow(0 12px 36px rgba(32, 52, 136, 0.18));
+      opacity: 0.96;
       transition: transform 0.35s ease, opacity 0.35s ease;
     }
 
@@ -263,7 +262,16 @@
 
     .directory-row:hover {
       background: rgba(255, 255, 255, 0.08);
-      padding-left: 30px;
+    }
+
+    .directory-bottom-center {
+      margin-top: 28px;
+      display: flex;
+      justify-content: center;
+    }
+
+    .directory-bottom-center .directory-box {
+      width: calc(50% - 24px);
     }
 
     .dir-left {
@@ -449,11 +457,78 @@
     <div class="canva-center-stage">
       <h1 class="canva-wordmark">Atomos</h1>
       <div class="canva-hero-logo-wrap">
-        <img
-          src="assets/logo_emblem_large.png"
-          alt="Atomos Orbital Emblem"
+        <svg
           class="canva-hero-logo"
-        />
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="16 20 133 116"
+          fill="none"
+          role="img"
+          aria-label="Atomos Orbital Emblem"
+        >
+          <defs>
+            <mask id="atomos-sphere-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+              <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+              <circle cx="65.79" cy="70.37" r="10.38" fill="#000000" />
+            </mask>
+            <mask id="atomos-c-ring-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+              <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+              <ellipse
+                cx="80.90"
+                cy="78.85"
+                rx="45.37"
+                ry="48.48"
+                transform="rotate(-54.65 80.90 78.85)"
+                fill="#000000"
+              />
+              <polygon points="0,0 88.21,0 88.21,38 52,55 0,55" fill="#000000" />
+            </mask>
+            <mask id="atomos-h-ring-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+              <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+              <ellipse
+                cx="86.45"
+                cy="90.40"
+                rx="22.35"
+                ry="58.75"
+                transform="rotate(89.95 86.45 90.40)"
+                fill="#000000"
+              />
+              <circle cx="82.16" cy="78.08" r="27.30" fill="#000000" />
+              <polygon points="112,92 160,92 160,150 112,150" fill="#000000" />
+            </mask>
+          </defs>
+          <g mask="url(#atomos-sphere-mask)">
+            <circle cx="82.16" cy="78.08" r="27.30" fill="#ffffff" />
+          </g>
+          <circle cx="88.21" cy="31.56" r="7.94" fill="#ffffff" />
+          <ellipse
+            cx="110.10"
+            cy="111.35"
+            rx="9.50"
+            ry="4.05"
+            transform="rotate(-2.00 110.10 111.35)"
+            fill="#ffffff"
+          />
+          <g mask="url(#atomos-c-ring-mask)">
+            <ellipse
+              cx="83.29"
+              cy="80.83"
+              rx="51.81"
+              ry="51.89"
+              transform="rotate(0.81 83.29 80.83)"
+              fill="#ffffff"
+            />
+          </g>
+          <g mask="url(#atomos-h-ring-mask)">
+            <ellipse
+              cx="82.60"
+              cy="90.25"
+              rx="25.14"
+              ry="62.97"
+              transform="rotate(89.08 82.60 90.25)"
+              fill="#ffffff"
+            />
+          </g>
+        </svg>
       </div>
     </div>
 
@@ -509,16 +584,16 @@
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">05</span>
-            <span class="dir-name">Head to Head</span>
+            <span class="dir-name">Adjudicator Bio</span>
           </div>
-          <span class="dir-meta">Direct Matchups</span>
+          <span class="dir-meta">Panels · Breaks · Rounds Judged</span>
         </a>
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">07</span>
-            <span class="dir-name">Adjudicator Bio</span>
+            <span class="dir-name">Head to Head</span>
           </div>
-          <span class="dir-meta">Panels · Breaks · Rounds Judged</span>
+          <span class="dir-meta">Direct Matchups</span>
         </a>
       </div>
 
@@ -551,6 +626,19 @@
             <span class="dir-name">Atomos AI Assistant</span>
           </div>
           <span class="dir-meta">Natural Language Circuit Query</span>
+        </a>
+      </div>
+    </div>
+
+    <!-- Centered Bottom Box (09 Admin) -->
+    <div class="directory-bottom-center">
+      <div class="directory-box">
+        <a class="directory-row" href="#standings">
+          <div class="dir-left">
+            <span class="dir-num">09</span>
+            <span class="dir-name">Admin</span>
+          </div>
+          <span class="dir-meta">Administration</span>
         </a>
       </div>
     </div>

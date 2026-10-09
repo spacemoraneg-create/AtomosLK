@@ -1,0 +1,83 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="16 20 133 116" fill="none">
+  <defs>
+    <!-- Central sphere minus upper-left circular highlight cutout -->
+    <mask id="atomos-sphere-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+      <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+      <circle cx="65.79" cy="70.37" r="10.38" fill="#000000" />
+    </mask>
+
+    <!-- C-shaped vertical orbital crescent: outer ellipse minus inner rotated ellipse -->
+    <mask id="atomos-c-ring-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+      <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+      <ellipse
+        cx="80.90"
+        cy="78.85"
+        rx="45.37"
+        ry="48.48"
+        transform="rotate(-54.65 80.90 78.85)"
+        fill="#000000"
+      />
+      <!-- Clip top-left opening between upper-left horn tip and top satellite sphere -->
+      <polygon points="0,0 88.21,0 88.21,38 52,55 0,55" fill="#000000" />
+    </mask>
+
+    <!-- Horizontal tilted orbital crescent: outer ellipse minus inner rotated ellipse -->
+    <mask id="atomos-h-ring-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+      <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+      <ellipse
+        cx="86.45"
+        cy="90.40"
+        rx="22.35"
+        ry="58.75"
+        transform="rotate(89.95 86.45 90.40)"
+        fill="#000000"
+      />
+      <!-- Clip central sphere interior so back arc passes cleanly behind the sphere -->
+      <circle cx="82.16" cy="78.08" r="27.30" fill="#000000" />
+      <!-- Clip bottom-right opening between orbital bead and right horn tip -->
+      <polygon points="112,92 160,92 160,150 112,150" fill="#000000" />
+    </mask>
+  </defs>
+
+  <!-- 1. Central Sphere -->
+  <g mask="url(#atomos-sphere-mask)">
+    <circle cx="82.16" cy="78.08" r="27.30" fill="#ffffff" />
+  </g>
+
+  <!-- 2. Top Satellite Sphere -->
+  <circle cx="88.21" cy="31.56" r="7.94" fill="#ffffff" />
+
+  <!-- 3. Bottom-Right Orbital Bead -->
+  <ellipse
+    cx="110.10"
+    cy="111.35"
+    rx="9.50"
+    ry="4.05"
+    transform="rotate(-2.00 110.10 111.35)"
+    fill="#ffffff"
+  />
+
+  <!-- 4. C-Shaped Vertical Orbital Crescent -->
+  <g mask="url(#atomos-c-ring-mask)">
+    <ellipse
+      cx="83.29"
+      cy="80.83"
+      rx="51.81"
+      ry="51.89"
+      transform="rotate(0.81 83.29 80.83)"
+      fill="#ffffff"
+    />
+  </g>
+
+  <!-- 5. Horizontal Tilted Orbital Crescent -->
+  <g mask="url(#atomos-h-ring-mask)">
+    <ellipse
+      cx="82.60"
+      cy="90.25"
+      rx="25.14"
+      ry="62.97"
+      transform="rotate(89.08 82.60 90.25)"
+      fill="#ffffff"
+    />
+  </g>
+</svg>
