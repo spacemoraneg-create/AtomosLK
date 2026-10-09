@@ -2577,7 +2577,7 @@ a {
 }
 
 /* ==========================================================================
-   12. RESPONSIVE BREAKPOINTS
+   12. RESPONSIVE BREAKPOINTS (TABLET & VERTICAL SMARTPHONE OPTIMIZATION)
    ========================================================================== */
 @media (max-width: 980px) {
   .canva-hero,
@@ -2593,6 +2593,25 @@ a {
   .table-responsive,
   .table-container {
     overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .atomos-table,
+  .minimal-table,
+  .leaderboard-table,
+  .data-table {
+    table-layout: auto;
+    min-width: 680px;
+  }
+
+  .canva-top-bar {
+    flex-wrap: wrap;
+    gap: 18px;
+  }
+
+  .canva-mission {
+    max-width: 100%;
+    flex-shrink: 1;
   }
 
   .canva-center-stage {
@@ -2606,7 +2625,7 @@ a {
   .roster-split-grid,
   .admin-grid-2col {
     grid-template-columns: 1fr;
-    gap: 20px;
+    gap: 18px;
   }
 
   .directory-bottom-center .directory-box {
@@ -2615,6 +2634,7 @@ a {
 
   .h2h-select-row {
     grid-template-columns: 1fr;
+    gap: 12px;
   }
 
   .h2h-vs-badge {
@@ -2627,3 +2647,678 @@ a {
     grid-template-columns: repeat(2, 1fr);
   }
 }
+
+/* Vertical Smartphone View (<= 768px) */
+@media (max-width: 768px) {
+  html,
+  body {
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
+
+  /* 1. Homepage Hero — Vertical Smartphone Layout */
+  .canva-hero {
+    min-height: auto;
+    padding: 22px 16px 26px;
+    gap: 24px;
+    justify-content: flex-start;
+  }
+
+  .canva-top-bar {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 14px;
+    width: 100%;
+  }
+
+  .canva-mission {
+    font-size: 14.5px;
+    line-height: 1.42;
+    max-width: 100%;
+    flex-shrink: 1;
+  }
+
+  .canva-mission br {
+    display: none;
+  }
+
+  .canva-minimal-nav {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 7px 11px;
+    font-size: 11.8px;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline-subtle);
+  }
+
+  .canva-center-stage {
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 18px;
+    padding: 12px 0 8px;
+    margin: 0;
+    width: 100%;
+  }
+
+  .canva-wordmark {
+    font-size: clamp(58px, 17vw, 82px);
+    margin-left: 0;
+    line-height: 0.98;
+    text-align: center;
+  }
+
+  .canva-hero-logo-wrap {
+    padding-right: 0;
+    width: 100%;
+    justify-content: center;
+  }
+
+  .canva-hero-logo {
+    width: clamp(160px, 46vw, 215px);
+  }
+
+  .canva-bottom-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 16px;
+    padding-top: 18px;
+    width: 100%;
+  }
+
+  .canva-vitals-inline {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 14px 16px;
+    width: 100%;
+  }
+
+  .canva-vital-val {
+    font-size: 22px;
+  }
+
+  .canva-vital-lbl {
+    font-size: 10.5px;
+  }
+
+  .scroll-cue {
+    width: 100%;
+    text-align: center;
+    padding-top: 12px;
+    border-top: 1px solid var(--hairline-subtle);
+    font-size: 11px;
+  }
+
+  /* 2. Homepage Circuit Modules & Standings */
+  .editorial-section {
+    padding: 32px 16px;
+  }
+
+  .editorial-header {
+    margin-bottom: 18px;
+    gap: 6px;
+  }
+
+  .editorial-title {
+    font-size: 24px;
+  }
+
+  .editorial-kicker {
+    font-size: 11px;
+  }
+
+  .directory-columns {
+    gap: 14px;
+  }
+
+  .directory-bottom-center {
+    margin-top: 14px;
+  }
+
+  .directory-row {
+    padding: 14px 15px;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+  }
+
+  .dir-left {
+    gap: 9px;
+    align-items: baseline;
+    min-width: 0;
+    flex: 1;
+  }
+
+  .dir-num {
+    font-size: 11px;
+    flex-shrink: 0;
+  }
+
+  .dir-name {
+    font-size: 15px;
+    line-height: 1.25;
+    white-space: nowrap;
+  }
+
+  .dir-meta {
+    font-size: 11px;
+    max-width: 40%;
+    line-height: 1.28;
+    text-align: right;
+  }
+
+  .minimal-lb-controls {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .minimal-pills {
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .minimal-pill {
+    font-size: 11.5px;
+    white-space: nowrap;
+    flex-shrink: 0;
+  }
+
+  .minimal-search {
+    width: 100%;
+    font-size: 13.5px;
+    padding: 10px 16px;
+  }
+
+  /* 3. Unified Subpage Top Navigation Bar */
+  .tabby-nav {
+    padding: 16px 16px 14px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+  }
+
+  .nav-brand-svg {
+    width: 26px;
+    height: 22px;
+  }
+
+  .nav-brand-wordmark {
+    font-size: 21px;
+  }
+
+  .nav-links {
+    width: 100%;
+    justify-content: flex-start;
+    gap: 6px 9px;
+    padding-top: 10px;
+    border-top: 1px solid var(--hairline-subtle);
+  }
+
+  .nav-link {
+    font-size: 11.2px;
+  }
+
+  /* 4. Subpage Containers, Titles, Tabs & Mode Switcher */
+  .subpage-container {
+    padding: 20px 16px 40px;
+    gap: 20px;
+  }
+
+  .subpage-title {
+    font-size: 24px;
+    margin-bottom: 16px;
+    padding-bottom: 12px;
+    gap: 8px;
+  }
+
+  .badge-count {
+    font-size: 10.5px;
+  }
+
+  .subpage-tabs-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-bottom: 12px;
+    margin-bottom: 14px;
+  }
+
+  .subpage-tabs {
+    gap: 10px;
+    justify-content: space-between;
+    width: 100%;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    padding-bottom: 4px;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .subpage-tab-btn {
+    font-size: 12px;
+    padding-bottom: 8px;
+    margin-bottom: -5px;
+    flex-shrink: 0;
+  }
+
+  .subpage-mode-switcher {
+    margin-left: 0;
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .mode-switch-btn {
+    text-align: center;
+    padding: 8px 10px;
+    font-size: 12px;
+  }
+
+  .metric-pills-bar {
+    gap: 6px;
+  }
+
+  .metric-pill-btn {
+    font-size: 11.5px;
+    padding: 5px 11px;
+  }
+
+  .filter-input,
+  .bio-search-input,
+  .h2h-search-input,
+  .chat-input {
+    padding: 11px 14px;
+    font-size: 14px;
+  }
+
+  /* 5. Editorial Tables on Smartphones — Zero Collision & Smooth Touch Scroll */
+  .data-table-wrap,
+  .minimal-table-scroll,
+  .table-responsive,
+  .table-container {
+    max-height: 520px;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .atomos-table,
+  .minimal-table,
+  .leaderboard-table,
+  .data-table {
+    table-layout: auto !important;
+    min-width: 600px;
+    font-size: 12.5px;
+  }
+
+  .minimal-table th,
+  .atomos-table th,
+  .leaderboard-table th,
+  .data-table th {
+    font-size: 10px;
+    padding: 10px 8px;
+    letter-spacing: 0.04em;
+  }
+
+  .minimal-table td,
+  .atomos-table td,
+  .leaderboard-table td,
+  .data-table td {
+    padding: 10px 8px;
+    font-size: 12.5px;
+  }
+
+  .minimal-table th:first-child,
+  .atomos-table th:first-child,
+  .leaderboard-table th:first-child,
+  .data-table th:first-child,
+  .minimal-table td:first-child,
+  .atomos-table td:first-child,
+  .leaderboard-table td:first-child,
+  .data-table td:first-child {
+    padding-left: 10px;
+    width: 34px;
+  }
+
+  .minimal-table th:last-child,
+  .atomos-table th:last-child,
+  .leaderboard-table th:last-child,
+  .data-table th:last-child,
+  .minimal-table td:last-child,
+  .atomos-table td:last-child,
+  .leaderboard-table td:last-child,
+  .data-table td:last-child {
+    padding-right: 10px;
+  }
+
+  .minimal-table td:nth-child(2),
+  .atomos-table td:nth-child(2) {
+    min-width: 130px;
+    max-width: 165px;
+  }
+
+  .minimal-table td:nth-child(3),
+  .atomos-table td:nth-child(3) {
+    min-width: 120px;
+    max-width: 155px;
+  }
+
+  /* 6. Bio / Dossier Pages (Debater, Team, Institution, Adjudicator) */
+  .bio-profile-header {
+    padding: 18px 16px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    margin-bottom: 18px;
+  }
+
+  .bio-name {
+    font-size: 24px;
+  }
+
+  .bio-stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+    margin-bottom: 22px;
+  }
+
+  .bio-stat-tile {
+    padding: 14px 12px;
+  }
+
+  .bio-stat-val {
+    font-size: 21px;
+  }
+
+  .bio-stat-lbl {
+    font-size: 10px;
+  }
+
+  .bio-stat-sub {
+    font-size: 11px;
+  }
+
+  .bio-positions-grid,
+  .positions-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .bio-section-heading {
+    font-size: 11px;
+    margin: 22px 0 12px;
+    line-height: 1.35;
+  }
+
+  .lineup-card,
+  .adj-tour-row,
+  .trajectory-card {
+    padding: 12px 14px;
+    gap: 8px;
+  }
+
+  .achievement-card {
+    padding: 12px 14px;
+    gap: 10px;
+    flex-wrap: nowrap;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .achievement-card > div:first-child {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .achievement-card > div:last-child {
+    flex-shrink: 0;
+  }
+
+  .lineup-names,
+  .t-info-title,
+  .adj-tour-name {
+    font-size: 13px;
+  }
+
+  .roster-box {
+    padding: 14px;
+  }
+
+  .score-pills {
+    gap: 6px;
+  }
+
+  .score-pill {
+    padding: 4px 10px;
+    font-size: 12px;
+  }
+
+  .round-hover-trigger .round-tooltip {
+    left: 0;
+    min-width: 195px;
+    max-width: 250px;
+    white-space: normal;
+  }
+
+  .bias-labels {
+    font-size: 11px;
+    flex-wrap: wrap;
+    gap: 4px;
+  }
+
+  /* 7. Head to Head (H2H) Vertical Smartphone Layout */
+  .h2h-select-row {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    margin-bottom: 20px;
+  }
+
+  .h2h-vs-badge {
+    width: 34px;
+    height: 34px;
+    font-size: 11px;
+    margin: 0 auto;
+  }
+
+  .h2h-selected-pill {
+    max-width: 185px;
+    font-size: 10.5px;
+    padding: 2px 8px;
+  }
+
+  .h2h-prediction-banner {
+    padding: 18px 14px;
+    margin-bottom: 18px;
+  }
+
+  .h2h-pred-prob {
+    font-size: 21px;
+    line-height: 1.25;
+  }
+
+  .h2h-category-card {
+    grid-template-columns: 74px 1fr 74px;
+    gap: 8px;
+    padding: 14px 10px;
+  }
+
+  .h2h-cat-val {
+    font-size: 14.5px;
+    line-height: 1.22;
+    word-break: normal;
+    overflow-wrap: break-word;
+  }
+
+  .h2h-cat-val[style*="13px"] {
+    font-size: 11px !important;
+    line-height: 1.2;
+  }
+
+  .h2h-cat-title-row {
+    flex-wrap: wrap;
+    gap: 4px;
+    justify-content: space-between;
+  }
+
+  .h2h-cat-title {
+    font-size: 10px;
+    letter-spacing: 0.03em;
+  }
+
+  .h2h-cat-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+  }
+
+  .h2h-cat-subtext {
+    font-size: 10.5px;
+    line-height: 1.3;
+  }
+
+  .h2h-matchup-card {
+    padding: 12px 14px;
+  }
+
+  .h2h-matchup-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 4px;
+  }
+
+  .h2h-matchup-tour {
+    font-size: 12.5px;
+  }
+
+  .h2h-matchup-body {
+    gap: 8px;
+  }
+
+  .h2h-matchup-team {
+    font-size: 12px;
+  }
+
+  /* 8. National Pool & AI Chat Assistant */
+  .pool-tier-header {
+    padding: 14px 16px;
+  }
+
+  .pool-tier-title {
+    font-size: 16.5px;
+  }
+
+  .pool-tier-body {
+    max-height: 360px;
+  }
+
+  .pool-debater-card {
+    padding: 12px 16px;
+  }
+
+  .chat-window {
+    min-height: 440px;
+    height: 68vh;
+  }
+
+  .chat-messages {
+    padding: 14px;
+    gap: 12px;
+  }
+
+  .chat-bubble {
+    max-width: 92%;
+    padding: 12px 14px;
+    font-size: 13.5px;
+  }
+
+  .chat-bubble.user {
+    max-width: 85%;
+  }
+
+  .chat-bubble.bot {
+    max-width: 96%;
+  }
+
+  .quick-chips-row {
+    gap: 6px;
+  }
+
+  .quick-chip {
+    font-size: 11.5px;
+    padding: 5px 11px;
+  }
+
+  .chat-input-bar {
+    gap: 8px;
+  }
+
+  .chat-send-btn {
+    padding: 0 18px;
+    font-size: 13px;
+  }
+
+  /* 9. Admin Console */
+  .admin-lock-card {
+    margin: 24px auto;
+    padding: 24px 18px;
+  }
+
+  .admin-kv-grid,
+  .inst-teams-grid,
+  .merge-clash-grid,
+  .inst-merge-bar-content {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+
+  .admin-positions-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .atomos-footer {
+    margin-top: 24px;
+    padding-top: 16px;
+  }
+
+  .footer-tag {
+    font-size: 10.5px;
+    margin: 0 auto;
+    text-align: center;
+  }
+}
+
+/* Compact Smartphones (<= 420px) */
+@media (max-width: 420px) {
+  .canva-wordmark {
+    font-size: clamp(52px, 16vw, 68px);
+  }
+
+  .canva-hero-logo {
+    width: clamp(145px, 44vw, 185px);
+  }
+
+  .dir-name {
+    font-size: 14.5px;
+  }
+
+  .dir-meta {
+    font-size: 10.5px;
+    max-width: 40%;
+  }
+
+  .h2h-category-card {
+    grid-template-columns: 68px 1fr 68px;
+    gap: 6px;
+    padding: 12px 8px;
+  }
+
+  .h2h-cat-val {
+    font-size: 13.5px;
+  }
+}
+
