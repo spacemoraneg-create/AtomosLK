@@ -203,7 +203,21 @@
   // 3. TAB 1: SYSTEM & DATABASE STATUS
   // =========================================================================
 
+  function clearClientExportCaches() {
+    try {
+      const keysToRemove = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && (k.startsWith('atomos_cache_') || k === 'atomos_manifest_version')) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => sessionStorage.removeItem(k));
+    } catch (e) {}
+  }
+
   async function fetchAdminStatus() {
+    clearClientExportCaches();
     try {
       const res = await fetch(`${API_BASE}/api/admin/status`, {
         headers: getHeaders(),
@@ -396,7 +410,13 @@
       const data = await res.json();
       if (!badge) return;
       if (data.configured) {
-        badge.textContent = `SYNC READY: ${data.repo} (${data.branch})`;
+        const shaSuffix = data.head_sha ? ` @ ${data.head_sha}` : '';
+        const st = data.sync_state || {};
+        if (st.in_progress) {
+          badge.textContent = `SYNCING: ${data.repo} (${data.branch})...`;
+        } else {
+          badge.textContent = `SYNC READY: ${data.repo} (${data.branch}${shaSuffix})`;
+        }
         badge.style.color = '#ffffff';
         badge.style.background = 'rgba(255, 255, 255, 0.12)';
       } else {
@@ -452,7 +472,7 @@
     });
 
     if (statusBox) {
-      showStatusBox(statusBox, 'loading', 'Pushing atomos.db and web_export files directly to GitHub...');
+      showStatusBox(statusBox, 'loading', 'Re-exporting all web datasets and pushing atomos.db + web_export files to GitHub...');
     }
 
     try {
@@ -466,10 +486,12 @@
         body: JSON.stringify(payload),
       });
       const data = await res.json();
+      clearClientExportCaches();
       if (res.ok && data.success) {
         const filesCount = data.synced_files ? data.synced_files.length : 'all';
+        const shaInfo = data.commit_sha ? ` [commit ${String(data.commit_sha).slice(0, 7)}]` : '';
         if (statusBox) {
-          showStatusBox(statusBox, 'success', `[SUCCESS] Synchronized ${filesCount} file(s) to GitHub repository (${data.repo} @ ${data.branch}).`);
+          showStatusBox(statusBox, 'success', `[SUCCESS] ${data.message || `Synchronized ${filesCount} file(s) to GitHub repository (${data.repo} @ ${data.branch})`}${shaInfo}.`);
         }
         fetchGitHubSyncStatus();
       } else {
@@ -519,7 +541,7 @@
     }
 
     if (saveGhTokenBtn) {
-      saveGhTokenBtn.addEventListener('click', () => {
+      saveGhTokenBtn.addEventListener('click', async () => {
         const val = (ghTokenInput ? ghTokenInput.value : '').trim();
         if (!val) {
           if (statusBox) showStatusBox(statusBox, 'error', 'Please provide a valid GitHub token before saving.');
@@ -527,17 +549,31 @@
         }
         localStorage.setItem('atomos_gh_token', val);
         sessionStorage.setItem('atomos_gh_token', val);
-        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token saved in browser storage.');
+        try {
+          await fetch(`${API_BASE}/api/admin/github/token`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ token: val }),
+          });
+        } catch (e) {}
+        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token saved for automatic & manual repository sync.');
         fetchGitHubSyncStatus();
       });
     }
 
     if (clearGhTokenBtn) {
-      clearGhTokenBtn.addEventListener('click', () => {
+      clearGhTokenBtn.addEventListener('click', async () => {
         localStorage.removeItem('atomos_gh_token');
         sessionStorage.removeItem('atomos_gh_token');
         if (ghTokenInput) ghTokenInput.value = '';
-        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared from browser storage.');
+        try {
+          await fetch(`${API_BASE}/api/admin/github/token`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ token: '' }),
+          });
+        } catch (e) {}
+        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared.');
         fetchGitHubSyncStatus();
       });
     }

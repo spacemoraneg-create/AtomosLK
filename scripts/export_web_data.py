@@ -11,8 +11,10 @@ Usage:
 """
 
 import argparse
+from datetime import datetime, timezone
 import json
 import sys
+import time
 from pathlib import Path
 
 # Ensure src is in python path
@@ -57,13 +59,18 @@ def export_web_data(output_dir: Path):
         # V2 Multi Purpose Datasets
         ("v2_speakers_tab.json", "v2_speakers_tab"),
         ("v2_speakers_general.json", "v2_speakers_general"),
+        ("v2_speakers_all.json", "v2_speakers_all"),
         ("v2_teams_tab.json", "v2_teams_tab"),
         ("v2_teams_general.json", "v2_teams_general"),
+        ("v2_teams_all.json", "v2_teams_all"),
         ("v2_institutions_tab.json", "v2_institutions_tab"),
         ("v2_institutions_general.json", "v2_institutions_general"),
+        ("v2_institutions_all.json", "v2_institutions_all"),
         ("v2_tournaments.json", "v2_tournaments"),
         ("v2_adjudicators.json", "v2_adjudicators"),
+        ("v2_adjudicators_all.json", "v2_adjudicators_all"),
         ("v2_national_pool.json", "v2_national_pool"),
+        ("v2_h2h_debates.json", "v2_h2h_debates"),
     ]
 
     print("\n  [*] Writing static JSON files to target...")
@@ -71,7 +78,7 @@ def export_web_data(output_dir: Path):
         data = cache.get(cache_key)
         target = output_dir / filename
         with open(target, "w", encoding="utf-8") as f:
-            json.dump(data, f, indent=2, ensure_ascii=False)
+            json.dump(data, f, separators=(",", ":"), ensure_ascii=False)
         size_kb = target.stat().st_size / 1024.0
         print(f"      + {filename:<32} -> {size_kb:6.1f} KB")
 
@@ -101,6 +108,24 @@ def export_web_data(output_dir: Path):
     with open(output_dir / "circuit_summary.json", "w", encoding="utf-8") as f:
         json.dump(summary, f, indent=2, ensure_ascii=False)
     print(f"      + circuit_summary.json         -> {len(summary)} metrics")
+
+    # 5. Export Manifest for Live + GitHub Synchronization
+    manifest = {
+        "version": int(time.time() * 1000),
+        "generated_at": datetime.now(timezone.utc).strftime("%Y-%m-%dT%H:%M:%SZ"),
+        "repo": "spacemoraneg-create/AtomosLK",
+        "branch": "main",
+        "counts": {
+            "tournaments": summary.get("total_tournaments", 0),
+            "persons": summary.get("total_persons", 0),
+            "institutions": summary.get("total_institutions", 0),
+            "debates": summary.get("total_debates_debated", 0),
+            "speeches": summary.get("total_speeches", 0),
+        },
+    }
+    with open(output_dir / "export_manifest.json", "w", encoding="utf-8") as f:
+        json.dump(manifest, f, indent=2, ensure_ascii=False)
+    print(f"      + export_manifest.json         -> version {manifest['version']}")
 
     print(f"\n==================================================================")
     print(f" [SUCCESS] Web data export complete! Total brackets: {exported_brackets}")

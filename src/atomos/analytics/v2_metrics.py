@@ -354,6 +354,7 @@ class V2MetricsEngine:
           - 'tab' (Default): >= 12 rounds debated
           - 'general': >= 5 rounds debated
           - 'homepage': >= 12 rounds debated
+          - 'all': >= 1 round debated
         sort_by:
           - 'speaker_score' (Default): Mean of all substantive speeches
           - 'win_pct': Win rate percentage
@@ -361,7 +362,12 @@ class V2MetricsEngine:
           - 'prelims': Distinct preliminary rounds debated
           - 'nat_status': Nat Pool Direct -> Nat Pool Trialed -> Trials -> None
         """
-        min_rounds = 12 if tier in ("tab", "homepage") else 5
+        if tier in ("tab", "homepage"):
+            min_rounds = 12
+        elif tier == "general":
+            min_rounds = 5
+        else:
+            min_rounds = 1
         cur = self.conn.cursor()
 
         # Pre-fetch latest host institutions
@@ -381,44 +387,144 @@ class V2MetricsEngine:
             if pid not in latest_inst and row["inst_name"]:
                 latest_inst[pid] = row["inst_name"]
 
-        # Fetch all preliminary substantive speeches with paneled ballot averaging
+        # Pre-fetch most debated team per person
+        cur.execute("""
+            SELECT sp.person_id, t.name as team_name, COUNT(sp.id) as spk_cnt
+            FROM speech_performances sp
+            JOIN teams t ON sp.team_id = t.id
+            GROUP BY sp.person_id, t.id
+            ORDER BY sp.person_id, spk_cnt DESC
+        """)
+        most_team_map: Dict[int, str] = {}
+        for row in cur.fetchall():
+            pid = row["person_id"]
+            if pid not in most_team_map and row["team_name"]:
+                raw_t = row["team_name"]
+                most_team_map[pid] = CANONICAL_TEAM_ALIASES.get(raw_t, raw_t)
+
+        # Pre-fetch break seeds per person for BRA
+        break_seeds = self._get_break_seeds_map()
+        cur.execute("""
+            SELECT DISTINCT sp.person_id, COALESCE(t.canonical_name, t.name) as tname, r.tournament_id
+            FROM speech_performances sp
+            JOIN teams t ON sp.team_id = t.id
+            JOIN rounds r ON sp.round_id = r.id
+        """)
+        person_seeds: Dict[int, List[int]] = defaultdict(list)
+        for row in cur.fetchall():
+            key = (row["tname"], row["tournament_id"])
+            if key in break_seeds:
+                person_seeds[row["person_id"]].append(break_seeds[key])
+
+        # Pre-fetch speaker position scores (1st, 2nd, 3rd, Reply) across all non-walkover debates
+        cur.execute("""
+            SELECT sp.person_id, sp.debate_id, sp.position, sp.speech_type, AVG(sp.total_score) as speech_score
+            FROM speech_performances sp
+            JOIN debates d ON sp.debate_id = d.id
+            WHERE d.is_walkover = 0 AND sp.total_score > 0
+            GROUP BY sp.person_id, sp.debate_id, sp.position, sp.speech_type
+        """)
+        person_pos_scores: Dict[int, Dict[str, List[float]]] = defaultdict(lambda: defaultdict(list))
+        for row in cur.fetchall():
+            pid = row["person_id"]
+            sc = float(row["speech_score"])
+            if row["speech_type"] == "REPLY":
+                person_pos_scores[pid]["Reply"].append(sc)
+            elif row["speech_type"] == "SUBSTANTIVE" and row["position"] in ("1st", "2nd", "3rd"):
+                person_pos_scores[pid][row["position"]].append(sc)
+
+        # Fetch all preliminary speeches (substantive and reply) with paneled ballot averaging & round details
         cur.execute("""
             SELECT p.id as person_id,
                    p.canonical_name as speaker_name,
                    p.national_level,
                    r.tournament_id,
+                   tour.name as tournament_name,
+                   tour.slug as tournament_slug,
                    r.round_number,
+                   r.name as round_name,
+                   r.round_type,
                    sp.debate_id,
                    sp.position,
-                   AVG(sp.total_score) as round_speech_score
+                   sp.speech_type,
+                   AVG(sp.total_score) as round_speech_score,
+                   CASE WHEN sp.team_id = d.prop_team_id THEN topp.name ELSE tprop.name END as opp_team_name,
+                   GROUP_CONCAT(DISTINCT b.adjudicator_raw_name) as judges_raw
             FROM speech_performances sp
             JOIN rounds r ON sp.round_id = r.id
+            JOIN tournaments tour ON r.tournament_id = tour.id
             JOIN debates d ON sp.debate_id = d.id
             JOIN persons p ON sp.person_id = p.id
-            WHERE sp.speech_type = 'SUBSTANTIVE'
-              AND r.round_type = 'PRELIMINARY'
+            LEFT JOIN teams tprop ON d.prop_team_id = tprop.id
+            LEFT JOIN teams topp ON d.opp_team_id = topp.id
+            LEFT JOIN adjudicator_ballots b ON sp.ballot_id = b.id
+            WHERE r.round_type = 'PRELIMINARY'
               AND d.is_walkover = 0
               AND sp.total_score > 0
-            GROUP BY p.id, r.tournament_id, r.round_number, sp.debate_id, sp.position
+            GROUP BY p.id, r.tournament_id, r.round_number, sp.debate_id, sp.position, sp.speech_type
             ORDER BY p.id, r.tournament_id, r.round_number
         """)
         rows = cur.fetchall()
 
         # Iron Man resolution: per person -> tournament -> round, take higher substantive score
         person_rounds: Dict[int, Dict[int, Dict[int, float]]] = defaultdict(lambda: defaultdict(dict))
+        person_tour_details: Dict[int, Dict[int, Dict[str, Any]]] = defaultdict(dict)
         person_meta: Dict[int, Dict[str, Any]] = {}
 
         for r in rows:
             pid = r["person_id"]
             tid = r["tournament_id"]
             rnum = r["round_number"]
+            stype = r["speech_type"]
             score = float(r["round_speech_score"])
             if pid not in person_meta:
                 person_meta[pid] = {
                     "name": r["speaker_name"],
                     "national_level": r["national_level"]
                 }
-            person_rounds[pid][tid][rnum] = max(person_rounds[pid][tid].get(rnum, 0.0), score)
+
+            if tid not in person_tour_details[pid]:
+                person_tour_details[pid][tid] = {
+                    "tournament_id": tid,
+                    "tournament_name": CLEAN_TOURNAMENT_NAMES.get(tid, r["tournament_name"]),
+                    "slug": r["tournament_slug"],
+                    "sub_rounds": {},
+                    "reply_rounds": {},
+                }
+
+            judges_raw = r["judges_raw"] or ""
+            judge_list = [j.strip() for j in judges_raw.split(",") if j.strip() and j.strip() != "Official Tab Reconciled"]
+            judge_str = ", ".join(judge_list) if judge_list else "Adjudication Panel"
+            opp_name = r["opp_team_name"] or "Opponent"
+            rname = r["round_name"] or f"Round {rnum}"
+
+            if stype == "SUBSTANTIVE":
+                prev_score = person_rounds[pid][tid].get(rnum, 0.0)
+                if score >= prev_score:
+                    person_rounds[pid][tid][rnum] = score
+                    person_tour_details[pid][tid]["sub_rounds"][rnum] = {
+                        "round_number": rnum,
+                        "round_name": rname,
+                        "round_type": r["round_type"],
+                        "position": r["position"] or "Substantive",
+                        "speech_type": "SUBSTANTIVE",
+                        "score": truncate_3(score),
+                        "adjudicator": judge_str,
+                        "opponent": opp_name,
+                    }
+            elif stype == "REPLY":
+                prev_rep = person_tour_details[pid][tid]["reply_rounds"].get(rnum)
+                if not prev_rep or score >= prev_rep["score"]:
+                    person_tour_details[pid][tid]["reply_rounds"][rnum] = {
+                        "round_number": rnum,
+                        "round_name": rname,
+                        "round_type": r["round_type"],
+                        "position": "Reply",
+                        "speech_type": "REPLY",
+                        "score": truncate_3(score),
+                        "adjudicator": judge_str,
+                        "opponent": opp_name,
+                    }
 
         # Contested debates and win rate (group by debate to avoid panel ballot multiplication)
         cur.execute("""
@@ -468,23 +574,68 @@ class V2MetricsEngine:
             elo_val = d_elo.get("elo", 1500.0)
             peak_elo_val = d_elo.get("peak_elo", 1500.0)
 
+            p_seeds = person_seeds.get(pid, [])
+            bra_val = truncate_3(sum(p_seeds) / len(p_seeds)) if p_seeds else None
+            breaks_cnt = len(p_seeds)
+
+            pos_map = person_pos_scores.get(pid, {})
+            positions = {}
+            for pos_key in ("1st", "2nd", "3rd", "Reply"):
+                p_list = pos_map.get(pos_key, [])
+                p_avg = truncate_3(sum(p_list) / len(p_list)) if p_list else 0.0
+                positions[pos_key] = {"count": len(p_list), "average": p_avg}
+
+            # Build reverse-chronological tournament_breakdown
+            tour_breakdown = []
+            p_tours = person_tour_details.get(pid, {})
+            for tid in sorted(p_tours.keys(), key=lambda t_id: CHRONOLOGICAL_TOURNAMENT_ORDER.get(t_id, 0), reverse=True):
+                td = p_tours[tid]
+                sub_r_dict = td["sub_rounds"]
+                rep_r_dict = td["reply_rounds"]
+                if not sub_r_dict:
+                    continue
+                t_sub_scores = [v["score"] for v in sub_r_dict.values() if v["score"]]
+                t_avg = truncate_3(sum(t_sub_scores) / len(t_sub_scores)) if t_sub_scores else 0.0
+                rounds_combined = []
+                for rnum in sorted(set(list(sub_r_dict.keys()) + list(rep_r_dict.keys()))):
+                    if rnum in sub_r_dict:
+                        rounds_combined.append(sub_r_dict[rnum])
+                    if rnum in rep_r_dict:
+                        rounds_combined.append(rep_r_dict[rnum])
+                tour_breakdown.append({
+                    "tournament_name": td["tournament_name"],
+                    "slug": td["slug"],
+                    "tournament_average": t_avg,
+                    "speeches_count": len(t_sub_scores),
+                    "rounds": rounds_combined,
+                })
+
+            spk_score = truncate_3(mean_score)
             speakers.append({
                 "person_id": pid,
                 "name": name,
                 "speaker_name": name,
+                "canonical_name": name,
                 "institution": inst,
+                "latest_institution": inst,
+                "most_debated_team": most_team_map.get(pid, "Unknown"),
                 "national_level": nat,
-                "speaker_score": truncate_3(mean_score),
+                "speaker_score": spk_score,
+                "speaker_avg": spk_score,
                 "elo": elo_val,
                 "peak_elo": peak_elo_val,
                 "win_percentage": win_pct,
                 "stdev": stdev,
+                "bra": bra_val,
+                "breaks_count": breaks_cnt,
                 "prelims_debated": speech_count,
                 "tournaments_debated": tour_count,
                 "total_substantive_speeches": speech_count,
                 "total_debates": debates,
                 "total_wins": wins,
                 "highest_achievement": person_ach.get(pid, "Preliminary Rounds"),
+                "position_averages": positions,
+                "tournament_breakdown": tour_breakdown,
             })
 
         # Apply multi-metric sorting
@@ -533,13 +684,19 @@ class V2MetricsEngine:
         tier:
           - 'tab' (Default): >= 3 tournaments
           - 'general': >= 2 tournaments
+          - 'all': >= 1 tournament
         sort_by:
           - 'atss' (Default): Average Total Speaker Score (Avg of avgs)
           - 'win_pct': Team win rate
           - 'awpt': Average wins per tournament
           - 'achievement': Highest achievement in knockouts
         """
-        min_tourneys = 3 if tier == "tab" else 2
+        if tier == "tab":
+            min_tourneys = 3
+        elif tier == "general":
+            min_tourneys = 2
+        else:
+            min_tourneys = 1
         cur = self.conn.cursor()
 
         raw_team_ach, canonical_team_ach, _ = self._get_all_team_and_debater_achievements()
@@ -636,6 +793,8 @@ class V2MetricsEngine:
             elo_val = t_elo.get("elo", 1500.0)
             peak_elo_val = t_elo.get("peak_elo", 1500.0)
 
+            full_bio = self.get_team_bio(cname) or {}
+
             teams_res.append({
                 "team_name": cname,
                 "institution": inst_name,
@@ -644,13 +803,20 @@ class V2MetricsEngine:
                 "peak_elo": peak_elo_val,
                 "win_percentage": win_pct,
                 "awpt": awpt,
+                "wins_per_tournament": awpt,
                 "wins_per_prelim": wins_per_prelim,
                 "stdev": stdev,
+                "bra": full_bio.get("bra"),
+                "breaks_count": full_bio.get("breaks_count", 0),
                 "tournaments_debated": tourneys_debated,
                 "prelims_debated": prelims_debated,
                 "total_wins": total_wins,
                 "highest_achievement": highest_achieve,
                 "achievement_rank": ACHIEVEMENT_ORDER.get(highest_achieve, 8),
+                "top_break_achievements": full_bio.get("top_break_achievements", []),
+                "top_win_lineups": full_bio.get("top_win_lineups", []),
+                "top_atss_lineups": full_bio.get("top_atss_lineups", []),
+                "tournament_breakdown": full_bio.get("tournament_breakdown", []),
             })
 
         # Multi-metric sorting
@@ -747,6 +913,19 @@ class V2MetricsEngine:
         """, team_ids + team_ids)
         debates = cur.fetchall()
 
+        # Bulk-fetch all substantive speakers for this team across all its debates
+        cur.execute(f"""
+            SELECT DISTINCT sp.debate_id, p.canonical_name
+            FROM speech_performances sp
+            JOIN persons p ON sp.person_id = p.id
+            WHERE sp.speech_type = 'SUBSTANTIVE'
+              AND sp.team_id IN ({placeholders})
+        """, team_ids)
+        deb_speakers_map: Dict[int, List[str]] = defaultdict(list)
+        for sr in cur.fetchall():
+            if sr["canonical_name"]:
+                deb_speakers_map[sr["debate_id"]].append(sr["canonical_name"])
+
         match_scores: List[float] = []
         total_wins = 0
         tournaments_seen = set()
@@ -779,16 +958,7 @@ class V2MetricsEngine:
 
             margin = truncate_3(my_score - opp_score) if my_score and opp_score else 0.0
 
-            # Lineup combination for this debate (substantive speakers only)
-            cur.execute(f"""
-                SELECT DISTINCT p.canonical_name
-                FROM speech_performances sp
-                JOIN persons p ON sp.person_id = p.id
-                WHERE sp.debate_id = ? AND sp.speech_type = 'SUBSTANTIVE'
-                  AND sp.team_id IN ({placeholders})
-            """, [deb_id] + team_ids)
-            spk_rows = cur.fetchall()
-            speakers = sorted([r["canonical_name"] for r in spk_rows if r["canonical_name"]])
+            speakers = sorted(list(set(deb_speakers_map.get(deb_id, []))))
 
             if len(speakers) == 3:
                 lineup_key = ", ".join(speakers)
@@ -967,6 +1137,7 @@ class V2MetricsEngine:
         tier:
           - 'tab' (Default): >= 3 tournaments
           - 'general': >= 2 tournaments
+          - 'all': >= 1 tournament
         sort_by:
           - 'delta' (Default)
           - 'a_atss'
@@ -975,7 +1146,12 @@ class V2MetricsEngine:
           - 'win_pct'
           - 'pool'
         """
-        min_tourneys = 3 if tier == "tab" else 2
+        if tier == "tab":
+            min_tourneys = 3
+        elif tier == "general":
+            min_tourneys = 2
+        else:
+            min_tourneys = 1
         cur = self.conn.cursor()
 
         # Query all active institutions
@@ -1094,22 +1270,48 @@ class V2MetricsEngine:
             tot_wins = w_row["wins"] or 0
             win_pct = truncate_3(tot_wins / tot_deb * 100.0) if tot_deb else 0.0
 
-            # Debater Pool: Count of unique debaters from school eligible at least once (>= 3 prelims in a tournament)
+            # Debater Pool: unique debaters from school eligible at least once (>= 3 prelims in a tournament)
             cur.execute("""
-                SELECT COUNT(DISTINCT e.person_id) as pool_cnt
-                FROM (
-                    SELECT sp.person_id
-                    FROM speech_performances sp
-                    JOIN teams t ON sp.team_id = t.id
-                    JOIN rounds r ON sp.round_id = r.id
-                    WHERE t.institution_id = ? AND r.round_type = 'PRELIMINARY'
-                    GROUP BY sp.person_id, r.tournament_id
-                    HAVING COUNT(DISTINCT sp.round_id) >= 3
-                ) e
-            """, (iid,))
-            pool_cnt = cur.fetchone()["pool_cnt"] or 0
+                SELECT p.id as person_id,
+                       p.canonical_name,
+                       p.national_level,
+                       COUNT(DISTINCT r.tournament_id) as tourneys_count,
+                       COUNT(DISTINCT sp.round_id) as prelims_count
+                FROM speech_performances sp
+                JOIN persons p ON sp.person_id = p.id
+                JOIN teams t ON sp.team_id = t.id
+                JOIN rounds r ON sp.round_id = r.id
+                WHERE t.institution_id = ? AND r.round_type = 'PRELIMINARY'
+                  AND sp.person_id IN (
+                      SELECT sp2.person_id
+                      FROM speech_performances sp2
+                      JOIN teams t2 ON sp2.team_id = t2.id
+                      JOIN rounds r2 ON sp2.round_id = r2.id
+                      WHERE t2.institution_id = ? AND r2.round_type = 'PRELIMINARY'
+                      GROUP BY sp2.person_id, r2.tournament_id
+                      HAVING COUNT(DISTINCT sp2.round_id) >= 3
+                  )
+                GROUP BY p.id
+                ORDER BY tourneys_count DESC, prelims_count DESC
+            """, (iid, iid))
+            debater_rows = cur.fetchall()
+            veterans = []
+            new_debaters = []
+            for d in debater_rows:
+                d_dict = {
+                    "person_id": d["person_id"],
+                    "name": d["canonical_name"],
+                    "national_level": d["national_level"],
+                    "tournaments": d["tourneys_count"],
+                    "prelims": d["prelims_count"],
+                }
+                if d["tourneys_count"] >= 2:
+                    veterans.append(d_dict)
+                else:
+                    new_debaters.append(d_dict)
+            pool_cnt = len(debater_rows)
 
-            team_names = set(t["name"] for t in teams)
+            team_names = set(CANONICAL_TEAM_ALIASES.get(t["name"], t["name"]) for t in teams)
             elos = self._get_international_elos()
             inst_elo = elos.get("institutions", {}).get(iid) or elos.get("institutions_by_name", {}).get(iname.lower(), {})
             elo_val = inst_elo.get("elo", 1500.0)
@@ -1129,6 +1331,10 @@ class V2MetricsEngine:
                 "net_diff": net_diff,
                 "win_percentage": win_pct,
                 "pool_count": pool_cnt,
+                "veterans_count": len(veterans),
+                "new_count": len(new_debaters),
+                "veterans": veterans,
+                "new_debaters": new_debaters,
                 "tournaments_debated": unique_tourneys,
                 "teams_count": len(team_names),
                 "teams_list": sorted(list(team_names)),
@@ -1179,49 +1385,10 @@ class V2MetricsEngine:
             return None
 
         iid, iname, icode = row["id"], row["name"], row["code"]
-        mult_insts = self.get_multipurpose_institutions(tier="general", sort_by="delta")
+        mult_insts = self.get_multipurpose_institutions(tier="all", sort_by="delta")
         inst_meta = next((m for m in mult_insts if m["institution_id"] == iid), None)
-
-        # Debater pool details: unique debaters eligible at least once, split into veterans (>= 2 tournaments) vs new (1 tournament)
-        cur.execute("""
-            SELECT p.id as person_id,
-                   p.canonical_name,
-                   p.national_level,
-                   COUNT(DISTINCT r.tournament_id) as tourneys_count,
-                   COUNT(DISTINCT sp.round_id) as prelims_count
-            FROM speech_performances sp
-            JOIN persons p ON sp.person_id = p.id
-            JOIN teams t ON sp.team_id = t.id
-            JOIN rounds r ON sp.round_id = r.id
-            WHERE t.institution_id = ? AND r.round_type = 'PRELIMINARY'
-              AND sp.person_id IN (
-                  SELECT sp2.person_id
-                  FROM speech_performances sp2
-                  JOIN teams t2 ON sp2.team_id = t2.id
-                  JOIN rounds r2 ON sp2.round_id = r2.id
-                  WHERE t2.institution_id = ? AND r2.round_type = 'PRELIMINARY'
-                  GROUP BY sp2.person_id, r2.tournament_id
-                  HAVING COUNT(DISTINCT sp2.round_id) >= 3
-              )
-            GROUP BY p.id
-            ORDER BY tourneys_count DESC, prelims_count DESC
-        """, (iid, iid))
-        debater_rows = cur.fetchall()
-
-        veterans = []
-        new_debaters = []
-        for d in debater_rows:
-            d_dict = {
-                "person_id": d["person_id"],
-                "name": d["canonical_name"],
-                "national_level": d["national_level"],
-                "tournaments": d["tourneys_count"],
-                "prelims": d["prelims_count"],
-            }
-            if d["tourneys_count"] >= 2:
-                veterans.append(d_dict)
-            else:
-                new_debaters.append(d_dict)
+        if inst_meta:
+            return dict(inst_meta)
 
         elos = self._get_international_elos()
         inst_elo = elos.get("institutions", {}).get(iid) or elos.get("institutions_by_name", {}).get(iname.lower(), {})
@@ -1230,20 +1397,20 @@ class V2MetricsEngine:
             "institution_id": iid,
             "institution_name": iname,
             "code": icode,
-            "delta": inst_meta["delta"] if inst_meta else 0.0,
-            "elo": inst_elo.get("elo", inst_meta["elo"] if inst_meta and "elo" in inst_meta else 1500.0),
-            "peak_elo": inst_elo.get("peak_elo", inst_meta["peak_elo"] if inst_meta and "peak_elo" in inst_meta else 1500.0),
-            "a_team_name": inst_meta["a_team_name"] if inst_meta else None,
-            "a_atss": inst_meta["a_atss"] if inst_meta else 0.0,
-            "b_team_name": inst_meta["b_team_name"] if inst_meta else None,
-            "b_atss": inst_meta["b_atss"] if inst_meta else None,
-            "win_percentage": inst_meta["win_percentage"] if inst_meta else 0.0,
-            "teams_list": inst_meta["teams_list"] if inst_meta else [],
-            "pool_count": len(debater_rows),
-            "veterans_count": len(veterans),
-            "new_count": len(new_debaters),
-            "veterans": veterans,
-            "new_debaters": new_debaters,
+            "delta": 0.0,
+            "elo": inst_elo.get("elo", 1500.0),
+            "peak_elo": inst_elo.get("peak_elo", 1500.0),
+            "a_team_name": None,
+            "a_atss": 0.0,
+            "b_team_name": None,
+            "b_atss": None,
+            "win_percentage": 0.0,
+            "teams_list": [],
+            "pool_count": 0,
+            "veterans_count": 0,
+            "new_count": 0,
+            "veterans": [],
+            "new_debaters": [],
         }
 
     # =========================================================================
@@ -1256,6 +1423,7 @@ class V2MetricsEngine:
         - AATSS: Average Awarded Team Speaker Score
         - Prop / Opp Win decision bias
         - Prelims & Tournaments adjudicated
+        - Full round-by-round judging_history
         """
         cur = self.conn.cursor()
 
@@ -1263,24 +1431,76 @@ class V2MetricsEngine:
             SELECT b.id as ballot_id,
                    b.adjudicator_raw_name,
                    b.adjudicator_institution,
-                   r.tournament_id,
-                   r.id as round_id,
-                   r.round_type,
-                   b.winner_side,
                    b.prop_total_score,
-                   b.opp_total_score
+                   b.opp_total_score,
+                   b.win_margin,
+                   b.winner_side,
+                   r.id as round_id,
+                   r.round_number,
+                   r.name as round_name,
+                   r.round_type,
+                   t.id as tournament_id,
+                   t.name as tournament_name,
+                   t.slug as tournament_slug,
+                   t.hosting_dates as t_hosting_dates,
+                   pt.name as prop_team,
+                   pi.name as prop_inst,
+                   ot.name as opp_team,
+                   oi.name as opp_inst
             FROM adjudicator_ballots b
             JOIN debates d ON b.debate_id = d.id
             JOIN rounds r ON d.round_id = r.id
+            JOIN tournaments t ON r.tournament_id = t.id
+            LEFT JOIN teams pt ON d.prop_team_id = pt.id
+            LEFT JOIN institutions pi ON pt.institution_id = pi.id
+            LEFT JOIN teams ot ON d.opp_team_id = ot.id
+            LEFT JOIN institutions oi ON ot.institution_id = oi.id
             WHERE b.adjudicator_raw_name IS NOT NULL
               AND b.adjudicator_raw_name != ''
               AND b.adjudicator_raw_name NOT LIKE '%Scoresheet%'
               AND b.adjudicator_raw_name NOT LIKE '%Walkover%'
               AND b.adjudicator_raw_name NOT LIKE '%Tab%'
+            ORDER BY t.id ASC, r.round_number ASC
         """)
         ballot_rows = cur.fetchall()
 
         panel_regex = re.compile(r"Official (?:Panel Decision|Reconstructed)\s*\((.*?)\)", re.IGNORECASE)
+
+        # Precompute ballot history record per ballot_id
+        ballot_history_map: Dict[int, Dict[str, Any]] = {}
+        for br in ballot_rows:
+            b_id = br["ballot_id"]
+            raw = br["adjudicator_raw_name"] or ""
+            m = panel_regex.search(raw)
+            is_panel = False
+            panel_members: List[str] = []
+            if m:
+                is_panel = True
+                inner = m.group(1)
+                panel_members = [re.sub(r"[^\w\s\.\']", "", n).strip() for n in re.split(r"[,;]|\band\b", inner) if n.strip()]
+            t_id = br["tournament_id"]
+            t_name = CLEAN_TOURNAMENT_NAMES.get(t_id, br["tournament_name"])
+            dates = br["t_hosting_dates"] or OFFICIAL_TOURNAMENT_DATES.get(t_id, "2026")
+            ballot_history_map[b_id] = {
+                "ballot_id": b_id,
+                "tournament_id": t_id,
+                "tournament_name": t_name,
+                "tournament_slug": br["tournament_slug"],
+                "tournament_dates": dates,
+                "round_number": br["round_number"],
+                "round_name": br["round_name"] or f"Round {br['round_number']}",
+                "round_type": br["round_type"],
+                "prop_team": CANONICAL_TEAM_ALIASES.get(br["prop_team"], br["prop_team"]) if br["prop_team"] else "Proposition",
+                "prop_inst": br["prop_inst"] or "",
+                "opp_team": CANONICAL_TEAM_ALIASES.get(br["opp_team"], br["opp_team"]) if br["opp_team"] else "Opposition",
+                "opp_inst": br["opp_inst"] or "",
+                "winner_side": br["winner_side"],
+                "win_margin": br["win_margin"],
+                "prop_score": br["prop_total_score"],
+                "opp_score": br["opp_total_score"],
+                "is_panel": is_panel,
+                "panel_members": panel_members,
+            }
 
         judge_data = defaultdict(lambda: {
             "ballot_ids": [],
@@ -1368,6 +1588,19 @@ class V2MetricsEngine:
             opp_pct = truncate_3((owins / total_decisions * 100.0)) if total_decisions else 0
 
             outrounds_cnt = len(jd["outrounds"])
+
+            # Build judging history for this adjudicator
+            seen_b_ids = set()
+            history = []
+            for b_id in jd["ballot_ids"]:
+                if b_id not in seen_b_ids and b_id in ballot_history_map:
+                    seen_b_ids.add(b_id)
+                    history.append(ballot_history_map[b_id])
+            history.sort(key=lambda x: (
+                CHRONOLOGICAL_TOURNAMENT_ORDER.get(x["tournament_id"], 99),
+                x["round_number"]
+            ))
+
             judges.append({
                 "adjudicator_name": jname,
                 "institution": inst,
@@ -1383,7 +1616,7 @@ class V2MetricsEngine:
                 "total_rounds_adjudicated": prelims_cnt + outrounds_cnt,
                 "tournaments_adjudicated": len(jd["tournaments"]),
                 "ballots_count": ballots_cnt,
-                "_ballot_ids": jd["ballot_ids"],
+                "judging_history": history,
             })
 
         judges.sort(key=lambda x: -x["prelims_adjudicated"])
@@ -1400,99 +1633,93 @@ class V2MetricsEngine:
             target = next((j for j in judges if judge_name.lower() in j["adjudicator_name"].lower()), None)
         if not target:
             return None
+        return dict(target)
 
-        # Build detailed round-by-round judging history
+    def get_all_h2h_debates(self) -> List[Dict[str, Any]]:
+        """Export compact debate clash records so Head-to-Head works 100% accurately in static/GitHub mode."""
         cur = self.conn.cursor()
-        panel_regex = re.compile(r"Official (?:Panel Decision|Reconstructed)\s*\((.*?)\)", re.IGNORECASE)
+        cur.execute("""
+            SELECT d.id as debate_id,
+                   t.id as tournament_id,
+                   t.name as tournament_name,
+                   t.slug as tournament_slug,
+                   r.round_number,
+                   r.name as round_name,
+                   r.round_type,
+                   tp.name as prop_team_name,
+                   topp.name as opp_team_name,
+                   d.is_walkover,
+                   d.walkover_winner_id,
+                   d.prop_team_id,
+                   d.opp_team_id,
+                   SUM(CASE WHEN b.winner_side = 'Proposition' THEN 1 ELSE 0 END) as prop_ballots,
+                   SUM(CASE WHEN b.winner_side = 'Opposition' THEN 1 ELSE 0 END) as opp_ballots
+            FROM debates d
+            JOIN rounds r ON d.round_id = r.id
+            JOIN tournaments t ON r.tournament_id = t.id
+            LEFT JOIN teams tp ON d.prop_team_id = tp.id
+            LEFT JOIN teams topp ON d.opp_team_id = topp.id
+            LEFT JOIN adjudicator_ballots b ON d.id = b.debate_id
+            GROUP BY d.id
+            ORDER BY t.id ASC, r.round_number ASC
+        """)
+        debates = cur.fetchall()
 
-        ballot_ids = target.get("_ballot_ids", [])
-        history: List[Dict[str, Any]] = []
-
-        if ballot_ids:
-            placeholders = ",".join("?" * len(ballot_ids))
-            cur.execute(f"""
-                SELECT b.id as ballot_id,
-                       b.adjudicator_raw_name,
-                       b.prop_total_score,
-                       b.opp_total_score,
-                       b.win_margin,
-                       b.winner_side,
-                       r.id as round_id,
-                       r.round_number,
-                       r.name as round_name,
-                       r.round_type,
-                       t.id as tournament_id,
-                       t.name as tournament_name,
-                       t.slug as tournament_slug,
-                       t.hosting_dates as t_hosting_dates,
-                       pt.name as prop_team,
-                       pi.name as prop_inst,
-                       ot.name as opp_team,
-                       oi.name as opp_inst
-                FROM adjudicator_ballots b
-                JOIN debates d ON b.debate_id = d.id
-                JOIN rounds r ON d.round_id = r.id
-                JOIN tournaments t ON r.tournament_id = t.id
-                LEFT JOIN teams pt ON d.prop_team_id = pt.id
-                LEFT JOIN institutions pi ON pt.institution_id = pi.id
-                LEFT JOIN teams ot ON d.opp_team_id = ot.id
-                LEFT JOIN institutions oi ON ot.institution_id = oi.id
-                WHERE b.id IN ({placeholders})
-                ORDER BY t.id ASC, r.round_number ASC
-            """, ballot_ids)
-
-            seen_debates = set()
-            for row in cur.fetchall():
-                b_id = row["ballot_id"]
-                if b_id in seen_debates:
-                    continue
-                seen_debates.add(b_id)
-
-                raw = row["adjudicator_raw_name"] or ""
-                m = panel_regex.search(raw)
-                is_panel = False
-                panel_members: List[str] = []
-                if m:
-                    is_panel = True
-                    inner = m.group(1)
-                    panel_members = [re.sub(r"[^\w\s\.\']", "", n).strip() for n in re.split(r"[,;]|\band\b", inner) if n.strip()]
-
-                t_id = row["tournament_id"]
-                t_name = CLEAN_TOURNAMENT_NAMES.get(t_id, row["tournament_name"])
-                dates = row["t_hosting_dates"] or OFFICIAL_TOURNAMENT_DATES.get(t_id, "2026")
-
-                history.append({
-                    "ballot_id": b_id,
-                    "tournament_id": t_id,
-                    "tournament_name": t_name,
-                    "tournament_slug": row["tournament_slug"],
-                    "tournament_dates": dates,
-                    "round_number": row["round_number"],
-                    "round_name": row["round_name"] or f"Round {row['round_number']}",
-                    "round_type": row["round_type"],
-                    "prop_team": row["prop_team"] or "Proposition",
-                    "prop_inst": row["prop_inst"] or "",
-                    "opp_team": row["opp_team"] or "Opposition",
-                    "opp_inst": row["opp_inst"] or "",
-                    "winner_side": row["winner_side"],
-                    "win_margin": row["win_margin"],
-                    "prop_score": row["prop_total_score"],
-                    "opp_score": row["opp_total_score"],
-                    "is_panel": is_panel,
-                    "panel_members": panel_members,
+        cur.execute("""
+            SELECT DISTINCT sp.debate_id, sp.person_id, p.canonical_name, sp.side
+            FROM speech_performances sp
+            JOIN persons p ON sp.person_id = p.id
+            WHERE sp.speech_type = 'SUBSTANTIVE'
+        """)
+        deb_spk: Dict[int, Dict[str, List[Dict[str, Any]]]] = defaultdict(lambda: {"Proposition": [], "Opposition": []})
+        for sr in cur.fetchall():
+            side = sr["side"]
+            if side in ("Proposition", "Opposition"):
+                deb_spk[sr["debate_id"]][side].append({
+                    "person_id": sr["person_id"],
+                    "name": sr["canonical_name"],
                 })
 
-        # Sort history: by tournament chronological order, then round number
-        history.sort(key=lambda x: (
-            CHRONOLOGICAL_TOURNAMENT_ORDER.get(x["tournament_id"], 99),
-            x["round_number"]
-        ))
+        result = []
+        for row in debates:
+            d_id = row["debate_id"]
+            spks = deb_spk.get(d_id)
+            if not spks or (not spks["Proposition"] and not spks["Opposition"]):
+                continue
+            p_bal = row["prop_ballots"] or 0
+            o_bal = row["opp_ballots"] or 0
+            winner_side = None
+            if row["is_walkover"]:
+                if row["walkover_winner_id"] == row["prop_team_id"]:
+                    winner_side = "Proposition"
+                elif row["walkover_winner_id"] == row["opp_team_id"]:
+                    winner_side = "Opposition"
+            else:
+                if p_bal > o_bal:
+                    winner_side = "Proposition"
+                elif o_bal > p_bal:
+                    winner_side = "Opposition"
 
-        res = dict(target)
-        # Remove internal ballot_ids before returning
-        res.pop("_ballot_ids", None)
-        res["judging_history"] = history
-        return res
+            tid = row["tournament_id"]
+            tname = CLEAN_TOURNAMENT_NAMES.get(tid, row["tournament_name"])
+            p_team = CANONICAL_TEAM_ALIASES.get(row["prop_team_name"], row["prop_team_name"]) if row["prop_team_name"] else "Proposition"
+            o_team = CANONICAL_TEAM_ALIASES.get(row["opp_team_name"], row["opp_team_name"]) if row["opp_team_name"] else "Opposition"
+
+            result.append({
+                "debate_id": d_id,
+                "tournament_id": tid,
+                "tournament_name": tname,
+                "tournament_slug": row["tournament_slug"],
+                "round_number": row["round_number"],
+                "round_name": row["round_name"] or f"Round {row['round_number']}",
+                "round_type": row["round_type"],
+                "prop_team": p_team,
+                "opp_team": o_team,
+                "winner_side": winner_side,
+                "prop_speakers": spks["Proposition"],
+                "opp_speakers": spks["Opposition"],
+            })
+        return result
 
 
     # =========================================================================

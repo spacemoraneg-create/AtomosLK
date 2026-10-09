@@ -54,38 +54,74 @@ def create_app(db_conn=None) -> Flask:
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Token, X-GitHub-Token"
         return response
 
+    sync_state: Dict[str, Any] = {
+        "in_progress": False,
+        "last_sync_at": None,
+        "last_commit_sha": None,
+        "last_success": None,
+        "last_message": "Ready",
+        "synced_files_count": 0,
+    }
+
+    def invalidate_live_caches():
+        v2_engine._elo_cache = None
+        if hasattr(v2_engine, "_break_seeds_cache"):
+            v2_engine._break_seeds_cache = None
+
     def get_request_github_token() -> Optional[str]:
+        from atomos.sync import load_persisted_github_token
         req_json = request.get_json(force=True, silent=True) if request.is_json else {}
         token = (
             request.headers.get("X-GitHub-Token")
             or (req_json.get("github_token") if isinstance(req_json, dict) else None)
-            or os.environ.get("GITHUB_TOKEN")
-            or os.environ.get("GH_TOKEN")
+            or load_persisted_github_token()
         )
         return str(token).strip() if token else None
 
+    _export_sync_lock = threading.Lock()
+
     def trigger_async_export_and_sync(commit_message: str, custom_token: Optional[str] = None):
+        invalidate_live_caches()
+        if db_conn is not None or app.config.get("TESTING"):
+            return
         token_to_use = custom_token or get_request_github_token()
 
         def _worker():
-            try:
-                root_dir = Path(__file__).resolve().parent.parent.parent
-                if str(root_dir) not in sys.path:
-                    sys.path.insert(0, str(root_dir))
-                from scripts.export_web_data import export_web_data
-                export_web_data(data_export_dir)
+            with _export_sync_lock:
+                sync_state["in_progress"] = True
+                sync_state["last_message"] = f"Exporting & syncing: {commit_message}"
+                try:
+                    root_dir = Path(__file__).resolve().parent.parent.parent
+                    if str(root_dir) not in sys.path:
+                        sys.path.insert(0, str(root_dir))
+                    from scripts.export_web_data import export_web_data
+                    export_web_data(data_export_dir)
 
-                from atomos.sync import GitHubSyncService
-                sync_svc = GitHubSyncService(token=token_to_use)
-                if sync_svc.is_configured():
-                    db_f = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
-                    sync_svc.sync_database_and_export(
-                        db_path=db_f,
-                        export_dir=data_export_dir,
-                        commit_message=commit_message,
-                    )
-            except Exception as exp_err:
-                print(f"[WARN] Async static export and sync encountered an issue: {exp_err}")
+                    from atomos.sync import GitHubSyncService
+                    sync_svc = GitHubSyncService(token=token_to_use)
+                    if sync_svc.is_configured():
+                        db_f = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
+                        res = sync_svc.sync_database_and_export(
+                            db_path=db_f,
+                            export_dir=data_export_dir,
+                            commit_message=commit_message,
+                        )
+                        sync_state["last_sync_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+                        sync_state["last_success"] = bool(res.get("success"))
+                        sync_state["last_commit_sha"] = res.get("commit_sha") or sync_svc.get_head_commit_sha()
+                        sync_state["last_message"] = res.get("message") or res.get("error") or "Completed"
+                        sync_state["synced_files_count"] = len(res.get("synced_files") or [])
+                    else:
+                        sync_state["last_sync_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+                        sync_state["last_success"] = False
+                        sync_state["last_message"] = "Local export finished; GitHub sync not configured."
+                except Exception as exp_err:
+                    sync_state["last_sync_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+                    sync_state["last_success"] = False
+                    sync_state["last_message"] = f"Error: {str(exp_err)}"
+                    print(f"[WARN] Async static export and sync encountered an issue: {exp_err}")
+                finally:
+                    sync_state["in_progress"] = False
 
         threading.Thread(target=_worker, daemon=True).start()
 
@@ -1050,25 +1086,74 @@ def create_app(db_conn=None) -> Flask:
         from atomos.sync import GitHubSyncService
         token = get_request_github_token()
         sync_svc = GitHubSyncService(token=token)
+        head_sha = sync_svc.get_head_commit_sha()
         return jsonify({
             "configured": sync_svc.is_configured(),
+            "auth_mode": sync_svc.get_auth_mode(),
             "repo": sync_svc.repo,
             "branch": sync_svc.branch,
+            "head_sha": head_sha[:7] if head_sha else None,
+            "sync_state": sync_state,
+        })
+
+    @app.route("/api/admin/github/token", methods=["POST"])
+    @require_admin
+    def admin_github_token():
+        from atomos.sync import save_persisted_github_token, GitHubSyncService
+        payload = request.get_json(force=True, silent=True) or {}
+        token = str(payload.get("token") or "").strip()
+        save_persisted_github_token(token)
+        sync_svc = GitHubSyncService(token=token or None)
+        return jsonify({
+            "success": True,
+            "configured": sync_svc.is_configured(),
+            "auth_mode": sync_svc.get_auth_mode(),
         })
 
     @app.route("/api/admin/github/sync", methods=["POST"])
     @require_admin
     def admin_github_sync():
-        from atomos.sync import GitHubSyncService
+        from atomos.sync import GitHubSyncService, save_persisted_github_token
         payload = request.get_json(force=True, silent=True) or {}
+        req_token = (
+            request.headers.get("X-GitHub-Token")
+            or payload.get("github_token")
+        )
+        if req_token and str(req_token).strip():
+            save_persisted_github_token(str(req_token).strip())
         token = get_request_github_token()
         message = payload.get("message") or "chore(data): manual sync of database and web export from admin console"
-        
-        sync_svc = GitHubSyncService(token=token)
-        db_path = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
-        res = sync_svc.sync_database_and_export(db_path=db_path, export_dir=data_export_dir, commit_message=message)
-        status_code = 200 if res.get("success") else 400
-        return jsonify(res), status_code
+
+        invalidate_live_caches()
+        sync_state["in_progress"] = True
+        sync_state["last_message"] = "Re-exporting web datasets and syncing to GitHub..."
+        try:
+            root_dir = Path(__file__).resolve().parent.parent.parent
+            if str(root_dir) not in sys.path:
+                sys.path.insert(0, str(root_dir))
+            from scripts.export_web_data import export_web_data
+            export_web_data(data_export_dir)
+
+            sync_svc = GitHubSyncService(token=token)
+            db_path = Path(__file__).resolve().parent.parent.parent / "data" / "atomos.db"
+            res = sync_svc.sync_database_and_export(db_path=db_path, export_dir=data_export_dir, commit_message=message)
+
+            sync_state["last_sync_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+            sync_state["last_success"] = bool(res.get("success"))
+            sync_state["last_commit_sha"] = res.get("commit_sha") or sync_svc.get_head_commit_sha()
+            sync_state["last_message"] = res.get("message") or res.get("error") or "Completed"
+            sync_state["synced_files_count"] = len(res.get("synced_files") or [])
+
+            status_code = 200 if res.get("success") else 400
+            return jsonify({**res, "sync_state": sync_state}), status_code
+        except Exception as e:
+            sync_state["last_sync_at"] = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC")
+            sync_state["last_success"] = False
+            sync_state["last_message"] = f"Error: {str(e)}"
+            return jsonify({"success": False, "error": str(e), "sync_state": sync_state}), 500
+        finally:
+            sync_state["in_progress"] = False
+
 
     @app.route("/api/admin/institutions/list", methods=["GET"])
     @require_admin

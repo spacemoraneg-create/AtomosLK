@@ -6,24 +6,33 @@
 (function () {
   'use strict';
 
+  const GITHUB_RAW_BASE = 'https://raw.githubusercontent.com/spacemoraneg-create/AtomosLK/main/data/web_export';
+
   // Global State
   const state = {
     // V2 Datasets
     v2SpeakersTab: [],
     v2SpeakersGeneral: [],
+    v2SpeakersAll: [],
     v2TeamsTab: [],
     v2TeamsGeneral: [],
+    v2TeamsAll: [],
     v2InstitutionsTab: [],
     v2InstitutionsGeneral: [],
+    v2InstitutionsAll: [],
     v2Tournaments: [],
     v2Adjudicators: [],
+    v2AdjudicatorsAll: [],
     v2NationalPool: null,
+    v2H2HDebates: [],
 
     circuitSummary: null,
     searchIndex: [],
 
-    // App State
+    // App & GitHub Sync State
     isServerOnline: false,
+    useGitHubRaw: false,
+    manifestVersion: null,
     apiUrl: window.location.origin.includes('http') ? window.location.origin : 'http://127.0.0.1:5000',
   };
 
@@ -124,11 +133,82 @@
 
   // Fast In-Memory & Session Storage Cache Map
   const dataCache = new Map();
+  let manifestCheckPromise = null;
 
-  // Router / Initializer based on active page - Runs immediately on DOMContentLoaded (0ms UI latency)
+  function clearClientDataCache() {
+    dataCache.clear();
+    try {
+      const keysToRemove = [];
+      for (let i = 0; i < sessionStorage.length; i++) {
+        const k = sessionStorage.key(i);
+        if (k && k.startsWith('atomos_cache_')) {
+          keysToRemove.push(k);
+        }
+      }
+      keysToRemove.forEach((k) => sessionStorage.removeItem(k));
+    } catch (e) {}
+  }
+
+  // Synchronize manifest version with local export & GitHub Raw to guarantee fresh data
+  function syncWithGitHubManifest() {
+    if (manifestCheckPromise) return manifestCheckPromise;
+    manifestCheckPromise = (async () => {
+      let localManifest = null;
+      let githubManifest = null;
+
+      const fetchLocalManifest = async () => {
+        try {
+          let r = await fetch(`data/web_export/export_manifest.json`, { cache: 'no-cache' });
+          if (!r.ok) r = await fetch(`../data/web_export/export_manifest.json`, { cache: 'no-cache' });
+          if (r.ok) return await r.json();
+        } catch (e) {}
+        return null;
+      };
+
+      const fetchGitHubManifest = async () => {
+        try {
+          const r = await fetch(`${GITHUB_RAW_BASE}/export_manifest.json?t=${Math.floor(Date.now() / 30000)}`, {
+            cache: 'no-cache',
+            signal: AbortSignal.timeout(2200),
+          });
+          if (r.ok) return await r.json();
+        } catch (e) {}
+        return null;
+      };
+
+      [localManifest, githubManifest] = await Promise.all([fetchLocalManifest(), fetchGitHubManifest()]);
+
+      const localVer = localManifest && localManifest.version ? Number(localManifest.version) : 0;
+      const ghVer = githubManifest && githubManifest.version ? Number(githubManifest.version) : 0;
+
+      if (ghVer > localVer) {
+        state.useGitHubRaw = true;
+        state.manifestVersion = ghVer;
+      } else if (localVer > 0) {
+        state.useGitHubRaw = false;
+        state.manifestVersion = localVer;
+      } else if (ghVer > 0) {
+        state.useGitHubRaw = true;
+        state.manifestVersion = ghVer;
+      }
+
+      if (state.manifestVersion) {
+        try {
+          const cachedVer = Number(sessionStorage.getItem('atomos_manifest_version') || '0');
+          if (cachedVer !== state.manifestVersion) {
+            clearClientDataCache();
+            sessionStorage.setItem('atomos_manifest_version', String(state.manifestVersion));
+          }
+        } catch (e) {}
+      }
+    })();
+    return manifestCheckPromise;
+  }
+
+  // Router / Initializer based on active page - Runs immediately on DOMContentLoaded
   function init() {
-    // Non-blocking server status check in background
     checkServerStatus();
+    syncWithGitHubManifest();
 
     const path = window.location.pathname.toLowerCase();
 
@@ -167,8 +247,36 @@
     }
   }
 
-  // Fetch JSON with in-memory + sessionStorage caching, static-first loading (< 10ms), and live API fallback
+  async function tryFetchLocalExport(filename) {
+    const qs = state.manifestVersion ? `?v=${state.manifestVersion}` : '';
+    try {
+      let res = await fetch(`data/web_export/${filename}${qs}`);
+      if (!res.ok) {
+        res = await fetch(`../data/web_export/${filename}${qs}`);
+      }
+      if (res.ok) return await res.json();
+    } catch (e) {
+      try {
+        const res = await fetch(`../data/web_export/${filename}${qs}`);
+        if (res.ok) return await res.json();
+      } catch (err) {}
+    }
+    return null;
+  }
+
+  async function tryFetchGitHubRaw(filename) {
+    const qs = state.manifestVersion ? `?v=${state.manifestVersion}` : '';
+    try {
+      const res = await fetch(`${GITHUB_RAW_BASE}/${filename}${qs}`, { signal: AbortSignal.timeout(5000) });
+      if (res.ok) return await res.json();
+    } catch (e) {}
+    return null;
+  }
+
+  // Fetch JSON with manifest-verified caching, local + GitHub Raw synchronization, and live API fallback
   async function fetchJson(filename, fallbackApi) {
+    await syncWithGitHubManifest();
+
     if (dataCache.has(filename)) {
       return dataCache.get(filename);
     }
@@ -184,21 +292,18 @@
 
     let data = null;
 
-    // 1. Static Precomputed File Priority (Fastest, zero SQLite queries, CDN/browser cacheable)
-    try {
-      let res = await fetch(`data/web_export/${filename}`);
-      if (!res.ok) {
-        res = await fetch(`../data/web_export/${filename}`);
+    if (state.useGitHubRaw) {
+      // GitHub has a newer manifest version than local static files
+      data = await tryFetchGitHubRaw(filename);
+      if (!data) {
+        data = await tryFetchLocalExport(filename);
       }
-      if (res.ok) data = await res.json();
-    } catch (e) {
-      try {
-        const res = await fetch(`../data/web_export/${filename}`);
-        if (res.ok) data = await res.json();
-      } catch (err) {}
+    } else {
+      // Local static export is up-to-date
+      data = await tryFetchLocalExport(filename);
     }
 
-    // 2. Fallback to Live Server API if static file unavailable
+    // Fallback to Live Server API if static file unavailable
     if (!data && fallbackApi) {
       try {
         const res = await fetch(`${state.apiUrl}${fallbackApi}`);
@@ -210,11 +315,16 @@
       } catch (e) {}
     }
 
+    // Final fallback to GitHub Raw if local & server both unavailable
+    if (!data && !state.useGitHubRaw) {
+      data = await tryFetchGitHubRaw(filename);
+    }
+
     if (data) {
       dataCache.set(filename, data);
       try {
         const str = JSON.stringify(data);
-        if (str.length < 500000) {
+        if (str.length < 2500000) {
           sessionStorage.setItem(`atomos_cache_${filename}`, str);
         }
       } catch (e) {}
@@ -229,13 +339,18 @@
       ['circuit_summary.json', '/api/circuit'],
       ['v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab'],
       ['v2_speakers_general.json', '/api/v2/leaderboard/speakers?tier=general'],
+      ['v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'],
       ['v2_teams_tab.json', '/api/v2/leaderboard/teams?tier=tab'],
       ['v2_teams_general.json', '/api/v2/leaderboard/teams?tier=general'],
+      ['v2_teams_all.json', '/api/v2/leaderboard/teams?tier=all'],
       ['v2_institutions_tab.json', '/api/v2/leaderboard/institutions?tier=tab'],
       ['v2_institutions_general.json', '/api/v2/leaderboard/institutions?tier=general'],
+      ['v2_institutions_all.json', '/api/v2/leaderboard/institutions?tier=all'],
       ['v2_tournaments.json', '/api/v2/leaderboard/tournaments'],
       ['v2_adjudicators.json', '/api/v2/leaderboard/adjudicators'],
+      ['v2_adjudicators_all.json', '/api/v2/leaderboard/adjudicators?min_prelims=1'],
       ['v2_national_pool.json', '/api/v2/pool'],
+      ['v2_h2h_debates.json', null],
       ['search_index.json', '/api/search?q=a'],
     ];
 
@@ -247,13 +362,18 @@
             if (file === 'circuit_summary.json' && !state.circuitSummary) state.circuitSummary = res;
             if (file === 'v2_speakers_tab.json' && !state.v2SpeakersTab.length) state.v2SpeakersTab = res;
             if (file === 'v2_speakers_general.json' && !state.v2SpeakersGeneral.length) state.v2SpeakersGeneral = res;
+            if (file === 'v2_speakers_all.json' && !state.v2SpeakersAll.length) state.v2SpeakersAll = res;
             if (file === 'v2_teams_tab.json' && !state.v2TeamsTab.length) state.v2TeamsTab = res;
             if (file === 'v2_teams_general.json' && !state.v2TeamsGeneral.length) state.v2TeamsGeneral = res;
+            if (file === 'v2_teams_all.json' && !state.v2TeamsAll.length) state.v2TeamsAll = res;
             if (file === 'v2_institutions_tab.json' && !state.v2InstitutionsTab.length) state.v2InstitutionsTab = res;
             if (file === 'v2_institutions_general.json' && !state.v2InstitutionsGeneral.length) state.v2InstitutionsGeneral = res;
+            if (file === 'v2_institutions_all.json' && !state.v2InstitutionsAll.length) state.v2InstitutionsAll = res;
             if (file === 'v2_tournaments.json' && !state.v2Tournaments.length) state.v2Tournaments = res;
             if (file === 'v2_adjudicators.json' && !state.v2Adjudicators.length) state.v2Adjudicators = res;
+            if (file === 'v2_adjudicators_all.json' && !state.v2AdjudicatorsAll.length) state.v2AdjudicatorsAll = res;
             if (file === 'v2_national_pool.json' && !state.v2NationalPool) state.v2NationalPool = res;
+            if (file === 'v2_h2h_debates.json' && !state.v2H2HDebates.length) state.v2H2HDebates = res;
             if (file === 'search_index.json' && !state.searchIndex.length) state.searchIndex = res;
           }
         }
@@ -1088,11 +1208,17 @@
     const clearBtn = document.getElementById('bioClearBtn');
     const container = document.getElementById('bioProfileContainer');
 
-    let isDataLoading = (!state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length);
+    let isDataLoading = (!state.v2SpeakersAll.length && !state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length);
+
+    function getSpeakersPool() {
+      if (state.v2SpeakersAll && state.v2SpeakersAll.length) return state.v2SpeakersAll;
+      if (state.v2SpeakersGeneral && state.v2SpeakersGeneral.length) return state.v2SpeakersGeneral;
+      return state.v2SpeakersTab || [];
+    }
 
     function renderMatches(q) {
       const query = (q || '').trim().toLowerCase();
-      let dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
+      let dataset = getSpeakersPool();
 
       if (isDataLoading && dataset.length === 0) {
         dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
@@ -1181,12 +1307,14 @@
       });
     }
 
-    // Load speakers dataset immediately
-    if (!state.v2SpeakersGeneral.length) {
+    // Load speakers dataset immediately (including v2_speakers_all.json for 100% coverage)
+    if (!state.v2SpeakersAll.length) {
       Promise.all([
+        fetchJson('v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'),
         fetchJson('v2_speakers_general.json', '/api/v2/leaderboard/speakers?tier=general'),
         fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab')
-      ]).then(([spkGen, spkTab]) => {
+      ]).then(([spkAll, spkGen, spkTab]) => {
+        if (spkAll) state.v2SpeakersAll = spkAll;
         if (spkGen) state.v2SpeakersGeneral = spkGen;
         if (spkTab) state.v2SpeakersTab = spkTab;
         isDataLoading = false;
@@ -1211,45 +1339,50 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
 
       let profile = null;
-      try {
-        const res = await fetch(`${state.apiUrl}/api/v2/debaters/${encodeURIComponent(name)}/bio`);
-        if (res.ok) {
-          profile = await res.json();
-          state.isServerOnline = true;
-        }
-      } catch (e) {}
+      if (!state.useGitHubRaw) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/debaters/${encodeURIComponent(name)}/bio`, { signal: AbortSignal.timeout(2500) });
+          if (res.ok) {
+            profile = await res.json();
+            state.isServerOnline = true;
+          }
+        } catch (e) {}
+      }
 
-      // If server profile not loaded, ensure local datasets are loaded before searching
+      // If server profile not loaded or GitHub Raw mode is active, use enriched precomputed JSON
       if (!profile) {
-        if (!state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length) {
-          const [spkGen, spkTab] = await Promise.all([
+        if (!state.v2SpeakersAll.length && !state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length) {
+          const [spkAll, spkGen, spkTab] = await Promise.all([
+            fetchJson('v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'),
             fetchJson('v2_speakers_general.json', '/api/v2/leaderboard/speakers?tier=general'),
             fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab')
           ]);
+          if (spkAll) state.v2SpeakersAll = spkAll;
           if (spkGen) state.v2SpeakersGeneral = spkGen;
           if (spkTab) state.v2SpeakersTab = spkTab;
         }
 
-        const found = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab).find((d) => {
-          const dn = d.name || d.speaker_name || '';
-          return dn.toLowerCase() === name.toLowerCase() || dn.toLowerCase().includes(name.toLowerCase());
-        });
+        const pool = getSpeakersPool();
+        const qLower = name.toLowerCase();
+        const found = pool.find((d) => (d.name || d.speaker_name || '').toLowerCase() === qLower) ||
+                      pool.find((d) => (d.name || d.speaker_name || '').toLowerCase().includes(qLower));
         if (found) {
-          const dName = found.name || found.speaker_name || '';
+          const dName = found.canonical_name || found.name || found.speaker_name || '';
           profile = {
+            ...found,
             canonical_name: dName,
             national_level: found.national_level,
-            latest_institution: found.institution,
-            most_debated_team: 'Circuit Team',
-            speaker_avg: found.speaker_score,
+            latest_institution: found.latest_institution || found.institution,
+            most_debated_team: found.most_debated_team || 'Circuit Team',
+            speaker_avg: found.speaker_avg !== undefined ? found.speaker_avg : found.speaker_score,
             elo: found.elo || 1500,
             peak_elo: found.peak_elo || found.elo || 1500,
             win_percentage: found.win_percentage,
             stdev: found.stdev,
             prelims_debated: found.prelims_debated,
             tournaments_debated: found.tournaments_debated,
-            position_averages: { "1st": found.speaker_score, "2nd": found.speaker_score, "3rd": found.speaker_score, "Reply": 35.5 },
-            tournament_breakdown: [],
+            position_averages: found.position_averages || {},
+            tournament_breakdown: found.tournament_breakdown || [],
           };
         }
       }
@@ -1436,11 +1569,17 @@
     const clearBtn = document.getElementById('teamClearBtn');
     const container = document.getElementById('teamProfileContainer');
 
-    let isDataLoading = (!state.v2TeamsGeneral.length && !state.v2TeamsTab.length);
+    let isDataLoading = (!state.v2TeamsAll.length && !state.v2TeamsGeneral.length && !state.v2TeamsTab.length);
+
+    function getTeamsPool() {
+      if (state.v2TeamsAll && state.v2TeamsAll.length) return state.v2TeamsAll;
+      if (state.v2TeamsGeneral && state.v2TeamsGeneral.length) return state.v2TeamsGeneral;
+      return state.v2TeamsTab || [];
+    }
 
     function renderMatches(q) {
       const query = (q || '').trim().toLowerCase();
-      let dataset = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab);
+      let dataset = getTeamsPool();
 
       if (isDataLoading && dataset.length === 0) {
         dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading team records...</div>`;
@@ -1529,12 +1668,14 @@
       });
     }
 
-    // Load teams dataset immediately
-    if (!state.v2TeamsGeneral.length) {
+    // Load teams dataset immediately (including v2_teams_all.json for 100% coverage)
+    if (!state.v2TeamsAll.length) {
       Promise.all([
+        fetchJson('v2_teams_all.json', '/api/v2/leaderboard/teams?tier=all'),
         fetchJson('v2_teams_general.json', '/api/v2/leaderboard/teams?tier=general'),
         fetchJson('v2_teams_tab.json', '/api/v2/leaderboard/teams?tier=tab')
-      ]).then(([teamsGen, teamsTab]) => {
+      ]).then(([teamsAll, teamsGen, teamsTab]) => {
+        if (teamsAll) state.v2TeamsAll = teamsAll;
         if (teamsGen) state.v2TeamsGeneral = teamsGen;
         if (teamsTab) state.v2TeamsTab = teamsTab;
         isDataLoading = false;
@@ -1559,42 +1700,59 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
 
       let bio = null;
-      try {
-        const res = await fetch(`${state.apiUrl}/api/v2/teams/${encodeURIComponent(teamName)}/bio`);
-        if (res.ok) {
-          bio = await res.json();
-          state.isServerOnline = true;
-        }
-      } catch (e) {}
+      if (!state.useGitHubRaw) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/teams/${encodeURIComponent(teamName)}/bio`, { signal: AbortSignal.timeout(2500) });
+          if (res.ok) {
+            bio = await res.json();
+            state.isServerOnline = true;
+          }
+        } catch (e) {}
+      }
 
       if (!bio) {
-        if (!state.v2TeamsGeneral.length && !state.v2TeamsTab.length) {
-          const [tGen, tTab] = await Promise.all([
+        if (!state.v2TeamsAll.length && !state.v2TeamsGeneral.length && !state.v2TeamsTab.length) {
+          const [tAll, tGen, tTab] = await Promise.all([
+            fetchJson('v2_teams_all.json', '/api/v2/leaderboard/teams?tier=all'),
             fetchJson('v2_teams_general.json', '/api/v2/leaderboard/teams?tier=general'),
             fetchJson('v2_teams_tab.json', '/api/v2/leaderboard/teams?tier=tab')
           ]);
+          if (tAll) state.v2TeamsAll = tAll;
           if (tGen) state.v2TeamsGeneral = tGen;
           if (tTab) state.v2TeamsTab = tTab;
         }
 
-        const found = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab).find(
-          (t) => t.team_name.toLowerCase() === teamName.toLowerCase() || t.team_name.toLowerCase().includes(teamName.toLowerCase())
-        );
+        const pool = getTeamsPool();
+        const qLower = teamName.trim().toLowerCase();
+        const aliasNormalized = qLower
+          .replace(/^dss\s+/, 'ds ')
+          .replace(/^d\.?\s*s\.?\s*senanayake\s+/, 'ds ')
+          .replace(/^royal\s+/, 'rc ')
+          .replace(/^ladies'?\s+/, 'lc ')
+          .replace(/^trinity\s+/, 'tck ')
+          .replace(/^ananda\s+/, 'ac ')
+          .replace(/^visakha\s+/, 'vv ');
+        const found = pool.find((t) => (t.team_name || '').toLowerCase() === qLower) ||
+                      pool.find((t) => (t.team_name || '').toLowerCase() === aliasNormalized) ||
+                      pool.find((t) => (t.team_name || '').toLowerCase().includes(qLower)) ||
+                      pool.find((t) => (t.team_name || '').toLowerCase().includes(aliasNormalized));
         if (found) {
           bio = {
+            ...found,
             team_name: found.team_name,
             institution: found.institution,
             atss: found.atss,
             elo: found.elo || 1500,
             peak_elo: found.peak_elo || found.elo || 1500,
             win_percentage: found.win_percentage,
-            stdev: found.stdev || 2.4,
+            stdev: found.stdev || 0,
             prelims_debated: found.prelims_debated || found.total_debates,
             tournaments_debated: found.tournaments_debated,
-            wins_per_tournament: found.awpt,
-            top_win_lineups: [],
-            top_atss_lineups: [],
-            tournament_breakdown: [],
+            wins_per_tournament: found.wins_per_tournament !== undefined ? found.wins_per_tournament : found.awpt,
+            top_break_achievements: found.top_break_achievements || [],
+            top_win_lineups: found.top_win_lineups || [],
+            top_atss_lineups: found.top_atss_lineups || [],
+            tournament_breakdown: found.tournament_breakdown || [],
           };
         }
       }
@@ -1797,11 +1955,17 @@
     const clearBtn = document.getElementById('instClearBtn');
     const container = document.getElementById('instProfileContainer');
 
-    let isDataLoading = (!state.v2InstitutionsGeneral.length && !state.v2InstitutionsTab.length);
+    let isDataLoading = (!state.v2InstitutionsAll.length && !state.v2InstitutionsGeneral.length && !state.v2InstitutionsTab.length);
+
+    function getInstitutionsPool() {
+      if (state.v2InstitutionsAll && state.v2InstitutionsAll.length) return state.v2InstitutionsAll;
+      if (state.v2InstitutionsGeneral && state.v2InstitutionsGeneral.length) return state.v2InstitutionsGeneral;
+      return state.v2InstitutionsTab || [];
+    }
 
     function renderMatches(q) {
       const query = (q || '').trim().toLowerCase();
-      let dataset = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab);
+      let dataset = getInstitutionsPool();
 
       if (isDataLoading && dataset.length === 0) {
         dropdown.innerHTML = `<div style="padding: 14px; color: rgba(255, 255, 255, 0.85); font-size: 13px; text-align: center;">Loading institution records...</div>`;
@@ -1890,12 +2054,14 @@
       });
     }
 
-    // Load institutions dataset immediately
-    if (!state.v2InstitutionsGeneral.length) {
+    // Load institutions dataset immediately (including v2_institutions_all.json for 100% coverage)
+    if (!state.v2InstitutionsAll.length) {
       Promise.all([
+        fetchJson('v2_institutions_all.json', '/api/v2/leaderboard/institutions?tier=all'),
         fetchJson('v2_institutions_general.json', '/api/v2/leaderboard/institutions?tier=general'),
         fetchJson('v2_institutions_tab.json', '/api/v2/leaderboard/institutions?tier=tab')
-      ]).then(([instGen, instTab]) => {
+      ]).then(([instAll, instGen, instTab]) => {
+        if (instAll) state.v2InstitutionsAll = instAll;
         if (instGen) state.v2InstitutionsGeneral = instGen;
         if (instTab) state.v2InstitutionsTab = instTab;
         isDataLoading = false;
@@ -1920,29 +2086,35 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.78); font-weight: 300;"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
 
       let bio = null;
-      try {
-        const res = await fetch(`${state.apiUrl}/api/v2/institutions/${encodeURIComponent(instName)}/bio`);
-        if (res.ok) {
-          bio = await res.json();
-          state.isServerOnline = true;
-        }
-      } catch (e) {}
+      if (!state.useGitHubRaw) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/institutions/${encodeURIComponent(instName)}/bio`, { signal: AbortSignal.timeout(2500) });
+          if (res.ok) {
+            bio = await res.json();
+            state.isServerOnline = true;
+          }
+        } catch (e) {}
+      }
 
       if (!bio) {
-        if (!state.v2InstitutionsGeneral.length && !state.v2InstitutionsTab.length) {
-          const [iGen, iTab] = await Promise.all([
+        if (!state.v2InstitutionsAll.length && !state.v2InstitutionsGeneral.length && !state.v2InstitutionsTab.length) {
+          const [iAll, iGen, iTab] = await Promise.all([
+            fetchJson('v2_institutions_all.json', '/api/v2/leaderboard/institutions?tier=all'),
             fetchJson('v2_institutions_general.json', '/api/v2/leaderboard/institutions?tier=general'),
             fetchJson('v2_institutions_tab.json', '/api/v2/leaderboard/institutions?tier=tab')
           ]);
+          if (iAll) state.v2InstitutionsAll = iAll;
           if (iGen) state.v2InstitutionsGeneral = iGen;
           if (iTab) state.v2InstitutionsTab = iTab;
         }
 
-        const found = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab).find(
-          (i) => i.institution_name.toLowerCase() === instName.toLowerCase() || i.institution_name.toLowerCase().includes(instName.toLowerCase())
-        );
+        const pool = getInstitutionsPool();
+        const qLower = instName.toLowerCase();
+        const found = pool.find((i) => (i.institution_name || '').toLowerCase() === qLower || (i.code || '').toLowerCase() === qLower) ||
+                      pool.find((i) => (i.institution_name || '').toLowerCase().includes(qLower));
         if (found) {
           bio = {
+            ...found,
             institution_name: found.institution_name,
             code: found.code,
             delta: found.delta,
@@ -1955,8 +2127,8 @@
             peak_elo: found.peak_elo || found.elo || 1500.0,
             teams_list: found.teams_list || [],
             pool_count: found.pool_count || 0,
-            veterans: [],
-            new_debaters: [],
+            veterans: found.veterans || [],
+            new_debaters: found.new_debaters || [],
           };
         }
       }
@@ -2100,11 +2272,16 @@
     const clearBtn = document.getElementById('judgeClearBtn');
     const container = document.getElementById('judgeProfileContainer');
 
-    let isDataLoading = (!state.v2Adjudicators || !state.v2Adjudicators.length);
+    let isDataLoading = (!state.v2AdjudicatorsAll.length && (!state.v2Adjudicators || !state.v2Adjudicators.length));
+
+    function getAdjudicatorsPool() {
+      if (state.v2AdjudicatorsAll && state.v2AdjudicatorsAll.length) return state.v2AdjudicatorsAll;
+      return state.v2Adjudicators || [];
+    }
 
     function renderMatches(q) {
       const query = (q || '').trim().toLowerCase();
-      let dataset = state.v2Adjudicators || [];
+      let dataset = getAdjudicatorsPool();
 
       if (isDataLoading && dataset.length === 0) {
         dropdown.innerHTML = `<div style="padding: 14px; color: rgba(255, 255, 255, 0.85); font-size: 13px; text-align: center;">Loading adjudicator records...</div>`;
@@ -2193,9 +2370,13 @@
       });
     }
 
-    // Load adjudicators dataset immediately
-    if (!state.v2Adjudicators || !state.v2Adjudicators.length) {
-      fetchJson('v2_adjudicators.json', '/api/v2/leaderboard/adjudicators').then((judges) => {
+    // Load adjudicators dataset immediately (including v2_adjudicators_all.json for 100% coverage)
+    if (!state.v2AdjudicatorsAll.length) {
+      Promise.all([
+        fetchJson('v2_adjudicators_all.json', '/api/v2/leaderboard/adjudicators?min_prelims=1'),
+        fetchJson('v2_adjudicators.json', '/api/v2/leaderboard/adjudicators')
+      ]).then(([judgesAll, judges]) => {
+        if (judgesAll) state.v2AdjudicatorsAll = judgesAll;
         if (judges) state.v2Adjudicators = judges;
         isDataLoading = false;
         if (input && input.value && document.activeElement === input) {
@@ -2219,22 +2400,29 @@
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.78); font-weight: 300;"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
 
       let bio = null;
-      try {
-        const res = await fetch(`${state.apiUrl}/api/v2/adjudicators/${encodeURIComponent(judgeName)}/bio`);
-        if (res.ok) {
-          bio = await res.json();
-          state.isServerOnline = true;
-        }
-      } catch (e) {}
+      if (!state.useGitHubRaw) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/v2/adjudicators/${encodeURIComponent(judgeName)}/bio`, { signal: AbortSignal.timeout(2500) });
+          if (res.ok) {
+            bio = await res.json();
+            state.isServerOnline = true;
+          }
+        } catch (e) {}
+      }
 
       if (!bio) {
-        if (!state.v2Adjudicators.length) {
-          const judges = await fetchJson('v2_adjudicators.json', '/api/v2/leaderboard/adjudicators');
+        if (!state.v2AdjudicatorsAll.length && !state.v2Adjudicators.length) {
+          const [judgesAll, judges] = await Promise.all([
+            fetchJson('v2_adjudicators_all.json', '/api/v2/leaderboard/adjudicators?min_prelims=1'),
+            fetchJson('v2_adjudicators.json', '/api/v2/leaderboard/adjudicators')
+          ]);
+          if (judgesAll) state.v2AdjudicatorsAll = judgesAll;
           if (judges) state.v2Adjudicators = judges;
         }
-        const found = state.v2Adjudicators.find(
-          (j) => j.adjudicator_name.toLowerCase() === judgeName.toLowerCase() || j.adjudicator_name.toLowerCase().includes(judgeName.toLowerCase())
-        );
+        const pool = getAdjudicatorsPool();
+        const qLower = judgeName.toLowerCase();
+        const found = pool.find((j) => (j.adjudicator_name || '').toLowerCase() === qLower) ||
+                      pool.find((j) => (j.adjudicator_name || '').toLowerCase().includes(qLower));
         if (found) bio = found;
       }
 
@@ -2400,14 +2588,20 @@
     const clearB = document.getElementById('h2hClearBtnB');
     const container = document.getElementById('h2hResultContainer');
 
-    let isDataLoading = (!state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length);
+    let isDataLoading = (!state.v2SpeakersAll.length && !state.v2SpeakersGeneral.length && !state.v2SpeakersTab.length);
+
+    function getSpeakersPool() {
+      if (state.v2SpeakersAll && state.v2SpeakersAll.length) return state.v2SpeakersAll;
+      if (state.v2SpeakersGeneral && state.v2SpeakersGeneral.length) return state.v2SpeakersGeneral;
+      return state.v2SpeakersTab || [];
+    }
 
     function setupH2HSearch(side, input, dropdown, clearBtn, badge) {
       if (!input || !dropdown) return;
 
       function renderMatches(q) {
         const query = (q || '').trim().toLowerCase();
-        let dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
+        let dataset = getSpeakersPool();
 
         if (isDataLoading && dataset.length === 0) {
           dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
@@ -2504,10 +2698,11 @@
       const urlParams = new URLSearchParams(window.location.search);
       const paramA = urlParams.get('a') || urlParams.get('contender1');
       const paramB = urlParams.get('b') || urlParams.get('contender2');
-      const dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
+      const dataset = getSpeakersPool();
 
       if (paramA) {
-        const matchA = dataset.find((s) => (s.name || s.speaker_name || '').toLowerCase() === paramA.toLowerCase());
+        const matchA = dataset.find((s) => (s.name || s.speaker_name || '').toLowerCase() === paramA.toLowerCase()) ||
+                       dataset.find((s) => (s.name || s.speaker_name || '').toLowerCase().includes(paramA.toLowerCase()));
         if (matchA) {
           selectedA = matchA;
           if (inputA) inputA.value = matchA.name || matchA.speaker_name;
@@ -2517,7 +2712,8 @@
       }
 
       if (paramB) {
-        const matchB = dataset.find((s) => (s.name || s.speaker_name || '').toLowerCase() === paramB.toLowerCase());
+        const matchB = dataset.find((s) => (s.name || s.speaker_name || '').toLowerCase() === paramB.toLowerCase()) ||
+                       dataset.find((s) => (s.name || s.speaker_name || '').toLowerCase().includes(paramB.toLowerCase()));
         if (matchB) {
           selectedB = matchB;
           if (inputB) inputB.value = matchB.name || matchB.speaker_name;
@@ -2533,14 +2729,18 @@
 
     applyUrlParams();
 
-    // Load speakers dataset immediately
-    if (!state.v2SpeakersGeneral.length) {
+    // Load speakers and H2H debate datasets immediately
+    if (!state.v2SpeakersAll.length || !state.v2H2HDebates.length) {
       Promise.all([
+        fetchJson('v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'),
         fetchJson('v2_speakers_general.json', '/api/v2/leaderboard/speakers?tier=general'),
-        fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab')
-      ]).then(([spkGen, spkTab]) => {
+        fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab'),
+        fetchJson('v2_h2h_debates.json', null)
+      ]).then(([spkAll, spkGen, spkTab, h2hDebates]) => {
+        if (spkAll) state.v2SpeakersAll = spkAll;
         if (spkGen) state.v2SpeakersGeneral = spkGen;
         if (spkTab) state.v2SpeakersTab = spkTab;
+        if (h2hDebates) state.v2H2HDebates = h2hDebates;
         isDataLoading = false;
         applyUrlParams();
       });
@@ -2563,50 +2763,97 @@
         return;
       }
 
+      const nameA = selectedA ? (selectedA.name || selectedA.speaker_name) : '';
+      const nameB = selectedB ? (selectedB.name || selectedB.speaker_name) : '';
+
       if (selectedA && !selectedB) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Contender 01 (${escapeHtml(selectedA.name)}) selected. Select Contender 02 above.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Contender 01 (${escapeHtml(nameA)}) selected. Select Contender 02 above.</div>`;
         return;
       }
 
       if (!selectedA && selectedB) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Contender 02 (${escapeHtml(selectedB.name)}) selected. Select Contender 01 above.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Contender 02 (${escapeHtml(nameB)}) selected. Select Contender 01 above.</div>`;
         return;
       }
 
-      if (selectedA.name.toLowerCase() === selectedB.name.toLowerCase()) {
+      if (nameA.toLowerCase() === nameB.toLowerCase()) {
         container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Please select two different debaters to compare.</div>`;
         return;
       }
 
       if (window.history.replaceState) {
-        window.history.replaceState(null, '', `${window.location.pathname}?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}`);
+        window.history.replaceState(null, '', `${window.location.pathname}?a=${encodeURIComponent(nameA)}&b=${encodeURIComponent(nameB)}`);
       }
 
       container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.78); font-weight: 300;"><div class="spinner"></div> Computing head-to-head clash...</div>`;
       trackEvent('view_h2h_matchup', {
-        contender_a: selectedA.name || selectedA.speaker_name,
-        contender_b: selectedB.name || selectedB.speaker_name,
+        contender_a: nameA,
+        contender_b: nameB,
       });
 
-      // Fetch live direct clashes and BRA from server if available
+      // Fetch live direct clashes and BRA from server if available, or resolve from v2_h2h_debates.json
       let directDebates = [];
       let aDirectWins = 0;
       let bDirectWins = 0;
       let braA = selectedA.bra !== undefined ? selectedA.bra : null;
       let braB = selectedB.bra !== undefined ? selectedB.bra : null;
+      let loadedFromServer = false;
 
-      try {
-        const res = await fetch(`${state.apiUrl}/api/h2h?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}&mode=debater`);
-        if (res.ok) {
-          const j = await res.json();
-          directDebates = j.direct_debates || [];
-          aDirectWins = j.a_direct_wins || 0;
-          bDirectWins = j.b_direct_wins || 0;
-          if (j.a_bra !== undefined) braA = j.a_bra;
-          if (j.b_bra !== undefined) braB = j.b_bra;
-          state.isServerOnline = true;
+      if (!state.useGitHubRaw) {
+        try {
+          const res = await fetch(`${state.apiUrl}/api/h2h?a=${encodeURIComponent(nameA)}&b=${encodeURIComponent(nameB)}&mode=debater`, { signal: AbortSignal.timeout(2500) });
+          if (res.ok) {
+            const j = await res.json();
+            directDebates = j.direct_debates || [];
+            aDirectWins = j.a_direct_wins || 0;
+            bDirectWins = j.b_direct_wins || 0;
+            if (j.a_bra !== undefined) braA = j.a_bra;
+            if (j.b_bra !== undefined) braB = j.b_bra;
+            state.isServerOnline = true;
+            loadedFromServer = true;
+          }
+        } catch (e) {}
+      }
+
+      // Resolve direct clashes from precomputed/GitHub v2_h2h_debates.json when server isn't used
+      if (!loadedFromServer) {
+        if (!state.v2H2HDebates || !state.v2H2HDebates.length) {
+          const h2hData = await fetchJson('v2_h2h_debates.json', null);
+          if (h2hData) state.v2H2HDebates = h2hData;
         }
-      } catch (e) {}
+        const aLower = nameA.toLowerCase();
+        const bLower = nameB.toLowerCase();
+        for (const d of (state.v2H2HDebates || [])) {
+          const propSpk = (d.prop_speakers || []).map((s) => ((typeof s === 'string' ? s : s.name) || '').toLowerCase());
+          const oppSpk = (d.opp_speakers || []).map((s) => ((typeof s === 'string' ? s : s.name) || '').toLowerCase());
+          const aInProp = propSpk.includes(aLower);
+          const aInOpp = oppSpk.includes(aLower);
+          const bInProp = propSpk.includes(bLower);
+          const bInOpp = oppSpk.includes(bLower);
+
+          if ((aInProp && bInOpp) || (aInOpp && bInProp)) {
+            const sideA = aInProp ? 'PROPOSITION' : 'OPPOSITION';
+            const sideB = bInProp ? 'PROPOSITION' : 'OPPOSITION';
+            const teamA = aInProp ? d.prop_team : d.opp_team;
+            const teamB = bInProp ? d.prop_team : d.opp_team;
+            const winSideNorm = (d.winner_side || '').toUpperCase();
+            const aWon = winSideNorm === sideA || (aInProp && winSideNorm.startsWith('PROP')) || (aInOpp && winSideNorm.startsWith('OPP'));
+            if (aWon) aDirectWins++;
+            else if (winSideNorm === sideB || (bInProp && winSideNorm.startsWith('PROP')) || (bInOpp && winSideNorm.startsWith('OPP'))) bDirectWins++;
+            directDebates.push({
+              debate_id: d.debate_id,
+              tournament_name: d.tournament_name,
+              round_name: d.round_name,
+              round_type: d.round_type,
+              side_a: aInProp ? 'Proposition' : 'Opposition',
+              side_b: bInProp ? 'Proposition' : 'Opposition',
+              team_a: teamA,
+              team_b: teamB,
+              a_won: aWon,
+            });
+          }
+        }
+      }
 
       // Achievement ranking hierarchy
       const achOrder = {
@@ -2681,9 +2928,9 @@
 
       let bannerTitle = '';
       if (scoreA > scoreB) {
-        bannerTitle = `${escapeHtml(selectedA.name)} Leads ${scoreA} – ${scoreB}`;
+        bannerTitle = `${escapeHtml(nameA)} Leads ${scoreA} – ${scoreB}`;
       } else if (scoreB > scoreA) {
-        bannerTitle = `${escapeHtml(selectedB.name)} Leads ${scoreB} – ${scoreA}`;
+        bannerTitle = `${escapeHtml(nameB)} Leads ${scoreB} – ${scoreA}`;
       } else {
         bannerTitle = `Even Clash Tied ${scoreA} – ${scoreB}`;
       }
@@ -2701,10 +2948,10 @@
         return { a: (valA / tot) * 100, b: (valB / tot) * 100 };
       }
 
-      function badge(w) {
+      function badge(w, noneText = 'No Breaks') {
         if (w === 'A') return `<span class="h2h-cat-badge badge-a">Contender 01</span>`;
         if (w === 'B') return `<span class="h2h-cat-badge badge-b">Contender 02</span>`;
-        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">No Breaks</span>`;
+        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">${escapeHtml(noneText)}</span>`;
         return `<span class="h2h-cat-badge badge-tie">Tie</span>`;
       }
 
@@ -2792,7 +3039,7 @@
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">04 // Break Rank Avg (BRA)</span>
-                ${badge(w3)}
+                ${badge(w3, 'No Breaks')}
               </div>
               <div class="h2h-cat-bar">
                 <div class="h2h-cat-bar-a" style="width: ${b3.a}%;"></div>
@@ -2844,7 +3091,7 @@
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
                 <span class="h2h-cat-title">07 // Direct Tournament Clashes</span>
-                ${badge(w6)}
+                ${badge(w6, 'No Clashes')}
               </div>
               <div class="h2h-cat-bar">
                 <div class="h2h-cat-bar-a" style="width: ${b6.a}%;"></div>
@@ -2867,13 +3114,13 @@
                 <div class="h2h-matchup-header">
                   <span class="h2h-matchup-tour">${escapeHtml(m.tournament_name)} · ${escapeHtml(m.round_name)}</span>
                   <span class="h2h-matchup-outcome">
-                    ${m.a_won ? escapeHtml(selectedA.name) + ' Won' : escapeHtml(selectedB.name) + ' Won'}
+                    ${m.a_won ? escapeHtml(nameA) + ' Won' : escapeHtml(nameB) + ' Won'}
                   </span>
                 </div>
                 <div class="h2h-matchup-body">
-                  <div class="h2h-matchup-team">${escapeHtml(m.team_a)} (${m.side_a})</div>
+                  <div class="h2h-matchup-team">${escapeHtml(m.team_a || m.team_a_name)} (${m.side_a})</div>
                   <div style="font-family: var(--font-mono); font-size: 11px; color: rgba(255, 255, 255, 0.72);">vs</div>
-                  <div class="h2h-matchup-team" style="text-align: right;">${escapeHtml(m.team_b)} (${m.side_b})</div>
+                  <div class="h2h-matchup-team" style="text-align: right;">${escapeHtml(m.team_b || m.team_b_name)} (${m.side_b})</div>
                 </div>
               </div>
             `).join('')}
@@ -3029,6 +3276,107 @@
     }
   }
 
+  async function answerChatFromGitHubData(promptText) {
+    const q = (promptText || '').trim().toLowerCase();
+    const [sum, spkAll, spkTab, teamsAll, instAll, tourneys, adjAll, pool] = await Promise.all([
+      state.circuitSummary || fetchJson('circuit_summary.json', '/api/circuit'),
+      state.v2SpeakersAll.length ? state.v2SpeakersAll : fetchJson('v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'),
+      state.v2SpeakersTab.length ? state.v2SpeakersTab : fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab'),
+      state.v2TeamsAll.length ? state.v2TeamsAll : fetchJson('v2_teams_all.json', '/api/v2/leaderboard/teams?tier=all'),
+      state.v2InstitutionsAll.length ? state.v2InstitutionsAll : fetchJson('v2_institutions_all.json', '/api/v2/leaderboard/institutions?tier=all'),
+      state.v2Tournaments.length ? state.v2Tournaments : fetchJson('v2_tournaments.json', '/api/v2/leaderboard/tournaments'),
+      state.v2AdjudicatorsAll.length ? state.v2AdjudicatorsAll : fetchJson('v2_adjudicators_all.json', '/api/v2/leaderboard/adjudicators?min_prelims=1'),
+      state.v2NationalPool || fetchJson('v2_national_pool.json', '/api/v2/pool'),
+    ]);
+
+    if (sum) state.circuitSummary = sum;
+    if (spkAll) state.v2SpeakersAll = spkAll;
+    if (spkTab) state.v2SpeakersTab = spkTab;
+    if (teamsAll) state.v2TeamsAll = teamsAll;
+    if (instAll) state.v2InstitutionsAll = instAll;
+    if (tourneys) state.v2Tournaments = tourneys;
+    if (adjAll) state.v2AdjudicatorsAll = adjAll;
+    if (pool) state.v2NationalPool = pool;
+
+    // 1. Check if query mentions a specific debater
+    const matchedSpeaker = (spkAll || []).find((s) => q.includes((s.name || s.speaker_name || '').toLowerCase()));
+    if (matchedSpeaker) {
+      const pos = matchedSpeaker.position_averages || {};
+      const p1 = pos['1st'] && pos['1st'].average ? fmt(pos['1st'].average, 2) : '—';
+      const p2 = pos['2nd'] && pos['2nd'].average ? fmt(pos['2nd'].average, 2) : '—';
+      const p3 = pos['3rd'] && pos['3rd'].average ? fmt(pos['3rd'].average, 2) : '—';
+      return [
+        `### ${matchedSpeaker.name} (${matchedSpeaker.institution})`,
+        `- **Speaker Average:** ${fmt(matchedSpeaker.speaker_score, 2)} pts (${matchedSpeaker.prelims_debated} prelims across ${matchedSpeaker.tournaments_debated} tournaments)`,
+        `- **Debater Elo:** ${fmt(matchedSpeaker.elo || 1500, 1)} (Peak: ${fmt(matchedSpeaker.peak_elo || matchedSpeaker.elo || 1500, 1)})`,
+        `- **Win Rate:** ${fmt(matchedSpeaker.win_percentage, 1)}% · **StDev:** ${fmt(matchedSpeaker.stdev, 2)}`,
+        `- **Highest Achievement:** ${matchedSpeaker.highest_achievement || 'Preliminary Rounds'} · **National Status:** ${matchedSpeaker.national_level || '—'}`,
+        `- **Position Averages:** 1st: ${p1} · 2nd: ${p2} · 3rd: ${p3}`,
+      ].join('\n');
+    }
+
+    // 2. Check if query mentions a specific team
+    const matchedTeam = (teamsAll || []).find((t) => q.includes((t.team_name || '').toLowerCase()));
+    if (matchedTeam) {
+      return [
+        `### ${matchedTeam.team_name} (${matchedTeam.institution})`,
+        `- **ATSS:** ${fmt(matchedTeam.atss, 2)} pts · **Team Elo:** ${fmt(matchedTeam.elo || 1500, 1)} (Peak: ${fmt(matchedTeam.peak_elo || matchedTeam.elo || 1500, 1)})`,
+        `- **Win Rate:** ${fmt(matchedTeam.win_percentage, 1)}% (${matchedTeam.prelims_debated} prelims across ${matchedTeam.tournaments_debated} tournaments)`,
+        `- **Highest Break:** ${matchedTeam.highest_achievement || 'Preliminary Rounds'} · **AWPT:** ${fmt(matchedTeam.awpt, 2)}`,
+      ].join('\n');
+    }
+
+    // 3. Check if query mentions a specific institution
+    const matchedInst = (instAll || []).find((i) => q.includes((i.institution_name || '').toLowerCase()));
+    if (matchedInst) {
+      return [
+        `### ${matchedInst.institution_name}`,
+        `- **Delta:** ${fmt(matchedInst.delta, 2)} · **Institution Elo:** ${fmt(matchedInst.elo || 1500, 1)}`,
+        `- **A Team (${matchedInst.a_team_name || '—'}):** ${fmt(matchedInst.a_atss, 2)} ATSS · **B Team (${matchedInst.b_team_name || '—'}):** ${matchedInst.b_atss ? fmt(matchedInst.b_atss, 2) + ' ATSS' : '—'}`,
+        `- **Win Rate:** ${fmt(matchedInst.win_percentage, 1)}% · **Debater Pool:** ${matchedInst.pool_count} debaters (${(matchedInst.veterans || []).length} veterans, ${(matchedInst.new_debaters || []).length} new)`,
+      ].join('\n');
+    }
+
+    // 4. Top speakers / teams / institutions queries
+    if (q.includes('team')) {
+      const topTeams = (teamsAll || []).filter((t) => t.tournaments_debated >= 3).slice(0, 5);
+      return [
+        `### Top 5 Circuit Teams (Tab Qualified)`,
+        `| Rank | Team | Institution | ATSS | Elo | Win % |`,
+        `| --- | --- | --- | --- | --- | --- |`,
+        ...topTeams.map((t, idx) => `| ${idx + 1} | ${t.team_name} | ${t.institution} | ${fmt(t.atss, 2)} | ${fmt(t.elo || 1500, 1)} | ${fmt(t.win_percentage, 1)}% |`),
+      ].join('\n');
+    }
+
+    if (q.includes('school') || q.includes('institution') || q.includes('delta')) {
+      const topInst = (instAll || []).filter((i) => i.tournaments_debated >= 3).slice(0, 5);
+      return [
+        `### Top 5 Circuit Institutions (by Delta)`,
+        `| Rank | Institution | Delta | Elo | A ATSS | B ATSS |`,
+        `| --- | --- | --- | --- | --- | --- |`,
+        ...topInst.map((i, idx) => `| ${idx + 1} | ${i.institution_name} | ${fmt(i.delta, 2)} | ${fmt(i.elo || 1500, 1)} | ${fmt(i.a_atss, 2)} | ${i.b_atss ? fmt(i.b_atss, 2) : '—'} |`),
+      ].join('\n');
+    }
+
+    if (q.includes('judge') || q.includes('adjudicator')) {
+      const topAdj = (adjAll || []).filter((j) => j.prelims_adjudicated >= 4).slice(0, 5);
+      return [
+        `### Top 5 Circuit Adjudicators`,
+        `| Rank | Adjudicator | Prelims | AASS | AATSS | Prop / Opp Split |`,
+        `| --- | --- | --- | --- | --- | --- |`,
+        ...topAdj.map((j, idx) => `| ${idx + 1} | ${j.adjudicator_name} | ${j.prelims_adjudicated} | ${fmt(j.aass, 2)} | ${fmt(j.aatss, 2)} | ${fmt(j.prop_bias_pct, 1)}% P / ${fmt(j.opp_bias_pct, 1)}% O |`),
+      ].join('\n');
+    }
+
+    const topSpk = (spkTab || []).slice(0, 5);
+    return [
+      `### Sri Lankan Debate Circuit Overview (${sum ? sum.total_tournaments : 10} Tournaments · ${sum ? sum.total_debates_debated : 1096} Debates)`,
+      `| Rank | Debater | Institution | Avg Score | Elo | Win % |`,
+      `| --- | --- | --- | --- | --- | --- |`,
+      ...topSpk.map((s, idx) => `| ${idx + 1} | ${s.name} | ${s.institution} | ${fmt(s.speaker_score, 2)} | ${fmt(s.elo || 1500, 1)} | ${fmt(s.win_percentage, 1)}% |`),
+    ].join('\n');
+  }
+
   async function sendChatPrompt(promptText) {
     const messages = document.getElementById('chatMessages');
     const input = document.getElementById('chatInput');
@@ -3055,6 +3403,7 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: promptText, session_id: sid }),
+        signal: AbortSignal.timeout(8000),
       });
 
       if (res.ok) {
@@ -3064,22 +3413,18 @@
           botMsg.innerHTML = formatMarkdownToHtml(answer);
           messages.scrollTop = messages.scrollHeight;
           return;
-        } else if (data.error) {
-          botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Engine Notice: ${escapeHtml(data.error)}</div>`;
-          messages.scrollTop = messages.scrollHeight;
-          return;
         }
-      } else {
-        const errData = await res.json().catch(() => ({}));
-        const errMsg = errData.error || `Server responded with status ${res.status}`;
-        botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Server Error: ${escapeHtml(errMsg)}</div>`;
-        messages.scrollTop = messages.scrollHeight;
-        return;
       }
-    } catch (e) {
-      botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Unable to communicate with the Atomos AI server at ${escapeHtml(state.apiUrl)}.</div>`;
+    } catch (e) {}
+
+    // Fallback to GitHub-synced client analytical engine when live backend is offline
+    try {
+      const fallbackMd = await answerChatFromGitHubData(promptText);
+      botMsg.innerHTML = formatMarkdownToHtml(fallbackMd);
       messages.scrollTop = messages.scrollHeight;
-      return;
+    } catch (err) {
+      botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Unable to process circuit query.</div>`;
+      messages.scrollTop = messages.scrollHeight;
     }
   }
 
