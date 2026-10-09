@@ -13,7 +13,7 @@ Designed for:
 from collections import defaultdict
 import dataclasses
 import sqlite3
-from typing import Any, Dict, List, Optional, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from atomos.database.connection import get_connection
 from atomos.analytics.critical_stats import CriticalStatsEngine

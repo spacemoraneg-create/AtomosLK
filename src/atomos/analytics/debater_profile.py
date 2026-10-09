@@ -10,7 +10,7 @@ from collections import defaultdict
 from dataclasses import dataclass, field
 import math
 import sqlite3
-from typing import Dict, List, Optional, Tuple, Union
+from typing import Any, Dict, List, Optional, Tuple, Union
 
 from atomos.analytics.critical_stats import CriticalStatsEngine
 from atomos.analytics.master_tabs import MasterTabEngine
