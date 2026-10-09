@@ -393,7 +393,7 @@
   }
 
   // ==========================================================================
-  // 1. HOME PAGE LOGIC (Multi Purpose Leaderboard - Min 12 Rounds)
+  // 1. HOME PAGE LOGIC (Multi Purpose Leaderboard - Min 18 Rounds)
   // ==========================================================================
   function initHomePage() {
     updateVitals(state.circuitSummary);
@@ -653,7 +653,7 @@
     function updateTierBadge() {
       if (!tierBadge) return;
       if (activeCategory === 'individual') {
-        tierBadge.textContent = activeTier === 'tab' ? '01 // Tab Qualification (Min 12 Rounds)' : '01 // General Tab (Min 5 Rounds)';
+        tierBadge.textContent = activeTier === 'tab' ? '01 // Tab Qualification (Min 18 Rounds)' : '01 // General Tab (Min 5 Rounds)';
       } else if (activeCategory === 'teams') {
         tierBadge.textContent = activeTier === 'tab' ? '01 // Tab Qualification (Min 3 Tournaments)' : '01 // General Tab (Min 2 Tournaments)';
       } else if (activeCategory === 'institutions') {

@@ -351,9 +351,9 @@ class V2MetricsEngine:
         """
         Compute multi-purpose debater rankings.
         tier:
-          - 'tab' (Default): >= 12 rounds debated
+          - 'tab' (Default): >= 18 rounds debated
           - 'general': >= 5 rounds debated
-          - 'homepage': >= 12 rounds debated
+          - 'homepage': >= 18 rounds debated
           - 'all': >= 1 round debated
         sort_by:
           - 'speaker_score' (Default): Mean of all substantive speeches
@@ -363,7 +363,7 @@ class V2MetricsEngine:
           - 'nat_status': Nat Pool Direct -> Nat Pool Trialed -> Trials -> None
         """
         if tier in ("tab", "homepage"):
-            min_rounds = 12
+            min_rounds = 18
         elif tier == "general":
             min_rounds = 5
         else:

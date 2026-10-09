@@ -284,7 +284,7 @@ class DebaterProfileEngine:
         inst_rows = cur.fetchall()
         institution = ", ".join([r[0] for r in inst_rows if r[0]]) if inst_rows else "Independent / Composite"
 
-        # 4. Official V2 Leaderboard Rankings (Tab tier: >= 12 rounds; General tier: >= 5 rounds)
+        # 4. Official V2 Leaderboard Rankings (Tab tier: >= 18 rounds; General tier: >= 5 rounds)
         from atomos.analytics.v2_metrics import V2MetricsEngine
         v2_eng = V2MetricsEngine(self.conn)
         tab_speakers = v2_eng.get_multipurpose_speakers(tier="tab")
@@ -305,7 +305,7 @@ class DebaterProfileEngine:
         speech_average = mt_entry["speech_average"] if mt_entry else None
         avg_of_avgs = mt_entry["avg_of_avgs"] if mt_entry else None
 
-        # Sourced official tab rank (or general tab rank if < 12 rounds, fallback to mtab rank)
+        # Sourced official tab rank (or general tab rank if < 18 rounds, fallback to mtab rank)
         master_tab_rank = tab_rank or general_tab_rank or (mt_entry["rank"] if mt_entry else None)
         mt_total = len(tab_speakers) if tab_speakers else (len(mtab) if mtab else 0)
         cs_total = len(cstats)

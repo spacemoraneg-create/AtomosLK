@@ -14,7 +14,7 @@ the metrics should include. Speaker Score, Win %, Stdev, Prelim Debated, Nat sta
 *Stdev = Standard deviation = Deviation of either Debater speaker score or Team speaker score, consistency withen tournament = combine all speeches and see the devation
 *Nat status = Nat direct 1st, Nat Trialed 2nd, Trialed 3rd (because it's 3 groups, withen groups use speaker score to rank)
 *When pressed name, should be taken to Debater bio (new name of Bio engine)
-*Eligibility rules (12 rounds DEBATED minimum.)
+*Eligibility rules (18 rounds DEBATED minimum.)
 
 ((Leaderboard))
 
@@ -39,7 +39,7 @@ the metrics should include. Speaker Score, Win %, Stdev, Prelim Debated, Nat sta
 --Tab&General Tab
 
 *General Tab (5 round debated minimum)
-*Tab (Shall be the default when loaded, 12 Round debated minimum)
+*Tab (Shall be the default when loaded, 18 Round debated minimum)
 
 2.Leaderboard (Team)
 

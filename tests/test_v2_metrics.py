@@ -4,7 +4,7 @@ Atomos V2 Mathematical and Functional Regression Suite
 Verifies all requirements from Atomos V2 Upgrade READ_ME.txt:
 1. Universal Speaker Score Law (Substantive mean only, replies strictly excluded).
 2. Sample standard deviation calculation.
-3. Multi-Purpose Speaker Leaderboard (Tab >= 12 rds, General >= 5 rds, 5 switchable metrics).
+3. Multi-Purpose Speaker Leaderboard (Tab >= 18 rds, General >= 5 rds, 5 switchable metrics).
 4. Multi-Purpose Team Leaderboard (Tab >= 3 tourneys, General >= 2 tourneys, 4 metrics).
 5. Team Bio & Lineup Analytics (Top 5 Win % and Top 5 ATSS 3-speaker combinations).
 6. Multi-Purpose Institution Leaderboard (New Delta formula (0.8*A + 1.2*B)/2, Net Diff, Pool).
@@ -68,11 +68,11 @@ class TestV2UniversalLaw:
 class TestV2SpeakerLeaderboards:
     """Multi-Purpose Speaker Leaderboard: Tab vs General Tab."""
 
-    def test_speaker_tab_minimum_12_rounds(self, v2):
+    def test_speaker_tab_minimum_18_rounds(self, v2):
         tab = v2.get_multipurpose_speakers(tier="tab", sort_by="speaker_score")
         assert len(tab) > 0
         for s in tab:
-            assert s["prelims_debated"] >= 12
+            assert s["prelims_debated"] >= 18
 
     def test_speaker_general_minimum_5_rounds(self, v2):
         gen = v2.get_multipurpose_speakers(tier="general", sort_by="speaker_score")
