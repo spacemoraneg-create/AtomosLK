@@ -153,9 +153,6 @@
   function syncWithGitHubManifest() {
     if (manifestCheckPromise) return manifestCheckPromise;
     manifestCheckPromise = (async () => {
-      let localManifest = null;
-      let githubManifest = null;
-
       const fetchLocalManifest = async () => {
         try {
           let r = await fetch(`data/web_export/export_manifest.json`, { cache: 'no-cache' });
@@ -169,37 +166,45 @@
         try {
           const r = await fetch(`${GITHUB_RAW_BASE}/export_manifest.json?t=${Math.floor(Date.now() / 30000)}`, {
             cache: 'no-cache',
-            signal: AbortSignal.timeout(2200),
+            signal: AbortSignal.timeout(1800),
           });
           if (r.ok) return await r.json();
         } catch (e) {}
         return null;
       };
 
-      [localManifest, githubManifest] = await Promise.all([fetchLocalManifest(), fetchGitHubManifest()]);
-
-      const localVer = localManifest && localManifest.version ? Number(localManifest.version) : 0;
-      const ghVer = githubManifest && githubManifest.version ? Number(githubManifest.version) : 0;
-
-      if (ghVer > localVer) {
-        state.useGitHubRaw = true;
-        state.manifestVersion = ghVer;
-      } else if (localVer > 0) {
-        state.useGitHubRaw = false;
-        state.manifestVersion = localVer;
-      } else if (ghVer > 0) {
-        state.useGitHubRaw = true;
-        state.manifestVersion = ghVer;
-      }
-
-      if (state.manifestVersion) {
+      const applyVersion = (ver, useGh) => {
+        if (!ver) return;
+        state.useGitHubRaw = Boolean(useGh);
+        state.manifestVersion = ver;
         try {
           const cachedVer = Number(sessionStorage.getItem('atomos_manifest_version') || '0');
-          if (cachedVer !== state.manifestVersion) {
+          if (cachedVer !== ver) {
             clearClientDataCache();
-            sessionStorage.setItem('atomos_manifest_version', String(state.manifestVersion));
+            sessionStorage.setItem('atomos_manifest_version', String(ver));
           }
         } catch (e) {}
+      };
+
+      const ghPromise = fetchGitHubManifest();
+      const localManifest = await fetchLocalManifest();
+      const localVer = localManifest && localManifest.version ? Number(localManifest.version) : 0;
+
+      if (localVer > 0) {
+        applyVersion(localVer, false);
+        // Check GitHub Raw in background in case a newer commit was pushed remotely
+        ghPromise.then((ghManifest) => {
+          const ghVer = ghManifest && ghManifest.version ? Number(ghManifest.version) : 0;
+          if (ghVer > localVer) {
+            applyVersion(ghVer, true);
+          }
+        });
+      } else {
+        const ghManifest = await ghPromise;
+        const ghVer = ghManifest && ghManifest.version ? Number(ghManifest.version) : 0;
+        if (ghVer > 0) {
+          applyVersion(ghVer, true);
+        }
       }
     })();
     return manifestCheckPromise;
