@@ -56,7 +56,7 @@
 
   // Helper: National Status Tag HTML
   function getNatStatusTag(level) {
-    if (!level || level === '-' || level === 'null') return '<span class="nat-tag nat-none">-</span>';
+    if (!level || level === '-' || level === 'null') return '<span class="nat-tag nat-none">—</span>';
     const l = level.toLowerCase();
     if (l.includes('direct')) {
       return '<span class="nat-tag nat-direct">Nat Pool, Direct</span>';
@@ -68,18 +68,19 @@
     return `<span class="nat-tag nat-trials">${escapeHtml(level)}</span>`;
   }
 
-  // Helper: Rank Badge HTML
+  // Helper: Rank Badge HTML (Zero-padded 2-digit editorial rank)
   function getRankBadge(rank) {
     let cls = 'rank-badge';
     if (rank === 1) cls += ' rank-1';
     else if (rank === 2) cls += ' rank-2';
     else if (rank === 3) cls += ' rank-3';
-    return `<span class="${cls}">${rank}</span>`;
+    const padded = String(rank).padStart(2, '0');
+    return `<span class="${cls}">${padded}</span>`;
   }
 
   // Helper: Break Position Tag HTML
   function getBreakBadge(pos) {
-    if (!pos || pos === '-' || pos === 'Preliminary Rounds') return '<span class="break-tag break-none">-</span>';
+    if (!pos || pos === '-' || pos === 'Preliminary Rounds') return '<span class="break-tag break-none">—</span>';
     const p = pos.trim().toLowerCase();
     if (p === 'champion') {
       return '<span class="break-tag break-champion">Champion</span>';
@@ -359,7 +360,7 @@
       }
 
       if (list.length === 0) {
-        tbody.innerHTML = `<tr><td colspan="10" style="text-align: center; padding: 24px; color: #cbe6f4;">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
+        tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; padding: 28px; color: rgba(255, 255, 255, 0.72);">No debaters found matching "${escapeHtml(searchQuery)}".</td></tr>`;
         return;
       }
 
@@ -367,19 +368,18 @@
         const debaterName = s.speaker_name || s.name || '';
         return `
           <tr>
-            <td style="text-align: center;">${getRankBadge(s._trueRank)}</td>
+            <td>${getRankBadge(s._trueRank)}</td>
             <td>
               <a class="table-link" href="bio.html?debater=${encodeURIComponent(debaterName)}">${escapeHtml(debaterName)}</a>
             </td>
             <td>
               <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
             </td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'speaker_score' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(s.elo || 1500, 1)}</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'stdev' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.stdev, 2)}</td>
-            <td style="text-align: right; font-family: var(--font-mono); font-weight: ${currentMetric === 'prelims_debated' ? '800; color: #afd4e6;' : '600;'}">${s.prelims_debated}</td>
-            <td style="text-align: right; font-family: var(--font-mono); color: #cbe6f4;">${s.tournaments_debated}</td>
+            <td class="num-col" style="font-weight: ${currentMetric === 'speaker_score' ? '500' : '300'};">${fmt(s.speaker_score, 2)}</td>
+            <td class="num-col" style="font-weight: ${currentMetric === 'elo' ? '500' : '300'};">${fmt(s.elo || 1500, 1)}</td>
+            <td class="num-col" style="font-weight: ${currentMetric === 'win_percentage' ? '500' : '300'};">${fmt(s.win_percentage, 1)}%</td>
+            <td class="num-col" style="font-weight: ${currentMetric === 'stdev' ? '500' : '300'};">${fmt(s.stdev, 2)}</td>
+            <td class="num-col" style="font-weight: ${currentMetric === 'prelims_debated' ? '500' : '300'};">${s.prelims_debated}</td>
             <td>${getNatStatusTag(s.national_level)}</td>
           </tr>
         `;
@@ -415,7 +415,7 @@
     const k = document.getElementById('vitalKnockouts');
 
     if (t) t.textContent = data && data.total_tournaments ? String(data.total_tournaments) : '10';
-    if (d) d.textContent = data && data.total_persons ? Number(data.total_persons).toLocaleString() : '843';
+    if (d) d.textContent = data && data.total_persons ? Number(data.total_persons).toLocaleString() : '831';
     if (s) {
       const speechCount = (data && data.total_speeches) ? data.total_speeches : (data && data.total_valid_speeches ? data.total_valid_speeches : 8034);
       s.textContent = Number(speechCount).toLocaleString();
@@ -528,15 +528,15 @@
     function updateTierBadge() {
       if (!tierBadge) return;
       if (activeCategory === 'individual') {
-        tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 12 ROUNDS' : 'GENERAL TAB // MIN 5 ROUNDS';
+        tierBadge.textContent = activeTier === 'tab' ? '01 // Tab Qualification (Min 12 Rounds)' : '01 // General Tab (Min 5 Rounds)';
       } else if (activeCategory === 'teams') {
-        tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 3 TOURNAMENTS' : 'GENERAL TAB // MIN 2 TOURNAMENTS';
+        tierBadge.textContent = activeTier === 'tab' ? '01 // Tab Qualification (Min 3 Tournaments)' : '01 // General Tab (Min 2 Tournaments)';
       } else if (activeCategory === 'institutions') {
-        tierBadge.textContent = activeTier === 'tab' ? 'TAB // MIN 3 TOURNAMENTS' : 'GENERAL TAB // MIN 2 TOURNAMENTS';
+        tierBadge.textContent = activeTier === 'tab' ? '01 // Tab Qualification (Min 3 Tournaments)' : '01 // General Tab (Min 2 Tournaments)';
       } else if (activeCategory === 'tournaments') {
-        tierBadge.textContent = 'TAB // 10 CIRCUIT TOURNAMENTS';
+        tierBadge.textContent = '01 // Circuit Tournaments';
       } else if (activeCategory === 'adjudicators') {
-        tierBadge.textContent = 'TAB // CIRCUIT ADJUDICATORS';
+        tierBadge.textContent = '01 // Circuit Adjudicators';
       }
     }
 
@@ -547,24 +547,24 @@
       if (activeCategory === 'individual') {
         pills = [
           { id: 'speaker_score', label: 'Speaker Score' },
-          { id: 'elo', label: 'ELO' },
+          { id: 'elo', label: 'Elo' },
           { id: 'win_percentage', label: 'Win %' },
-          { id: 'prelims_debated', label: 'Prelims Debated' },
-          { id: 'stdev', label: 'Stdev' },
+          { id: 'prelims_debated', label: 'Prelims' },
+          { id: 'stdev', label: 'StDev' },
           { id: 'national_level', label: 'Nat Status' },
         ];
       } else if (activeCategory === 'teams') {
         pills = [
           { id: 'atss', label: 'ATSS' },
-          { id: 'elo', label: 'ELO' },
+          { id: 'elo', label: 'Elo' },
           { id: 'win_percentage', label: 'Win %' },
           { id: 'awpt', label: 'AWPT (Wins / Tour)' },
-          { id: 'achievement', label: 'Highest Achievement' },
+          { id: 'achievement', label: 'Highest Break' },
         ];
       } else if (activeCategory === 'institutions') {
         pills = [
           { id: 'delta', label: 'Delta' },
-          { id: 'elo', label: 'ELO' },
+          { id: 'elo', label: 'Elo' },
           { id: 'a_atss', label: 'A Team ATSS' },
           { id: 'b_atss', label: 'B Team ATSS' },
           { id: 'net_diff', label: 'Net Diff' },
@@ -574,7 +574,7 @@
       } else if (activeCategory === 'tournaments') {
         pills = [
           { id: 'atss', label: 'ATSS' },
-          { id: 'brk_atss', label: 'BRK ATSS' },
+          { id: 'brk_atss', label: 'Break ATSS' },
           { id: 'institutions', label: 'Institutions' },
           { id: 'teams', label: 'Teams' },
           { id: 'rounds', label: 'Prelims + Knockouts' },
@@ -584,7 +584,7 @@
       } else if (activeCategory === 'adjudicators') {
         pills = [
           { id: 'debates', label: 'Prelims Judged' },
-          { id: 'aass', label: 'AASS (Substantive Mean)' },
+          { id: 'aass', label: 'AASS (Speak Avg)' },
           { id: 'aatss', label: 'AATSS (Team Avg)' },
           { id: 'tournaments', label: 'Tournaments' },
         ];
@@ -592,7 +592,7 @@
 
       metricToolbar.innerHTML = `
         <div class="metric-pills-bar">
-          <span style="font-family: var(--font-mono); font-size: 11px; color: #cbe6f4; margin-right: 4px;">RANK BY:</span>
+          <span style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: rgba(255, 255, 255, 0.68); margin-right: 6px;">Sort by</span>
           ${pills.map((p) => `
             <button class="metric-pill-btn${p.id === activeMetric ? ' active' : ''}" data-metric="${p.id}">
               ${p.label}
@@ -682,7 +682,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">No debaters match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.72);">No debaters match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -691,16 +691,16 @@
           <table class="atomos-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">#</th>
-                <th>SPEAKER</th>
-                <th>INSTITUTION</th>
-                <th style="text-align: right;">SPEAKER SCORE</th>
-                <th style="text-align: right;">ELO</th>
-                <th style="text-align: right;">WIN %</th>
-                <th style="text-align: right;">STDEV</th>
-                <th style="text-align: right;">PRELIMS</th>
-                <th style="text-align: right;">TOURNAMENTS</th>
-                <th>NAT STATUS</th>
+                <th style="width: 56px;">#</th>
+                <th>Speaker</th>
+                <th>Institution</th>
+                <th class="num-col">Avg Score</th>
+                <th class="num-col">Elo</th>
+                <th class="num-col">Win %</th>
+                <th class="num-col">StDev</th>
+                <th class="num-col">Prelims</th>
+                <th class="num-col">Tournaments</th>
+                <th>Nat Status</th>
               </tr>
             </thead>
             <tbody>
@@ -708,19 +708,19 @@
                 const debaterName = s.speaker_name || s.name || '';
                 return `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(s._trueRank)}</td>
+                  <td>${getRankBadge(s._trueRank)}</td>
                   <td>
                     <a class="table-link" href="bio.html?debater=${encodeURIComponent(debaterName)}">${escapeHtml(debaterName)}</a>
                   </td>
                   <td>
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(s.institution)}">${escapeHtml(s.institution)}</a>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'speaker_score' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.speaker_score, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(s.elo || 1500, 1)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.win_percentage, 1)}%</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'stdev' ? '800; color: #afd4e6;' : '600;'}">${fmt(s.stdev, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'prelims_debated' ? '800; color: #afd4e6;' : '600;'}">${s.prelims_debated}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #cbe6f4;">${s.tournaments_debated}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'speaker_score' ? '500' : '300'};">${fmt(s.speaker_score, 2)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'elo' ? '500' : '300'};">${fmt(s.elo || 1500, 1)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'win_percentage' ? '500' : '300'};">${fmt(s.win_percentage, 1)}%</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'stdev' ? '500' : '300'};">${fmt(s.stdev, 2)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'prelims_debated' ? '500' : '300'};">${s.prelims_debated}</td>
+                  <td class="num-col" style="color: rgba(255, 255, 255, 0.78);">${s.tournaments_debated}</td>
                   <td>${getNatStatusTag(s.national_level)}</td>
                 </tr>
               `;
@@ -779,7 +779,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">No teams match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.72);">No teams match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -788,33 +788,33 @@
           <table class="atomos-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">#</th>
-                <th>TEAM NAME</th>
-                <th>INSTITUTION</th>
-                <th style="text-align: right;">ATSS</th>
-                <th style="text-align: right;">ELO</th>
-                <th style="text-align: right;">WIN %</th>
-                <th style="text-align: right;">AWPT</th>
-                <th style="text-align: right;">TOURNAMENTS</th>
-                <th style="text-align: center;">HIGHEST BREAK</th>
+                <th style="width: 56px;">#</th>
+                <th>Team</th>
+                <th>Institution</th>
+                <th class="num-col">ATSS</th>
+                <th class="num-col">Elo</th>
+                <th class="num-col">Win %</th>
+                <th class="num-col">AWPT</th>
+                <th class="num-col">Tournaments</th>
+                <th>Highest Break</th>
               </tr>
             </thead>
             <tbody>
               ${list.map((t) => `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(t._trueRank)}</td>
+                  <td>${getRankBadge(t._trueRank)}</td>
                   <td>
                     <a class="table-link" href="team_bio.html?team=${encodeURIComponent(t.team_name)}">${escapeHtml(t.team_name)}</a>
                   </td>
                   <td>
                     <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(t.institution)}">${escapeHtml(t.institution)}</a>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'atss' ? '800; color: #afd4e6;' : '600;'}">${fmt(t.atss, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(t.elo || 1500, 1)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(t.win_percentage, 1)}%</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'awpt' ? '800; color: #afd4e6;' : '600;'}">${fmt(t.awpt, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #cbe6f4;">${t.tournaments_debated}</td>
-                  <td style="text-align: center;">${getBreakBadge(t.highest_achievement)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'atss' ? '500' : '300'};">${fmt(t.atss, 2)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'elo' ? '500' : '300'};">${fmt(t.elo || 1500, 1)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'win_percentage' ? '500' : '300'};">${fmt(t.win_percentage, 1)}%</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'awpt' ? '500' : '300'};">${fmt(t.awpt, 2)}</td>
+                  <td class="num-col" style="color: rgba(255, 255, 255, 0.78);">${t.tournaments_debated}</td>
+                  <td>${getBreakBadge(t.highest_achievement)}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -862,7 +862,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">No institutions match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.72);">No institutions match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -871,42 +871,42 @@
           <table class="atomos-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">#</th>
-                <th>INSTITUTION</th>
-                <th style="text-align: right;">DELTA</th>
-                <th style="text-align: right;">ELO</th>
-                <th style="text-align: right;">A TEAM ATSS</th>
-                <th style="text-align: right;">B TEAM ATSS</th>
-                <th style="text-align: right;">NET DIFF</th>
-                <th style="text-align: right;">WIN %</th>
-                <th style="text-align: right;">DEBATER POOL</th>
+                <th style="width: 56px;">#</th>
+                <th>Institution</th>
+                <th class="num-col">Delta</th>
+                <th class="num-col">Elo</th>
+                <th class="num-col">A Team ATSS</th>
+                <th class="num-col">B Team ATSS</th>
+                <th class="num-col">Net Diff</th>
+                <th class="num-col">Win %</th>
+                <th class="num-col">Debater Pool</th>
               </tr>
             </thead>
             <tbody>
               ${list.map((i) => {
                 const aTeamLink = i.a_team_name ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.a_team_name)}">${fmt(i.a_atss, 2)}</a>` : fmt(i.a_atss, 2);
-                const bTeamLink = i.b_team_name && i.b_atss ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.b_team_name)}">${fmt(i.b_atss, 2)}</a>` : (i.b_atss ? fmt(i.b_atss, 2) : '-');
-                let netDiffHtml = '-';
+                const bTeamLink = i.b_team_name && i.b_atss ? `<a class="table-link" href="team_bio.html?team=${encodeURIComponent(i.b_team_name)}">${fmt(i.b_atss, 2)}</a>` : (i.b_atss ? fmt(i.b_atss, 2) : '—');
+                let netDiffHtml = '—';
                 if (i.net_diff !== null && i.net_diff !== undefined) {
                   const nd = Number(i.net_diff);
                   const sign = nd > 0 ? '+' : '';
-                  netDiffHtml = `<span style="font-family: var(--font-mono); font-weight: 700; color: ${nd >= 0 ? '#34d399' : '#f87171'};">${sign}${fmt(nd, 2)}</span>`;
+                  netDiffHtml = `<span style="font-family: var(--font-mono); font-weight: 400; color: rgba(255, 255, 255, 0.9);">${sign}${fmt(nd, 2)}</span>`;
                 }
 
                 return `
                   <tr>
-                    <td style="text-align: center;">${getRankBadge(i._trueRank)}</td>
+                    <td>${getRankBadge(i._trueRank)}</td>
                     <td>
                       <a class="table-link" href="institution_bio.html?inst=${encodeURIComponent(i.institution_name)}">${escapeHtml(i.institution_name)}</a>
-                      ${i.code ? `<span style="font-size: 10px; margin-left: 6px; padding: 2px 6px; border-radius: 4px; background: rgba(6, 14, 42, 0.7); border: 1px solid rgba(81, 113, 255, 0.2); color: #cbe6f4; font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
+                      ${i.code ? `<span style="font-size: 10px; margin-left: 8px; padding: 2px 7px; border-radius: 3px; background: rgba(255, 255, 255, 0.08); border: 1px solid rgba(255, 255, 255, 0.22); color: rgba(255, 255, 255, 0.82); font-family: var(--font-mono);">${escapeHtml(i.code)}</span>` : ''}
                     </td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'delta' ? '800; color: #afd4e6;' : '700;'}">${fmt(i.delta, 2)}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'elo' ? '800; color: #6ee7b7;' : '700; color: #a7f3d0;'}">${fmt(i.elo || 1500, 1)}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'a_atss' ? '800; color: #afd4e6;' : '600;'}">${aTeamLink}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'b_atss' ? '800; color: #afd4e6;' : '600;'}">${bTeamLink}</td>
-                    <td style="text-align: right;">${netDiffHtml}</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'win_percentage' ? '800; color: #afd4e6;' : '600;'}">${fmt(i.win_percentage, 1)}%</td>
-                    <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'pool_count' ? '800; color: #afd4e6;' : '600;'}">${i.pool_count}</td>
+                    <td class="num-col" style="font-weight: ${activeMetric === 'delta' ? '500' : '300'};">${fmt(i.delta, 2)}</td>
+                    <td class="num-col" style="font-weight: ${activeMetric === 'elo' ? '500' : '300'};">${fmt(i.elo || 1500, 1)}</td>
+                    <td class="num-col" style="font-weight: ${activeMetric === 'a_atss' ? '500' : '300'};">${aTeamLink}</td>
+                    <td class="num-col" style="font-weight: ${activeMetric === 'b_atss' ? '500' : '300'};">${bTeamLink}</td>
+                    <td class="num-col">${netDiffHtml}</td>
+                    <td class="num-col" style="font-weight: ${activeMetric === 'win_percentage' ? '500' : '300'};">${fmt(i.win_percentage, 1)}%</td>
+                    <td class="num-col" style="font-weight: ${activeMetric === 'pool_count' ? '500' : '300'};">${i.pool_count}</td>
                   </tr>
                 `;
               }).join('')}
@@ -953,31 +953,31 @@
           <table class="atomos-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">#</th>
-                <th>TOURNAMENT</th>
-                <th>DATES</th>
-                <th style="text-align: right;">ATSS</th>
-                <th style="text-align: right;">BRK ATSS</th>
-                <th style="text-align: right;">INSTITUTIONS</th>
-                <th style="text-align: right;">TEAMS</th>
-                <th style="text-align: right;">PRELIMS+KNOCK</th>
-                <th style="text-align: right;">SPEECHES</th>
-                <th style="text-align: right;">PRELIM DEBATES</th>
+                <th style="width: 56px;">#</th>
+                <th>Tournament</th>
+                <th>Dates</th>
+                <th class="num-col">ATSS</th>
+                <th class="num-col">Break ATSS</th>
+                <th class="num-col">Institutions</th>
+                <th class="num-col">Teams</th>
+                <th class="num-col">Prelims+Knock</th>
+                <th class="num-col">Speeches</th>
+                <th class="num-col">Prelim Debates</th>
               </tr>
             </thead>
             <tbody>
               ${list.map((t) => `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(t._trueRank)}</td>
-                  <td style="font-weight: 700; color: #ffffff;">${escapeHtml(t.name)}</td>
-                  <td style="font-family: var(--font-mono); font-size: 11px; color: #cbe6f4;">${escapeHtml(t.hosting_dates)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 800; color: #afd4e6;">${fmt(t.atss, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: 700;">${fmt(t.brk_atss, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono);">${t.participating_institutions}</td>
-                  <td style="text-align: right; font-family: var(--font-mono);">${t.participating_teams}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #34d399;">${t.prelims_plus_knock}</td>
-                  <td style="text-align: right; font-family: var(--font-mono);">${Number(t.total_speeches).toLocaleString()}</td>
-                  <td style="text-align: right; font-family: var(--font-mono);">${t.prelim_debates}</td>
+                  <td>${getRankBadge(t._trueRank)}</td>
+                  <td style="font-weight: 400; color: #ffffff;">${escapeHtml(t.name)}</td>
+                  <td style="font-family: var(--font-mono); font-size: 12px; color: rgba(255, 255, 255, 0.78);">${escapeHtml(t.hosting_dates)}</td>
+                  <td class="num-col" style="font-weight: 400;">${fmt(t.atss, 2)}</td>
+                  <td class="num-col">${fmt(t.brk_atss, 2)}</td>
+                  <td class="num-col">${t.participating_institutions}</td>
+                  <td class="num-col">${t.participating_teams}</td>
+                  <td class="num-col">${t.prelims_plus_knock}</td>
+                  <td class="num-col">${Number(t.total_speeches).toLocaleString()}</td>
+                  <td class="num-col">${t.prelim_debates}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -1021,7 +1021,7 @@
       }
 
       if (list.length === 0) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">No adjudicators match "${escapeHtml(searchQuery)}".</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.72);">No adjudicators match "${escapeHtml(searchQuery)}".</div>`;
         return;
       }
 
@@ -1030,31 +1030,31 @@
           <table class="atomos-table">
             <thead>
               <tr>
-                <th style="width: 44px; text-align: center;">#</th>
-                <th>ADJUDICATOR</th>
-                <th>INSTITUTION</th>
-                <th style="text-align: right;">AASS (SPEAK AVG)</th>
-                <th style="text-align: right;">AATSS (TEAM AVG)</th>
-                <th style="text-align: center;">PROP / OPP BIAS</th>
-                <th style="text-align: right;">PRELIMS ADJUDICATED</th>
-                <th style="text-align: right;">TOURNAMENTS</th>
+                <th style="width: 56px;">#</th>
+                <th>Adjudicator</th>
+                <th>Institution</th>
+                <th class="num-col">AASS (Speak Avg)</th>
+                <th class="num-col">AATSS (Team Avg)</th>
+                <th style="text-align: center;">Prop / Opp Balance</th>
+                <th class="num-col">Prelims Judged</th>
+                <th class="num-col">Tournaments</th>
               </tr>
             </thead>
             <tbody>
               ${list.map((j) => `
                 <tr>
-                  <td style="text-align: center;">${getRankBadge(j._trueRank)}</td>
+                  <td>${getRankBadge(j._trueRank)}</td>
                   <td>
                     <a class="table-link" href="adjudicator_bio.html?judge=${encodeURIComponent(j.adjudicator_name)}">${escapeHtml(j.adjudicator_name)}</a>
                   </td>
-                  <td style="color: #cbe6f4;">${escapeHtml(j.institution)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aass' ? '800; color: #afd4e6;' : '600;'}">${fmt(j.aass, 2)}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'aatss' ? '800; color: #afd4e6;' : '600;'}">${fmt(j.aatss, 2)}</td>
-                  <td style="text-align: center; font-family: var(--font-mono); font-size: 11px;">
-                    <span style="color: #afd4e6; font-weight: 700;">${fmt(j.prop_bias_pct)}% P</span> / <span style="color: #fda4af; font-weight: 700;">${fmt(j.opp_bias_pct)}% O</span>
+                  <td style="color: rgba(255, 255, 255, 0.82);">${escapeHtml(j.institution)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'aass' ? '500' : '300'};">${fmt(j.aass, 2)}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'aatss' ? '500' : '300'};">${fmt(j.aatss, 2)}</td>
+                  <td style="text-align: center; font-family: var(--font-mono); font-size: 12px; color: rgba(255, 255, 255, 0.88);">
+                    <span>${fmt(j.prop_bias_pct)}% P</span> · <span>${fmt(j.opp_bias_pct)}% O</span>
                   </td>
-                  <td style="text-align: right; font-family: var(--font-mono); font-weight: ${activeMetric === 'debates' ? '800; color: #afd4e6;' : '600;'}">${j.prelims_adjudicated}</td>
-                  <td style="text-align: right; font-family: var(--font-mono); color: #cbe6f4;">${j.tournaments_adjudicated}</td>
+                  <td class="num-col" style="font-weight: ${activeMetric === 'debates' ? '500' : '300'};">${j.prelims_adjudicated}</td>
+                  <td class="num-col" style="color: rgba(255, 255, 255, 0.78);">${j.tournaments_adjudicated}</td>
                 </tr>
               `).join('')}
             </tbody>
@@ -1095,7 +1095,7 @@
       let dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #afd4e6; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1123,7 +1123,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #cbe6f4; font-size: 13px; text-align: center;">No matching debaters found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.76); font-size: 13px; text-align: center;">No matching debaters found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1172,7 +1172,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: #cbe6f4; font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono);">
               Type any debater's name above to view their career record.
             </div>
           `;
@@ -1208,7 +1208,7 @@
     async function loadDebaterBio(name) {
       if (!container) return;
       trackEvent('view_debater', { debater_name: name });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);"><div class="spinner"></div> Loading Debater Bio for "${escapeHtml(name)}"...</div>`;
 
       let profile = null;
       try {
@@ -1255,7 +1255,7 @@
       }
 
       if (!profile) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">Debater "${escapeHtml(name)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);">Debater "${escapeHtml(name)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -1304,11 +1304,11 @@
             <h2 class="bio-name">${escapeHtml(profile.canonical_name)}</h2>
             <div style="display: flex; gap: 16px; margin-top: 6px; flex-wrap: wrap; font-size: 13.5px;">
               <div>
-                <span style="color: #cbe6f4; font-family: var(--font-mono); font-size: 11px;">MOST DEBATED TEAM: </span>
+                <span style="color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); font-size: 11px;">MOST DEBATED TEAM: </span>
                 <a class="table-link" href="team_bio.html?team=${encodeURIComponent(profile.most_debated_team)}">${escapeHtml(profile.most_debated_team)}</a>
               </div>
               <div>
-                <span style="color: #cbe6f4; font-family: var(--font-mono); font-size: 11px;">LATEST SCHOOL: </span>
+                <span style="color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); font-size: 11px;">LATEST SCHOOL: </span>
                 <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(profile.latest_institution)}">${escapeHtml(profile.latest_institution)}</a>
               </div>
             </div>
@@ -1319,34 +1319,34 @@
         <!-- 1. First Box Stats Seen (6 Core Metrics incl. International Standard Debater Elo) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${fmt(profile.speaker_avg, 2)}</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${fmt(profile.speaker_avg, 2)}</div>
             <div class="bio-stat-lbl">SPEAKER AVG</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Universal Substantive Mean</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Universal Substantive Mean</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #6ee7b7;">${fmt(profile.elo || 1500, 1)}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(profile.elo || 1500, 1)}</div>
             <div class="bio-stat-lbl">DEBATER ELO</div>
-            <div style="font-size: 9.5px; color: #a7f3d0; font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(profile.peak_elo || profile.elo || 1500, 1)}</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.92); font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(profile.peak_elo || profile.elo || 1500, 1)}</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${fmt(profile.win_percentage, 1)}%</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(profile.win_percentage, 1)}%</div>
             <div class="bio-stat-lbl">WIN %</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Debates Contested</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Debates Contested</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #fbbf24;">${fmt(profile.stdev, 2)}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(profile.stdev, 2)}</div>
             <div class="bio-stat-lbl">STDEV</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Speech Score Deviation</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Speech Score Deviation</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${profile.prelims_debated}</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${profile.prelims_debated}</div>
             <div class="bio-stat-lbl">PRELIMS DEBATED</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Preliminary Speeches</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Preliminary Speeches</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #e9d5ff;">${profile.tournaments_debated}</div>
             <div class="bio-stat-lbl">TOURNAMENTS</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Events Debated</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Events Debated</div>
           </div>
         </div>
 
@@ -1357,24 +1357,24 @@
         </div>
         <div class="bio-stats-grid bio-positions-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #afd4e6;">${pos1}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: rgba(255, 255, 255, 0.88);">${pos1}</div>
             <div class="bio-stat-lbl">1ST SPEAKER AVG</div>
-            ${count1 ? `<div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">${count1}</div>` : ''}
+            ${count1 ? `<div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">${count1}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #afd4e6;">${pos2}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: rgba(255, 255, 255, 0.88);">${pos2}</div>
             <div class="bio-stat-lbl">2ND SPEAKER AVG</div>
-            ${count2 ? `<div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">${count2}</div>` : ''}
+            ${count2 ? `<div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">${count2}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="font-size: 22px; color: #afd4e6;">${pos3}</div>
+            <div class="bio-stat-val" style="font-size: 22px; color: rgba(255, 255, 255, 0.88);">${pos3}</div>
             <div class="bio-stat-lbl">3RD SPEAKER AVG</div>
-            ${count3 ? `<div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">${count3}</div>` : ''}
+            ${count3 ? `<div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">${count3}</div>` : ''}
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="font-size: 22px; color: #e9d5ff;">${posReply}</div>
             <div class="bio-stat-lbl">REPLY SPEAKER AVG</div>
-            ${countReply ? `<div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">${countReply}</div>` : ''}
+            ${countReply ? `<div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">${countReply}</div>` : ''}
           </div>
         </div>
 
@@ -1388,7 +1388,7 @@
             <div class="trajectory-card" style="display: flex; flex-direction: column; align-items: flex-start; gap: 10px;">
               <div style="display: flex; justify-content: space-between; width: 100%; align-items: center; flex-wrap: wrap;">
                 <div class="t-info-title">${escapeHtml(t.tournament_name)}</div>
-                <div style="font-family: var(--font-mono); font-size: 13px; color: #afd4e6; font-weight: 700;">
+                <div style="font-family: var(--font-mono); font-size: 13px; color: rgba(255, 255, 255, 0.88); font-weight: 400;">
                   Event Avg: ${fmt(t.tournament_average, 2)} pts (${t.speeches_count} prelim speeches)
                 </div>
               </div>
@@ -1408,7 +1408,7 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">SCORE:</span>
-                        <span style="font-weight: 700; color: ${isReply ? '#f3e8ff' : '#afd4e6'};">${fmt(r.score, 1)}</span>
+                        <span style="font-weight: 400; color: ${isReply ? '#f3e8ff' : '#afd4e6'};">${fmt(r.score, 1)}</span>
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">JUDGE:</span>
@@ -1416,14 +1416,14 @@
                       </div>
                       <div class="tooltip-row">
                         <span class="tooltip-label">POSITION:</span>
-                        <span style="color: ${isReply ? '#e9d5ff' : '#a7f3d0'}; font-weight: 700;">${escapeHtml(r.position)}</span>
+                        <span style="color: ${isReply ? '#e9d5ff' : '#a7f3d0'}; font-weight: 400;">${escapeHtml(r.position)}</span>
                       </div>
                     </div>
                   </div>
                 `;}).join('')}
               </div>
             </div>
-          `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
+          `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
         </div>
       `;
     }
@@ -1445,7 +1445,7 @@
       let dataset = (state.v2TeamsGeneral.length ? state.v2TeamsGeneral : state.v2TeamsTab);
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #afd4e6; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading team records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading team records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1473,7 +1473,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #cbe6f4; font-size: 13px; text-align: center;">No matching teams found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.76); font-size: 13px; text-align: center;">No matching teams found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1522,7 +1522,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: #cbe6f4; font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono);">
               Type any team name above to inspect ATSS, lineups, break achievements, and tournament progressions.
             </div>
           `;
@@ -1558,7 +1558,7 @@
     async function loadTeamBio(teamName) {
       if (!container) return;
       trackEvent('view_team', { team_name: teamName });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);"><div class="spinner"></div> Loading Team Bio for "${escapeHtml(teamName)}"...</div>`;
 
       let bio = null;
       try {
@@ -1602,7 +1602,7 @@
       }
 
       if (!bio) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">Team "${escapeHtml(teamName)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);">Team "${escapeHtml(teamName)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -1629,46 +1629,46 @@
           <div class="bio-name-group">
             <h2 class="bio-name">${escapeHtml(bio.team_name)}</h2>
             <div style="font-size: 15px; margin-top: 4px;">
-              <span style="color: #cbe6f4; font-family: var(--font-mono); font-size: 11px;">REPRESENTING: </span>
+              <span style="color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); font-size: 11px;">REPRESENTING: </span>
               <a class="table-link-inst" href="institution_bio.html?inst=${encodeURIComponent(bio.institution)}">${escapeHtml(bio.institution)}</a>
             </div>
           </div>
           <div>
-            <span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: #afd4e6;">TEAM TAB ELIGIBLE</span>
+            <span class="badge-count" style="background: rgba(81, 113, 255, 0.2); color: rgba(255, 255, 255, 0.88);">TEAM TAB ELIGIBLE</span>
           </div>
         </div>
 
         <!-- 1. First Box Seen (6 Metrics incl. International Standard Team Elo) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${fmt(bio.atss, 2)}</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${fmt(bio.atss, 2)}</div>
             <div class="bio-stat-lbl">ATSS</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Avg Total Speaker Score</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Avg Total Speaker Score</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #6ee7b7;">${fmt(bio.elo || 1500, 1)}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(bio.elo || 1500, 1)}</div>
             <div class="bio-stat-lbl">TEAM ELO</div>
-            <div style="font-size: 9.5px; color: #a7f3d0; font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(bio.peak_elo || bio.elo || 1500, 1)}</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.92); font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(bio.peak_elo || bio.elo || 1500, 1)}</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(bio.win_percentage, 1)}%</div>
             <div class="bio-stat-lbl">WIN %</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Total Debates Won</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Total Debates Won</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #fbbf24;">${fmt(bio.stdev, 2)}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(bio.stdev, 2)}</div>
             <div class="bio-stat-lbl">STDEV</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Match Score Standard Deviation</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Match Score Standard Deviation</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${bio.prelims_debated} <span style="font-size: 16px; color: #afd4e6;">/ ${bio.tournaments_debated}</span></div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${bio.prelims_debated} <span style="font-size: 16px; color: rgba(255, 255, 255, 0.88);">/ ${bio.tournaments_debated}</span></div>
             <div class="bio-stat-lbl">PRELIMS & TOURNAMENTS</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Prelim Matches / Tourneys</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Prelim Matches / Tourneys</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #e9d5ff;">${fmt(bio.wins_per_tournament, 2)}</div>
             <div class="bio-stat-lbl">WINS PER TOURNAMENT</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Avg Wins / Tournament</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Avg Wins / Tournament</div>
           </div>
         </div>
 
@@ -1682,13 +1682,13 @@
             <div class="achievement-card">
               <div>
                 <strong style="color: #ffffff;">${escapeHtml(a.tournament_name)}</strong>
-                <div style="font-size: 11px; color: #cbe6f4; font-family: var(--font-mono);">
+                <div style="font-size: 11px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono);">
                   Tournament ATSS: ${fmt(a.tournament_atss !== undefined ? a.tournament_atss : a.atss, 2)}
                 </div>
               </div>
               <div>${getBreakBadge(a.highest_break || a.highest_stage)}</div>
             </div>
-          `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No elimination break stages recorded.</div>`}
+          `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No elimination break stages recorded.</div>`}
         </div>
 
         <!-- 3. Lineup Analytics (Top 5 Win % & Top 5 ATSS 3-Debater Combinations) -->
@@ -1707,15 +1707,15 @@
               ${(bio.top_win_lineups || []).length > 0 ? (bio.top_win_lineups || []).map((l, idx) => `
                 <div class="lineup-card">
                   <div class="lineup-names">
-                    <span style="color: #afd4e6; margin-right: 6px;">#${idx + 1}</span>
+                    <span style="color: rgba(255, 255, 255, 0.88); margin-right: 6px;">#${idx + 1}</span>
                     ${l.lineup.map(n => `<a class="table-link" href="bio.html?debater=${encodeURIComponent(n)}">${escapeHtml(n)}</a>`).join(' · ')}
-                    <div style="font-size: 11px; color: #cbe6f4; font-family: var(--font-mono); margin-top: 2px;">
+                    <div style="font-size: 11px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); margin-top: 2px;">
                       ${l.debates_count} debates together
                     </div>
                   </div>
-                  <div class="lineup-stat" style="color: #34d399;">${fmt(l.win_percentage, 1)}%</div>
+                  <div class="lineup-stat" style="color: #ffffff;">${fmt(l.win_percentage, 1)}%</div>
                 </div>
-              `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
+              `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
             </div>
           </div>
 
@@ -1729,15 +1729,15 @@
               ${(bio.top_atss_lineups || []).length > 0 ? (bio.top_atss_lineups || []).map((l, idx) => `
                 <div class="lineup-card">
                   <div class="lineup-names">
-                    <span style="color: #afd4e6; margin-right: 6px;">#${idx + 1}</span>
+                    <span style="color: rgba(255, 255, 255, 0.88); margin-right: 6px;">#${idx + 1}</span>
                     ${l.lineup.map(n => `<a class="table-link" href="bio.html?debater=${encodeURIComponent(n)}">${escapeHtml(n)}</a>`).join(' · ')}
-                    <div style="font-size: 11px; color: #cbe6f4; font-family: var(--font-mono); margin-top: 2px;">
+                    <div style="font-size: 11px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); margin-top: 2px;">
                       ${l.debates_count} debates together
                     </div>
                   </div>
-                  <div class="lineup-stat" style="color: #afd4e6;">${fmt(l.atss, 2)}</div>
+                  <div class="lineup-stat" style="color: rgba(255, 255, 255, 0.88);">${fmt(l.atss, 2)}</div>
                 </div>
-              `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
+              `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No 3-person lineups on record.</div>`}
             </div>
           </div>
         </div>
@@ -1755,7 +1755,7 @@
                   <strong style="color: #ffffff; font-size: 14px;">${escapeHtml(t.tournament_name)}</strong>
                   <span style="margin-left: 8px;">${getBreakBadge(t.highest_break || t.highest_stage)}</span>
                 </div>
-                <div style="font-family: var(--font-mono); font-size: 13px; color: #afd4e6; font-weight: 700;">
+                <div style="font-family: var(--font-mono); font-size: 13px; color: rgba(255, 255, 255, 0.88); font-weight: 400;">
                   Event ATSS: ${fmt(t.tournament_atss !== undefined ? t.tournament_atss : t.atss, 2)} pts (${t.debates_count || (t.debates || t.rounds || []).length} debates)
                 </div>
               </div>
@@ -1775,7 +1775,7 @@
                         </div>
                         <div class="tooltip-row">
                           <span class="tooltip-label">SCORE:</span>
-                          <span style="font-weight: 700; color: #afd4e6;">${fmt(d.team_score, 1)}</span>
+                          <span style="font-weight: 400; color: rgba(255, 255, 255, 0.88);">${fmt(d.team_score, 1)}</span>
                         </div>
                         <div class="tooltip-row">
                           <span class="tooltip-label">SIDE:</span>
@@ -1787,7 +1787,7 @@
                 }).join('')}
               </div>
             </div>
-          `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
+          `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No tournament breakdown recorded.</div>`}
         </div>
       `;
     }
@@ -1809,7 +1809,7 @@
       let dataset = (state.v2InstitutionsGeneral.length ? state.v2InstitutionsGeneral : state.v2InstitutionsTab);
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #afd4e6; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading institution records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading institution records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1837,7 +1837,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #cbe6f4; font-size: 13px; text-align: center;">No matching institutions found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.76); font-size: 13px; text-align: center;">No matching institutions found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -1886,7 +1886,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: #cbe6f4; font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono);">
               Type any institution name above to inspect Delta, A/B team ATSS, roster, and veteran vs new debater pool.
             </div>
           `;
@@ -1922,7 +1922,7 @@
     async function loadInstitutionBio(instName) {
       if (!container) return;
       trackEvent('view_institution', { institution_name: instName });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);"><div class="spinner"></div> Loading Institution Bio for "${escapeHtml(instName)}"...</div>`;
 
       let bio = null;
       try {
@@ -1967,7 +1967,7 @@
       }
 
       if (!bio) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">Institution "${escapeHtml(instName)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);">Institution "${escapeHtml(instName)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -1987,48 +1987,48 @@
         <div class="bio-profile-header">
           <div class="bio-name-group">
             <h2 class="bio-name">${escapeHtml(bio.institution_name)}</h2>
-            <div style="font-size: 13.5px; color: #cbe6f4; font-family: var(--font-mono); margin-top: 4px;">
+            <div style="font-size: 13.5px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); margin-top: 4px;">
               ${bio.code ? `CODE: ${escapeHtml(bio.code)} · ` : ''}TOTAL DEBATERS FIELDED: ${bio.pool_count}
             </div>
           </div>
           <div>
-            <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #34d399;">INSTITUTION TAB</span>
+            <span class="badge-count" style="background: rgba(16, 185, 129, 0.2); color: #ffffff;">INSTITUTION TAB</span>
           </div>
         </div>
 
         <!-- 1. First Box Seen (6 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${fmt(bio.delta, 2)}</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${fmt(bio.delta, 2)}</div>
             <div class="bio-stat-lbl">DELTA</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">(0.8*A + 1.2*B) / 2</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">(0.8*A + 1.2*B) / 2</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.elo || 1500, 1)}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(bio.elo || 1500, 1)}</div>
             <div class="bio-stat-lbl">INSTITUTION ELO</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(bio.peak_elo || bio.elo || 1500, 1)}</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Peak: ${fmt(bio.peak_elo || bio.elo || 1500, 1)}</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #ffffff;">${teamsFielded.length}</div>
             <div class="bio-stat-lbl">TEAMS FIELDED</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Active Circuit Rosters</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Active Circuit Rosters</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6; font-size: 20px;">
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88); font-size: 20px;">
               A: ${fmt(bio.a_atss, 1)}<br />
               <span style="color: #d8b4fe;">B: ${bio.b_atss ? fmt(bio.b_atss, 1) : '-'}</span>
             </div>
             <div class="bio-stat-lbl">A & B TEAM ATSS</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${fmt(bio.win_percentage, 1)}%</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${fmt(bio.win_percentage, 1)}%</div>
             <div class="bio-stat-lbl">WIN RATE</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">All Debates Contested</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">All Debates Contested</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #fbbf24;">${bio.pool_count}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${bio.pool_count}</div>
             <div class="bio-stat-lbl">DEBATER POOL</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Eligible Debaters Fielded</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Eligible Debaters Fielded</div>
           </div>
         </div>
 
@@ -2042,7 +2042,7 @@
             <a class="opt-btn" href="team_bio.html?team=${encodeURIComponent(t)}" style="padding: 10px 18px; font-size: 12px; border-radius: 10px;">
               ${escapeHtml(t)}
             </a>
-          `).join('') : '<div style="color: #cbe6f4; font-style: italic;">No teams recorded.</div>'}
+          `).join('') : '<div style="color: rgba(255, 255, 255, 0.76); font-style: italic;">No teams recorded.</div>'}
         </div>
 
         <!-- 2. Debater Pool Graph: Veterans (>= 2 tourneys) vs New Debaters (1 tourney) -->
@@ -2062,15 +2062,15 @@
                 <div class="pool-debater-card">
                   <div>
                     <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(v.name)}">${escapeHtml(v.name)}</a>
-                    <div style="font-size: 10.5px; color: #afd4e6; font-family: var(--font-mono);">
+                    <div style="font-size: 10.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono);">
                       ${v.prelims} prelims debated
                     </div>
                   </div>
-                  <div style="font-family: var(--font-mono); font-weight: 700; color: #afd4e6;">
+                  <div style="font-family: var(--font-mono); font-weight: 400; color: rgba(255, 255, 255, 0.88);">
                     ${v.tournaments} Tourneys
                   </div>
                 </div>
-              `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No veteran debaters recorded.</div>`}
+              `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No veteran debaters recorded.</div>`}
             </div>
           </div>
 
@@ -2085,15 +2085,15 @@
                 <div class="pool-debater-card">
                   <div>
                     <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(n.name)}">${escapeHtml(n.name)}</a>
-                    <div style="font-size: 10.5px; color: #afd4e6; font-family: var(--font-mono);">
+                    <div style="font-size: 10.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono);">
                       1 tournament debated
                     </div>
                   </div>
-                  <div style="font-family: var(--font-mono); font-weight: 700; color: #34d399;">
+                  <div style="font-family: var(--font-mono); font-weight: 400; color: #ffffff;">
                     ${n.prelims} Prelims
                   </div>
                 </div>
-              `).join('') : `<div style="color: #cbe6f4; padding: 12px; font-style: italic;">No new debaters recorded.</div>`}
+              `).join('') : `<div style="color: rgba(255, 255, 255, 0.76); padding: 12px; font-style: italic;">No new debaters recorded.</div>`}
             </div>
           </div>
         </div>
@@ -2117,7 +2117,7 @@
       let dataset = state.v2Adjudicators || [];
 
       if (isDataLoading && dataset.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #afd4e6; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading adjudicator records...</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading adjudicator records...</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -2145,7 +2145,7 @@
       matches = matches.slice(0, 15);
 
       if (matches.length === 0) {
-        dropdown.innerHTML = `<div style="padding: 12px; color: #cbe6f4; font-size: 13px; text-align: center;">No matching adjudicators found.</div>`;
+        dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.76); font-size: 13px; text-align: center;">No matching adjudicators found.</div>`;
         dropdown.classList.remove('hidden');
         return;
       }
@@ -2194,7 +2194,7 @@
         clearBtn.classList.add('hidden');
         if (container) {
           container.innerHTML = `
-            <div style="text-align: center; padding: 48px 20px; color: #cbe6f4; font-family: var(--font-mono);">
+            <div style="text-align: center; padding: 48px 20px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono);">
               Type any adjudicator's name above to inspect AASS, AATSS, Prop/Opp bias, and judging history.
             </div>
           `;
@@ -2226,7 +2226,7 @@
     async function loadAdjudicatorBio(judgeName) {
       if (!container) return;
       trackEvent('view_adjudicator', { adjudicator_name: judgeName });
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);"><div class="spinner"></div> Loading Adjudicator Bio for "${escapeHtml(judgeName)}"...</div>`;
 
       let bio = null;
       try {
@@ -2249,7 +2249,7 @@
       }
 
       if (!bio) {
-        container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;">Adjudicator "${escapeHtml(judgeName)}" not found in circuit records.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.76);">Adjudicator "${escapeHtml(judgeName)}" not found in circuit records.</div>`;
         return;
       }
 
@@ -2269,7 +2269,7 @@
         <div class="bio-profile-header">
           <div class="bio-name-group">
             <h2 class="bio-name">${escapeHtml(bio.adjudicator_name)}</h2>
-            <div style="font-size: 15px; color: #cbe6f4; margin-top: 4px;">
+            <div style="font-size: 15px; color: rgba(255, 255, 255, 0.76); margin-top: 4px;">
               ${escapeHtml(bio.institution || 'Independent Adjudicator')}
             </div>
           </div>
@@ -2281,34 +2281,34 @@
         <!-- 1. Key Metrics Grid (6 Metrics) -->
         <div class="bio-stats-grid">
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${bio.aass ? fmt(bio.aass, 2) : '-'}</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${bio.aass ? fmt(bio.aass, 2) : '-'}</div>
             <div class="bio-stat-lbl">AASS (SUBSTANTIVE MEAN)</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Awarded Speaker Avg</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Awarded Speaker Avg</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #34d399;">${bio.aatss ? fmt(bio.aatss, 2) : '-'}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${bio.aatss ? fmt(bio.aatss, 2) : '-'}</div>
             <div class="bio-stat-lbl">AATSS (TEAM AVG)</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Awarded Team Avg</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Awarded Team Avg</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #fda4af; font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.78); font-size: 20px;">${propPctStr}% P / ${oppPctStr}% O</div>
             <div class="bio-stat-lbl">PROP / OPP WIN BIAS</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Decision Split</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #afd4e6;">${bio.prelims_adjudicated || 0}</div>
+            <div class="bio-stat-val" style="color: rgba(255, 255, 255, 0.88);">${bio.prelims_adjudicated || 0}</div>
             <div class="bio-stat-lbl">PRELIMS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Preliminary Rounds</div>
           </div>
           <div class="bio-stat-tile">
-            <div class="bio-stat-val" style="color: #fbbf24;">${bio.outrounds_adjudicated || 0}</div>
+            <div class="bio-stat-val" style="color: #ffffff;">${bio.outrounds_adjudicated || 0}</div>
             <div class="bio-stat-lbl">KNOCKOUTS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Elimination Panels</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Elimination Panels</div>
           </div>
           <div class="bio-stat-tile">
             <div class="bio-stat-val" style="color: #e9d5ff;">${bio.tournaments_adjudicated || 0}</div>
             <div class="bio-stat-lbl">TOURNAMENTS ADJUDICATED</div>
-            <div style="font-size: 9.5px; color: #afd4e6; font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
+            <div style="font-size: 9.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono); margin-top: 2px;">Tournaments</div>
           </div>
         </div>
 
@@ -2320,8 +2320,8 @@
         <div class="roster-box" style="margin-bottom: 24px;">
           <div class="bias-container">
             <div class="bias-labels">
-              <span style="color: #afd4e6; font-weight: 700;">PROPOSITION: ${propPctStr}% (${bio.prop_wins || 0} wins)</span>
-              <span style="color: #fda4af; font-weight: 700;">OPPOSITION: ${oppPctStr}% (${bio.opp_wins || 0} wins)</span>
+              <span style="color: rgba(255, 255, 255, 0.88); font-weight: 400;">PROPOSITION: ${propPctStr}% (${bio.prop_wins || 0} wins)</span>
+              <span style="color: rgba(255, 255, 255, 0.78); font-weight: 400;">OPPOSITION: ${oppPctStr}% (${bio.opp_wins || 0} wins)</span>
             </div>
             <div class="bias-bar-wrap">
               <div class="bias-bar-prop" style="width: ${propPct}%;"></div>
@@ -2351,33 +2351,33 @@
                 ${bio.judging_history.map((h) => {
                   const isKnockout = h.round_type === 'ELIMINATION';
                   const roundBadge = isKnockout
-                    ? `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(217, 119, 6, 0.16); color: #fde68a; font-weight: 700;">${escapeHtml(h.round_name)}</span>`
-                    : `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(81, 113, 255, 0.15); color: #afd4e6; font-weight: 600;">${escapeHtml(h.round_name)}</span>`;
+                    ? `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(217, 119, 6, 0.16); color: #ffffff; font-weight: 400;">${escapeHtml(h.round_name)}</span>`
+                    : `<span style="display: inline-block; padding: 2px 6px; font-size: 10px; border-radius: 4px; background: rgba(81, 113, 255, 0.15); color: rgba(255, 255, 255, 0.88); font-weight: 600;">${escapeHtml(h.round_name)}</span>`;
 
                   const winnerColor = h.winner_side === 'Proposition' ? '#afd4e6' : (h.winner_side === 'Opposition' ? '#fb7185' : '#cbe6f4');
                   const marginText = h.win_margin ? ` (${fmt(h.win_margin, 1)} pts)` : '';
 
                   const panelText = h.is_panel && h.panel_members && h.panel_members.length > 0
-                    ? `<div style="font-size: 11px; color: #ffffff;"><span style="color: #d8b4fe; font-weight: 700;">PANEL:</span> ${h.panel_members.map(m => escapeHtml(m)).join(', ')}</div>`
-                    : `<span style="font-size: 11px; color: #cbe6f4; font-family: var(--font-mono);">Solo Chair</span>`;
+                    ? `<div style="font-size: 11px; color: #ffffff;"><span style="color: #d8b4fe; font-weight: 400;">PANEL:</span> ${h.panel_members.map(m => escapeHtml(m)).join(', ')}</div>`
+                    : `<span style="font-size: 11px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono);">Solo Chair</span>`;
 
                   return `
                     <tr>
                       <td style="font-weight: 600; color: #ffffff;">
                         <div>${escapeHtml(h.tournament_name)}</div>
-                        <div style="font-size: 10.5px; color: #afd4e6; font-family: var(--font-mono);">${escapeHtml(h.tournament_dates || '')}</div>
+                        <div style="font-size: 10.5px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono);">${escapeHtml(h.tournament_dates || '')}</div>
                       </td>
                       <td>${roundBadge}</td>
                       <td>
                         <div style="display: flex; align-items: center; gap: 6px; font-size: 12.5px;">
                           <a class="table-link" href="team_bio.html?team=${encodeURIComponent(h.prop_team)}">${escapeHtml(h.prop_team)}</a>
-                          <span style="font-size: 10px; color: #afd4e6; font-family: var(--font-mono);">(Prop)</span>
-                          <span style="color: #afd4e6;">vs</span>
+                          <span style="font-size: 10px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono);">(Prop)</span>
+                          <span style="color: rgba(255, 255, 255, 0.88);">vs</span>
                           <a class="table-link" href="team_bio.html?team=${encodeURIComponent(h.opp_team)}">${escapeHtml(h.opp_team)}</a>
-                          <span style="font-size: 10px; color: #afd4e6; font-family: var(--font-mono);">(Opp)</span>
+                          <span style="font-size: 10px; color: rgba(255, 255, 255, 0.88); font-family: var(--font-mono);">(Opp)</span>
                         </div>
                       </td>
-                      <td style="text-align: center; font-family: var(--font-mono); font-size: 11.5px; font-weight: 700; color: ${winnerColor};">
+                      <td style="text-align: center; font-family: var(--font-mono); font-size: 11.5px; font-weight: 400; color: ${winnerColor};">
                         ${escapeHtml(h.winner_side || 'Decided')}${marginText}
                       </td>
                       <td>${panelText}</td>
@@ -2388,7 +2388,7 @@
             </table>
           </div>
         ` : `
-          <div class="roster-box" style="text-align: center; padding: 24px; color: #cbe6f4; font-family: var(--font-mono); font-size: 12px; margin-bottom: 24px;">
+          <div class="roster-box" style="text-align: center; padding: 24px; color: rgba(255, 255, 255, 0.76); font-family: var(--font-mono); font-size: 12px; margin-bottom: 24px;">
             Detailed round matchups recorded under standard preliminary scoring ballots.
           </div>
         `}
@@ -2423,7 +2423,7 @@
         let dataset = (state.v2SpeakersGeneral.length ? state.v2SpeakersGeneral : state.v2SpeakersTab);
 
         if (isDataLoading && dataset.length === 0) {
-          dropdown.innerHTML = `<div style="padding: 12px; color: #afd4e6; font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.88); font-size: 13px; text-align: center; font-family: var(--font-mono);"><span style="display:inline-block; margin-right:6px;">●</span> Loading debater records...</div>`;
           dropdown.classList.remove('hidden');
           return;
         }
@@ -2451,7 +2451,7 @@
         matches = matches.slice(0, 15);
 
         if (matches.length === 0) {
-          dropdown.innerHTML = `<div style="padding: 12px; color: #cbe6f4; font-size: 13px; text-align: center;">No matching debaters found.</div>`;
+          dropdown.innerHTML = `<div style="padding: 12px; color: rgba(255, 255, 255, 0.76); font-size: 13px; text-align: center;">No matching debaters found.</div>`;
           dropdown.classList.remove('hidden');
           return;
         }
@@ -2566,10 +2566,10 @@
 
       if (!selectedA && !selectedB) {
         container.innerHTML = `
-          <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: #cbe6f4; font-family: var(--font-mono);">
-            <div style="font-size: 16px; color: #afd4e6; margin-bottom: 8px; font-weight: 600; letter-spacing: 0.06em;">HEAD TO HEAD // CORE CIRCUIT METRICS + ELO</div>
-            <div style="font-size: 13px; max-width: 560px; margin: 0 auto; line-height: 1.6; color: #cbe6f4;">
-              Select Contender 1 and Contender 2 above to compare them across Speaker Score, International Elo Rating, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Direct Tournament Clashes.
+          <div class="h2h-empty-state" style="text-align: center; padding: 64px 20px; color: rgba(255, 255, 255, 0.78); font-family: var(--font-display);">
+            <div style="font-family: var(--font-mono); font-size: 12px; color: rgba(255, 255, 255, 0.72); margin-bottom: 10px; font-weight: 400; letter-spacing: 0.1em; text-transform: uppercase;">07 // Direct Matchup Comparison</div>
+            <div style="font-size: 14px; font-weight: 300; max-width: 560px; margin: 0 auto; line-height: 1.6; color: rgba(255, 255, 255, 0.85);">
+              Select Contender 01 and Contender 02 above to compare Speaker Score, Elo Rating, Win %, Break Rank Avg (BRA), Prelims, Highest Achievement, and Direct Tournament Clashes.
             </div>
           </div>
         `;
@@ -2577,17 +2577,17 @@
       }
 
       if (selectedA && !selectedB) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: #cbe6f4;">Contender 1 (${escapeHtml(selectedA.name)}) selected. Select Contender 2 above.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Contender 01 (${escapeHtml(selectedA.name)}) selected. Select Contender 02 above.</div>`;
         return;
       }
 
       if (!selectedA && selectedB) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: #cbe6f4;">Contender 2 (${escapeHtml(selectedB.name)}) selected. Select Contender 1 above.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Contender 02 (${escapeHtml(selectedB.name)}) selected. Select Contender 01 above.</div>`;
         return;
       }
 
       if (selectedA.name.toLowerCase() === selectedB.name.toLowerCase()) {
-        container.innerHTML = `<div style="text-align: center; padding: 48px; color: #cbe6f4;">Please select two different debaters to compare.</div>`;
+        container.innerHTML = `<div style="text-align: center; padding: 48px; color: rgba(255, 255, 255, 0.78); font-weight: 300;">Please select two different debaters to compare.</div>`;
         return;
       }
 
@@ -2595,7 +2595,7 @@
         window.history.replaceState(null, '', `${window.location.pathname}?a=${encodeURIComponent(selectedA.name)}&b=${encodeURIComponent(selectedB.name)}`);
       }
 
-      container.innerHTML = `<div style="text-align: center; padding: 40px; color: #cbe6f4;"><div class="spinner"></div> Computing head-to-head clash...</div>`;
+      container.innerHTML = `<div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.78); font-weight: 300;"><div class="spinner"></div> Computing head-to-head clash...</div>`;
       trackEvent('view_h2h_matchup', {
         contender_a: selectedA.name || selectedA.speaker_name,
         contender_b: selectedB.name || selectedB.speaker_name,
@@ -2693,16 +2693,12 @@
       if (w6 === 'B') scoreB++;
 
       let bannerTitle = '';
-      let bannerColor = '#afd4e6';
       if (scoreA > scoreB) {
-        bannerTitle = `${escapeHtml(selectedA.name)} LEADS ${scoreA} - ${scoreB}`;
-        bannerColor = '#afd4e6';
+        bannerTitle = `${escapeHtml(selectedA.name)} Leads ${scoreA} – ${scoreB}`;
       } else if (scoreB > scoreA) {
-        bannerTitle = `${escapeHtml(selectedB.name)} LEADS ${scoreB} - ${scoreA}`;
-        bannerColor = '#fda4af';
+        bannerTitle = `${escapeHtml(selectedB.name)} Leads ${scoreB} – ${scoreA}`;
       } else {
-        bannerTitle = `EVEN CLASH TIED ${scoreA} - ${scoreB}`;
-        bannerColor = '#fbbf24';
+        bannerTitle = `Even Clash Tied ${scoreA} – ${scoreB}`;
       }
 
       function getBar(valA, valB, higherBetter = true) {
@@ -2719,10 +2715,10 @@
       }
 
       function badge(w) {
-        if (w === 'A') return `<span class="h2h-cat-badge badge-a">CONTENDER 1</span>`;
-        if (w === 'B') return `<span class="h2h-cat-badge badge-b">CONTENDER 2</span>`;
-        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">NO BREAKS</span>`;
-        return `<span class="h2h-cat-badge badge-tie">TIE</span>`;
+        if (w === 'A') return `<span class="h2h-cat-badge badge-a">Contender 01</span>`;
+        if (w === 'B') return `<span class="h2h-cat-badge badge-b">Contender 02</span>`;
+        if (w === 'NONE') return `<span class="h2h-cat-badge badge-tie">No Breaks</span>`;
+        return `<span class="h2h-cat-badge badge-tie">Tie</span>`;
       }
 
       const b1 = getBar(selectedA.speaker_score, selectedB.speaker_score, true);
@@ -2742,22 +2738,22 @@
 
       container.innerHTML = `
         <div class="h2h-prediction-banner">
-          <div style="font-family: var(--font-mono); font-size: 11.5px; letter-spacing: 0.14em; text-transform: uppercase; color: #cbe6f4; margin-bottom: 6px;">
-            HEAD TO HEAD RESULT · ELO WIN EXPECTANCY: ${fmt(expectedProbA, 1)}% VS ${fmt(expectedProbB, 1)}%
+          <div style="font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase; color: rgba(255, 255, 255, 0.76); margin-bottom: 6px;">
+            Head to Head Result · Elo Win Expectancy: ${fmt(expectedProbA, 1)}% vs ${fmt(expectedProbB, 1)}%
           </div>
-          <div class="h2h-pred-prob" style="color: ${bannerColor};">${bannerTitle}</div>
-          <div style="font-size: 13px; color: #e4f3fb; margin-top: 6px;">
-            Judged across: Speaker Score, International Elo, Win %, Break Rank Avg (BRA), Prelims Debated, Highest Achievement, and Tournament Clashes.
+          <div class="h2h-pred-prob">${bannerTitle}</div>
+          <div style="font-size: 13px; font-weight: 300; color: rgba(255, 255, 255, 0.82); margin-top: 6px;">
+            Judged across Speaker Score, Elo, Win %, Break Rank Avg (BRA), Prelims, Highest Achievement, and Direct Tournament Clashes.
           </div>
         </div>
 
         <div class="h2h-stat-compare">
           <!-- 1. Speaker Score -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #afd4e6;">${fmt(selectedA.speaker_score, 2)}</div>
+            <div class="h2h-cat-val">${fmt(selectedA.speaker_score, 2)}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">1. SPEAKER SCORE</span>
+                <span class="h2h-cat-title">01 // Speaker Score</span>
                 ${badge(w1)}
               </div>
               <div class="h2h-cat-bar">
@@ -2766,15 +2762,15 @@
               </div>
               <div class="h2h-cat-subtext">Speaker average across substantive speeches</div>
             </div>
-            <div class="h2h-cat-val" style="color: #fda4af;">${fmt(selectedB.speaker_score, 2)}</div>
+            <div class="h2h-cat-val">${fmt(selectedB.speaker_score, 2)}</div>
           </div>
 
           <!-- 2. Debater Elo Rating -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #afd4e6;">${fmt(eloA, 1)}</div>
+            <div class="h2h-cat-val">${fmt(eloA, 1)}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">2. INTERNATIONAL ELO</span>
+                <span class="h2h-cat-title">02 // Elo Rating</span>
                 ${badge(wElo)}
               </div>
               <div class="h2h-cat-bar">
@@ -2783,15 +2779,15 @@
               </div>
               <div class="h2h-cat-subtext">Expected Win Share: ${fmt(expectedProbA, 1)}% vs ${fmt(expectedProbB, 1)}%</div>
             </div>
-            <div class="h2h-cat-val" style="color: #fda4af;">${fmt(eloB, 1)}</div>
+            <div class="h2h-cat-val">${fmt(eloB, 1)}</div>
           </div>
 
           <!-- 3. Win % -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #afd4e6;">${fmt(selectedA.win_percentage, 1)}%</div>
+            <div class="h2h-cat-val">${fmt(selectedA.win_percentage, 1)}%</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">3. WIN %</span>
+                <span class="h2h-cat-title">03 // Win %</span>
                 ${badge(w2)}
               </div>
               <div class="h2h-cat-bar">
@@ -2800,15 +2796,15 @@
               </div>
               <div class="h2h-cat-subtext">Match win rate across contested debates</div>
             </div>
-            <div class="h2h-cat-val" style="color: #fda4af;">${fmt(selectedB.win_percentage, 1)}%</div>
+            <div class="h2h-cat-val">${fmt(selectedB.win_percentage, 1)}%</div>
           </div>
 
           <!-- 4. Break Rank Avg (BRA) -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #afd4e6;">${braA !== null ? fmt(braA, 2) : '-'}</div>
+            <div class="h2h-cat-val">${braA !== null ? fmt(braA, 2) : '—'}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">4. BREAK RANK AVG (BRA)</span>
+                <span class="h2h-cat-title">04 // Break Rank Avg (BRA)</span>
                 ${badge(w3)}
               </div>
               <div class="h2h-cat-bar">
@@ -2817,16 +2813,16 @@
               </div>
               <div class="h2h-cat-subtext">Average preliminary break seed (Lower is better)</div>
             </div>
-            <div class="h2h-cat-val" style="color: #fda4af;">${braB !== null ? fmt(braB, 2) : '-'}</div>
+            <div class="h2h-cat-val">${braB !== null ? fmt(braB, 2) : '—'}</div>
           </div>
 
 
           <!-- 5. Prelims Debated -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #afd4e6;">${selectedA.prelims_debated}</div>
+            <div class="h2h-cat-val">${selectedA.prelims_debated}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">5. PRELIMS DEBATED</span>
+                <span class="h2h-cat-title">05 // Prelims Debated</span>
                 ${badge(w4)}
               </div>
               <div class="h2h-cat-bar">
@@ -2835,15 +2831,15 @@
               </div>
               <div class="h2h-cat-subtext">Preliminary speeches completed</div>
             </div>
-            <div class="h2h-cat-val" style="color: #fda4af;">${selectedB.prelims_debated}</div>
+            <div class="h2h-cat-val">${selectedB.prelims_debated}</div>
           </div>
 
           <!-- 6. Highest Achievement -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="font-size: 11.5px; color: #afd4e6;">${achA}</div>
+            <div class="h2h-cat-val" style="font-size: 13px;">${achA}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">6. HIGHEST ACHIEVEMENT</span>
+                <span class="h2h-cat-title">06 // Highest Achievement</span>
                 ${badge(w5)}
               </div>
               <div class="h2h-cat-bar">
@@ -2852,15 +2848,15 @@
               </div>
               <div class="h2h-cat-subtext">Peak elimination progression</div>
             </div>
-            <div class="h2h-cat-val" style="font-size: 11.5px; color: #fda4af;">${achB}</div>
+            <div class="h2h-cat-val" style="font-size: 13px;">${achB}</div>
           </div>
 
           <!-- 7. Head to Head in Tournaments -->
           <div class="h2h-category-card">
-            <div class="h2h-cat-val" style="color: #afd4e6;">${aDirectWins}</div>
+            <div class="h2h-cat-val">${aDirectWins}</div>
             <div class="h2h-cat-center">
               <div class="h2h-cat-title-row">
-                <span class="h2h-cat-title">7. HEAD TO HEAD IN TOURNAMENTS</span>
+                <span class="h2h-cat-title">07 // Direct Tournament Clashes</span>
                 ${badge(w6)}
               </div>
               <div class="h2h-cat-bar">
@@ -2869,7 +2865,7 @@
               </div>
               <div class="h2h-cat-subtext">${directDebates.length} direct debate matchup${directDebates.length === 1 ? '' : 's'} contested</div>
             </div>
-            <div class="h2h-cat-val" style="color: #fda4af;">${bDirectWins}</div>
+            <div class="h2h-cat-val">${bDirectWins}</div>
           </div>
         </div>
 
@@ -2877,19 +2873,19 @@
         ${directDebates.length > 0 ? `
           <div class="h2h-matchups-section">
             <div class="h2h-matchups-title">
-              DIRECT TOURNAMENT ENCOUNTERS (${directDebates.length})
+              Direct Tournament Encounters (${directDebates.length})
             </div>
             ${directDebates.map(m => `
               <div class="h2h-matchup-card">
                 <div class="h2h-matchup-header">
-                  <span class="h2h-matchup-tour">${escapeHtml(m.tournament_name)} - ${escapeHtml(m.round_name)}</span>
-                  <span class="h2h-matchup-outcome" style="color: ${m.a_won ? '#afd4e6' : '#fb7185'};">
-                    ${m.a_won ? escapeHtml(selectedA.name) + ' WON' : escapeHtml(selectedB.name) + ' WON'}
+                  <span class="h2h-matchup-tour">${escapeHtml(m.tournament_name)} · ${escapeHtml(m.round_name)}</span>
+                  <span class="h2h-matchup-outcome">
+                    ${m.a_won ? escapeHtml(selectedA.name) + ' Won' : escapeHtml(selectedB.name) + ' Won'}
                   </span>
                 </div>
                 <div class="h2h-matchup-body">
                   <div class="h2h-matchup-team">${escapeHtml(m.team_a)} (${m.side_a})</div>
-                  <div style="font-family: var(--font-mono); font-weight: 700; color: #afd4e6;">VS</div>
+                  <div style="font-family: var(--font-mono); font-size: 11px; color: rgba(255, 255, 255, 0.72);">vs</div>
                   <div class="h2h-matchup-team" style="text-align: right;">${escapeHtml(m.team_b)} (${m.side_b})</div>
                 </div>
               </div>
@@ -2933,18 +2929,18 @@
       const cd = document.getElementById('countDirect');
       const ctr = document.getElementById('countTrialed');
       const ct = document.getElementById('countTrials');
-      if (cd) cd.textContent = `${direct.length} DEBATERS`;
-      if (ctr) ctr.textContent = `${trialed.length} DEBATERS`;
-      if (ct) ct.textContent = `${trials.length} DEBATERS`;
+      if (cd) cd.textContent = `${direct.length} Debaters`;
+      if (ctr) ctr.textContent = `${trialed.length} Debaters`;
+      if (ct) ct.textContent = `${trials.length} Debaters`;
 
       function renderItems(arr, tagClass) {
         if (arr.length === 0) {
-          return `<div style="text-align: center; padding: 20px; color: #afd4e6; font-size: 12px;">No debaters match.</div>`;
+          return `<div style="text-align: center; padding: 24px; color: rgba(255, 255, 255, 0.72); font-size: 13px; font-weight: 300;">No debaters match.</div>`;
         }
-        return arr.map(d => `
+        return arr.map((d, idx) => `
           <div class="pool-debater-card">
-            <div style="display: flex; align-items: center; gap: 10px; min-width: 0;">
-              <span class="pool-rank-badge">#${d.rank_in_tier || '-'}</span>
+            <div style="display: flex; align-items: baseline; gap: 14px; min-width: 0;">
+              <span class="pool-rank-badge">${String(d.rank_in_tier || idx + 1).padStart(2, '0')}</span>
               <div style="min-width: 0;">
                 <a class="pool-debater-name" href="bio.html?debater=${encodeURIComponent(d.name)}">${escapeHtml(d.name)}</a>
                 <div>
@@ -2954,7 +2950,7 @@
             </div>
             <div style="text-align: right; display: flex; flex-direction: column; align-items: flex-end; gap: 3px; flex-shrink: 0;">
               <span class="nat-tag ${tagClass}">${escapeHtml(d.national_level || '')}</span>
-              ${d.speaker_score ? `<span style="font-size: 10.5px; font-family: var(--font-mono); color: #afd4e6; font-weight: 600; white-space: nowrap;">Avg: ${fmt(d.speaker_score, 2)} · <span style="color: #34d399;">ELO: ${fmt(d.elo || 1500, 0)}</span></span>` : ''}
+              ${d.speaker_score ? `<span style="font-size: 11px; font-family: var(--font-mono); color: rgba(255, 255, 255, 0.82); font-weight: 400; white-space: nowrap;">Avg ${fmt(d.speaker_score, 2)} · Elo ${fmt(d.elo || 1500, 0)}</span>` : ''}
             </div>
           </div>
         `).join('');
@@ -3082,19 +3078,19 @@
           messages.scrollTop = messages.scrollHeight;
           return;
         } else if (data.error) {
-          botMsg.innerHTML = `<div style="color: #f87171;">Engine Notice: ${escapeHtml(data.error)}</div>`;
+          botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Engine Notice: ${escapeHtml(data.error)}</div>`;
           messages.scrollTop = messages.scrollHeight;
           return;
         }
       } else {
         const errData = await res.json().catch(() => ({}));
         const errMsg = errData.error || `Server responded with status ${res.status}`;
-        botMsg.innerHTML = `<div style="color: #f87171;">Server Error: ${escapeHtml(errMsg)}</div>`;
+        botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Server Error: ${escapeHtml(errMsg)}</div>`;
         messages.scrollTop = messages.scrollHeight;
         return;
       }
     } catch (e) {
-      botMsg.innerHTML = `<div style="color: #f87171;">Unable to communicate with the Atomos AI server at ${escapeHtml(state.apiUrl)}.</div>`;
+      botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Unable to communicate with the Atomos AI server at ${escapeHtml(state.apiUrl)}.</div>`;
       messages.scrollTop = messages.scrollHeight;
       return;
     }
@@ -3166,7 +3162,7 @@
         output.push(`<div style="margin: 3px 0 3px 14px;">• ${formatInlineMarkdown(line.slice(2))}</div>`);
       } else if (/^\d+\.\s+/.test(line)) {
         const match = line.match(/^(\d+\.)\s+(.*)$/);
-        output.push(`<div style="margin: 3px 0 3px 14px;"><strong style="color: #afd4e6;">${match[1]}</strong> ${formatInlineMarkdown(match[2])}</div>`);
+        output.push(`<div style="margin: 3px 0 3px 14px;"><strong style="color: rgba(255, 255, 255, 0.88);">${match[1]}</strong> ${formatInlineMarkdown(match[2])}</div>`);
       } else {
         output.push(`<div>${formatInlineMarkdown(line)}</div>`);
       }

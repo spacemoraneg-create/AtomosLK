@@ -12,52 +12,85 @@
 
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Leaderboards - Atomos V3</title>
-  <link rel="stylesheet" href="styles.css?v=13" />
+  <title>Circuit Leaderboards — Atomos</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="styles.css?v=14" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="assets/logo_icon.png" />
   <!-- Open Graph / Rich Link Preview -->
   <meta property="og:type" content="website" />
-  <meta property="og:title" content="Leaderboards - Atomos V3" />
-  <meta property="og:description" content="Automated Debating Statistics and Archival System for competitive debating circuits." />
+  <meta property="og:title" content="Circuit Leaderboards — Atomos" />
+  <meta property="og:description" content="Individual, Team, Institution, Tournament, and Adjudicator standings on the Sri Lankan debating circuit." />
   <meta property="og:image" content="assets/og_preview.png" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="twitter:title" content="Leaderboards - Atomos V3" />
-  <meta name="twitter:description" content="Automated Debating Statistics and Archival System for competitive debating circuits." />
+  <meta name="twitter:title" content="Circuit Leaderboards — Atomos" />
+  <meta name="twitter:description" content="Individual, Team, Institution, Tournament, and Adjudicator standings on the Sri Lankan debating circuit." />
   <meta name="twitter:image" content="assets/og_preview.png" />
 </head>
 <body>
 
-  <!-- Top Tabbycat-style Navigation Bar -->
+  <!-- Editorial Top Navigation Bar (Descendant of Homepage) -->
   <header class="tabby-nav">
     <div class="nav-brand">
-      <a href="index.html" class="nav-brand-link" aria-label="Atomos V3 Home">
-        <img class="nav-brand-logo" src="assets/logo_nav.png?v=13" alt="Atomos - Automated Statistics" />
+      <a href="index.html" class="nav-brand-link" aria-label="Atomos Home">
+        <svg class="nav-brand-svg" xmlns="http://www.w3.org/2000/svg" viewBox="16 20 133 116" fill="none" aria-hidden="true">
+          <defs>
+            <mask id="nav-sphere-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+              <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+              <circle cx="65.79" cy="70.37" r="10.38" fill="#000000" />
+            </mask>
+            <mask id="nav-c-ring-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+              <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+              <ellipse cx="80.90" cy="78.85" rx="45.37" ry="48.48" transform="rotate(-54.65 80.90 78.85)" fill="#000000" />
+              <polygon points="0,0 88.21,0 88.21,38 52,55 0,55" fill="#000000" />
+            </mask>
+            <mask id="nav-h-ring-mask" maskUnits="userSpaceOnUse" x="0" y="0" width="160" height="150">
+              <rect x="0" y="0" width="160" height="150" fill="#ffffff" />
+              <ellipse cx="86.45" cy="90.40" rx="22.35" ry="58.75" transform="rotate(89.95 86.45 90.40)" fill="#000000" />
+              <circle cx="82.16" cy="78.08" r="27.30" fill="#000000" />
+              <polygon points="112,92 160,92 160,150 112,150" fill="#000000" />
+            </mask>
+          </defs>
+          <g mask="url(#nav-sphere-mask)">
+            <circle cx="82.16" cy="78.08" r="27.30" fill="#ffffff" />
+          </g>
+          <circle cx="88.21" cy="31.56" r="7.94" fill="#ffffff" />
+          <ellipse cx="110.10" cy="111.35" rx="9.50" ry="4.05" transform="rotate(-2.00 110.10 111.35)" fill="#ffffff" />
+          <g mask="url(#nav-c-ring-mask)">
+            <ellipse cx="83.29" cy="80.83" rx="51.81" ry="51.89" transform="rotate(0.81 83.29 80.83)" fill="#ffffff" />
+          </g>
+          <g mask="url(#nav-h-ring-mask)">
+            <ellipse cx="82.60" cy="90.25" rx="25.14" ry="62.97" transform="rotate(89.08 82.60 90.25)" fill="#ffffff" />
+          </g>
+        </svg>
+        <span class="nav-brand-wordmark">Atomos</span>
       </a>
     </div>
-    <nav class="nav-links">
-      <a href="index.html" class="nav-link">HOME</a>
-      <a href="leaderboards.html" class="nav-link active">LEADERBOARDS</a>
-      <a href="bio.html" class="nav-link">DEBATER BIO</a>
-      <a href="team_bio.html" class="nav-link">TEAM BIO</a>
-      <a href="institution_bio.html" class="nav-link">INSTITUTION BIO</a>
-      <a href="adjudicator_bio.html" class="nav-link">ADJUDICATOR BIO</a>
-      <a href="h2h.html" class="nav-link">HEAD TO HEAD</a>
-      <a href="pool.html" class="nav-link">POOL</a>
-      <a href="chat.html" class="nav-link">AI CHATBOT</a>
-      <a href="admin.html" class="nav-link">ADMIN</a>
+    <nav class="nav-links" aria-label="Primary Navigation">
+      <a href="index.html" class="nav-link">Home</a>
+      <a href="leaderboards.html" class="nav-link active">Leaderboards</a>
+      <a href="bio.html" class="nav-link">Debaters</a>
+      <a href="team_bio.html" class="nav-link">Teams</a>
+      <a href="institution_bio.html" class="nav-link">Institutions</a>
+      <a href="adjudicator_bio.html" class="nav-link">Adjudicators</a>
+      <a href="h2h.html" class="nav-link">Head to Head</a>
+      <a href="pool.html" class="nav-link">National Pool</a>
+      <a href="chat.html" class="nav-link">AI Assistant</a>
+      <a href="admin.html" class="nav-link">Admin</a>
     </nav>
   </header>
 
   <main class="subpage-container">
     <div class="subpage-card">
       <div class="subpage-title">
-        <span>CIRCUIT LEADERBOARDS</span>
-        <span class="badge-count" id="tierEligibilityBadge">TAB // MIN 12 ROUNDS</span>
+        <span>Circuit Leaderboards</span>
+        <span class="badge-count" id="tierEligibilityBadge">01 // Tab Qualification (Min 12 Rounds)</span>
       </div>
 
-      <!-- Tabbycat Leaderboard Navigation Tabs & Mode Switcher -->
+      <!-- Leaderboard Category Tabs & Tier Mode Switcher -->
       <div class="subpage-tabs-bar">
         <div class="subpage-tabs" id="lbCategoryTabs">
           <button class="subpage-tab-btn active" data-tab="individual">Individual</button>
@@ -69,13 +102,13 @@
 
         <!-- Universal Tier Switcher: Tab (Default) vs General Tab -->
         <div class="subpage-mode-switcher" id="tierModeSwitcher" aria-label="Leaderboard Tier">
-          <button class="mode-switch-btn active" data-tier="tab">TAB</button>
-          <button class="mode-switch-btn" data-tier="general">GENERAL TAB</button>
+          <button class="mode-switch-btn active" data-tier="tab">Tab</button>
+          <button class="mode-switch-btn" data-tier="general">General Tab</button>
         </div>
       </div>
 
       <!-- Dynamic Metric Switcher Toolbar for Active Category -->
-      <div class="metric-toolbar-wrap" id="lbMetricToolbar" style="margin-bottom: 14px;">
+      <div class="metric-toolbar-wrap" id="lbMetricToolbar">
         <!-- Injected dynamically via JS based on category -->
       </div>
 
@@ -85,23 +118,23 @@
           type="text"
           id="lbSearchInput"
           class="filter-input"
-          placeholder="Filter by name or institution..."
+          placeholder="Search by name or institution..."
         />
       </div>
 
       <!-- Dynamic Data Table -->
       <div id="lbTableContainer">
-        <div style="text-align: center; padding: 40px; color: #d8eef9; font-weight: 500; font-family: var(--font-mono);">Loading leaderboard...</div>
+        <div style="text-align: center; padding: 40px; color: rgba(255, 255, 255, 0.72); font-weight: 300; font-family: var(--font-mono);">Loading leaderboard...</div>
       </div>
     </div>
 
     <!-- Footer -->
     <footer class="atomos-footer">
-      <div class="footer-tag">ATOMOS V3</div>
+      <div class="footer-tag">Atomos // Sri Lankan Debating Archive</div>
     </footer>
   </main>
 
-  <script src="app.js?v=13"></script>
+  <script src="app.js?v=14"></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f88322e0730e4449a5bb81b8e7aad80f"}'></script>
   <!-- End Cloudflare Web Analytics -->
