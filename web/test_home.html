@@ -19,12 +19,10 @@
         #acaedb 100%
       );
       --text-primary: #ffffff;
-      --text-soft: rgba(255, 255, 255, 0.86);
-      --text-muted: rgba(255, 255, 255, 0.64);
-      --hairline: rgba(255, 255, 255, 0.24);
-      --hairline-subtle: rgba(255, 255, 255, 0.14);
-      --glass-surface: rgba(25, 42, 115, 0.18);
-      --glass-surface-strong: rgba(22, 38, 108, 0.28);
+      --text-soft: rgba(255, 255, 255, 0.88);
+      --text-muted: rgba(255, 255, 255, 0.68);
+      --hairline: rgba(255, 255, 255, 0.26);
+      --hairline-subtle: rgba(255, 255, 255, 0.15);
       --font-display: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
     }
@@ -53,73 +51,12 @@
     }
 
     /* =========================================================================
-       FLOATING LAYOUT SWITCHER (For Test Preview Only)
-       ========================================================================= */
-    .preview-dock {
-      position: fixed;
-      bottom: 24px;
-      right: 28px;
-      z-index: 9999;
-      display: flex;
-      align-items: center;
-      gap: 6px;
-      background: rgba(18, 30, 82, 0.72);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border: 1px solid rgba(255, 255, 255, 0.28);
-      padding: 6px;
-      border-radius: 999px;
-      box-shadow: 0 12px 32px rgba(12, 20, 60, 0.32);
-    }
-
-    .preview-dock-label {
-      font-family: var(--font-mono);
-      font-size: 10px;
-      letter-spacing: 0.1em;
-      text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.7);
-      padding: 0 10px 0 12px;
-    }
-
-    .preview-btn {
-      background: transparent;
-      border: none;
-      color: rgba(255, 255, 255, 0.8);
-      font-family: var(--font-display);
-      font-size: 12px;
-      font-weight: 400;
-      padding: 7px 14px;
-      border-radius: 999px;
-      cursor: pointer;
-      transition: all 0.2s ease;
-    }
-
-    .preview-btn:hover {
-      color: #ffffff;
-      background: rgba(255, 255, 255, 0.12);
-    }
-
-    .preview-btn.active {
-      background: #ffffff;
-      color: #2b4fa6;
-      font-weight: 500;
-    }
-
-    .layout-view {
-      display: none;
-    }
-
-    .layout-view.active {
-      display: block;
-    }
-
-    /* =========================================================================
-       LAYOUT 1: EXACT CANVA HERO + EDITORIAL SCROLL BELOW FOLD
+       HERO SECTION (CANVA GRADIENT + TOP NAV + WORDMARK + RIGHT LOGO)
        ========================================================================= */
     .canva-hero {
       min-height: 100vh;
       width: 100%;
-      padding: 46px 56px 56px;
+      padding: 44px 56px 52px;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -130,30 +67,34 @@
       display: flex;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 40px;
+      gap: 32px;
     }
 
     .canva-mission {
-      font-size: 17px;
+      font-size: 16.5px;
       font-weight: 300;
       line-height: 1.38;
       letter-spacing: -0.01em;
-      color: rgba(255, 255, 255, 0.94);
-      max-width: 390px;
+      color: rgba(255, 255, 255, 0.95);
+      max-width: 380px;
+      flex-shrink: 0;
     }
 
     .canva-minimal-nav {
       display: flex;
-      gap: 28px;
+      gap: 22px;
       align-items: center;
-      font-size: 13.5px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      font-size: 13px;
       font-weight: 300;
-      color: rgba(255, 255, 255, 0.9);
+      color: rgba(255, 255, 255, 0.92);
     }
 
     .canva-minimal-nav a {
       position: relative;
       padding-bottom: 3px;
+      white-space: nowrap;
       transition: opacity 0.2s ease;
     }
 
@@ -165,16 +106,21 @@
       width: 0%;
       height: 1px;
       background: #ffffff;
-      transition: width 0.25s ease;
+      transition: width 0.22s ease;
     }
 
     .canva-minimal-nav a:hover::after {
       width: 100%;
     }
 
-    .canva-wordmark-wrap {
+    /* Center Hero Row: Left Wordmark + Right Orbital Logo */
+    .canva-center-stage {
       margin: auto 0;
-      padding-bottom: 6vh;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 48px;
+      padding: 2vh 0 4vh;
     }
 
     .canva-wordmark {
@@ -185,6 +131,28 @@
       line-height: 0.95;
       color: #ffffff;
       margin-left: -0.04em;
+      user-select: none;
+    }
+
+    .canva-hero-logo-wrap {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding-right: 3vw;
+    }
+
+    .canva-hero-logo {
+      width: clamp(240px, 27vw, 390px);
+      height: auto;
+      object-fit: contain;
+      opacity: 0.94;
+      filter: drop-shadow(0 12px 36px rgba(32, 52, 136, 0.18));
+      transition: transform 0.35s ease, opacity 0.35s ease;
+    }
+
+    .canva-hero-logo:hover {
+      transform: scale(1.02);
+      opacity: 1;
     }
 
     .canva-bottom-bar {
@@ -221,7 +189,7 @@
       font-size: 11px;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.74);
     }
 
     .scroll-cue {
@@ -229,12 +197,14 @@
       font-size: 11px;
       letter-spacing: 0.1em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.8);
+      color: rgba(255, 255, 255, 0.82);
     }
 
-    /* Editorial Scroll Sections below the Hero */
+    /* =========================================================================
+       SECTION 2: CIRCUIT MODULES (SUBTLY BOXED COLUMNS)
+       ========================================================================= */
     .editorial-section {
-      padding: 72px 56px;
+      padding: 68px 56px;
       border-top: 1px solid var(--hairline);
     }
 
@@ -242,7 +212,7 @@
       display: flex;
       justify-content: space-between;
       align-items: baseline;
-      margin-bottom: 36px;
+      margin-bottom: 32px;
       flex-wrap: wrap;
       gap: 16px;
     }
@@ -258,34 +228,42 @@
       font-size: 11px;
       letter-spacing: 0.12em;
       text-transform: uppercase;
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.74);
     }
 
-    /* Minimal Directory Rows (Instead of blocky buttons) */
-    .directory-grid {
+    /* Two subtly boxed columns matching the user's drawn vertical borders */
+    .directory-columns {
       display: grid;
       grid-template-columns: repeat(2, 1fr);
-      column-gap: 64px;
+      gap: 48px;
+    }
+
+    .directory-box {
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
+      background: rgba(255, 255, 255, 0.035);
+      backdrop-filter: blur(6px);
+      -webkit-backdrop-filter: blur(6px);
+      overflow: hidden;
     }
 
     .directory-row {
       display: flex;
       align-items: baseline;
       justify-content: space-between;
-      padding: 20px 8px;
+      padding: 20px 24px;
       border-bottom: 1px solid var(--hairline);
-      transition: padding-left 0.22s ease, background 0.22s ease;
+      transition: background 0.2s ease, padding-left 0.2s ease;
       cursor: pointer;
     }
 
-    .directory-row:first-child,
-    .directory-row:nth-child(2) {
-      border-top: 1px solid var(--hairline);
+    .directory-row:last-child {
+      border-bottom: none;
     }
 
     .directory-row:hover {
-      padding-left: 18px;
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(255, 255, 255, 0.08);
+      padding-left: 30px;
     }
 
     .dir-left {
@@ -297,11 +275,11 @@
     .dir-num {
       font-family: var(--font-mono);
       font-size: 12px;
-      color: rgba(255, 255, 255, 0.6);
+      color: rgba(255, 255, 255, 0.62);
     }
 
     .dir-name {
-      font-size: 22px;
+      font-size: 21px;
       font-weight: 300;
       letter-spacing: -0.01em;
     }
@@ -309,10 +287,13 @@
     .dir-meta {
       font-size: 13px;
       font-weight: 300;
-      color: rgba(255, 255, 255, 0.72);
+      color: rgba(255, 255, 255, 0.78);
+      text-align: right;
     }
 
-    /* Clean Hairline Scrollable Leaderboard */
+    /* =========================================================================
+       SECTION 3: STANDINGS (CLEAN HAIRLINE SCROLLABLE TABLE)
+       ========================================================================= */
     .minimal-lb-controls {
       display: flex;
       justify-content: space-between;
@@ -324,7 +305,7 @@
 
     .minimal-pills {
       display: flex;
-      gap: 24px;
+      gap: 26px;
       border-bottom: 1px solid var(--hairline);
       padding-bottom: 10px;
     }
@@ -363,14 +344,14 @@
     }
 
     .minimal-search::placeholder {
-      color: rgba(255, 255, 255, 0.65);
+      color: rgba(255, 255, 255, 0.68);
     }
 
     .minimal-table-scroll {
       max-height: 440px;
       overflow-y: auto;
-      border-top: 1px solid rgba(255, 255, 255, 0.35);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.35);
+      border: 1px solid var(--hairline);
+      border-radius: 4px;
       background: rgba(20, 35, 96, 0.14);
       backdrop-filter: blur(8px);
     }
@@ -402,15 +383,19 @@
       font-weight: 400;
       text-transform: uppercase;
       letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.78);
-      padding: 14px 16px;
+      color: rgba(255, 255, 255, 0.82);
+      padding: 14px 18px;
       border-bottom: 1px solid var(--hairline);
     }
 
     .minimal-table td {
-      padding: 15px 16px;
+      padding: 15px 18px;
       border-bottom: 1px solid var(--hairline-subtle);
       color: #ffffff;
+    }
+
+    .minimal-table tbody tr:last-child td {
+      border-bottom: none;
     }
 
     .minimal-table tbody tr:hover td {
@@ -422,165 +407,17 @@
       font-variant-numeric: tabular-nums;
     }
 
-    /* =========================================================================
-       LAYOUT 2: SPLIT POSTER (LEFT CANVA HERO + RIGHT EDITORIAL INDEX)
-       ========================================================================= */
-    .split-poster {
-      min-height: 100vh;
-      padding: 46px 56px;
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 48px;
-      align-items: stretch;
-    }
-
-    .split-left {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding-right: 24px;
-    }
-
-    .split-right {
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      border-left: 1px solid var(--hairline);
-      padding-left: 48px;
-    }
-
-    .split-index-list {
-      display: flex;
-      flex-direction: column;
-    }
-
-    .split-index-item {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      padding: 18px 0;
-      border-bottom: 1px solid var(--hairline);
-      transition: transform 0.2s ease, opacity 0.2s ease;
-    }
-
-    .split-index-item:first-child {
-      border-top: 1px solid var(--hairline);
-    }
-
-    .split-index-item:hover {
-      transform: translateX(8px);
-    }
-
-    .split-index-title {
-      font-size: 24px;
-      font-weight: 300;
-      letter-spacing: -0.015em;
-    }
-
-    .split-index-sub {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      color: rgba(255, 255, 255, 0.72);
-    }
-
-    /* =========================================================================
-       LAYOUT 3: ARCHITECTURAL SWISS HAIRLINE GRID
-       ========================================================================= */
-    .swiss-grid-page {
-      min-height: 100vh;
-      display: grid;
-      grid-template-rows: auto 1fr auto;
-    }
-
-    .swiss-top-row {
-      display: grid;
-      grid-template-columns: 1.2fr 1fr 1fr;
-      border-bottom: 1px solid var(--hairline);
-    }
-
-    .swiss-cell {
-      padding: 36px 44px;
-      border-right: 1px solid var(--hairline);
-    }
-
-    .swiss-cell:last-child {
-      border-right: none;
-    }
-
-    .swiss-hero-row {
-      display: grid;
-      grid-template-columns: 1.2fr 1.8fr;
-      border-bottom: 1px solid var(--hairline);
-      min-height: 62vh;
-    }
-
-    .swiss-brand-pane {
-      padding: 52px 44px;
-      border-right: 1px solid var(--hairline);
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .swiss-lb-pane {
-      padding: 40px 44px;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-    }
-
-    .swiss-nav-strip {
-      display: grid;
-      grid-template-columns: repeat(7, 1fr);
-      border-bottom: 1px solid var(--hairline);
-    }
-
-    .swiss-nav-cell {
-      padding: 22px 24px;
-      border-right: 1px solid var(--hairline);
-      display: flex;
-      flex-direction: column;
-      gap: 8px;
-      transition: background 0.2s ease;
-      cursor: pointer;
-    }
-
-    .swiss-nav-cell:last-child {
-      border-right: none;
-    }
-
-    .swiss-nav-cell:hover {
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .swiss-nav-num {
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      color: rgba(255, 255, 255, 0.65);
-    }
-
-    .swiss-nav-name {
-      font-size: 15px;
-      font-weight: 400;
-      letter-spacing: -0.01em;
-    }
-
     @media (max-width: 980px) {
-      .canva-hero, .editorial-section, .split-poster {
+      .canva-hero, .editorial-section {
         padding: 32px 24px;
       }
-      .directory-grid, .split-poster, .swiss-top-row, .swiss-hero-row {
+      .canva-center-stage {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .directory-columns {
         grid-template-columns: 1fr;
-      }
-      .split-right {
-        border-left: none;
-        padding-left: 0;
-        padding-top: 24px;
-      }
-      .swiss-nav-strip {
-        grid-template-columns: repeat(2, 1fr);
+        gap: 24px;
       }
     }
   </style>
@@ -588,512 +425,272 @@
 <body>
 
   <!-- =======================================================================
-       LAYOUT 1: EXACT CANVA HERO + CLEAN EDITORIAL SCROLL
+       1. HERO SECTION
        ======================================================================= -->
-  <div id="layout-1" class="layout-view active">
-    <section class="canva-hero">
-      <div class="canva-top-bar">
-        <p class="canva-mission">
-          Atomos is a project built to streamline the<br />
-          world of Sri Lankan Debating statistics
-        </p>
-        <nav class="canva-minimal-nav">
-          <a href="#standings">Leaderboards</a>
-          <a href="#modules">Debaters</a>
-          <a href="#modules">Teams</a>
-          <a href="#modules">Institutions</a>
-          <a href="#modules">Head to Head</a>
-          <a href="#modules">National Pool</a>
-          <a href="#modules">AI Assistant</a>
-        </nav>
-      </div>
+  <section class="canva-hero" id="heroSection">
+    <div class="canva-top-bar">
+      <p class="canva-mission">
+        Atomos is a project built to streamline the<br />
+        world of Sri Lankan Debating statistics
+      </p>
+      <nav class="canva-minimal-nav">
+        <a href="#standings">Leaderboards</a>
+        <a href="#modules">Debaters</a>
+        <a href="#modules">Teams</a>
+        <a href="#modules">Institutions</a>
+        <a href="#modules">Adjudicators</a>
+        <a href="#modules">Head to Head</a>
+        <a href="#modules">National Pool</a>
+        <a href="#modules">AI Assistant</a>
+        <a href="#modules">Admin</a>
+      </nav>
+    </div>
 
-      <div class="canva-wordmark-wrap">
-        <h1 class="canva-wordmark">Atomos</h1>
+    <div class="canva-center-stage">
+      <h1 class="canva-wordmark">Atomos</h1>
+      <div class="canva-hero-logo-wrap">
+        <img
+          src="assets/logo_emblem_large.png"
+          alt="Atomos Orbital Emblem"
+          class="canva-hero-logo"
+        />
       </div>
+    </div>
 
-      <div class="canva-bottom-bar">
-        <div class="canva-vitals-inline">
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">10</span>
-            <span class="canva-vital-lbl">Tournaments</span>
-          </div>
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">831</span>
-            <span class="canva-vital-lbl">Debaters</span>
-          </div>
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">8,034</span>
-            <span class="canva-vital-lbl">Speeches</span>
-          </div>
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">1,096</span>
-            <span class="canva-vital-lbl">Debates</span>
-          </div>
+    <div class="canva-bottom-bar">
+      <div class="canva-vitals-inline">
+        <div class="canva-vital-item">
+          <span class="canva-vital-val">10</span>
+          <span class="canva-vital-lbl">Tournaments</span>
         </div>
-        <div class="scroll-cue">Scroll to explore ↓</div>
+        <div class="canva-vital-item">
+          <span class="canva-vital-val">831</span>
+          <span class="canva-vital-lbl">Debaters</span>
+        </div>
+        <div class="canva-vital-item">
+          <span class="canva-vital-val">8,034</span>
+          <span class="canva-vital-lbl">Speeches</span>
+        </div>
+        <div class="canva-vital-item">
+          <span class="canva-vital-val">1,096</span>
+          <span class="canva-vital-lbl">Debates</span>
+        </div>
       </div>
-    </section>
+      <div class="scroll-cue">Scroll to explore ↓</div>
+    </div>
+  </section>
 
-    <!-- Section 2: Open Typographic Directory (Zero Blocky Cards) -->
-    <section class="editorial-section" id="modules">
-      <div class="editorial-header">
-        <h2 class="editorial-title">Circuit Modules</h2>
-        <span class="editorial-kicker">01 // Archive Directory</span>
-      </div>
+  <!-- =======================================================================
+       2. CIRCUIT MODULES (SUBTLY BOXED, UPDATED LABELS, NO ARROWS)
+       ======================================================================= -->
+  <section class="editorial-section" id="modules">
+    <div class="editorial-header">
+      <h2 class="editorial-title">Circuit Modules</h2>
+      <span class="editorial-kicker">01 // Archive Directory</span>
+    </div>
 
-      <div class="directory-grid">
+    <div class="directory-columns">
+      <!-- Left Boxed Column (01, 03, 05, 07) -->
+      <div class="directory-box">
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">01</span>
             <span class="dir-name">Circuit Leaderboards</span>
           </div>
-          <span class="dir-meta">Individual · Teams · Institutions →</span>
-        </a>
-        <a class="directory-row" href="#standings">
-          <div class="dir-left">
-            <span class="dir-num">02</span>
-            <span class="dir-name">Debater Bio</span>
-          </div>
-          <span class="dir-meta">Scores · Elo · Trajectory →</span>
+          <span class="dir-meta">Individual · Teams · Institutions</span>
         </a>
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">03</span>
             <span class="dir-name">Team Bio</span>
           </div>
-          <span class="dir-meta">ATSS · Team Elo · Lineups →</span>
-        </a>
-        <a class="directory-row" href="#standings">
-          <div class="dir-left">
-            <span class="dir-num">04</span>
-            <span class="dir-name">Institution Bio</span>
-          </div>
-          <span class="dir-meta">Delta · School Elo · Rosters →</span>
+          <span class="dir-meta">ATSS · Team Elo</span>
         </a>
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">05</span>
             <span class="dir-name">Head to Head</span>
           </div>
-          <span class="dir-meta">Direct Matchups &amp; Win Expectancy →</span>
-        </a>
-        <a class="directory-row" href="#standings">
-          <div class="dir-left">
-            <span class="dir-num">06</span>
-            <span class="dir-name">National Pool</span>
-          </div>
-          <span class="dir-meta">Direct · Trialed · Trials →</span>
+          <span class="dir-meta">Direct Matchups</span>
         </a>
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">07</span>
             <span class="dir-name">Adjudicator Bio</span>
           </div>
-          <span class="dir-meta">Panels · Breaks · Rounds Judged →</span>
+          <span class="dir-meta">Panels · Breaks · Rounds Judged</span>
+        </a>
+      </div>
+
+      <!-- Right Boxed Column (02, 04, 06, 08) -->
+      <div class="directory-box">
+        <a class="directory-row" href="#standings">
+          <div class="dir-left">
+            <span class="dir-num">02</span>
+            <span class="dir-name">Debater Bio</span>
+          </div>
+          <span class="dir-meta">Scores · Elo · Ranking</span>
+        </a>
+        <a class="directory-row" href="#standings">
+          <div class="dir-left">
+            <span class="dir-num">04</span>
+            <span class="dir-name">Institution Bio</span>
+          </div>
+          <span class="dir-meta">Delta · School Elo · Rosters</span>
+        </a>
+        <a class="directory-row" href="#standings">
+          <div class="dir-left">
+            <span class="dir-num">06</span>
+            <span class="dir-name">National Pool</span>
+          </div>
+          <span class="dir-meta">Direct · Trialed · Trials</span>
         </a>
         <a class="directory-row" href="#standings">
           <div class="dir-left">
             <span class="dir-num">08</span>
             <span class="dir-name">Atomos AI Assistant</span>
           </div>
-          <span class="dir-meta">Natural Language Circuit Query →</span>
+          <span class="dir-meta">Natural Language Circuit Query</span>
         </a>
       </div>
-    </section>
-
-    <!-- Section 3: Minimal Hairline Leaderboard -->
-    <section class="editorial-section" id="standings">
-      <div class="editorial-header">
-        <h2 class="editorial-title">Standings</h2>
-        <span class="editorial-kicker">02 // Tab Qualification (Min 12 Rounds)</span>
-      </div>
-
-      <div class="minimal-lb-controls">
-        <div class="minimal-pills">
-          <button class="minimal-pill active">Speaker Score</button>
-          <button class="minimal-pill">International Elo</button>
-          <button class="minimal-pill">Win %</button>
-          <button class="minimal-pill">StDev</button>
-          <button class="minimal-pill">Prelims</button>
-        </div>
-        <input type="text" class="minimal-search" placeholder="Search debater or school..." />
-      </div>
-
-      <div class="minimal-table-scroll">
-        <table class="minimal-table">
-          <thead>
-            <tr>
-              <th style="width: 56px;">#</th>
-              <th>Speaker</th>
-              <th>Institution</th>
-              <th class="num-col">Avg Score</th>
-              <th class="num-col">Elo</th>
-              <th class="num-col">Win %</th>
-              <th class="num-col">StDev</th>
-              <th class="num-col">Prelims</th>
-              <th>National Pool</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr>
-              <td>01</td>
-              <td>Apoorva Jinadasa</td>
-              <td>Hillwood College Kandy</td>
-              <td class="num-col">72.78</td>
-              <td class="num-col">1688.9</td>
-              <td class="num-col">80.9%</td>
-              <td class="num-col">0.90</td>
-              <td class="num-col">21</td>
-              <td>Nat Pool, Direct</td>
-            </tr>
-            <tr>
-              <td>02</td>
-              <td>Vidath Marasinghe</td>
-              <td>D. S. Senanayake College</td>
-              <td class="num-col">72.71</td>
-              <td class="num-col">1743.4</td>
-              <td class="num-col">84.2%</td>
-              <td class="num-col">1.14</td>
-              <td class="num-col">38</td>
-              <td>Nat Pool, Direct</td>
-            </tr>
-            <tr>
-              <td>03</td>
-              <td>T. Tharaniharan</td>
-              <td>Royal College</td>
-              <td class="num-col">72.52</td>
-              <td class="num-col">1807.2</td>
-              <td class="num-col">100%</td>
-              <td class="num-col">0.71</td>
-              <td class="num-col">25</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>04</td>
-              <td>Nimuthu Pathiraja</td>
-              <td>Trinity College Kandy</td>
-              <td class="num-col">72.43</td>
-              <td class="num-col">1717.7</td>
-              <td class="num-col">78.2%</td>
-              <td class="num-col">0.92</td>
-              <td class="num-col">46</td>
-              <td>Nat Pool, Direct</td>
-            </tr>
-            <tr>
-              <td>05</td>
-              <td>Thahira Saheed</td>
-              <td>Ladies' College</td>
-              <td class="num-col">72.35</td>
-              <td class="num-col">1653.1</td>
-              <td class="num-col">81.4%</td>
-              <td class="num-col">0.95</td>
-              <td class="num-col">27</td>
-              <td>Nat Pool, Direct</td>
-            </tr>
-            <tr>
-              <td>06</td>
-              <td>Ra'ed Abdul Cader</td>
-              <td>Asian International School</td>
-              <td class="num-col">72.16</td>
-              <td class="num-col">1667.9</td>
-              <td class="num-col">73.5%</td>
-              <td class="num-col">0.73</td>
-              <td class="num-col">34</td>
-              <td>—</td>
-            </tr>
-            <tr>
-              <td>07</td>
-              <td>Druvin Vitharanage</td>
-              <td>Royal College</td>
-              <td class="num-col">72.12</td>
-              <td class="num-col">1776.2</td>
-              <td class="num-col">93.5%</td>
-              <td class="num-col">0.64</td>
-              <td class="num-col">31</td>
-              <td>Nat Pool, Trialed</td>
-            </tr>
-            <tr>
-              <td>08</td>
-              <td>Dithira De Silva</td>
-              <td>Royal College</td>
-              <td class="num-col">72.12</td>
-              <td class="num-col">1796.4</td>
-              <td class="num-col">95.0%</td>
-              <td class="num-col">0.74</td>
-              <td class="num-col">40</td>
-              <td>Nat Pool, Direct</td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </div>
-
-  <!-- =======================================================================
-       LAYOUT 2: SPLIT POSTER (LEFT CANVA HERO + RIGHT INDEX ON FIRST SCREEN)
-       ======================================================================= -->
-  <div id="layout-2" class="layout-view">
-    <section class="split-poster">
-      <div class="split-left">
-        <p class="canva-mission">
-          Atomos is a project built to streamline the<br />
-          world of Sri Lankan Debating statistics
-        </p>
-
-        <div style="margin: auto 0; padding: 32px 0;">
-          <h1 class="canva-wordmark" style="font-size: clamp(84px, 11vw, 156px);">Atomos</h1>
-        </div>
-
-        <div class="canva-vitals-inline" style="padding-top: 24px; border-top: 1px solid var(--hairline);">
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">10</span>
-            <span class="canva-vital-lbl">Tournaments</span>
-          </div>
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">831</span>
-            <span class="canva-vital-lbl">Debaters</span>
-          </div>
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">8,034</span>
-            <span class="canva-vital-lbl">Speeches</span>
-          </div>
-          <div class="canva-vital-item">
-            <span class="canva-vital-val">1,096</span>
-            <span class="canva-vital-lbl">Debates</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="split-right">
-        <div style="display: flex; justify-content: space-between; align-items: baseline;">
-          <span class="editorial-kicker">Circuit Directory</span>
-          <span class="editorial-kicker">2025 / 2026 Archive</span>
-        </div>
-
-        <div class="split-index-list">
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">Leaderboards</span>
-            <span class="split-index-sub">01 · Standings &amp; Elo</span>
-          </a>
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">Debater Bio</span>
-            <span class="split-index-sub">02 · Individual Dossier</span>
-          </a>
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">Team Bio</span>
-            <span class="split-index-sub">03 · Lineups &amp; ATSS</span>
-          </a>
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">Institution Bio</span>
-            <span class="split-index-sub">04 · School Delta &amp; Pool</span>
-          </a>
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">Head to Head</span>
-            <span class="split-index-sub">05 · Clash Comparison</span>
-          </a>
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">National Pool</span>
-            <span class="split-index-sub">06 · Qualification Tiers</span>
-          </a>
-          <a class="split-index-item" href="#l2-lb">
-            <span class="split-index-title">AI Assistant</span>
-            <span class="split-index-sub">07 · Query Engine</span>
-          </a>
-        </div>
-
-        <div style="display: flex; justify-content: space-between; font-size: 12px; font-weight: 300; color: rgba(255,255,255,0.75);">
-          <span>Curated by Barista &amp; Sadew</span>
-          <span>Scroll for Live Tab ↓</span>
-        </div>
-      </div>
-    </section>
-
-    <section class="editorial-section" id="l2-lb">
-      <div class="editorial-header">
-        <h2 class="editorial-title">Multi-Purpose Standings</h2>
-        <span class="editorial-kicker">Tab Qualification · Min 12 Rounds</span>
-      </div>
-      <div class="minimal-table-scroll">
-        <table class="minimal-table">
-          <thead>
-            <tr>
-              <th style="width: 56px;">#</th>
-              <th>Speaker</th>
-              <th>Institution</th>
-              <th class="num-col">Avg Score</th>
-              <th class="num-col">Elo</th>
-              <th class="num-col">Win %</th>
-              <th class="num-col">Prelims</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr><td>01</td><td>Apoorva Jinadasa</td><td>Hillwood College Kandy</td><td class="num-col">72.78</td><td class="num-col">1688.9</td><td class="num-col">80.9%</td><td class="num-col">21</td></tr>
-            <tr><td>02</td><td>Vidath Marasinghe</td><td>D. S. Senanayake College</td><td class="num-col">72.71</td><td class="num-col">1743.4</td><td class="num-col">84.2%</td><td class="num-col">38</td></tr>
-            <tr><td>03</td><td>T. Tharaniharan</td><td>Royal College</td><td class="num-col">72.52</td><td class="num-col">1807.2</td><td class="num-col">100%</td><td class="num-col">25</td></tr>
-            <tr><td>04</td><td>Nimuthu Pathiraja</td><td>Trinity College Kandy</td><td class="num-col">72.43</td><td class="num-col">1717.7</td><td class="num-col">78.2%</td><td class="num-col">46</td></tr>
-            <tr><td>05</td><td>Thahira Saheed</td><td>Ladies' College</td><td class="num-col">72.35</td><td class="num-col">1653.1</td><td class="num-col">81.4%</td><td class="num-col">27</td></tr>
-          </tbody>
-        </table>
-      </div>
-    </section>
-  </div>
-
-  <!-- =======================================================================
-       LAYOUT 3: ARCHITECTURAL SWISS HAIRLINE GRID (ALL-IN-ONE VIEWPORT)
-       ======================================================================= -->
-  <div id="layout-3" class="layout-view">
-    <div class="swiss-grid-page">
-      <div class="swiss-top-row">
-        <div class="swiss-cell">
-          <p class="canva-mission">
-            Atomos is a project built to streamline the<br />
-            world of Sri Lankan Debating statistics
-          </p>
-        </div>
-        <div class="swiss-cell" style="display: flex; justify-content: space-between; align-items: center;">
-          <div>
-            <div class="canva-vital-val">10</div>
-            <div class="canva-vital-lbl">Tournaments</div>
-          </div>
-          <div>
-            <div class="canva-vital-val">831</div>
-            <div class="canva-vital-lbl">Debaters</div>
-          </div>
-          <div>
-            <div class="canva-vital-val">8,034</div>
-            <div class="canva-vital-lbl">Speeches</div>
-          </div>
-        </div>
-        <div class="swiss-cell" style="display: flex; flex-direction: column; justify-content: space-between;">
-          <span class="editorial-kicker">Archive Status</span>
-          <span style="font-size: 14px; font-weight: 300;">Sri Lankan Schools Debating Circuit · 1,096 Contested Debates</span>
-        </div>
-      </div>
-
-      <div class="swiss-nav-strip">
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">01</span>
-          <span class="swiss-nav-name">Leaderboards</span>
-        </div>
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">02</span>
-          <span class="swiss-nav-name">Debater Bio</span>
-        </div>
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">03</span>
-          <span class="swiss-nav-name">Team Bio</span>
-        </div>
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">04</span>
-          <span class="swiss-nav-name">Institution Bio</span>
-        </div>
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">05</span>
-          <span class="swiss-nav-name">Head to Head</span>
-        </div>
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">06</span>
-          <span class="swiss-nav-name">National Pool</span>
-        </div>
-        <div class="swiss-nav-cell">
-          <span class="swiss-nav-num">07</span>
-          <span class="swiss-nav-name">AI Assistant</span>
-        </div>
-      </div>
-
-      <div class="swiss-hero-row">
-        <div class="swiss-brand-pane">
-          <span class="editorial-kicker">Atomos Archive</span>
-          <h1 class="canva-wordmark" style="font-size: clamp(78px, 9.5vw, 136px);">Atomos</h1>
-          <span style="font-size: 13px; font-weight: 300; color: rgba(255,255,255,0.75);">
-            International Standard Elo · Substantive Tab · Institutional Delta
-          </span>
-        </div>
-
-        <div class="swiss-lb-pane">
-          <div class="minimal-lb-controls" style="margin-bottom: 14px;">
-            <div class="minimal-pills">
-              <button class="minimal-pill active">Speaker Score</button>
-              <button class="minimal-pill">Elo</button>
-              <button class="minimal-pill">Win %</button>
-              <button class="minimal-pill">Prelims</button>
-            </div>
-            <input type="text" class="minimal-search" placeholder="Filter..." style="width: 190px; padding: 6px 14px;" />
-          </div>
-
-          <div class="minimal-table-scroll" style="max-height: 360px;">
-            <table class="minimal-table">
-              <thead>
-                <tr>
-                  <th style="width: 44px;">#</th>
-                  <th>Speaker</th>
-                  <th>Institution</th>
-                  <th class="num-col">Score</th>
-                  <th class="num-col">Elo</th>
-                  <th class="num-col">Win %</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr><td>01</td><td>Apoorva Jinadasa</td><td>Hillwood College Kandy</td><td class="num-col">72.78</td><td class="num-col">1688.9</td><td class="num-col">80.9%</td></tr>
-                <tr><td>02</td><td>Vidath Marasinghe</td><td>D. S. Senanayake College</td><td class="num-col">72.71</td><td class="num-col">1743.4</td><td class="num-col">84.2%</td></tr>
-                <tr><td>03</td><td>T. Tharaniharan</td><td>Royal College</td><td class="num-col">72.52</td><td class="num-col">1807.2</td><td class="num-col">100%</td></tr>
-                <tr><td>04</td><td>Nimuthu Pathiraja</td><td>Trinity College Kandy</td><td class="num-col">72.43</td><td class="num-col">1717.7</td><td class="num-col">78.2%</td></tr>
-                <tr><td>05</td><td>Thahira Saheed</td><td>Ladies' College</td><td class="num-col">72.35</td><td class="num-col">1653.1</td><td class="num-col">81.4%</td></tr>
-                <tr><td>06</td><td>Ra'ed Abdul Cader</td><td>Asian International School</td><td class="num-col">72.16</td><td class="num-col">1667.9</td><td class="num-col">73.5%</td></tr>
-                <tr><td>07</td><td>Druvin Vitharanage</td><td>Royal College</td><td class="num-col">72.12</td><td class="num-col">1776.2</td><td class="num-col">93.5%</td></tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
     </div>
-  </div>
+  </section>
 
-  <!-- Floating Switcher Dock to test layouts -->
-  <div class="preview-dock">
-    <span class="preview-dock-label">Layout Test</span>
-    <button class="preview-btn" id="btn-0" onclick="switchLayout(0, this)">0 · Pure Canva</button>
-    <button class="preview-btn active" id="btn-1" onclick="switchLayout(1, this)">1 · Canva + Scroll</button>
-    <button class="preview-btn" id="btn-4" onclick="switchLayout(4, this)">2 · Directory + Tab</button>
-    <button class="preview-btn" id="btn-2" onclick="switchLayout(2, this)">3 · Split Poster</button>
-    <button class="preview-btn" id="btn-3" onclick="switchLayout(3, this)">4 · Swiss Grid</button>
-  </div>
+  <!-- =======================================================================
+       3. STANDINGS (SPEAKER SCORE · ELO · WIN % · STDEV · PRELIMS · NAT STATUS)
+       ======================================================================= -->
+  <section class="editorial-section" id="standings">
+    <div class="editorial-header">
+      <h2 class="editorial-title">Standings</h2>
+      <span class="editorial-kicker">02 // Tab Qualification (Min 12 Rounds)</span>
+    </div>
+
+    <div class="minimal-lb-controls">
+      <div class="minimal-pills">
+        <button class="minimal-pill active">Speaker Score</button>
+        <button class="minimal-pill">Elo</button>
+        <button class="minimal-pill">Win %</button>
+        <button class="minimal-pill">StDev</button>
+        <button class="minimal-pill">Prelims</button>
+        <button class="minimal-pill">Nat Status</button>
+      </div>
+      <input type="text" class="minimal-search" placeholder="Search debater or school..." />
+    </div>
+
+    <div class="minimal-table-scroll">
+      <table class="minimal-table">
+        <thead>
+          <tr>
+            <th style="width: 56px;">#</th>
+            <th>Speaker</th>
+            <th>Institution</th>
+            <th class="num-col">Avg Score</th>
+            <th class="num-col">Elo</th>
+            <th class="num-col">Win %</th>
+            <th class="num-col">StDev</th>
+            <th class="num-col">Prelims</th>
+            <th>Nat Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>01</td>
+            <td>Apoorva Jinadasa</td>
+            <td>Hillwood College Kandy</td>
+            <td class="num-col">72.78</td>
+            <td class="num-col">1688.9</td>
+            <td class="num-col">80.9%</td>
+            <td class="num-col">0.90</td>
+            <td class="num-col">21</td>
+            <td>Nat Pool, Direct</td>
+          </tr>
+          <tr>
+            <td>02</td>
+            <td>Vidath Marasinghe</td>
+            <td>D. S. Senanayake College</td>
+            <td class="num-col">72.71</td>
+            <td class="num-col">1743.4</td>
+            <td class="num-col">84.2%</td>
+            <td class="num-col">1.14</td>
+            <td class="num-col">38</td>
+            <td>Nat Pool, Direct</td>
+          </tr>
+          <tr>
+            <td>03</td>
+            <td>T. Tharaniharan</td>
+            <td>Royal College</td>
+            <td class="num-col">72.52</td>
+            <td class="num-col">1807.2</td>
+            <td class="num-col">100%</td>
+            <td class="num-col">0.71</td>
+            <td class="num-col">25</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>04</td>
+            <td>Nimuthu Pathiraja</td>
+            <td>Trinity College Kandy</td>
+            <td class="num-col">72.43</td>
+            <td class="num-col">1717.7</td>
+            <td class="num-col">78.2%</td>
+            <td class="num-col">0.92</td>
+            <td class="num-col">46</td>
+            <td>Nat Pool, Direct</td>
+          </tr>
+          <tr>
+            <td>05</td>
+            <td>Thahira Saheed</td>
+            <td>Ladies' College</td>
+            <td class="num-col">72.35</td>
+            <td class="num-col">1653.1</td>
+            <td class="num-col">81.4%</td>
+            <td class="num-col">0.95</td>
+            <td class="num-col">27</td>
+            <td>Nat Pool, Direct</td>
+          </tr>
+          <tr>
+            <td>06</td>
+            <td>Ra'ed Abdul Cader</td>
+            <td>Asian International School</td>
+            <td class="num-col">72.16</td>
+            <td class="num-col">1667.9</td>
+            <td class="num-col">73.5%</td>
+            <td class="num-col">0.73</td>
+            <td class="num-col">34</td>
+            <td>—</td>
+          </tr>
+          <tr>
+            <td>07</td>
+            <td>Druvin Vitharanage</td>
+            <td>Royal College</td>
+            <td class="num-col">72.12</td>
+            <td class="num-col">1776.2</td>
+            <td class="num-col">93.5%</td>
+            <td class="num-col">0.64</td>
+            <td class="num-col">31</td>
+            <td>Nat Pool, Trialed</td>
+          </tr>
+          <tr>
+            <td>08</td>
+            <td>Dithira De Silva</td>
+            <td>Royal College</td>
+            <td class="num-col">72.12</td>
+            <td class="num-col">1796.4</td>
+            <td class="num-col">95.0%</td>
+            <td class="num-col">0.74</td>
+            <td class="num-col">40</td>
+            <td>Nat Pool, Direct</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
 
   <script>
-    function switchLayout(num, btn) {
-      document.querySelectorAll('.layout-view').forEach(el => el.classList.remove('active'));
-      document.querySelectorAll('.preview-btn').forEach(el => el.classList.remove('active'));
-      const hero = document.querySelector('#layout-1 .canva-hero');
-      const nav = document.querySelector('#layout-1 .canva-minimal-nav');
-      const bottom = document.querySelector('#layout-1 .canva-bottom-bar');
-
-      if (num === 0) {
-        document.getElementById('layout-1').classList.add('active');
-        if (hero) hero.style.display = 'flex';
-        if (nav) nav.style.visibility = 'hidden';
-        if (bottom) bottom.style.visibility = 'hidden';
-      } else if (num === 4) {
-        document.getElementById('layout-1').classList.add('active');
-        if (hero) hero.style.display = 'none';
-      } else {
-        if (hero) hero.style.display = 'flex';
-        if (nav) nav.style.visibility = 'visible';
-        if (bottom) bottom.style.visibility = 'visible';
-        const target = document.getElementById('layout-' + num);
-        if (target) target.classList.add('active');
-      }
-
-      if (btn) btn.classList.add('active');
-      else {
-        const b = document.getElementById('btn-' + num);
-        if (b) b.classList.add('active');
-      }
-      window.scrollTo({ top: 0, behavior: 'smooth' });
+    // Optional helper for headless screenshot verification of the below-fold section
+    if (new URLSearchParams(window.location.search).get('section') === 'below') {
+      document.getElementById('heroSection').style.display = 'none';
     }
-    const params = new URLSearchParams(window.location.search);
-    const urlLayout = params.get('layout');
-    if (urlLayout !== null) switchLayout(Number(urlLayout));
   </script>
 </body>
 </html>
