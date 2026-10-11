@@ -15,8 +15,9 @@ import math
 import sqlite3
 from typing import Any, Dict, List, Optional, Tuple
 
-from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER
+from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER, CLEAN_TOURNAMENT_NAMES
 from atomos.analytics.v2_metrics import CANONICAL_TEAM_ALIASES, truncate_3
+
 
 
 def _is_excluded_team(name: Optional[str]) -> bool:
@@ -391,7 +392,7 @@ class EloRatingEngine:
                 )
 
                 # Compute new ratings before mutating so all speakers in the room see pre-match ratings
-                p_new_ratings: List[Tuple[Dict[str, Any], float]] = []
+                p_new_ratings = []
                 for rec in p_records:
                     pid = rec["person_id"]
                     r_i = rec["elo"]
@@ -409,9 +410,10 @@ class EloRatingEngine:
                     else:
                         s_eff = s_prop
 
-                    p_new_ratings.append((rec, r_i + k_i * (s_eff - e_i)))
+                    new_r = r_i + k_i * (s_eff - e_i)
+                    p_new_ratings.append((rec, new_r, r_i, e_i, s_eff, k_i, avg_r_opp, s_prop, p_scores.get(pid), o_raw, "Proposition"))
 
-                o_new_ratings: List[Tuple[Dict[str, Any], float]] = []
+                o_new_ratings = []
                 for rec in o_records:
                     pid = rec["person_id"]
                     r_j = rec["elo"]
@@ -429,9 +431,28 @@ class EloRatingEngine:
                     else:
                         s_eff = s_opp
 
-                    o_new_ratings.append((rec, r_j + k_j * (s_eff - e_j)))
+                    new_r = r_j + k_j * (s_eff - e_j)
+                    o_new_ratings.append((rec, new_r, r_j, e_j, s_eff, k_j, avg_r_prop, s_opp, o_scores.get(pid), p_raw, "Opposition"))
 
-                for rec, new_r in p_new_ratings:
+                for rec, new_r, old_r, e_val, s_eff, k_val, opp_avg, team_win, my_sc, opp_name, side in p_new_ratings:
+                    rec["history"].append({
+                        "debate_id": did,
+                        "tournament_id": d["tournament_id"],
+                        "tournament_name": CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"]),
+                        "round_number": d["round_number"],
+                        "round_name": d["round_name"],
+                        "round_type": rtype,
+                        "team": p_raw,
+                        "opponent_team": opp_name,
+                        "side": side,
+                        "won": team_win == 1.0,
+                        "speaker_score": my_sc,
+                        "rating_before": truncate_3(old_r),
+                        "rating_after": truncate_3(new_r),
+                        "delta": truncate_3(new_r - old_r),
+                        "opp_avg_elo": truncate_3(opp_avg),
+                        "k_factor": k_val,
+                    })
                     rec["elo"] = new_r
                     rec["peak_elo"] = max(rec["peak_elo"], new_r)
                     rec["lowest_elo"] = min(rec["lowest_elo"], new_r)
@@ -441,7 +462,25 @@ class EloRatingEngine:
                     elif s_prop == 0.0:
                         rec["losses"] += 1
 
-                for rec, new_r in o_new_ratings:
+                for rec, new_r, old_r, e_val, s_eff, k_val, opp_avg, team_win, my_sc, opp_name, side in o_new_ratings:
+                    rec["history"].append({
+                        "debate_id": did,
+                        "tournament_id": d["tournament_id"],
+                        "tournament_name": CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"]),
+                        "round_number": d["round_number"],
+                        "round_name": d["round_name"],
+                        "round_type": rtype,
+                        "team": o_raw,
+                        "opponent_team": opp_name,
+                        "side": side,
+                        "won": team_win == 1.0,
+                        "speaker_score": my_sc,
+                        "rating_before": truncate_3(old_r),
+                        "rating_after": truncate_3(new_r),
+                        "delta": truncate_3(new_r - old_r),
+                        "opp_avg_elo": truncate_3(opp_avg),
+                        "k_factor": k_val,
+                    })
                     rec["elo"] = new_r
                     rec["peak_elo"] = max(rec["peak_elo"], new_r)
                     rec["lowest_elo"] = min(rec["lowest_elo"], new_r)
@@ -450,6 +489,7 @@ class EloRatingEngine:
                         rec["wins"] += 1
                     elif s_opp == 0.0:
                         rec["losses"] += 1
+
 
         # Truncate to max 3 decimals (Atomos universal formatting rule)
         for rec in debater_elos.values():
@@ -694,3 +734,74 @@ class EloRatingEngine:
             entry["rank"] = rank
 
         return leaderboard
+
+    def get_debater_elo_history(self, identifier: Any) -> Dict[str, Any]:
+        """
+        Retrieves the complete tournament-by-tournament and match-by-match Elo history for a debater.
+        """
+        cur = self.conn.cursor()
+        pid = None
+        if isinstance(identifier, int) or (isinstance(identifier, str) and identifier.isdigit()):
+            pid = int(identifier)
+        else:
+            cur.execute("SELECT id FROM persons WHERE canonical_name LIKE ? ORDER BY LENGTH(canonical_name) ASC LIMIT 1", (f"%{identifier}%",))
+            row = cur.fetchone()
+            if row:
+                pid = row[0]
+
+        if not pid:
+            return {"error": f"Debater '{identifier}' not found in database."}
+
+        cur.execute("SELECT canonical_name FROM persons WHERE id = ?", (pid,))
+        p_row = cur.fetchone()
+        canonical_name = p_row[0] if p_row else f"Debater #{pid}"
+
+        elos = self.compute_all_international_elos()
+        deb_rec = elos["debaters"].get(pid)
+        if not deb_rec:
+            return {
+                "person_id": pid,
+                "canonical_name": canonical_name,
+                "current_elo": 1500.0,
+                "peak_elo": 1500.0,
+                "lowest_elo": 1500.0,
+                "matches_played": 0,
+                "wins": 0,
+                "losses": 0,
+                "tournament_summaries": [],
+                "match_history": []
+            }
+
+        from collections import defaultdict
+        tour_groups = defaultdict(list)
+        for m in deb_rec.get("history", []):
+            tour_groups[m["tournament_name"]].append(m)
+
+        tournament_summaries = []
+        for tname, m_list in tour_groups.items():
+            wins = sum(1 for m in m_list if m["won"])
+            start_elo = m_list[0]["rating_before"]
+            end_elo = m_list[-1]["rating_after"]
+            net_delta = round(end_elo - start_elo, 3)
+            tournament_summaries.append({
+                "tournament_name": tname,
+                "debates": len(m_list),
+                "record": f"{wins}W - {len(m_list) - wins}L",
+                "start_elo": start_elo,
+                "end_elo": end_elo,
+                "net_delta": net_delta,
+            })
+
+        return {
+            "person_id": pid,
+            "canonical_name": canonical_name,
+            "current_elo": deb_rec["elo"],
+            "peak_elo": deb_rec["peak_elo"],
+            "lowest_elo": deb_rec["lowest_elo"],
+            "matches_played": deb_rec["matches_played"],
+            "wins": deb_rec["wins"],
+            "losses": deb_rec["losses"],
+            "tournament_summaries": tournament_summaries,
+            "match_history": deb_rec.get("history", []),
+        }
+

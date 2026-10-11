@@ -39,4 +39,5 @@ def get_gemini_api_key() -> str:
 
 def get_gemini_model() -> str:
     load_env()
-    return os.environ.get("GEMINI_MODEL", "gemini-3.6-flash")
+    return os.environ.get("GEMINI_MODEL", "gemini-flash-lite-latest")
+

@@ -3283,7 +3283,16 @@
 
   async function answerChatFromGitHubData(promptText) {
     const q = (promptText || '').trim().toLowerCase();
+
+    // Client-side circuit boundary lock
+    const offTopicKeywords = ['recipe', 'toast', 'bake', 'cook', 'cinnamon', 'ingredient', 'cake', 'bread', 'soup', 'sandwich', 'pizza', 'pasta', 'cocktail', 'poem', 'poetry', 'write a song', 'story about', 'joke about', 'weather in', 'translate to', 'movie', 'celebrity'];
+    const debateKeywords = ['debate', 'debater', 'debating', 'wsdc', 'tabbycat', 'ballot', 'speaker', 'speeches', 'elo', 'rating', 'motion', 'round', 'prelim', 'elim', 'break', 'bra', 'atss', 'awpt', 'atomos', 'school', 'college', 'royal', 'ananda', 'ds', 'chaps', 'slsdc', 'vvidc', 'metho', 'vijis'];
+    if (offTopicKeywords.some(w => q.includes(w)) && !debateKeywords.some(w => q.includes(w))) {
+      return "I am Atomos, an exclusive intelligence analyst calibrated solely for the Sri Lankan Schools Debating Circuit and Atomos debate analytics. I do not provide recipes, general programming, or off-topic assistance. Ask me about debaters, teams, tournaments, ballots, Elo ratings, or speaker rankings instead.";
+    }
+
     const [sum, spkAll, spkTab, teamsAll, instAll, tourneys, adjAll, pool] = await Promise.all([
+
       state.circuitSummary || fetchJson('circuit_summary.json', '/api/circuit'),
       state.v2SpeakersAll.length ? state.v2SpeakersAll : fetchJson('v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'),
       state.v2SpeakersTab.length ? state.v2SpeakersTab : fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab'),
@@ -3408,7 +3417,8 @@
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ query: promptText, session_id: sid }),
-        signal: AbortSignal.timeout(8000),
+        signal: AbortSignal.timeout(45000),
+
       });
 
       if (res.ok) {

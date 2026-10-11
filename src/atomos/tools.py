@@ -45,6 +45,40 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "get_debater_v2_profile",
+            "description": "Retrieve the official V2 debater profile including Universal Speaker Average, consistency standard deviation (StDev σ), current Elo rating, peak Elo, lowest Elo, prelim win rate (W-L), break count, Break Rank Average (BRA), highest tournament achievement, and speaker position breakdown (1st, 2nd, 3rd, Reply averages and speech counts). Use this whenever asked about a debater's V2 stats, consistency, break rank average, or complete career profile.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "identifier": {
+                        "type": "string",
+                        "description": "The debater's canonical name (e.g. 'Balishta Wijesinghe', 'Yasir Shuhail') or numeric Person ID (e.g. '42', '43')."
+                    }
+                },
+                "required": ["identifier"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_debater_elo_history",
+            "description": "Retrieve the complete official match-by-match and tournament-by-tournament Elo rating history for a debater. Includes starting and ending Elo per tournament, net Elo deltas, round-by-round opponent teams, opponent average Elo, speaker scores, match outcomes (Won/Lost), and K-factors across all preliminary and knockout rounds. Use this whenever asked about a debater's Elo progression, Elo gains, or tournament Elo timeline.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "identifier": {
+                        "type": "string",
+                        "description": "The debater's canonical name (e.g. 'Balishta Wijesinghe', 'Sadew Muthuhetti', 'Didumika') or numeric Person ID (e.g. '42')."
+                    }
+                },
+                "required": ["identifier"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_debater_profile",
             "description": "Retrieve the comprehensive career profile, official Master Tab rank, national Critical Stats rank, overall substantive average, tournament performances, and break records for a specific debater.",
             "parameters": {
@@ -263,7 +297,42 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
     {
         "type": "function",
         "function": {
+            "name": "get_team_bio",
+            "description": "Retrieve official V2 team dossier including team Elo, peak Elo, Average Team Speaker Score (ATSS), Average Win Percentage across Tournaments (AWPT), highest tournament break/achievement, debater roster, and tournament campaign records. Use this whenever asked for detailed team vitals or team bio.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "team_name": {
+                        "type": "string",
+                        "description": "Team name (e.g. 'DS B', 'RC A', 'AIS Green')."
+                    }
+                },
+                "required": ["team_name"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "get_institution_bio",
+            "description": "Retrieve official V2 institutional dossier for a debating school: Institution Elo, Delta (performance gap between A and B teams), A-team ATSS, B-team ATSS, win rate, debater pool size, veterans count, and circuit standings. Use this whenever asked for school vitals or institution bio.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "institution_name": {
+                        "type": "string",
+                        "description": "Institution/school name (e.g. 'Royal College', 'D. S. Senanayake College', 'Visakha Vidyalaya', 'Ananda College')."
+                    }
+                },
+                "required": ["institution_name"]
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
             "name": "get_tier_matchup_stats",
+
             "description": "Calculate win rates, total matchups, win ratios, and score margins between competitive tiers (e.g. Tier A vs Tier B, Tier A vs Tier C) across the circuit or for a specific tournament. Use this whenever the user asks about the win ratio of B teams vs A teams or how lower/higher tiered school teams perform against each other.",
             "parameters": {
                 "type": "object",
@@ -484,10 +553,35 @@ def dispatch_tool(
             limit = args.get("limit", 5)
             return {"results": query_engine.search(query, entity_types=entity_types, limit=limit)}
 
+        elif name == "get_debater_v2_profile":
+            identifier = args.get("identifier", "")
+            from atomos.analytics.v2_metrics import V2MetricsEngine
+            v2 = V2MetricsEngine(query_engine.conn)
+            return v2.get_debater_v2_profile(identifier)
+
+        elif name == "get_debater_elo_history":
+            identifier = args.get("identifier", "")
+            from atomos.analytics.ratings import EloRatingEngine
+            rating_eng = EloRatingEngine(query_engine.conn)
+            return rating_eng.get_debater_elo_history(identifier)
+
+        elif name == "get_team_bio":
+            team_name = args.get("team_name", "")
+            from atomos.analytics.v2_metrics import V2MetricsEngine
+            v2 = V2MetricsEngine(query_engine.conn)
+            return v2.get_team_bio(team_name)
+
+        elif name == "get_institution_bio":
+            inst_name = args.get("institution_name", "")
+            from atomos.analytics.v2_metrics import V2MetricsEngine
+            v2 = V2MetricsEngine(query_engine.conn)
+            return v2.get_institution_bio(inst_name)
+
         elif name == "get_debater_profile":
             identifier = args.get("identifier", "")
             compact = args.get("compact", True)
             return query_engine.get_debater(identifier, compact=compact)
+
 
         elif name == "get_head_to_head":
             ea = args.get("entity_a", "")

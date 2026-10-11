@@ -120,8 +120,19 @@ class AtomosAgent:
                 pass
 
         # 2. Local deterministic fallback engine (grounded in atomos.db)
+        from atomos.agent.prompts import is_off_topic_query, OFF_TOPIC_REFUSAL
+        if is_off_topic_query(query):
+            return AgentResult(
+                query=query,
+                intent="OFF_TOPIC_GUARD",
+                answer=OFF_TOPIC_REFUSAL,
+                tool_calls=[],
+                success=True,
+            )
+
         intent, params = classify_intent(query)
         tool_calls: List[Dict[str, Any]] = []
+
 
         try:
             if intent == AgentIntent.GREETING:
