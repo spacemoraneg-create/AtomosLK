@@ -1617,6 +1617,7 @@ class AtomosQuery:
                     "total_points": info["total_points"],
                     "tournament_average": info["avg_score"],
                     "stdev": info["stdev"],
+                    "speaker_tab_rank": info["rank_by_avg"],
                     "rank_by_avg_eligible": info["rank_by_avg"],
                     "rank_by_total_points": info["rank_by_total"],
                     "round_scores": r_scores,
@@ -1630,12 +1631,14 @@ class AtomosQuery:
 
             return {
                 "mode": "tournament",
+                "default_priority_methodology": "Rank by Avg (Eligible Pool, >=3 Prelims)",
                 "tournament_id": target_tid,
                 "tournament_name": t_info["clean_name"],
                 "tournament_slug": t_info["slug"],
                 "max_prelims": entries[0]["max_prelims"] if entries else 5,
                 "total_speakers": len(entries),
                 "eligible_speakers": len(by_avg),
+                "speaker_tab": by_avg[:limit],
                 "top_by_wsdc_average": by_avg[:limit],
                 "top_by_tabbycat_total_points": by_total[:limit],
             }
