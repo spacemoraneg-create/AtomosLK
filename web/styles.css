@@ -2576,6 +2576,177 @@ a {
   padding: 0 4px;
 }
 
+/* Tournament Operations Quick-Manager List */
+.ops-tournaments-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.ops-tour-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  padding: 12px 16px;
+  background: rgba(20, 35, 96, 0.24);
+  border: 1px solid var(--hairline);
+  border-radius: 4px;
+}
+
+.ops-tour-main {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-width: 0;
+  flex: 1;
+}
+
+.ops-tour-title-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.ops-tour-order {
+  font-size: 12px;
+  font-weight: 600;
+  color: #ffffff;
+}
+
+.ops-tour-name {
+  font-size: 14px;
+  font-weight: 500;
+  color: #ffffff;
+}
+
+.ops-tour-meta {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+  font-size: 11.5px;
+  color: var(--text-soft);
+}
+
+.ops-tour-actions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-shrink: 0;
+}
+
+/* Confirmed & Auto-Merged Identities Audit Grid */
+.confirmed-merges-audit-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 8px;
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.confirmed-merge-pill {
+  padding: 8px 12px;
+  background: rgba(20, 35, 96, 0.26);
+  border: 1px solid var(--hairline-subtle);
+  border-radius: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.confirmed-merge-names {
+  font-size: 12.5px;
+  line-height: 1.35;
+  word-break: break-word;
+}
+
+.confirmed-merge-meta {
+  font-size: 10.5px;
+  color: var(--text-soft);
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* Entity Autocomplete Dropdown in Manual Merger */
+.entity-autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  background: var(--surface-dropdown);
+  border: 1px solid var(--hairline-strong);
+  border-radius: 4px;
+  max-height: 260px;
+  overflow-y: auto;
+  z-index: 1200;
+  box-shadow: 0 12px 28px rgba(8, 16, 52, 0.65);
+}
+
+.entity-auto-item {
+  padding: 10px 12px;
+  border-bottom: 1px solid var(--hairline-subtle);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: background 0.15s ease;
+}
+
+.entity-auto-item:hover {
+  background: rgba(255, 255, 255, 0.12);
+}
+
+.entity-auto-title {
+  font-size: 13px;
+  color: #ffffff;
+  font-weight: 400;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.entity-auto-badge {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  color: var(--text-soft);
+}
+
+.entity-auto-sub {
+  font-size: 11px;
+  color: var(--text-soft);
+  margin-top: 2px;
+}
+
+.entity-auto-stats {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  color: #ffffff;
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
+.inst-audit-row,
+.inst-merged-into-box,
+.inst-confirmed-merged-box {
+  padding: 10px 12px;
+  background: rgba(20, 35, 96, 0.24);
+  border: 1px solid var(--hairline-subtle);
+  border-radius: 4px;
+  margin-top: 8px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+  font-size: 12.5px;
+}
+
 /* ==========================================================================
    12. RESPONSIVE BREAKPOINTS (TABLET & VERTICAL SMARTPHONE OPTIMIZATION)
    ========================================================================== */
@@ -3262,22 +3433,180 @@ a {
     font-size: 13px;
   }
 
-  /* 9. Admin Console */
+  /* 9. Admin Console — Smartphone Vertical View Optimization */
   .admin-lock-card {
-    margin: 24px auto;
-    padding: 24px 18px;
+    margin: 16px auto;
+    padding: 22px 16px;
+  }
+
+  .admin-top-bar {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 12px;
+    padding-bottom: 14px;
+    margin-bottom: 14px;
+  }
+
+  .admin-bar-right {
+    width: 100%;
+    display: grid !important;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px !important;
+  }
+
+  .admin-bar-right .admin-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 9px 10px;
+    font-size: 11.5px;
+  }
+
+  .admin-tabs-nav {
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    gap: 8px;
+    padding-bottom: 8px;
+    margin-bottom: 18px;
+    border-bottom: 1px solid var(--hairline);
+  }
+
+  .admin-tab-btn {
+    margin-bottom: 0;
+    padding: 7px 12px;
+    font-size: 11.5px;
+    border: 1px solid var(--hairline-subtle);
+    border-radius: 4px;
+    background: rgba(20, 35, 96, 0.22);
+    flex-shrink: 0;
+  }
+
+  .admin-tab-btn.active {
+    background: rgba(255, 255, 255, 0.20);
+    border-color: #ffffff;
+    color: #ffffff;
+  }
+
+  .admin-box,
+  .admin-dossier-card,
+  .merge-card,
+  .inst-team-card,
+  .inst-merge-action-bar {
+    padding: 14px;
   }
 
   .admin-kv-grid,
   .inst-teams-grid,
   .merge-clash-grid,
-  .inst-merge-bar-content {
-    grid-template-columns: 1fr;
+  .inst-merge-bar-content,
+  .confirmed-merges-audit-grid,
+  .admin-manual-merge-grid {
+    grid-template-columns: 1fr !important;
     gap: 10px;
+  }
+
+  .admin-kv-row {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 3px;
+    word-break: break-all;
+  }
+
+  .admin-btn-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+    width: 100%;
+  }
+
+  .admin-btn-row .admin-btn {
+    width: 100%;
+    justify-content: center;
+    margin-left: 0 !important;
+    font-size: 11.5px;
+    padding: 9px 10px;
+  }
+
+  .ops-tour-card {
+    flex-direction: column;
+    align-items: stretch;
+    padding: 12px;
+    gap: 10px;
+  }
+
+  .ops-tour-actions {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+  }
+
+  .ops-tour-actions .admin-btn {
+    width: 100%;
+    justify-content: center;
+    padding: 8px 10px;
+  }
+
+  .merge-card-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+  }
+
+  .merge-arrow-col,
+  .inst-merge-arrow {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transform: rotate(90deg);
+    margin: 2px auto;
+  }
+
+  .merge-actions-row,
+  .inst-team-actions,
+  .inst-merge-bar-actions {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+    width: 100%;
+  }
+
+  .merge-actions-row .admin-btn,
+  .inst-team-actions .admin-btn,
+  .inst-merge-bar-actions .admin-btn {
+    width: 100%;
+    justify-content: center;
+    text-align: center;
+    padding: 9px 8px;
+    font-size: 11px;
+  }
+
+  .admin-inst-search-row {
+    flex-direction: column;
+    align-items: stretch !important;
+  }
+
+  .admin-inst-search-row .admin-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .admin-positions-grid {
     grid-template-columns: repeat(2, 1fr);
+  }
+
+  .admin-modal-card {
+    padding: 20px 16px;
+  }
+
+  .admin-modal-actions {
+    flex-direction: column-reverse;
+    gap: 8px;
+  }
+
+  .admin-modal-actions .admin-btn {
+    width: 100%;
+    justify-content: center;
   }
 
   .atomos-footer {

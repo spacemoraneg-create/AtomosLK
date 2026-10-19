@@ -27,7 +27,7 @@
 
   // Helper for Headers
   function getHeaders() {
-    const token = sessionStorage.getItem(TOKEN_KEY) || '';
+    const token = getStoredToken() || '';
     const ghToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
     const headers = {
       'Content-Type': 'application/json',
@@ -63,14 +63,16 @@
   // =========================================================================
 
   function getStoredToken() {
-    return sessionStorage.getItem(TOKEN_KEY);
+    return sessionStorage.getItem(TOKEN_KEY) || localStorage.getItem(TOKEN_KEY);
   }
 
   function setStoredToken(token) {
     if (token) {
       sessionStorage.setItem(TOKEN_KEY, token);
+      try { localStorage.setItem(TOKEN_KEY, token); } catch (e) {}
     } else {
       sessionStorage.removeItem(TOKEN_KEY);
+      try { localStorage.removeItem(TOKEN_KEY); } catch (e) {}
     }
   }
 
@@ -232,11 +234,87 @@
       currentStatusData = data;
       renderDatabaseVitals(data.database);
       renderTournamentsTable(data.tournaments);
+      renderOpsQuickTournaments(data.tournaments);
       updateTournamentDropdown(data.tournaments);
       fetchGitHubSyncStatus();
     } catch (e) {
       console.error('Failed to load admin status:', e);
     }
+  }
+
+  function renderOpsQuickTournaments(tournaments) {
+    const container = document.getElementById('opsTournamentsQuickList');
+    if (!container) return;
+
+    if (!tournaments || tournaments.length === 0) {
+      container.innerHTML = `<div style="text-align: center; padding: 24px; color: rgba(255, 255, 255, 0.78);">No tournaments ingested in database.</div>`;
+      return;
+    }
+
+    container.innerHTML = tournaments
+      .map((t) => {
+        return `
+          <div class="ops-tour-card">
+            <div class="ops-tour-main">
+              <div class="ops-tour-title-row">
+                <span class="ops-tour-order monospace">#${t.chrono_order ?? t.id}</span>
+                <span class="ops-tour-name">${escapeHtml(t.official_name || t.name)}</span>
+                <span class="badge-count monospace" style="font-size: 10px;">${escapeHtml(t.slug)}</span>
+              </div>
+              <div class="ops-tour-meta monospace">
+                <span>${t.hosting_dates ? escapeHtml(t.hosting_dates) : '2026'}</span>
+                <span>&bull;</span>
+                <span>${t.debate_count ?? 0} debates</span>
+                <span>&bull;</span>
+                <span>${t.team_count ?? 0} teams</span>
+                <span>&bull;</span>
+                <span>${t.speech_count ?? 0} speeches</span>
+              </div>
+            </div>
+            <div class="ops-tour-actions">
+              <button
+                class="admin-btn admin-btn-secondary admin-btn-sm btn-ops-edit-dates"
+                data-id="${t.id}"
+                data-slug="${escapeHtml(t.slug)}"
+                data-name="${escapeHtml(t.official_name || t.name)}"
+                data-dates="${escapeHtml(t.hosting_dates || '')}"
+              >
+                EDIT DATES
+              </button>
+              <button
+                class="admin-btn admin-btn-danger admin-btn-sm btn-ops-delete"
+                data-id="${t.id}"
+                data-slug="${escapeHtml(t.slug)}"
+                data-name="${escapeHtml(t.official_name || t.name)}"
+              >
+                DELETE
+              </button>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
+
+    container.querySelectorAll('.btn-ops-edit-dates').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        openEditDatesModal(
+          btn.getAttribute('data-id'),
+          btn.getAttribute('data-slug'),
+          btn.getAttribute('data-name'),
+          btn.getAttribute('data-dates')
+        );
+      });
+    });
+
+    container.querySelectorAll('.btn-ops-delete').forEach((btn) => {
+      btn.addEventListener('click', () => {
+        openDeleteConfirmation(
+          btn.getAttribute('data-id'),
+          btn.getAttribute('data-slug'),
+          btn.getAttribute('data-name')
+        );
+      });
+    });
   }
 
   function renderDatabaseVitals(db) {
@@ -908,6 +986,7 @@
         );
 
         let pollInterval = null;
+        let idleTicks = 0;
 
         const pollStatus = async () => {
           try {
@@ -921,6 +1000,7 @@
             }
             const job = await parseFetchResponse(statusRes);
             if (job.status === 'running') {
+              idleTicks = 0;
               showStatusBox(
                 importStatusBox,
                 'loading',
@@ -928,17 +1008,30 @@
               );
             } else if (job.status === 'success') {
               clearInterval(pollInterval);
-              showStatusBox(importStatusBox, 'success', `[SUCCESS] ${job.message}`);
+              const am = (job.data && job.data.auto_merge) || {};
+              const amSuffix = am.total_merged ? ` Auto-merged ${am.total_merged} duplicate identities.` : '';
+              showStatusBox(importStatusBox, 'success', `[SUCCESS] ${job.message}${amSuffix}`);
               if (importTargetInput) importTargetInput.value = '';
               if (importDatesInput) importDatesInput.value = '';
               startImportBtn.disabled = false;
               startImportBtn.textContent = 'START INGESTION PIPELINE';
               fetchAdminStatus();
+              fetchMergeSuggestions(true);
             } else if (job.status === 'error') {
               clearInterval(pollInterval);
               showStatusBox(importStatusBox, 'error', `[ERROR] ${job.error || job.message || 'Ingestion failed.'}`);
               startImportBtn.disabled = false;
               startImportBtn.textContent = 'START INGESTION PIPELINE';
+            } else if (job.status === 'idle') {
+              idleTicks += 1;
+              if (idleTicks >= 4) {
+                clearInterval(pollInterval);
+                startImportBtn.disabled = false;
+                startImportBtn.textContent = 'START INGESTION PIPELINE';
+                showStatusBox(importStatusBox, 'success', '[COMPLETED] Ingestion pipeline finished. Refreshing tournament registry...');
+                fetchAdminStatus();
+                fetchMergeSuggestions(true);
+              }
             }
           } catch (err) {
             console.warn('Status poll warning:', err);
@@ -1233,13 +1326,14 @@
   // 6. TAB 5: IDENTITY RESOLVER & MERGER TOOL
   // =========================================================================
 
-  let mergeSuggestionsData = { persons: [], teams: [] };
+  let mergeSuggestionsData = { persons: [], teams: [], confirmed_merges: [] };
   let activeMergeFilter = 'all'; // 'all', 'person', 'team'
 
   function initIdentityMerger() {
     const btnAll = document.getElementById('btnFilterAllMerges');
     const btnPersons = document.getElementById('btnFilterPersonMerges');
     const btnTeams = document.getElementById('btnFilterTeamMerges');
+    const btnAutoMerge = document.getElementById('btnAutoMergeAll');
     const btnRefresh = document.getElementById('btnRefreshMerges');
 
     if (btnAll) {
@@ -1261,6 +1355,60 @@
         activeMergeFilter = 'team';
         updateFilterButtons();
         renderMergeSuggestions();
+      });
+    }
+    if (btnAutoMerge) {
+      btnAutoMerge.addEventListener('click', async () => {
+        const statusBox = document.getElementById('mergeStatusBox');
+        btnAutoMerge.disabled = true;
+        const origText = btnAutoMerge.innerHTML;
+        btnAutoMerge.textContent = 'AUTO-MERGING...';
+        if (statusBox) {
+          showStatusBox(statusBox, 'loading', 'Scanning database and auto-merging all high-confidence (>=90%) duplicate identities...');
+        }
+        try {
+          const res = await fetch(`${API_BASE}/api/admin/merges/auto`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({ min_confidence: 90.0 }),
+          });
+          if (res.status === 401) {
+            handleUnauthorized();
+            return;
+          }
+          const data = await parseFetchResponse(res);
+          if (res.ok && data.success) {
+            const total = data.total_merged || 0;
+            if (statusBox) {
+              if (total > 0) {
+                showStatusBox(
+                  statusBox,
+                  'success',
+                  `[AUTO-MERGE COMPLETE] Automatically merged ${data.merged_persons_count || 0} person duplicate(s) and ${data.merged_teams_count || 0} team duplicate(s).`
+                );
+              } else {
+                showStatusBox(
+                  statusBox,
+                  'success',
+                  '[AUTO-MERGE COMPLETE] All high-confidence (>=90%) duplicate identities are already resolved.'
+                );
+              }
+            }
+            await fetchMergeSuggestions(true);
+            fetchAdminStatus();
+          } else {
+            if (statusBox) {
+              showStatusBox(statusBox, 'error', `[ERROR] ${data.error || 'Auto-merge failed.'}`);
+            }
+          }
+        } catch (err) {
+          if (statusBox) {
+            showStatusBox(statusBox, 'error', `[NETWORK ERROR] ${err.message}`);
+          }
+        } finally {
+          btnAutoMerge.disabled = false;
+          btnAutoMerge.innerHTML = origText;
+        }
       });
     }
     if (btnRefresh) {
@@ -1297,17 +1445,52 @@
       mergeSuggestionsData = {
         persons: data.persons || [],
         teams: data.teams || [],
+        confirmed_merges: data.confirmed_merges || [],
       };
 
       setText('mergePersonCount', mergeSuggestionsData.persons.length);
       setText('mergeTeamCount', mergeSuggestionsData.teams.length);
 
       renderMergeSuggestions();
+      renderRecentConfirmedMerges();
     } catch (e) {
       if (container && !silent) {
         container.innerHTML = `<div style="text-align: center; padding: 24px; color: rgba(255, 255, 255, 0.85);">Failed to load candidate suggestions: ${escapeHtml(e.message)}</div>`;
       }
     }
+  }
+
+  function renderRecentConfirmedMerges() {
+    const section = document.getElementById('recentConfirmedMergesSection');
+    const listEl = document.getElementById('recentConfirmedMergesList');
+    if (!section || !listEl) return;
+
+    const list = mergeSuggestionsData.confirmed_merges || [];
+    setText('confirmedMergeCount', list.length);
+    if (list.length === 0) {
+      section.classList.add('hidden');
+      return;
+    }
+
+    section.classList.remove('hidden');
+    listEl.innerHTML = list
+      .map((m) => {
+        return `
+          <div class="confirmed-merge-pill">
+            <div class="confirmed-merge-names">
+              <strong style="color: #ffffff;">${escapeHtml(m.canonical_name)}</strong>
+              <span style="color: rgba(255, 255, 255, 0.65); margin: 0 6px;">&larr;</span>
+              <span style="color: rgba(255, 255, 255, 0.85);">${escapeHtml(m.alias_name)}</span>
+            </div>
+            <div class="confirmed-merge-meta monospace">
+              <span>${escapeHtml(m.institution || 'Independent')}</span>
+              <span>&bull;</span>
+              <span>#${m.person_id}</span>
+            </div>
+          </div>
+        `;
+      })
+      .join('');
   }
 
   function renderMergeSuggestions() {

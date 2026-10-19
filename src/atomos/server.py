@@ -7,6 +7,7 @@ mobile apps, and AI clients using Flask.
 
 import functools
 import hashlib
+import json
 import os
 import subprocess
 import sys
@@ -22,7 +23,7 @@ from flask import Flask, jsonify, request, send_from_directory, send_file
 sys.path.insert(0, str(Path(__file__).resolve().parent.parent))
 
 from atomos.agent.orchestrator import AtomosAgent
-from atomos.database.connection import get_connection
+from atomos.database.connection import DEFAULT_DB_PATH, get_connection
 from atomos.query import AtomosQuery
 from atomos.tools import dispatch_tool
 from atomos.pipeline.ingestion import IngestionPipeline
@@ -42,6 +43,7 @@ def create_app(db_conn=None) -> Flask:
 
     app = Flask(__name__)
     conn = db_conn or get_connection(check_same_thread=False)
+    _db_write_lock = threading.RLock()
     query_engine = AtomosQuery(conn)
     agent = AtomosAgent(conn)
     v2_engine = V2MetricsEngine(conn)
@@ -618,7 +620,7 @@ def create_app(db_conn=None) -> Flask:
     @app.route("/api/admin/status", methods=["GET"])
     @require_admin
     def admin_status():
-        db_file = Path("data/atomos.db").resolve()
+        db_file = DEFAULT_DB_PATH.resolve()
         file_size_mb = round(db_file.stat().st_size / (1024 * 1024), 2) if db_file.exists() else 0
         mtime = db_file.stat().st_mtime if db_file.exists() else 0
         last_modified = datetime.fromtimestamp(mtime, tz=timezone.utc).strftime("%Y-%m-%d %H:%M:%S UTC") if mtime else "N/A"
@@ -696,6 +698,7 @@ def create_app(db_conn=None) -> Flask:
 
     # 21. Tournament Ingestion Pipeline Trigger & Status
     ingestion_job_lock = threading.Lock()
+    ingestion_state_file = DEFAULT_DB_PATH.parent / ".ingestion_job_state.json"
     ingestion_job_state = {
         "status": "idle",
         "target": "",
@@ -707,6 +710,33 @@ def create_app(db_conn=None) -> Flask:
         "started_at": None,
         "finished_at": None,
     }
+
+    def _save_ingestion_state():
+        if db_conn is not None or app.config.get("TESTING"):
+            return
+        try:
+            ingestion_state_file.parent.mkdir(parents=True, exist_ok=True)
+            ingestion_state_file.write_text(json.dumps(ingestion_job_state), encoding="utf-8")
+        except Exception:
+            pass
+
+    def _load_ingestion_state() -> Dict[str, Any]:
+        if db_conn is None and not app.config.get("TESTING") and ingestion_state_file.exists():
+            try:
+                disk_state = json.loads(ingestion_state_file.read_text(encoding="utf-8"))
+                if isinstance(disk_state, dict):
+                    # Auto-recover if stuck in running for > 240 seconds
+                    if disk_state.get("status") == "running" and disk_state.get("started_at"):
+                        if time.time() - float(disk_state["started_at"]) > 240:
+                            disk_state["status"] = "error"
+                            disk_state["step"] = "TIMEOUT"
+                            disk_state["error"] = "Ingestion job timed out after 240 seconds."
+                            disk_state["message"] = "Previous ingestion timed out. Ready for retry."
+                            disk_state["finished_at"] = time.time()
+                    ingestion_job_state.update(disk_state)
+            except Exception:
+                pass
+        return dict(ingestion_job_state)
 
     @app.route("/api/admin/tournaments/import", methods=["POST"])
     @require_admin
@@ -721,10 +751,11 @@ def create_app(db_conn=None) -> Flask:
             return jsonify({"error": "Target URL or local slug is required."}), 400
 
         with ingestion_job_lock:
-            if ingestion_job_state["status"] == "running":
+            curr_state = _load_ingestion_state()
+            if curr_state.get("status") == "running":
                 return jsonify({
                     "success": False,
-                    "error": f"An ingestion pipeline is already running for '{ingestion_job_state.get('target')}'.",
+                    "error": f"An ingestion pipeline is already running for '{curr_state.get('target')}'.",
                     "status": "running",
                 }), 409
 
@@ -737,6 +768,7 @@ def create_app(db_conn=None) -> Flask:
             ingestion_job_state["error"] = None
             ingestion_job_state["started_at"] = time.time()
             ingestion_job_state["finished_at"] = None
+            _save_ingestion_state()
 
         def _worker():
             try:
@@ -744,8 +776,9 @@ def create_app(db_conn=None) -> Flask:
                     with ingestion_job_lock:
                         ingestion_job_state["step"] = step_key
                         ingestion_job_state["message"] = msg
+                        _save_ingestion_state()
 
-                pipeline = IngestionPipeline(db_path=Path("data/atomos.db"))
+                pipeline = IngestionPipeline(db_path=DEFAULT_DB_PATH)
                 res = pipeline.ingest_tournament(
                     target=target,
                     skip_extract=skip_extract,
@@ -758,6 +791,7 @@ def create_app(db_conn=None) -> Flask:
                 with ingestion_job_lock:
                     ingestion_job_state["step"] = "SYNCING"
                     ingestion_job_state["message"] = f"Exporting static web data and syncing to GitHub for '{t_label}'..."
+                    _save_ingestion_state()
 
                 trigger_async_export_and_sync(
                     commit_message=f"chore(data): auto-sync after importing tournament {t_label}",
@@ -770,6 +804,7 @@ def create_app(db_conn=None) -> Flask:
                     ingestion_job_state["data"] = res
                     ingestion_job_state["message"] = f"Tournament '{t_label}' successfully imported."
                     ingestion_job_state["finished_at"] = time.time()
+                    _save_ingestion_state()
             except Exception as e:
                 with ingestion_job_lock:
                     ingestion_job_state["status"] = "error"
@@ -777,6 +812,7 @@ def create_app(db_conn=None) -> Flask:
                     ingestion_job_state["error"] = str(e)
                     ingestion_job_state["message"] = f"Ingestion failed: {str(e)}"
                     ingestion_job_state["finished_at"] = time.time()
+                    _save_ingestion_state()
 
         threading.Thread(target=_worker, daemon=True).start()
 
@@ -791,119 +827,125 @@ def create_app(db_conn=None) -> Flask:
     @require_admin
     def admin_import_status():
         with ingestion_job_lock:
-            return jsonify(dict(ingestion_job_state))
+            return jsonify(_load_ingestion_state())
 
     # 22. Tournament Purge / Deletion (Cascading)
     @app.route("/api/admin/tournaments/<identifier>", methods=["DELETE"])
     @require_admin
     def admin_delete_tournament(identifier: str):
-        cur = conn.cursor()
-        if identifier.isdigit():
-            cur.execute("SELECT id, slug, name FROM tournaments WHERE id = ?", (int(identifier),))
-        else:
-            cur.execute("SELECT id, slug, name FROM tournaments WHERE slug = ?", (identifier,))
-        t = cur.fetchone()
-        if not t:
-            return jsonify({"error": f"Tournament '{identifier}' not found in database."}), 404
+        with _db_write_lock:
+            cur = conn.cursor()
+            if identifier.isdigit():
+                cur.execute("SELECT id, slug, name FROM tournaments WHERE id = ?", (int(identifier),))
+            else:
+                cur.execute("SELECT id, slug, name FROM tournaments WHERE slug = ?", (identifier,))
+            t = cur.fetchone()
+            if not t:
+                return jsonify({"error": f"Tournament '{identifier}' not found in database."}), 404
 
-        t_id = t["id"]
-        t_name = t["name"]
-        t_slug = t["slug"]
+            t_id = t["id"]
+            t_name = t["name"]
+            t_slug = t["slug"]
 
-        try:
-            cur.execute("PRAGMA foreign_keys = ON;")
-            cur.execute("DELETE FROM provenance_records WHERE tournament_id = ?", (t_id,))
-            cur.execute("""
-                DELETE FROM speech_performances WHERE debate_id IN (
-                    SELECT d.id FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = ?
-                )
-            """, (t_id,))
-            cur.execute("""
-                DELETE FROM adjudicator_ballots WHERE debate_id IN (
-                    SELECT d.id FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = ?
-                )
-            """, (t_id,))
-            cur.execute("""
-                DELETE FROM adjudicator_assignments WHERE debate_id IN (
-                    SELECT d.id FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = ?
-                )
-            """, (t_id,))
-            cur.execute("""
-                DELETE FROM debates WHERE round_id IN (
-                    SELECT id FROM rounds WHERE tournament_id = ?
-                )
-            """, (t_id,))
-            cur.execute("DELETE FROM rounds WHERE tournament_id = ?", (t_id,))
-            cur.execute("""
-                DELETE FROM team_members WHERE team_id IN (
-                    SELECT id FROM teams WHERE tournament_id = ?
-                )
-            """, (t_id,))
-            cur.execute("""
-                DELETE FROM team_resolutions WHERE team_id IN (
-                    SELECT id FROM teams WHERE tournament_id = ?
-                )
-            """, (t_id,))
-            cur.execute("DELETE FROM teams WHERE tournament_id = ?", (t_id,))
-            cur.execute("DELETE FROM tournament_roles WHERE tournament_id = ?", (t_id,))
-            cur.execute("DELETE FROM person_aliases WHERE source_tournament_id = ?", (t_id,))
-            cur.execute("DELETE FROM tournaments WHERE id = ?", (t_id,))
-            conn.commit()
+            try:
+                cur.execute("PRAGMA foreign_keys = ON;")
+                cur.execute("DELETE FROM provenance_records WHERE tournament_id = ?", (t_id,))
+                cur.execute("""
+                    DELETE FROM speech_performances WHERE debate_id IN (
+                        SELECT d.id FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = ?
+                    ) OR round_id IN (
+                        SELECT id FROM rounds WHERE tournament_id = ?
+                    ) OR team_id IN (
+                        SELECT id FROM teams WHERE tournament_id = ?
+                    )
+                """, (t_id, t_id, t_id))
+                cur.execute("""
+                    DELETE FROM adjudicator_ballots WHERE debate_id IN (
+                        SELECT d.id FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = ?
+                    )
+                """, (t_id,))
+                cur.execute("""
+                    DELETE FROM adjudicator_assignments WHERE debate_id IN (
+                        SELECT d.id FROM debates d JOIN rounds r ON d.round_id = r.id WHERE r.tournament_id = ?
+                    )
+                """, (t_id,))
+                cur.execute("""
+                    DELETE FROM debates WHERE round_id IN (
+                        SELECT id FROM rounds WHERE tournament_id = ?
+                    )
+                """, (t_id,))
+                cur.execute("DELETE FROM rounds WHERE tournament_id = ?", (t_id,))
+                cur.execute("""
+                    DELETE FROM team_members WHERE team_id IN (
+                        SELECT id FROM teams WHERE tournament_id = ?
+                    )
+                """, (t_id,))
+                cur.execute("""
+                    DELETE FROM team_resolutions WHERE team_id IN (
+                        SELECT id FROM teams WHERE tournament_id = ?
+                    )
+                """, (t_id,))
+                cur.execute("DELETE FROM teams WHERE tournament_id = ?", (t_id,))
+                cur.execute("DELETE FROM tournament_roles WHERE tournament_id = ?", (t_id,))
+                cur.execute("DELETE FROM person_aliases WHERE source_tournament_id = ?", (t_id,))
+                cur.execute("DELETE FROM tournaments WHERE id = ?", (t_id,))
+                conn.commit()
 
-            # Refresh static web exports and auto-sync to GitHub
-            trigger_async_export_and_sync(
-                commit_message=f"chore(data): auto-sync after deleting tournament {t_slug}"
-            )
+                # Refresh static web exports and auto-sync to GitHub
+                trigger_async_export_and_sync(
+                    commit_message=f"chore(data): auto-sync after deleting tournament {t_slug}"
+                )
 
-            return jsonify({
-                "success": True,
-                "message": f"Tournament '{t_name}' ({t_slug}) and all associated records deleted.",
-                "deleted_id": t_id,
-                "deleted_slug": t_slug,
-            })
-        except Exception as e:
-            conn.rollback()
-            return jsonify({"error": f"Failed to delete tournament: {str(e)}"}), 500
+                return jsonify({
+                    "success": True,
+                    "message": f"Tournament '{t_name}' ({t_slug}) and all associated records deleted.",
+                    "deleted_id": t_id,
+                    "deleted_slug": t_slug,
+                })
+            except Exception as e:
+                conn.rollback()
+                return jsonify({"error": f"Failed to delete tournament: {str(e)}"}), 500
 
     # 22b. Update Tournament Hosting Dates
     @app.route("/api/admin/tournaments/<identifier>/dates", methods=["POST"])
     @require_admin
     def admin_update_tournament_dates(identifier: str):
-        payload = request.get_json(force=True, silent=True) or {}
-        dates_raw = payload.get("hosting_dates", "")
-        hosting_dates = str(dates_raw).strip() if dates_raw is not None else ""
+        with _db_write_lock:
+            payload = request.get_json(force=True, silent=True) or {}
+            dates_raw = payload.get("hosting_dates", "")
+            hosting_dates = str(dates_raw).strip() if dates_raw is not None else ""
 
-        cur = conn.cursor()
-        if identifier.isdigit():
-            cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments WHERE id = ?", (int(identifier),))
-        else:
-            cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments WHERE slug = ?", (identifier,))
-        t = cur.fetchone()
-        if not t:
-            return jsonify({"error": f"Tournament '{identifier}' not found in database."}), 404
+            cur = conn.cursor()
+            if identifier.isdigit():
+                cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments WHERE id = ?", (int(identifier),))
+            else:
+                cur.execute("SELECT id, slug, name, hosting_dates FROM tournaments WHERE slug = ?", (identifier,))
+            t = cur.fetchone()
+            if not t:
+                return jsonify({"error": f"Tournament '{identifier}' not found in database."}), 404
 
-        t_id = t["id"]
-        t_slug = t["slug"]
-        t_name = t["name"]
+            t_id = t["id"]
+            t_slug = t["slug"]
+            t_name = t["name"]
 
-        try:
-            cur.execute("UPDATE tournaments SET hosting_dates = ? WHERE id = ?", (hosting_dates or None, t_id))
-            conn.commit()
+            try:
+                cur.execute("UPDATE tournaments SET hosting_dates = ? WHERE id = ?", (hosting_dates or None, t_id))
+                conn.commit()
 
-            trigger_async_export_and_sync(
-                commit_message=f"chore(data): update hosting dates for tournament {t_slug}"
-            )
+                trigger_async_export_and_sync(
+                    commit_message=f"chore(data): update hosting dates for tournament {t_slug}"
+                )
 
-            return jsonify({
-                "success": True,
-                "message": f"Hosting dates for '{t_name}' updated successfully.",
-                "tournament_id": t_id,
-                "tournament_slug": t_slug,
-                "hosting_dates": hosting_dates or None,
-            })
-        except Exception as e:
-            conn.rollback()
-            return jsonify({"error": f"Failed to update tournament dates: {str(e)}"}), 500
+                return jsonify({
+                    "success": True,
+                    "message": f"Hosting dates for '{t_name}' updated successfully.",
+                    "tournament_id": t_id,
+                    "tournament_slug": t_slug,
+                    "hosting_dates": hosting_dates or None,
+                })
+            except Exception as e:
+                conn.rollback()
+                return jsonify({"error": f"Failed to update tournament dates: {str(e)}"}), 500
 
     # 23. Diagnostic Testing Runner
     @app.route("/api/admin/run_tests", methods=["POST"])
@@ -985,68 +1027,89 @@ def create_app(db_conn=None) -> Flask:
         try:
             persons = identity_resolver.get_person_suggestions()
             teams = identity_resolver.get_team_suggestions()
+            confirmed_merges = identity_resolver.get_recent_confirmed_merges(limit=30)
             return jsonify({
                 "success": True,
                 "persons": persons,
                 "teams": teams,
+                "confirmed_merges": confirmed_merges,
                 "counts": {
                     "persons": len(persons),
                     "teams": len(teams),
+                    "confirmed_merges": len(confirmed_merges),
                 }
             })
         except Exception as e:
             return jsonify({"error": f"Failed to compute merge suggestions: {str(e)}"}), 500
 
+    @app.route("/api/admin/merges/auto", methods=["POST"])
+    @require_admin
+    def admin_merge_auto():
+        with _db_write_lock:
+            payload = request.get_json(force=True, silent=True) or {}
+            min_confidence = float(payload.get("min_confidence", 90.0))
+            try:
+                summary = identity_resolver.auto_merge_all(min_confidence=min_confidence)
+                if summary.get("total_merged", 0) > 0:
+                    trigger_async_export_and_sync(
+                        commit_message=f"chore(data): auto-sync after auto-merging {summary['total_merged']} duplicate identities"
+                    )
+                return jsonify(summary)
+            except Exception as e:
+                return jsonify({"error": f"Auto-merge failed: {str(e)}"}), 500
+
     @app.route("/api/admin/merges/execute", methods=["POST"])
     @require_admin
     def admin_merge_execute():
-        payload = request.get_json(force=True, silent=True) or {}
-        entity_type = payload.get("type", "").strip().lower()
-        primary_id = payload.get("primary_id")
-        duplicate_id = payload.get("duplicate_id")
+        with _db_write_lock:
+            payload = request.get_json(force=True, silent=True) or {}
+            entity_type = payload.get("type", "").strip().lower()
+            primary_id = payload.get("primary_id")
+            duplicate_id = payload.get("duplicate_id")
 
-        if not entity_type or primary_id is None or duplicate_id is None:
-            return jsonify({"error": "Missing required fields: type ('person'|'team'), primary_id, duplicate_id"}), 400
+            if not entity_type or primary_id is None or duplicate_id is None:
+                return jsonify({"error": "Missing required fields: type ('person'|'team'), primary_id, duplicate_id"}), 400
 
-        try:
-            primary_id = int(primary_id)
-            duplicate_id = int(duplicate_id)
-            if entity_type == "person":
-                res = identity_resolver.execute_person_merge(primary_id, duplicate_id)
-            elif entity_type == "team":
-                res = identity_resolver.execute_team_merge(primary_id, duplicate_id)
-            else:
-                return jsonify({"error": f"Invalid entity type '{entity_type}'. Must be 'person' or 'team'."}), 400
+            try:
+                primary_id = int(primary_id)
+                duplicate_id = int(duplicate_id)
+                if entity_type == "person":
+                    res = identity_resolver.execute_person_merge(primary_id, duplicate_id)
+                elif entity_type == "team":
+                    res = identity_resolver.execute_team_merge(primary_id, duplicate_id)
+                else:
+                    return jsonify({"error": f"Invalid entity type '{entity_type}'. Must be 'person' or 'team'."}), 400
 
-            # Re-export static cache and auto-sync to GitHub asynchronously
-            trigger_async_export_and_sync(
-                commit_message=f"chore(data): auto-sync after merge {entity_type} #{duplicate_id} -> #{primary_id}"
-            )
+                # Re-export static cache and auto-sync to GitHub asynchronously
+                trigger_async_export_and_sync(
+                    commit_message=f"chore(data): auto-sync after merge {entity_type} #{duplicate_id} -> #{primary_id}"
+                )
 
-            return jsonify(res)
-        except ValueError as ve:
-            return jsonify({"error": str(ve)}), 400
-        except Exception as e:
-            return jsonify({"error": f"Merge failed: {str(e)}"}), 500
+                return jsonify(res)
+            except ValueError as ve:
+                return jsonify({"error": str(ve)}), 400
+            except Exception as e:
+                return jsonify({"error": f"Merge failed: {str(e)}"}), 500
 
     @app.route("/api/admin/merges/dismiss", methods=["POST"])
     @require_admin
     def admin_merge_dismiss():
-        payload = request.get_json(force=True, silent=True) or {}
-        entity_type = payload.get("type", "").strip().lower()
-        id_a = payload.get("id_a")
-        id_b = payload.get("id_b")
+        with _db_write_lock:
+            payload = request.get_json(force=True, silent=True) or {}
+            entity_type = payload.get("type", "").strip().lower()
+            id_a = payload.get("id_a")
+            id_b = payload.get("id_b")
 
-        if not entity_type or id_a is None or id_b is None:
-            return jsonify({"error": "Missing required fields: type ('person'|'team'), id_a, id_b"}), 400
+            if not entity_type or id_a is None or id_b is None:
+                return jsonify({"error": "Missing required fields: type ('person'|'team'), id_a, id_b"}), 400
 
-        try:
-            id_a = int(id_a)
-            id_b = int(id_b)
-            identity_resolver.dismiss_suggestion(entity_type, id_a, id_b)
-            return jsonify({"success": True, "message": f"Suggestion dismissed."})
-        except Exception as e:
-            return jsonify({"error": f"Failed to dismiss suggestion: {str(e)}"}), 500
+            try:
+                id_a = int(id_a)
+                id_b = int(id_b)
+                identity_resolver.dismiss_suggestion(entity_type, id_a, id_b)
+                return jsonify({"success": True, "message": f"Suggestion dismissed."})
+            except Exception as e:
+                return jsonify({"error": f"Failed to dismiss suggestion: {str(e)}"}), 500
 
     @app.route("/api/admin/database/download", methods=["GET"])
     @require_admin

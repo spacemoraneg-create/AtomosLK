@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=19" />
+  <link rel="stylesheet" href="styles.css?v=20" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="assets/logo_icon.png" />
@@ -373,17 +373,17 @@
       </div>
 
       <!-- ================================================================== -->
-      <!-- TAB 3: TOURNAMENT OPERATIONS (IMPORT / DELETE)                     -->
+      <!-- TAB 3: TOURNAMENT OPERATIONS (IMPORT / DELETE / DATES)             -->
       <!-- ================================================================== -->
       <div id="paneTournaments" class="admin-tab-pane">
         
-        <div class="admin-grid-2col">
+        <div class="admin-grid-2col" style="margin-bottom: 24px;">
           
           <!-- Ingestion Card -->
           <div class="admin-box">
             <div class="admin-box-title">Import / Ingest Tournament</div>
             <p style="font-size: 13px; color: rgba(255, 255, 255, 0.80); line-height: 1.5; margin-bottom: 16px; font-weight: 300;">
-              Enter a public Tabbycat URL or local folder name to run the ingestion pipeline (Extract, Normalize, Reconcile, and Validate).
+              Enter any public Tabbycat URL (root or subpage) or local folder slug to run the full pipeline (Extract, Normalize, Reconcile, Auto-Merge Identities, and Validate).
             </p>
 
             <div class="admin-form-group">
@@ -392,7 +392,10 @@
                 type="text"
                 id="importTargetInput"
                 class="admin-text-input"
-                placeholder="https://site.calicotab.com/slug/ or local slug (e.g. ric2026)"
+                placeholder="https://site.calicotab.com/slug/ or local slug"
+                autocapitalize="none"
+                autocorrect="off"
+                spellcheck="false"
               />
             </div>
 
@@ -415,7 +418,7 @@
 
             <div id="importStatusBox" class="admin-status-box hidden"></div>
 
-            <button id="startImportBtn" class="admin-btn admin-btn-primary" style="margin-top: 14px;">
+            <button id="startImportBtn" class="admin-btn admin-btn-primary" style="margin-top: 14px; width: 100%; justify-content: center;">
               Start Ingestion Pipeline
             </button>
           </div>
@@ -436,11 +439,22 @@
 
             <div id="deleteStatusBox" class="admin-status-box hidden"></div>
 
-            <button id="openDeleteModalBtn" class="admin-btn admin-btn-danger" style="margin-top: 14px;">
+            <button id="openDeleteModalBtn" class="admin-btn admin-btn-danger" style="margin-top: 14px; width: 100%; justify-content: center;">
               Delete Selected Tournament
             </button>
           </div>
 
+        </div>
+
+        <!-- Mobile-Friendly Active Tournaments Quick-Action List inside Tab 3 -->
+        <div class="admin-box">
+          <div class="admin-box-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span>Active Tournaments Quick-Manager</span>
+            <span style="font-size: 11px; color: rgba(255, 255, 255, 0.72); font-weight: 400; text-transform: none;">Edit dates or purge directly from mobile</span>
+          </div>
+          <div id="opsTournamentsQuickList" class="ops-tournaments-list">
+            <div style="text-align: center; padding: 24px; color: rgba(255, 255, 255, 0.76);">Loading tournaments...</div>
+          </div>
         </div>
 
       </div>
@@ -494,16 +508,20 @@
       <div id="paneMerges" class="admin-tab-pane">
         
         <div class="admin-box" style="margin-bottom: 20px;">
-          <div class="admin-box-title">Identity Merger &amp; Resolution Engine</div>
+          <div class="admin-box-title" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px;">
+            <span>Identity Merger &amp; Auto-Resolution Engine</span>
+            <span class="badge-count">Auto-Merges &ge;90% Confidence on Import</span>
+          </div>
           <p style="font-size: 13px; color: rgba(255, 255, 255, 0.80); line-height: 1.5; margin-bottom: 16px; font-weight: 300;">
-            Identify and merge duplicate Person identities (typos, single-name expansions) and Team identities (acronyms vs full names) with full foreign key cascading across all tournament records.
+            High-confidence duplicate Person identities (typos, middle-name variations, single-name tab entries) and Team identities are merged automatically during tournament ingestion. Review remaining lower-confidence candidates or run batch auto-merge below.
           </p>
 
           <div class="admin-btn-row" style="margin-bottom: 16px;">
             <button id="btnFilterAllMerges" class="admin-btn admin-btn-primary">All Suggestions</button>
             <button id="btnFilterPersonMerges" class="admin-btn admin-btn-secondary">Persons (<span id="mergePersonCount">0</span>)</button>
             <button id="btnFilterTeamMerges" class="admin-btn admin-btn-secondary">Teams (<span id="mergeTeamCount">0</span>)</button>
-            <button id="btnRefreshMerges" class="admin-btn admin-btn-outline" style="margin-left: auto;">Refresh Suggestions</button>
+            <button id="btnAutoMergeAll" class="admin-btn admin-btn-secondary" title="Automatically merge all duplicate identities with >=90% confidence">Auto-Merge (&ge;90%)</button>
+            <button id="btnRefreshMerges" class="admin-btn admin-btn-outline" style="margin-left: auto;">Refresh</button>
           </div>
 
           <!-- Status / Action Feedback Message -->
@@ -512,6 +530,17 @@
           <!-- Suggestions List -->
           <div id="mergeSuggestionsContainer" class="merge-suggestions-grid">
             <div style="text-align: center; padding: 32px; color: rgba(255, 255, 255, 0.76);">Loading candidate duplicate suggestions...</div>
+          </div>
+
+          <!-- Recently Auto-Merged & Confirmed Identities Log -->
+          <div id="recentConfirmedMergesSection" class="hidden" style="margin-top: 22px; padding-top: 18px; border-top: 1px solid rgba(255, 255, 255, 0.14);">
+            <div style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 6px; margin-bottom: 10px;">
+              <span style="font-size: 11px; font-weight: 500; color: rgba(255, 255, 255, 0.82); letter-spacing: 0.1em; text-transform: uppercase;">
+                Recently Auto-Merged &amp; Confirmed Person Identities (<span id="confirmedMergeCount">0</span>)
+              </span>
+              <span style="font-size: 11px; color: rgba(255, 255, 255, 0.65); font-family: var(--font-mono);">person_aliases registry</span>
+            </div>
+            <div id="recentConfirmedMergesList" class="confirmed-merges-audit-grid"></div>
           </div>
         </div>
 
@@ -523,14 +552,14 @@
           </p>
 
           <!-- Institution Search Bar & Controls -->
-          <div style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
-            <div style="flex: 1; min-width: 260px; position: relative;">
+          <div class="admin-inst-search-row" style="display: flex; gap: 10px; align-items: center; flex-wrap: wrap; margin-bottom: 12px;">
+            <div style="flex: 1; min-width: 180px; position: relative; width: 100%;">
               <input
                 type="text"
                 id="instTeamExplorerInput"
                 list="institutionsDatalist"
                 class="admin-text-input"
-                placeholder="Type or select institution (e.g. Royal College, Trinity, Ananda, Moir, CIS, STC)..."
+                placeholder="Type or select institution (e.g. Royal College, Trinity, Ananda)..."
                 autocomplete="off"
               />
               <datalist id="institutionsDatalist"></datalist>
@@ -618,7 +647,7 @@
             </select>
           </div>
 
-          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 16px; margin-bottom: 18px;">
+          <div class="admin-manual-merge-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 16px; margin-bottom: 18px;">
             <!-- Target / Primary Selection -->
             <div class="admin-form-group" style="position: relative;">
               <label class="admin-form-label">Canonical Target (Keep This Record)</label>
@@ -749,7 +778,7 @@
     </footer>
   </main>
 
-  <script src="admin.js?v=19"></script>
+  <script src="admin.js?v=20"></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f88322e0730e4449a5bb81b8e7aad80f"}'></script>
   <!-- End Cloudflare Web Analytics -->

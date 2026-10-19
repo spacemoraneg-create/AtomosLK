@@ -8,22 +8,62 @@ Automates the entire data pipeline from public Tabbycat URL to validated SQLite 
 4. Validation: Asserts database relational integrity and rubric validity
 """
 
+import re
 import sqlite3
 import sys
 from pathlib import Path
 from typing import Callable, Optional
+from urllib.parse import urlparse
 
-from atomos.database.connection import initialize_database
+from atomos.database.connection import DEFAULT_DB_PATH, PROJECT_ROOT, initialize_database
 from atomos.extractor.tabbycat import TabbycatExtractor
 from atomos.normalizer.reconciler import TabReconciler
 from atomos.normalizer.tournament_normalizer import TournamentNormalizer
 from atomos.normalizer.validator import IntegrityValidator
 
 
+def _normalize_target_input(target: str) -> tuple[str, Optional[str]]:
+    """
+    Normalizes user-supplied Tabbycat URLs or local slugs.
+    Handles:
+    - Missing scheme (e.g. 'site.calicotab.com/slug' -> 'https://site.calicotab.com/slug')
+    - Subpage URLs (e.g. 'https://site.calicotab.com/slug/tab/team/' -> 'https://site.calicotab.com/slug')
+    - Local directory slugs (e.g. 'stanleys-26')
+    """
+    raw = (target or "").strip().rstrip("/")
+    if not raw:
+        return "", None
+
+    # Detect URL without scheme (contains domain dot and slash or calicotab/herokuapp)
+    if not raw.startswith(("http://", "https://")):
+        first_part = raw.split("/")[0]
+        if "." in first_part and ("/" in raw or "calicotab" in first_part or "tabbycat" in first_part or "herokuapp" in first_part):
+            raw = "https://" + raw
+
+    if raw.startswith(("http://", "https://")):
+        parsed = urlparse(raw)
+        path_parts = [p for p in parsed.path.split("/") if p]
+        # Strip known Tabbycat subpage suffixes if the user copied a tab/results/draw link
+        subpage_markers = {"tab", "results", "draw", "motions", "standings", "participants", "break", "feedback", "checkins", "privateurls"}
+        if len(path_parts) >= 2 and path_parts[1].lower() in subpage_markers:
+            path_parts = [path_parts[0]]
+        elif len(path_parts) > 1 and any(m in [p.lower() for p in path_parts[1:]] for m in subpage_markers):
+            for idx, p in enumerate(path_parts):
+                if p.lower() in subpage_markers and idx >= 1:
+                    path_parts = path_parts[:idx]
+                    break
+        slug = path_parts[-1] if path_parts else parsed.netloc.split(".")[0]
+        clean_path = "/" + "/".join(path_parts) if path_parts else ""
+        base_url = f"{parsed.scheme}://{parsed.netloc}{clean_path}"
+        return slug, base_url
+
+    return raw, None
+
+
 class IngestionPipeline:
     """End-to-end tournament ingestion orchestrator."""
 
-    def __init__(self, db_path: Path = Path("data/atomos.db")):
+    def __init__(self, db_path: Path = DEFAULT_DB_PATH):
         self.db_path = Path(db_path)
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
 
@@ -49,16 +89,12 @@ class IngestionPipeline:
             if progress_callback:
                 progress_callback(step or msg, msg)
 
-        # Determine slug and raw directory
-        target_str = target.rstrip("/")
-        if target_str.startswith("http://") or target_str.startswith("https://"):
-            slug = target_str.split("/")[-1]
-            base_url = target_str
-        else:
-            slug = target_str
-            base_url = None
+        slug, base_url = _normalize_target_input(target)
+        if not slug:
+            raise ValueError("Target URL or local slug cannot be empty.")
 
-        raw_base_dir = Path("data/raw")
+        raw_base_dir = PROJECT_ROOT / "data" / "raw"
+        raw_base_dir.mkdir(parents=True, exist_ok=True)
         raw_dir = raw_base_dir / slug
 
         # STEP 1: EXTRACTION
@@ -172,6 +208,21 @@ class IngestionPipeline:
         except Exception as tr_err:
             log(f"Note: Team auto-resolution warning: {tr_err}")
 
+        # STEP 3.6: AUTOMATIC IDENTITY RESOLUTION & MERGING (PERSONS & TEAMS)
+        auto_merge_summary = {"merged_persons_count": 0, "merged_teams_count": 0, "total_merged": 0}
+        try:
+            from atomos.analytics.identity_resolver import IdentityResolver
+            ir_engine = IdentityResolver(conn)
+            auto_merge_summary = ir_engine.auto_merge_all(min_confidence=90.0)
+            if auto_merge_summary.get("total_merged", 0) > 0:
+                log(
+                    f"Auto-merged {auto_merge_summary['merged_persons_count']} duplicate person(s) "
+                    f"and {auto_merge_summary['merged_teams_count']} duplicate team(s).",
+                    step="AUTO_MERGED",
+                )
+        except Exception as ir_err:
+            log(f"Note: Identity auto-merge warning: {ir_err}")
+
         # STEP 4: INTEGRITY VALIDATION
         log("Step 4/4: Running integrity validation gatekeeper...", step="VALIDATING")
         validator = IntegrityValidator(conn)
@@ -218,6 +269,7 @@ class IngestionPipeline:
             "debates_count": debate_count,
             "speeches_recorded": speech_count,
             "reconciliation": rec_res,
+            "auto_merge": auto_merge_summary,
             "is_valid": report.is_valid,
             "critical_errors": report.critical_errors,
         }

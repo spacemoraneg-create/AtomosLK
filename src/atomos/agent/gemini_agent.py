@@ -8,6 +8,7 @@ memory, and an intelligent data hierarchy:
    relational, or subset questions.
 """
 
+import copy
 import json
 import math
 import os
@@ -43,6 +44,25 @@ def fmt_val(v: Any, max_decimals: int = 3) -> str:
         return str(v)
 
 
+def _strip_thought_signatures(contents: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    """
+    Strip model-specific thought parts and thoughtSignature fields from contents
+    when switching fallback models mid-loop to prevent HTTP 400 INVALID_ARGUMENT errors.
+    """
+    cleaned: List[Dict[str, Any]] = []
+    for turn in contents:
+        new_parts = []
+        for p in turn.get("parts", []):
+            if p.get("thought") and "functionCall" not in p and "functionResponse" not in p:
+                continue
+            p_copy = {k: v for k, v in p.items() if k not in ("thoughtSignature", "thought")}
+            if p_copy:
+                new_parts.append(p_copy)
+        if new_parts:
+            cleaned.append({"role": turn.get("role", "user"), "parts": new_parts})
+    return cleaned
+
+
 class GeminiAgent:
     """Autonomous ReAct agent with persistent conversational memory and intelligent atomic SQL fallback."""
 
@@ -67,6 +87,56 @@ class GeminiAgent:
         # Compacted conversational memory: session_id -> list of clean {role, parts} turns
         self.sessions: Dict[str, List[Dict[str, Any]]] = {}
         self.conversation_history: List[Dict[str, Any]] = []
+        self._ensure_session_table()
+
+    def _ensure_session_table(self):
+        try:
+            if self.query_engine and getattr(self.query_engine, "conn", None):
+                cur = self.query_engine.conn.cursor()
+                cur.execute("""
+                    CREATE TABLE IF NOT EXISTS chat_session_memory (
+                        session_id TEXT PRIMARY KEY,
+                        history_json TEXT NOT NULL,
+                        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                    )
+                """)
+                self.query_engine.conn.commit()
+        except Exception:
+            pass
+
+    def _load_session_history(self, session_id: str) -> List[Dict[str, Any]]:
+        if session_id in self.sessions:
+            return self.sessions[session_id]
+        try:
+            if self.query_engine and getattr(self.query_engine, "conn", None):
+                cur = self.query_engine.conn.cursor()
+                cur.execute("SELECT history_json FROM chat_session_memory WHERE session_id = ?", (session_id,))
+                row = cur.fetchone()
+                if row and row[0]:
+                    loaded = json.loads(row[0])
+                    if isinstance(loaded, list):
+                        self.sessions[session_id] = loaded
+                        return loaded
+        except Exception:
+            pass
+        return []
+
+    def _save_session_history(self, session_id: str, history: List[Dict[str, Any]]):
+        self.sessions[session_id] = history
+        self.conversation_history = history
+        try:
+            if self.query_engine and getattr(self.query_engine, "conn", None):
+                cur = self.query_engine.conn.cursor()
+                cur.execute("""
+                    INSERT INTO chat_session_memory (session_id, history_json, updated_at)
+                    VALUES (?, ?, CURRENT_TIMESTAMP)
+                    ON CONFLICT(session_id) DO UPDATE SET
+                        history_json = excluded.history_json,
+                        updated_at = CURRENT_TIMESTAMP
+                """, (session_id, json.dumps(history)))
+                self.query_engine.conn.commit()
+        except Exception:
+            pass
 
     def close(self):
         if self._owned_query and self.query_engine:
@@ -78,9 +148,23 @@ class GeminiAgent:
             self.sessions.pop(session_id, None)
             if session_id == "default":
                 self.conversation_history = []
+            try:
+                if self.query_engine and getattr(self.query_engine, "conn", None):
+                    cur = self.query_engine.conn.cursor()
+                    cur.execute("DELETE FROM chat_session_memory WHERE session_id = ?", (session_id,))
+                    self.query_engine.conn.commit()
+            except Exception:
+                pass
         else:
             self.sessions.clear()
             self.conversation_history = []
+            try:
+                if self.query_engine and getattr(self.query_engine, "conn", None):
+                    cur = self.query_engine.conn.cursor()
+                    cur.execute("DELETE FROM chat_session_memory")
+                    self.query_engine.conn.commit()
+            except Exception:
+                pass
 
     def run(self, query: str, session_id: str = "default", max_turns: int = 15) -> Dict[str, Any]:
         """
@@ -110,19 +194,29 @@ class GeminiAgent:
 
         headers = {"Content-Type": "application/json"}
 
-        # Fast and resilient model hierarchy: prioritize fastest available model
-        candidate_models = ["gemini-flash-lite-latest", "gemini-3.6-flash", "gemini-3.5-flash"]
-        if self.model and self.model not in candidate_models:
+        # Fast and resilient model hierarchy: prioritize fastest available model with highest quota headroom
+        candidate_models = [
+            "gemini-flash-lite-latest",
+            "gemini-3.1-flash-lite",
+            "gemini-flash-latest",
+            "gemini-3.6-flash",
+        ]
+        if self.model and self.model in candidate_models:
+            candidate_models.remove(self.model)
+            candidate_models.insert(0, self.model)
+        elif self.model and self.model not in ("gemini-2.5-flash", "gemini-2.0-flash"):
             candidate_models.insert(0, self.model)
 
         # Build contents from pristine compacted conversation history + new user query
-        session_history = self.sessions.get(session_id, [])
+        session_history = self._load_session_history(session_id)
         contents: List[Dict[str, Any]] = []
         for turn in session_history:
-            contents.append({
-                "role": turn.get("role", "user"),
-                "parts": [{"text": str(p.get("text", "")) for p in turn.get("parts", []) if "text" in p}]
-            })
+            text_parts = [{"text": str(p.get("text", ""))} for p in turn.get("parts", []) if "text" in p and str(p.get("text", "")).strip()]
+            if text_parts:
+                contents.append({
+                    "role": turn.get("role", "user"),
+                    "parts": text_parts
+                })
 
         contents.append({"role": "user", "parts": [{"text": query}]})
 
@@ -138,18 +232,7 @@ class GeminiAgent:
 
         for step in range(max_turns):
             is_final_step = (step >= max_turns - 1)
-            payload: Dict[str, Any] = {
-                "contents": contents,
-                "systemInstruction": {
-                    "parts": [{"text": SYSTEM_INSTRUCTION}]
-                },
-                "generationConfig": {
-                    "temperature": 0.1,
-                }
-            }
-            if not is_final_step:
-                payload["tools"] = [{"functionDeclarations": self.function_declarations}]
-            else:
+            if is_final_step:
                 contents.append({
                     "role": "user",
                     "parts": [{"text": "Synthesize and present your final answer now using all facts collected so far."}]
@@ -159,16 +242,44 @@ class GeminiAgent:
             last_err = ""
 
             models_to_try = [active_model] + [m for m in candidate_models if m != active_model]
-            for m in models_to_try:
+            for m_idx, m in enumerate(models_to_try):
+                # If switching models mid-turn, strip model-specific thoughtSignatures to prevent HTTP 400
+                req_contents = contents if m_idx == 0 else _strip_thought_signatures(contents)
+                payload: Dict[str, Any] = {
+                    "contents": req_contents,
+                    "systemInstruction": {
+                        "parts": [{"text": SYSTEM_INSTRUCTION}]
+                    },
+                    "generationConfig": {
+                        "temperature": 0.1,
+                    }
+                }
+                if not is_final_step:
+                    payload["tools"] = [{"functionDeclarations": self.function_declarations}]
+
                 url = f"https://generativelanguage.googleapis.com/v1beta/models/{m}:generateContent?key={self.api_key}"
                 try:
-                    r = requests.post(url, headers=headers, json=payload, timeout=15)
+                    r = requests.post(url, headers=headers, json=payload, timeout=18)
                     if r.status_code == 200:
                         resp = r
+                        if m_idx > 0:
+                            contents = req_contents
                         active_model = m
                         break
-                    elif r.status_code in (404, 429, 503):
-                        last_err = f"Model {m} status {r.status_code}: {r.text[:120]}"
+                    elif r.status_code == 400 and step > 0:
+                        # Retry once on the same model after stripping thought signatures
+                        clean_c = _strip_thought_signatures(contents)
+                        payload["contents"] = clean_c
+                        r2 = requests.post(url, headers=headers, json=payload, timeout=18)
+                        if r2.status_code == 200:
+                            resp = r2
+                            contents = clean_c
+                            active_model = m
+                            break
+                        last_err = f"Model {m} status {r2.status_code}: {r2.text[:140]}"
+                        continue
+                    elif r.status_code in (400, 404, 429, 500, 502, 503, 504):
+                        last_err = f"Model {m} status {r.status_code}: {r.text[:140]}"
                         continue
                     else:
                         resp = r
@@ -205,7 +316,9 @@ class GeminiAgent:
             fc_parts = [p for p in parts if "functionCall" in p]
 
             if not fc_parts:
-                candidate_text = "".join([p.get("text", "") for p in parts if "text" in p]).strip()
+                # Separate final answer text from internal Gemini 3.x thinking parts
+                non_thought_text = "".join([p.get("text", "") for p in parts if "text" in p and not p.get("thought")]).strip()
+                candidate_text = non_thought_text or "".join([p.get("text", "") for p in parts if "text" in p]).strip()
 
                 # Anti-Hallucination Interceptor:
                 # Enforce tool grounding only for specific factual/statistical inquiries, NOT pure conceptual derivations.
@@ -230,7 +343,6 @@ class GeminiAgent:
                     )
 
                     if is_factual_inquiry and has_statistical_claims:
-                        # Reject ungrounded hallucination and force tool retrieval
                         contents.append(candidate_content)
                         contents.append({
                             "role": "user",
@@ -275,10 +387,6 @@ class GeminiAgent:
             final_answer = OFF_TOPIC_REFUSAL
 
         if success:
-            # 5. Compacted Memory Management:
-            # Rather than polluting session history with 50KB raw JSON dumps,
-            # store pristine user prompt and final synthesized assistant markdown
-            # with active entity continuity tags.
             entity_notes = []
             for tc in turn_tool_calls:
                 args = tc.get("args", {})
@@ -293,27 +401,18 @@ class GeminiAgent:
                 {"role": "model", "parts": [{"text": f"{context_tag}{final_answer}"}]}
             ]
 
-            compacted_history = list(self.sessions.get(session_id, []))
+            compacted_history = list(self._load_session_history(session_id))
             compacted_history.extend(clean_turn)
             if len(compacted_history) > self.max_history_turns * 2:
                 compacted_history = compacted_history[-(self.max_history_turns * 2):]
 
-            self.sessions[session_id] = compacted_history
-            self.conversation_history = compacted_history
+            self._save_session_history(session_id, compacted_history)
 
-            return {
-                "query": query,
-                "intent": "GEMINI_LLM",
-                "answer": final_answer or "No answer returned.",
-                "tool_calls": turn_tool_calls,
-                "success": True,
-                "model_used": active_model,
-            }
-        else:
-            return {
-                "query": query,
-                "intent": "GEMINI_LLM",
-                "answer": "Maximum reasoning iterations exceeded.",
-                "tool_calls": turn_tool_calls,
-                "success": False,
-            }
+        return {
+            "query": query,
+            "intent": "GEMINI_LLM",
+            "answer": final_answer,
+            "tool_calls": turn_tool_calls,
+            "success": success,
+            "model_used": active_model,
+        }

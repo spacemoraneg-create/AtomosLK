@@ -171,15 +171,27 @@ class TournamentNormalizer:
             raise ValueError("Cannot create person with empty name")
 
         cur = self.conn.cursor()
-        cur.execute("SELECT id FROM persons WHERE canonical_name = ?", (clean_name,))
+        cur.execute("SELECT id FROM persons WHERE LOWER(canonical_name) = LOWER(?)", (clean_name,))
         row = cur.fetchone()
         if row:
             return row["id"]
 
-        cur.execute("SELECT person_id FROM person_aliases WHERE raw_name = ?", (clean_name,))
+        cur.execute("SELECT person_id FROM person_aliases WHERE LOWER(raw_name) = LOWER(?)", (clean_name,))
         row = cur.fetchone()
         if row:
             return row["person_id"]
+
+        # Check punctuation/whitespace normalized match (e.g. 'S.M.Yuthmi' vs 'S. M. Yuthmi')
+        alnum_target = re.sub(r"[^\w]", "", clean_name.lower())
+        if len(alnum_target) >= 5:
+            cur.execute("SELECT id, canonical_name FROM persons")
+            for p_row in cur.fetchall():
+                if re.sub(r"[^\w]", "", (p_row["canonical_name"] or "").lower()) == alnum_target:
+                    cur.execute(
+                        "INSERT OR IGNORE INTO person_aliases (person_id, raw_name, source_tournament_id) VALUES (?, ?, ?)",
+                        (p_row["id"], clean_name, tournament_id),
+                    )
+                    return p_row["id"]
 
         # Create new Person
         cur.execute("INSERT INTO persons (canonical_name) VALUES (?)", (clean_name,))

@@ -3223,11 +3223,12 @@
   // 9. AI CHATBOT INTEGRATION
   // ==========================================================================
   function getChatSessionId() {
-    let sid = sessionStorage.getItem('atomos_chat_session_id');
+    let sid = sessionStorage.getItem('atomos_chat_session_id') || localStorage.getItem('atomos_chat_session_id');
     if (!sid) {
       sid = 'session_' + Math.random().toString(36).substring(2, 11) + '_' + Date.now();
-      sessionStorage.setItem('atomos_chat_session_id', sid);
     }
+    sessionStorage.setItem('atomos_chat_session_id', sid);
+    try { localStorage.setItem('atomos_chat_session_id', sid); } catch (e) {}
     return sid;
   }
 
@@ -3248,6 +3249,7 @@
           });
         } catch (e) {}
         sessionStorage.removeItem('atomos_chat_session_id');
+        try { localStorage.removeItem('atomos_chat_session_id'); } catch (e) {}
         if (messages) {
           messages.innerHTML = `
             <div class="chat-bubble bot">
@@ -3292,7 +3294,6 @@
     }
 
     const [sum, spkAll, spkTab, teamsAll, instAll, tourneys, adjAll, pool] = await Promise.all([
-
       state.circuitSummary || fetchJson('circuit_summary.json', '/api/circuit'),
       state.v2SpeakersAll.length ? state.v2SpeakersAll : fetchJson('v2_speakers_all.json', '/api/v2/leaderboard/speakers?tier=all'),
       state.v2SpeakersTab.length ? state.v2SpeakersTab : fetchJson('v2_speakers_tab.json', '/api/v2/leaderboard/speakers?tier=tab'),
@@ -3312,21 +3313,70 @@
     if (adjAll) state.v2AdjudicatorsAll = adjAll;
     if (pool) state.v2NationalPool = pool;
 
-    // 1. Check if query mentions a specific debater
-    const matchedSpeaker = (spkAll || []).find((s) => q.includes((s.name || s.speaker_name || '').toLowerCase()));
-    if (matchedSpeaker) {
-      const pos = matchedSpeaker.position_averages || {};
-      const p1 = pos['1st'] && pos['1st'].average ? fmt(pos['1st'].average, 2) : '—';
-      const p2 = pos['2nd'] && pos['2nd'].average ? fmt(pos['2nd'].average, 2) : '—';
-      const p3 = pos['3rd'] && pos['3rd'].average ? fmt(pos['3rd'].average, 2) : '—';
+    // 1. Check if query mentions one or more specific debaters (full name or distinctive token >= 4 chars)
+    const stopWords = new Set(['what', 'when', 'where', 'which', 'show', 'tell', 'compare', 'comparison', 'between', 'from', 'with', 'history', 'record', 'debater', 'debaters', 'speaker', 'speakers', 'team', 'teams', 'school', 'college', 'metho', 'chaps', 'slsdc', 'vvidc', 'vijis', 'round', 'prelim', 'prelims', 'break', 'average', 'score', 'scores', 'rank', 'ranking', 'national', 'pool', 'direct', 'trialed', 'trials']);
+    const qWords = q.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/).filter(w => w.length >= 4 && !stopWords.has(w));
+    const matchedSpeakers = [];
+    const seenIds = new Set();
+
+    // First pass: exact full name match
+    for (const s of (spkAll || [])) {
+      const sName = (s.name || s.speaker_name || '').toLowerCase();
+      if (sName && q.includes(sName)) {
+        seenIds.add(sName);
+        matchedSpeakers.push(s);
+      }
+    }
+    // Second pass: token match (first name / surname) ordered by prelims_debated DESC
+    if (qWords.length > 0) {
+      const sortedByActivity = [...(spkAll || [])].sort((a, b) => (b.prelims_debated || 0) - (a.prelims_debated || 0));
+      for (const w of qWords) {
+        if (matchedSpeakers.some(ms => (ms.name || '').toLowerCase().split(/\s+/).includes(w))) continue;
+        const found = sortedByActivity.find(s => {
+          const sName = (s.name || s.speaker_name || '').toLowerCase();
+          if (seenIds.has(sName)) return false;
+          const parts = sName.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
+          return parts.includes(w);
+        });
+        if (found) {
+          seenIds.add((found.name || found.speaker_name || '').toLowerCase());
+          matchedSpeakers.push(found);
+        }
+      }
+    }
+
+    if (matchedSpeakers.length >= 2) {
+      const rows = matchedSpeakers.slice(0, 5);
       return [
+        `### Debater Comparison (${rows.map(r => r.name).join(' vs ')})`,
+        `| Debater | Institution | Speaker Avg | Elo (Peak) | Win % | Prelims | Highest Achievement |`,
+        `| --- | --- | --- | --- | --- | --- | --- |`,
+        ...rows.map(s => `| ${s.name} | ${s.institution} | ${fmt(s.speaker_score, 3)} | ${fmt(s.elo || 1500, 3)} (${fmt(s.peak_elo || s.elo || 1500, 3)}) | ${fmt(s.win_percentage, 3)}% | ${s.prelims_debated} | ${s.highest_achievement || 'Preliminary Rounds'} |`),
+      ].join('\n');
+    }
+
+    if (matchedSpeakers.length === 1) {
+      const matchedSpeaker = matchedSpeakers[0];
+      const pos = matchedSpeaker.position_averages || {};
+      const p1 = pos['1st'] && pos['1st'].average ? fmt(pos['1st'].average, 3) : '—';
+      const p2 = pos['2nd'] && pos['2nd'].average ? fmt(pos['2nd'].average, 3) : '—';
+      const p3 = pos['3rd'] && pos['3rd'].average ? fmt(pos['3rd'].average, 3) : '—';
+      const lines = [
         `### ${matchedSpeaker.name} (${matchedSpeaker.institution})`,
-        `- **Speaker Average:** ${fmt(matchedSpeaker.speaker_score, 2)} pts (${matchedSpeaker.prelims_debated} prelims across ${matchedSpeaker.tournaments_debated} tournaments)`,
-        `- **Debater Elo:** ${fmt(matchedSpeaker.elo || 1500, 1)} (Peak: ${fmt(matchedSpeaker.peak_elo || matchedSpeaker.elo || 1500, 1)})`,
-        `- **Win Rate:** ${fmt(matchedSpeaker.win_percentage, 1)}% · **StDev:** ${fmt(matchedSpeaker.stdev, 2)}`,
+        `- **Speaker Average:** ${fmt(matchedSpeaker.speaker_score, 3)} pts (${matchedSpeaker.prelims_debated} prelims across ${matchedSpeaker.tournaments_debated} tournaments)`,
+        `- **Debater Elo:** ${fmt(matchedSpeaker.elo || 1500, 3)} (Peak: ${fmt(matchedSpeaker.peak_elo || matchedSpeaker.elo || 1500, 3)})`,
+        `- **Win Rate:** ${fmt(matchedSpeaker.win_percentage, 3)}% · **StDev:** ${fmt(matchedSpeaker.stdev, 3)}`,
         `- **Highest Achievement:** ${matchedSpeaker.highest_achievement || 'Preliminary Rounds'} · **National Status:** ${matchedSpeaker.national_level || '—'}`,
         `- **Position Averages:** 1st: ${p1} · 2nd: ${p2} · 3rd: ${p3}`,
-      ].join('\n');
+      ];
+      const tb = matchedSpeaker.tournament_breakdown || [];
+      if (tb.length > 0) {
+        lines.push('', `| Tournament | Team | Avg Score | Stage Reached |`, `| --- | --- | --- | --- |`);
+        tb.forEach(t => {
+          lines.push(`| ${t.tournament_name} | ${t.team_name || '—'} | ${fmt(t.average_score || t.tournament_average, 3)} | ${t.highest_break || t.highest_stage || 'Preliminary Rounds'} |`);
+        });
+      }
+      return lines.join('\n');
     }
 
     // 2. Check if query mentions a specific team

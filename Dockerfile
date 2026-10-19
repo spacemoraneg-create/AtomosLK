@@ -21,7 +21,7 @@ COPY src/ /app/src/
 COPY web/ /app/web/
 COPY scripts/ /app/scripts/
 COPY tests/ /app/tests/
-COPY pyproject.toml /app/
+COPY pyproject.toml gunicorn.conf.py wsgi.py /app/
 
 # Ensure data directory exists with SQLite database
 COPY data/ /app/data/
@@ -32,5 +32,6 @@ EXPOSE 5000
 HEALTHCHECK --interval=30s --timeout=5s --start-period=5s --retries=3 \
     CMD curl -f http://localhost:5000/api/health || exit 1
 
-# Start production server using gunicorn
-CMD ["gunicorn", "--workers", "3", "--bind", "0.0.0.0:5000", "--timeout", "120", "atomos.server:create_app()"]
+# Start production server using gunicorn config
+CMD ["gunicorn", "-c", "gunicorn.conf.py", "wsgi:app"]
+
