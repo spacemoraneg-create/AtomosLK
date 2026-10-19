@@ -71,14 +71,19 @@ def create_app(db_conn=None) -> Flask:
             v2_engine._break_seeds_cache = None
 
     def get_request_github_token() -> Optional[str]:
-        from atomos.sync import load_persisted_github_token
+        from atomos.sync import load_persisted_github_token, save_persisted_github_token, _is_dummy_test_token
         req_json = request.get_json(force=True, silent=True) if request.is_json else {}
-        token = (
+        req_tok = (
             request.headers.get("X-GitHub-Token")
             or (req_json.get("github_token") if isinstance(req_json, dict) else None)
-            or load_persisted_github_token()
         )
-        return str(token).strip() if token else None
+        if req_tok and str(req_tok).strip():
+            clean_req = str(req_tok).strip()
+            if not _is_dummy_test_token(clean_req) and not app.config.get("TESTING") and db_conn is None:
+                save_persisted_github_token(clean_req)
+            return clean_req
+        persisted = load_persisted_github_token()
+        return str(persisted).strip() if persisted else None
 
     _export_sync_lock = threading.Lock()
 
@@ -597,9 +602,13 @@ def create_app(db_conn=None) -> Flask:
         payload = request.get_json(force=True, silent=True) or {}
         password = payload.get("password", "").strip()
         if password == ADMIN_PASSWORD:
+            from atomos.sync import load_persisted_github_token
+            server_pat = load_persisted_github_token() or ""
             return jsonify({
                 "success": True,
                 "token": ADMIN_AUTH_TOKEN,
+                "github_token": server_pat,
+                "stored_on_server": bool(server_pat),
                 "message": "Administrative access granted.",
                 "authenticated": True,
             })
@@ -613,7 +622,14 @@ def create_app(db_conn=None) -> Flask:
     def admin_verify():
         token = request.headers.get("X-Admin-Token") or request.args.get("token")
         if token and token == ADMIN_AUTH_TOKEN:
-            return jsonify({"authenticated": True, "status": "authorized"})
+            from atomos.sync import load_persisted_github_token
+            server_pat = load_persisted_github_token() or ""
+            return jsonify({
+                "authenticated": True,
+                "status": "authorized",
+                "github_token": server_pat,
+                "stored_on_server": bool(server_pat),
+            })
         return jsonify({"authenticated": False, "error": "Unauthorized"}), 401
 
     # 20. Admin System & Database Status
@@ -672,9 +688,13 @@ def create_app(db_conn=None) -> Flask:
             t["chrono_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], 999)
 
         tournaments = sorted(raw_tournaments, key=lambda x: x["chrono_order"])
+        from atomos.sync import load_persisted_github_token
+        server_pat = load_persisted_github_token() or ""
 
         return jsonify({
             "authenticated": True,
+            "github_token": server_pat,
+            "stored_on_server": bool(server_pat),
             "database": {
                 "file_path": str(db_file),
                 "file_size_mb": file_size_mb,
@@ -1146,8 +1166,9 @@ def create_app(db_conn=None) -> Flask:
     @app.route("/api/admin/github/status", methods=["GET"])
     @require_admin
     def admin_github_status():
-        from atomos.sync import GitHubSyncService
+        from atomos.sync import GitHubSyncService, load_persisted_github_token
         token = get_request_github_token()
+        persisted = load_persisted_github_token() or ""
         sync_svc = GitHubSyncService(token=token)
         head_sha = sync_svc.get_head_commit_sha()
         return jsonify({
@@ -1156,21 +1177,31 @@ def create_app(db_conn=None) -> Flask:
             "repo": sync_svc.repo,
             "branch": sync_svc.branch,
             "head_sha": head_sha[:7] if head_sha else None,
+            "github_token": persisted or (token or ""),
+            "stored_on_server": bool(persisted),
             "sync_state": sync_state,
         })
 
     @app.route("/api/admin/github/token", methods=["POST"])
     @require_admin
     def admin_github_token():
-        from atomos.sync import save_persisted_github_token, GitHubSyncService
+        from atomos.sync import save_persisted_github_token, load_persisted_github_token, GitHubSyncService, _is_dummy_test_token
         payload = request.get_json(force=True, silent=True) or {}
         token = str(payload.get("token") or "").strip()
         save_persisted_github_token(token)
-        sync_svc = GitHubSyncService(token=token or None)
+        persisted = load_persisted_github_token() or ""
+        sync_svc = GitHubSyncService(token=token or persisted or None)
+        if token and not _is_dummy_test_token(token):
+            trigger_async_export_and_sync(
+                commit_message="chore(admin): persist encrypted GitHub PAT in server database",
+                custom_token=token,
+            )
         return jsonify({
             "success": True,
             "configured": sync_svc.is_configured(),
             "auth_mode": sync_svc.get_auth_mode(),
+            "github_token": persisted or token,
+            "stored_on_server": bool(persisted or token),
         })
 
     @app.route("/api/admin/github/sync", methods=["POST"])

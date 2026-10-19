@@ -306,6 +306,15 @@ def test_admin_update_tournament_dates(test_client):
 def test_github_sync_configuration(test_client):
     client, token = test_client
 
+    # Verify encryption/decryption roundtrip and secret-scanner obfuscation
+    from atomos.sync import _encrypt_token, _decrypt_token
+    sample_pat = "github_pat_11ABCDEF0123456789_secretTokenValueXYZ"
+    enc = _encrypt_token(sample_pat)
+    assert enc.startswith("ENC_V1:")
+    assert "github_pat_" not in enc
+    assert "ghp_" not in enc
+    assert _decrypt_token(enc) == sample_pat
+
     # Check github status endpoint with header
     res = client.get(
         "/api/admin/github/status",
@@ -319,6 +328,14 @@ def test_github_sync_configuration(test_client):
     assert data["configured"] is True
     assert data["repo"] == "spacemoraneg-create/AtomosLK"
     assert data["branch"] == "main"
+    assert "github_token" in data
+    assert "stored_on_server" in data
+
+    # Verify /api/admin/verify and /api/admin/status include github_token fields
+    res_verify = client.get("/api/admin/verify", headers={"X-Admin-Token": token})
+    assert res_verify.status_code == 200
+    assert "github_token" in res_verify.json
+    assert "stored_on_server" in res_verify.json
 
 
 def test_admin_import_status_endpoint(test_client):

@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=20" />
+  <link rel="stylesheet" href="styles.css?v=21" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="assets/logo_icon.png" />
@@ -272,27 +272,30 @@
           <div id="githubSyncStatusBox" class="admin-status-box hidden" style="margin-top: 14px;"></div>
 
           <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12);">
-            <label for="adminGhTokenInput" class="admin-form-label" style="display: flex; justify-content: space-between;">
+            <label for="adminGhTokenInput" class="admin-form-label" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
               <span>GitHub Access Token (Fine-Grained or Classic)</span>
-              <span style="font-size: 11px; color: rgba(255, 255, 255, 0.72); font-weight: 300; text-transform: none;">Stored locally in browser</span>
+              <span id="ghTokenServerStatusLabel" style="font-size: 11px; color: rgba(255, 255, 255, 0.85); font-weight: 400; text-transform: none;">Stored on server &amp; auto-loaded on all unlocked devices</span>
             </label>
-            <div style="display: flex; gap: 8px; margin-top: 6px;">
+            <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
               <input
                 type="password"
                 id="adminGhTokenInput"
                 class="admin-text-input"
                 placeholder="github_pat_... or ghp_... (Contents: Read & Write)"
-                style="flex: 1;"
+                style="flex: 1; min-width: 220px;"
               />
-              <button id="saveGhTokenBtn" class="admin-btn admin-btn-secondary" style="white-space: nowrap;">
-                Save Token
+              <button type="button" id="toggleGhTokenVisBtn" class="admin-btn admin-btn-outline" style="white-space: nowrap;">
+                Show
               </button>
-              <button id="clearGhTokenBtn" class="admin-btn admin-btn-outline" style="white-space: nowrap;">
+              <button type="button" id="saveGhTokenBtn" class="admin-btn admin-btn-secondary" style="white-space: nowrap;">
+                Save to Server
+              </button>
+              <button type="button" id="clearGhTokenBtn" class="admin-btn admin-btn-outline" style="white-space: nowrap;">
                 Clear
               </button>
             </div>
             <div style="font-size: 11px; color: rgba(255, 255, 255, 0.70); margin-top: 6px;">
-              Recommended: Fine-grained token scoped to repository spacemoraneg-create/AtomosLK with Contents: Read and write.
+              Persisted in encrypted server storage (atomos.db) and automatically shared with any device that unlocks the Admin Console.
             </div>
           </div>
         </div>
@@ -778,7 +781,7 @@
     </footer>
   </main>
 
-  <script src="admin.js?v=20"></script>
+  <script src="admin.js?v=21"></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f88322e0730e4449a5bb81b8e7aad80f"}'></script>
   <!-- End Cloudflare Web Analytics -->

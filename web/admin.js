@@ -76,6 +76,40 @@
     }
   }
 
+  function syncClientWithServerPat(serverToken, storedOnServer) {
+    const cleanServer = (serverToken || '').trim();
+    const ghTokenInput = document.getElementById('adminGhTokenInput');
+    const statusLabel = document.getElementById('ghTokenServerStatusLabel');
+
+    if (cleanServer) {
+      try {
+        localStorage.setItem('atomos_gh_token', cleanServer);
+        sessionStorage.setItem('atomos_gh_token', cleanServer);
+      } catch (e) {}
+      if (ghTokenInput && ghTokenInput.value !== cleanServer) {
+        ghTokenInput.value = cleanServer;
+      }
+      if (statusLabel) {
+        statusLabel.textContent = 'Active on server & auto-loaded to this device';
+        statusLabel.style.color = '#ffffff';
+      }
+    } else {
+      // If server has no token yet, but this browser has one, push it up to the server automatically
+      const localTok = (localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '').trim();
+      if (localTok) {
+        if (ghTokenInput && !ghTokenInput.value) ghTokenInput.value = localTok;
+        fetch(`${API_BASE}/api/admin/github/token`, {
+          method: 'POST',
+          headers: getHeaders(),
+          body: JSON.stringify({ token: localTok }),
+        }).catch(() => {});
+      } else if (statusLabel && storedOnServer === false) {
+        statusLabel.textContent = 'No token stored on server yet';
+        statusLabel.style.color = 'rgba(255, 255, 255, 0.72)';
+      }
+    }
+  }
+
   async function verifySession() {
     const token = getStoredToken();
     if (!token) {
@@ -88,6 +122,10 @@
         headers: { 'X-Admin-Token': token },
       });
       if (res.ok) {
+        const data = await res.json().catch(() => ({}));
+        if (data && (data.github_token || data.stored_on_server !== undefined)) {
+          syncClientWithServerPat(data.github_token, data.stored_on_server);
+        }
         showDashboard();
         return true;
       }
@@ -142,6 +180,9 @@
       const data = await res.json();
       if (res.ok && data.success && data.token) {
         setStoredToken(data.token);
+        if (data.github_token || data.stored_on_server !== undefined) {
+          syncClientWithServerPat(data.github_token, data.stored_on_server);
+        }
         showDashboard();
       } else {
         showLoginError(data.error || 'Invalid administrative password. Access denied.');
@@ -232,6 +273,9 @@
 
       const data = await res.json();
       currentStatusData = data;
+      if (data.github_token || data.stored_on_server !== undefined) {
+        syncClientWithServerPat(data.github_token, data.stored_on_server);
+      }
       renderDatabaseVitals(data.database);
       renderTournamentsTable(data.tournaments);
       renderOpsQuickTournaments(data.tournaments);
@@ -486,6 +530,9 @@
       });
       if (!res.ok) return;
       const data = await res.json();
+      if (data.github_token || data.stored_on_server !== undefined) {
+        syncClientWithServerPat(data.github_token, data.stored_on_server);
+      }
       if (!badge) return;
       if (data.configured) {
         const shaSuffix = data.head_sha ? ` @ ${data.head_sha}` : '';
@@ -523,6 +570,10 @@
       });
       if (checkRes.ok) {
         const checkData = await checkRes.json();
+        if (checkData.github_token) {
+          customToken = checkData.github_token;
+          syncClientWithServerPat(checkData.github_token, checkData.stored_on_server);
+        }
         if (!checkData.configured && !customToken) {
           const entered = window.prompt(
             'GitHub Personal Access Token is required to commit directly to GitHub repository.\n\nEnter GitHub Personal Access Token (Fine-grained Contents: Read/Write, or Classic repo scope):'
@@ -609,13 +660,27 @@
 
     // GitHub PAT configuration input
     const ghTokenInput = document.getElementById('adminGhTokenInput');
+    const toggleGhTokenVisBtn = document.getElementById('toggleGhTokenVisBtn');
     const saveGhTokenBtn = document.getElementById('saveGhTokenBtn');
     const clearGhTokenBtn = document.getElementById('clearGhTokenBtn');
     const statusBox = document.getElementById('githubSyncStatusBox');
+    const statusLabel = document.getElementById('ghTokenServerStatusLabel');
 
     const existingToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
     if (ghTokenInput && existingToken) {
       ghTokenInput.value = existingToken;
+    }
+
+    if (toggleGhTokenVisBtn && ghTokenInput) {
+      toggleGhTokenVisBtn.addEventListener('click', () => {
+        if (ghTokenInput.type === 'password') {
+          ghTokenInput.type = 'text';
+          toggleGhTokenVisBtn.textContent = 'Hide';
+        } else {
+          ghTokenInput.type = 'password';
+          toggleGhTokenVisBtn.textContent = 'Show';
+        }
+      });
     }
 
     if (saveGhTokenBtn) {
@@ -628,13 +693,23 @@
         localStorage.setItem('atomos_gh_token', val);
         sessionStorage.setItem('atomos_gh_token', val);
         try {
-          await fetch(`${API_BASE}/api/admin/github/token`, {
+          const res = await fetch(`${API_BASE}/api/admin/github/token`, {
             method: 'POST',
             headers: getHeaders(),
             body: JSON.stringify({ token: val }),
           });
+          if (res.ok) {
+            const data = await res.json();
+            syncClientWithServerPat(data.github_token || val, true);
+          }
         } catch (e) {}
-        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token saved for automatic & manual repository sync.');
+        if (statusBox) {
+          showStatusBox(
+            statusBox,
+            'success',
+            'GitHub Personal Access Token saved to server database. Any device that unlocks Admin will now automatically receive this token.'
+          );
+        }
         fetchGitHubSyncStatus();
       });
     }
@@ -644,6 +719,10 @@
         localStorage.removeItem('atomos_gh_token');
         sessionStorage.removeItem('atomos_gh_token');
         if (ghTokenInput) ghTokenInput.value = '';
+        if (statusLabel) {
+          statusLabel.textContent = 'Cleared from server & browser';
+          statusLabel.style.color = 'rgba(255, 255, 255, 0.72)';
+        }
         try {
           await fetch(`${API_BASE}/api/admin/github/token`, {
             method: 'POST',
@@ -651,7 +730,7 @@
             body: JSON.stringify({ token: '' }),
           });
         } catch (e) {}
-        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared.');
+        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared from server and browser.');
         fetchGitHubSyncStatus();
       });
     }
