@@ -18,6 +18,8 @@
   // DOM Elements
   const lockView = document.getElementById('adminLockView');
   const dashboardView = document.getElementById('adminDashboardView');
+  const dashboardParent = dashboardView ? dashboardView.parentNode : null;
+  const dashboardNextSibling = dashboardView ? dashboardView.nextSibling : null;
   const passwordInput = document.getElementById('adminPasswordInput');
   const loginForm = document.getElementById('adminLoginForm');
   const loginBtn = document.getElementById('adminLoginBtn');
@@ -25,18 +27,13 @@
   const lockBtn = document.getElementById('adminLockBtn');
   const refreshBtn = document.getElementById('adminRefreshBtn');
 
-  // Helper for Headers
+  // Helper for Headers (never stores or transmits raw GitHub PAT from browser storage)
   function getHeaders() {
     const token = getStoredToken() || '';
-    const ghToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
-    const headers = {
+    return {
       'Content-Type': 'application/json',
       'X-Admin-Token': token,
     };
-    if (ghToken) {
-      headers['X-GitHub-Token'] = ghToken;
-    }
-    return headers;
   }
 
   // Safe JSON Parser avoiding Unexpected token '<' crashes on 502/504 HTML
@@ -76,35 +73,39 @@
     }
   }
 
-  function syncClientWithServerPat(serverToken, storedOnServer) {
-    const cleanServer = (serverToken || '').trim();
-    const ghTokenInput = document.getElementById('adminGhTokenInput');
-    const statusLabel = document.getElementById('ghTokenServerStatusLabel');
-
-    if (cleanServer) {
-      try {
-        localStorage.setItem('atomos_gh_token', cleanServer);
-        sessionStorage.setItem('atomos_gh_token', cleanServer);
-      } catch (e) {}
-      if (ghTokenInput && ghTokenInput.value !== cleanServer) {
-        ghTokenInput.value = cleanServer;
-      }
-      if (statusLabel) {
-        statusLabel.textContent = 'Active on server & auto-loaded to this device';
-        statusLabel.style.color = '#ffffff';
-      }
-    } else {
-      // If server has no token yet, but this browser has one, push it up to the server automatically
-      const localTok = (localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '').trim();
-      if (localTok) {
-        if (ghTokenInput && !ghTokenInput.value) ghTokenInput.value = localTok;
+  function syncClientWithServerPat(tokenMasked, storedOnServer) {
+    // Purge any legacy plaintext GitHub token from browser storage immediately
+    try {
+      const legacyLocal = (localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '').trim();
+      localStorage.removeItem('atomos_gh_token');
+      sessionStorage.removeItem('atomos_gh_token');
+      if (legacyLocal && !storedOnServer) {
         fetch(`${API_BASE}/api/admin/github/token`, {
           method: 'POST',
           headers: getHeaders(),
-          body: JSON.stringify({ token: localTok }),
+          body: JSON.stringify({ token: legacyLocal }),
         }).catch(() => {});
-      } else if (statusLabel && storedOnServer === false) {
-        statusLabel.textContent = 'No token stored on server yet';
+      }
+    } catch (e) {}
+
+    const ghTokenInput = document.getElementById('adminGhTokenInput');
+    const statusLabel = document.getElementById('ghTokenServerStatusLabel');
+    const masked = (tokenMasked || '').trim();
+
+    if (ghTokenInput) {
+      ghTokenInput.value = '';
+      ghTokenInput.placeholder = (storedOnServer || masked)
+        ? `Vault Active (${masked || 'Encrypted'}) — enter new token to replace`
+        : 'Enter new github_pat_... or ghp_... to store in server vault';
+    }
+    if (statusLabel) {
+      if (storedOnServer || masked) {
+        statusLabel.textContent = masked
+          ? `Encrypted in Server Vault (${masked})`
+          : 'Encrypted in Server Vault & Active';
+        statusLabel.style.color = '#ffffff';
+      } else {
+        statusLabel.textContent = 'No token stored in server vault yet';
         statusLabel.style.color = 'rgba(255, 255, 255, 0.72)';
       }
     }
@@ -123,10 +124,10 @@
       });
       if (res.ok) {
         const data = await res.json().catch(() => ({}));
-        if (data && (data.github_token || data.stored_on_server !== undefined)) {
-          syncClientWithServerPat(data.github_token, data.stored_on_server);
-        }
         showDashboard();
+        if (data && (data.token_masked !== undefined || data.stored_on_server !== undefined)) {
+          syncClientWithServerPat(data.token_masked, data.stored_on_server);
+        }
         return true;
       }
     } catch (e) {
@@ -140,7 +141,12 @@
 
   function showLockScreen() {
     if (lockView) lockView.classList.remove('hidden');
-    if (dashboardView) dashboardView.classList.add('hidden');
+    if (dashboardView) {
+      dashboardView.classList.add('hidden');
+      if (dashboardView.parentNode) {
+        dashboardView.parentNode.removeChild(dashboardView);
+      }
+    }
     if (passwordInput) {
       passwordInput.value = '';
       passwordInput.focus();
@@ -153,7 +159,12 @@
 
   function showDashboard() {
     if (lockView) lockView.classList.add('hidden');
-    if (dashboardView) dashboardView.classList.remove('hidden');
+    if (dashboardView) {
+      if (!dashboardView.parentNode && dashboardParent) {
+        dashboardParent.insertBefore(dashboardView, dashboardNextSibling);
+      }
+      dashboardView.classList.remove('hidden');
+    }
     fetchAdminStatus();
   }
 
@@ -180,10 +191,10 @@
       const data = await res.json();
       if (res.ok && data.success && data.token) {
         setStoredToken(data.token);
-        if (data.github_token || data.stored_on_server !== undefined) {
-          syncClientWithServerPat(data.github_token, data.stored_on_server);
-        }
         showDashboard();
+        if (data.token_masked !== undefined || data.stored_on_server !== undefined) {
+          syncClientWithServerPat(data.token_masked, data.stored_on_server);
+        }
       } else {
         showLoginError(data.error || 'Invalid administrative password. Access denied.');
         if (passwordInput) {
@@ -208,9 +219,18 @@
     loginError.classList.remove('hidden');
   }
 
-  function handleLogout() {
+  async function handleLogout() {
+    const token = getStoredToken();
     setStoredToken(null);
     showLockScreen();
+    if (token) {
+      try {
+        await fetch(`${API_BASE}/api/admin/logout`, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'X-Admin-Token': token },
+        });
+      } catch (e) {}
+    }
   }
 
   // Check 401 response and drop to lock
@@ -273,8 +293,8 @@
 
       const data = await res.json();
       currentStatusData = data;
-      if (data.github_token || data.stored_on_server !== undefined) {
-        syncClientWithServerPat(data.github_token, data.stored_on_server);
+      if (data.token_masked !== undefined || data.stored_on_server !== undefined) {
+        syncClientWithServerPat(data.token_masked, data.stored_on_server);
       }
       renderDatabaseVitals(data.database);
       renderTournamentsTable(data.tournaments);
@@ -530,8 +550,8 @@
       });
       if (!res.ok) return;
       const data = await res.json();
-      if (data.github_token || data.stored_on_server !== undefined) {
-        syncClientWithServerPat(data.github_token, data.stored_on_server);
+      if (data.token_masked !== undefined || data.stored_on_server !== undefined) {
+        syncClientWithServerPat(data.token_masked, data.stored_on_server);
       }
       if (!badge) return;
       if (data.configured) {
@@ -563,18 +583,15 @@
       document.getElementById('paneSyncGithubBtn'),
     ].filter(Boolean);
 
-    let customToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
+    let customToken = '';
     try {
       const checkRes = await fetch(`${API_BASE}/api/admin/github/status`, {
         headers: getHeaders(),
       });
       if (checkRes.ok) {
         const checkData = await checkRes.json();
-        if (checkData.github_token) {
-          customToken = checkData.github_token;
-          syncClientWithServerPat(checkData.github_token, checkData.stored_on_server);
-        }
-        if (!checkData.configured && !customToken) {
+        syncClientWithServerPat(checkData.token_masked, checkData.stored_on_server);
+        if (!checkData.configured) {
           const entered = window.prompt(
             'GitHub Personal Access Token is required to commit directly to GitHub repository.\n\nEnter GitHub Personal Access Token (Fine-grained Contents: Read/Write, or Classic repo scope):'
           );
@@ -585,10 +602,6 @@
             return;
           }
           customToken = entered.trim();
-          localStorage.setItem('atomos_gh_token', customToken);
-          sessionStorage.setItem('atomos_gh_token', customToken);
-          const ghInput = document.getElementById('adminGhTokenInput');
-          if (ghInput) ghInput.value = customToken;
         }
       }
     } catch (e) {
@@ -658,40 +671,20 @@
     if (adminSyncBtn) adminSyncBtn.addEventListener('click', triggerGitHubSync);
     if (paneSyncBtn) paneSyncBtn.addEventListener('click', triggerGitHubSync);
 
-    // GitHub PAT configuration input
+    // GitHub PAT configuration input (server vault only)
     const ghTokenInput = document.getElementById('adminGhTokenInput');
-    const toggleGhTokenVisBtn = document.getElementById('toggleGhTokenVisBtn');
     const saveGhTokenBtn = document.getElementById('saveGhTokenBtn');
     const clearGhTokenBtn = document.getElementById('clearGhTokenBtn');
     const statusBox = document.getElementById('githubSyncStatusBox');
     const statusLabel = document.getElementById('ghTokenServerStatusLabel');
 
-    const existingToken = localStorage.getItem('atomos_gh_token') || sessionStorage.getItem('atomos_gh_token') || '';
-    if (ghTokenInput && existingToken) {
-      ghTokenInput.value = existingToken;
-    }
-
-    if (toggleGhTokenVisBtn && ghTokenInput) {
-      toggleGhTokenVisBtn.addEventListener('click', () => {
-        if (ghTokenInput.type === 'password') {
-          ghTokenInput.type = 'text';
-          toggleGhTokenVisBtn.textContent = 'Hide';
-        } else {
-          ghTokenInput.type = 'password';
-          toggleGhTokenVisBtn.textContent = 'Show';
-        }
-      });
-    }
-
     if (saveGhTokenBtn) {
       saveGhTokenBtn.addEventListener('click', async () => {
         const val = (ghTokenInput ? ghTokenInput.value : '').trim();
         if (!val) {
-          if (statusBox) showStatusBox(statusBox, 'error', 'Please provide a valid GitHub token before saving.');
+          if (statusBox) showStatusBox(statusBox, 'error', 'Please enter a valid GitHub token to store in the encrypted server vault.');
           return;
         }
-        localStorage.setItem('atomos_gh_token', val);
-        sessionStorage.setItem('atomos_gh_token', val);
         try {
           const res = await fetch(`${API_BASE}/api/admin/github/token`, {
             method: 'POST',
@@ -700,14 +693,15 @@
           });
           if (res.ok) {
             const data = await res.json();
-            syncClientWithServerPat(data.github_token || val, true);
+            syncClientWithServerPat(data.token_masked, data.stored_on_server);
           }
         } catch (e) {}
+        if (ghTokenInput) ghTokenInput.value = '';
         if (statusBox) {
           showStatusBox(
             statusBox,
             'success',
-            'GitHub Personal Access Token saved to server database. Any device that unlocks Admin will now automatically receive this token.'
+            'GitHub Personal Access Token encrypted and stored in the server vault. Any device that unlocks Admin will automatically use this vault.'
           );
         }
         fetchGitHubSyncStatus();
@@ -716,11 +710,13 @@
 
     if (clearGhTokenBtn) {
       clearGhTokenBtn.addEventListener('click', async () => {
-        localStorage.removeItem('atomos_gh_token');
-        sessionStorage.removeItem('atomos_gh_token');
+        try {
+          localStorage.removeItem('atomos_gh_token');
+          sessionStorage.removeItem('atomos_gh_token');
+        } catch (e) {}
         if (ghTokenInput) ghTokenInput.value = '';
         if (statusLabel) {
-          statusLabel.textContent = 'Cleared from server & browser';
+          statusLabel.textContent = 'Cleared from server vault';
           statusLabel.style.color = 'rgba(255, 255, 255, 0.72)';
         }
         try {
@@ -730,8 +726,57 @@
             body: JSON.stringify({ token: '' }),
           });
         } catch (e) {}
-        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared from server and browser.');
+        if (statusBox) showStatusBox(statusBox, 'success', 'GitHub Personal Access Token cleared from server vault.');
         fetchGitHubSyncStatus();
+      });
+    }
+
+    // Administrative Password Change Handler
+    const currentPwInput = document.getElementById('currentAdminPwInput');
+    const newPwInput = document.getElementById('newAdminPwInput');
+    const changePwBtn = document.getElementById('changeAdminPwBtn');
+    const pwStatusBox = document.getElementById('adminPwStatusBox');
+
+    if (changePwBtn) {
+      changePwBtn.addEventListener('click', async () => {
+        const currentPassword = (currentPwInput ? currentPwInput.value : '').trim();
+        const newPassword = (newPwInput ? newPwInput.value : '').trim();
+        if (!currentPassword || !newPassword) {
+          if (pwStatusBox) showStatusBox(pwStatusBox, 'error', 'Please enter both your current password and a new password.');
+          return;
+        }
+        if (newPassword.length < 8) {
+          if (pwStatusBox) showStatusBox(pwStatusBox, 'error', 'New administrative password must be at least 8 characters long.');
+          return;
+        }
+        changePwBtn.disabled = true;
+        changePwBtn.textContent = 'UPDATING & RE-ENCRYPTING VAULT...';
+        try {
+          const res = await fetch(`${API_BASE}/api/admin/password`, {
+            method: 'POST',
+            headers: getHeaders(),
+            body: JSON.stringify({
+              current_password: currentPassword,
+              new_password: newPassword,
+            }),
+          });
+          const data = await res.json();
+          if (res.ok && data.success) {
+            if (data.token) setStoredToken(data.token);
+            if (currentPwInput) currentPwInput.value = '';
+            if (newPwInput) newPwInput.value = '';
+            if (pwStatusBox) {
+              showStatusBox(pwStatusBox, 'success', data.message || 'Administrative password updated and vault re-encrypted.');
+            }
+          } else {
+            if (pwStatusBox) showStatusBox(pwStatusBox, 'error', data.error || 'Failed to update password.');
+          }
+        } catch (e) {
+          if (pwStatusBox) showStatusBox(pwStatusBox, 'error', `Network error: ${e.message}`);
+        } finally {
+          changePwBtn.disabled = false;
+          changePwBtn.textContent = 'Update Password & Re-Encrypt Vault';
+        }
       });
     }
   }
@@ -2724,32 +2769,9 @@
     initIdentityMerger();
     initDataPersistence();
 
-    // Verify session state or URL parameters
-    const urlParams = new URLSearchParams(window.location.search);
-    const authParam = urlParams.get('auth');
-    const tabParam = urlParams.get('tab');
-    const speakerParam = urlParams.get('speaker');
-    const runParam = urlParams.get('run');
-
-    if (authParam) {
-      if (passwordInput) passwordInput.value = authParam;
-      handleLogin().then(() => {
-        if (getStoredToken()) {
-          if (tabParam) {
-            const tabBtn = document.querySelector(`.admin-tab-btn[data-tab="pane${tabParam.charAt(0).toUpperCase() + tabParam.slice(1)}"]`);
-            if (tabBtn) tabBtn.click();
-          }
-          if (speakerParam) {
-            loadDebaterAudit(speakerParam);
-          }
-          if (runParam) {
-            runTestSuite(runParam);
-          }
-        }
-      });
-    } else {
-      verifySession();
-    }
+    // Detach dashboard from DOM until session verification completes
+    showLockScreen();
+    verifySession();
   });
 })();
 

@@ -2,14 +2,16 @@
 Unit tests for Institution Team Explorer & Search Autocomplete API endpoints.
 """
 
+import os
 import sqlite3
 import pytest
 from pathlib import Path
-from atomos.server import create_app, ADMIN_PASSWORD
+from atomos.server import create_app
 
 
 @pytest.fixture
-def test_client():
+def test_client(monkeypatch):
+    monkeypatch.setenv("ATOMOS_ADMIN_PASSWORD", "test_admin_secret_2026")
     conn = sqlite3.connect(":memory:")
     conn.execute("PRAGMA foreign_keys = ON;")
     conn.row_factory = sqlite3.Row
@@ -41,7 +43,7 @@ def test_client():
     client = app.test_client()
 
     # Login to get admin token
-    res = client.post("/api/admin/login", json={"password": ADMIN_PASSWORD})
+    res = client.post("/api/admin/login", json={"password": "test_admin_secret_2026"})
     token = res.json["token"]
 
     return client, token
@@ -306,16 +308,17 @@ def test_admin_update_tournament_dates(test_client):
 def test_github_sync_configuration(test_client):
     client, token = test_client
 
-    # Verify encryption/decryption roundtrip and secret-scanner obfuscation
+    # Verify ENC_V2 authenticated encryption roundtrip, wrong-password rejection, and secret-scanner obfuscation
     from atomos.sync import _encrypt_token, _decrypt_token
     sample_pat = "github_pat_11ABCDEF0123456789_secretTokenValueXYZ"
-    enc = _encrypt_token(sample_pat)
-    assert enc.startswith("ENC_V1:")
+    enc = _encrypt_token(sample_pat, passphrase="my_admin_secret_pw")
+    assert enc.startswith("ENC_V2:")
     assert "github_pat_" not in enc
     assert "ghp_" not in enc
-    assert _decrypt_token(enc) == sample_pat
+    assert _decrypt_token(enc, passphrase="my_admin_secret_pw") == sample_pat
+    assert _decrypt_token(enc, passphrase="wrong_password") == ""
 
-    # Check github status endpoint with header
+    # Check github status endpoint with header (never leaks raw github_token)
     res = client.get(
         "/api/admin/github/status",
         headers={
@@ -328,14 +331,56 @@ def test_github_sync_configuration(test_client):
     assert data["configured"] is True
     assert data["repo"] == "spacemoraneg-create/AtomosLK"
     assert data["branch"] == "main"
-    assert "github_token" in data
+    assert "github_token" not in data
+    assert "token_masked" in data
     assert "stored_on_server" in data
 
-    # Verify /api/admin/verify and /api/admin/status include github_token fields
+    # Verify /api/admin/verify includes token_masked and stored_on_server (never raw github_token)
     res_verify = client.get("/api/admin/verify", headers={"X-Admin-Token": token})
     assert res_verify.status_code == 200
-    assert "github_token" in res_verify.json
+    assert "github_token" not in res_verify.json
+    assert "token_masked" in res_verify.json
     assert "stored_on_server" in res_verify.json
+
+
+def test_admin_security_hardening(test_client):
+    client, token = test_client
+
+    # 1. Security headers present on responses
+    res_verify = client.get("/api/admin/verify", headers={"X-Admin-Token": token})
+    assert res_verify.headers.get("X-Frame-Options") == "DENY"
+    assert res_verify.headers.get("X-Content-Type-Options") == "nosniff"
+
+    # 2. Password change updates PBKDF2 hash and issues a new session token while invalidating old session
+    res_pw = client.post(
+        "/api/admin/password",
+        headers={"X-Admin-Token": token},
+        json={
+            "current_password": "test_admin_secret_2026",
+            "new_password": "new_strong_password_2026",
+        },
+    )
+    assert res_pw.status_code == 200
+    new_token = res_pw.json["token"]
+    assert new_token != token
+
+    # Old session token is now revoked
+    assert client.get("/api/admin/verify", headers={"X-Admin-Token": token}).status_code == 401
+    # New session token works
+    assert client.get("/api/admin/verify", headers={"X-Admin-Token": new_token}).status_code == 200
+
+    # 3. Logout revokes active session token
+    res_logout = client.post("/api/admin/logout", headers={"X-Admin-Token": new_token})
+    assert res_logout.status_code == 200
+    assert client.get("/api/admin/verify", headers={"X-Admin-Token": new_token}).status_code == 401
+
+    # 4. Brute-force rate limiting blocks after 5 failed attempts
+    headers = {"X-Enforce-Rate-Limit": "1", "X-Forwarded-For": "203.0.113.99"}
+    for _ in range(5):
+        r = client.post("/api/admin/login", headers=headers, json={"password": "wrong_pw"})
+        assert r.status_code == 401
+    r_locked = client.post("/api/admin/login", headers=headers, json={"password": "wrong_pw"})
+    assert r_locked.status_code == 429
 
 
 def test_admin_import_status_endpoint(test_client):

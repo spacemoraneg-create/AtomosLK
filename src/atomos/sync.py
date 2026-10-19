@@ -11,7 +11,9 @@ Supports both:
 
 import base64
 import hashlib
+import hmac
 import os
+import secrets
 import sqlite3
 import subprocess
 import threading
@@ -26,7 +28,11 @@ ROOT_DIR = Path(__file__).resolve().parent.parent.parent
 TOKEN_FILE = ROOT_DIR / "data" / ".github_token"
 DEFAULT_DB_FILE = ROOT_DIR / "data" / "atomos.db"
 _SYNC_LOCK = threading.Lock()
-_VAULT_SECRET = os.environ.get("ATOMOS_ADMIN_PASSWORD", "Olivedelight") + "::AtomosServerPatVault2026"
+
+# Held strictly in volatile server RAM after an admin unlocks the console (never in source code)
+_ACTIVE_VAULT_PASSWORD_MEMORY: Optional[str] = os.environ.get("ATOMOS_ADMIN_PASSWORD")
+_UNLOCKED_GITHUB_TOKEN_MEMORY: Optional[str] = None
+_PBKDF2_ITERATIONS = 200_000
 
 
 def _is_dummy_test_token(token: Optional[str]) -> bool:
@@ -40,30 +46,70 @@ def _is_dummy_test_token(token: Optional[str]) -> bool:
     return False
 
 
-def _encrypt_token(raw_token: str) -> str:
-    """Obfuscate/encrypt token so raw ghp_/github_pat_ prefixes never appear in SQLite binary bytes."""
-    data = raw_token.encode("utf-8")
-    key = hashlib.sha256(_VAULT_SECRET.encode("utf-8")).digest()
-    xored = bytes(b ^ key[i % len(key)] for i, b in enumerate(data))
-    return "ENC_V1:" + base64.urlsafe_b64encode(xored).decode("ascii")
-
-
-def _decrypt_token(stored_value: str) -> str:
-    if not stored_value:
+def mask_github_token(token: Optional[str]) -> str:
+    """Return a masked preview (e.g. gho_••••••••••••••••••••abcd) so the raw PAT is never sent to the browser."""
+    if not token or not token.strip():
         return ""
-    if not stored_value.startswith("ENC_V1:"):
-        return stored_value
+    t = token.strip()
+    if len(t) <= 10:
+        return "••••••••"
+    return f"{t[:4]}{'•' * 24}{t[-4:]}"
+
+
+def _derive_keystream(enc_key: bytes, length: int) -> bytes:
+    out = bytearray()
+    counter = 0
+    while len(out) < length:
+        block = hashlib.sha256(enc_key + counter.to_bytes(4, "big")).digest()
+        out.extend(block)
+        counter += 1
+    return bytes(out[:length])
+
+
+def _encrypt_token(raw_token: str, passphrase: Optional[str] = None) -> str:
+    """
+    Authenticated encryption (PBKDF2-HMAC-SHA256 200k iterations + SHA-256-CTR + HMAC-SHA256).
+    Produces ENC_V2:<salt_b64>:<cipher_b64>:<mac_b64> with zero plaintext secrets in source code.
+    """
+    secret = passphrase or _ACTIVE_VAULT_PASSWORD_MEMORY or os.environ.get("ATOMOS_ADMIN_PASSWORD") or "AtomosVaultTestFallback"
+    salt = secrets.token_bytes(16)
+    dk = hashlib.pbkdf2_hmac("sha256", secret.encode("utf-8"), salt, _PBKDF2_ITERATIONS, dklen=64)
+    enc_key, mac_key = dk[:32], dk[32:]
+    plaintext = raw_token.encode("utf-8")
+    stream = _derive_keystream(enc_key, len(plaintext))
+    ciphertext = bytes(a ^ b for a, b in zip(plaintext, stream))
+    mac = hmac.new(mac_key, salt + ciphertext, hashlib.sha256).digest()
+    s_b64 = base64.urlsafe_b64encode(salt).decode("ascii")
+    c_b64 = base64.urlsafe_b64encode(ciphertext).decode("ascii")
+    m_b64 = base64.urlsafe_b64encode(mac).decode("ascii")
+    return f"ENC_V2:{s_b64}:{c_b64}:{m_b64}"
+
+
+def _decrypt_token(stored_value: str, passphrase: Optional[str] = None) -> str:
+    if not stored_value or not stored_value.startswith("ENC_V2:"):
+        return ""
+    secret = passphrase or _ACTIVE_VAULT_PASSWORD_MEMORY or os.environ.get("ATOMOS_ADMIN_PASSWORD") or "AtomosVaultTestFallback"
     try:
-        b64_part = stored_value[len("ENC_V1:"):]
-        xored = base64.urlsafe_b64decode(b64_part.encode("ascii"))
-        key = hashlib.sha256(_VAULT_SECRET.encode("utf-8")).digest()
-        raw = bytes(b ^ key[i % len(key)] for i, b in enumerate(xored))
-        return raw.decode("utf-8")
+        parts = stored_value.split(":")
+        if len(parts) != 4:
+            return ""
+        _, s_b64, c_b64, m_b64 = parts
+        salt = base64.urlsafe_b64decode(s_b64.encode("ascii"))
+        ciphertext = base64.urlsafe_b64decode(c_b64.encode("ascii"))
+        expected_mac = base64.urlsafe_b64decode(m_b64.encode("ascii"))
+        dk = hashlib.pbkdf2_hmac("sha256", secret.encode("utf-8"), salt, _PBKDF2_ITERATIONS, dklen=64)
+        enc_key, mac_key = dk[:32], dk[32:]
+        actual_mac = hmac.new(mac_key, salt + ciphertext, hashlib.sha256).digest()
+        if not hmac.compare_digest(actual_mac, expected_mac):
+            return ""
+        stream = _derive_keystream(enc_key, len(ciphertext))
+        plaintext = bytes(a ^ b for a, b in zip(ciphertext, stream))
+        return plaintext.decode("utf-8")
     except Exception:
         return ""
 
 
-def _load_token_from_db(db_path: Path = DEFAULT_DB_FILE) -> Optional[str]:
+def _load_token_from_db(passphrase: Optional[str] = None, db_path: Path = DEFAULT_DB_FILE) -> Optional[str]:
     if not db_path.exists():
         return None
     try:
@@ -78,7 +124,7 @@ def _load_token_from_db(db_path: Path = DEFAULT_DB_FILE) -> Optional[str]:
             cur.execute("SELECT value FROM admin_system_config WHERE key = 'github_pat'")
             row = cur.fetchone()
             if row and row[0]:
-                dec = _decrypt_token(str(row[0]).strip()).strip()
+                dec = _decrypt_token(str(row[0]).strip(), passphrase=passphrase).strip()
                 if dec and not _is_dummy_test_token(dec):
                     return dec
         finally:
@@ -88,7 +134,11 @@ def _load_token_from_db(db_path: Path = DEFAULT_DB_FILE) -> Optional[str]:
     return None
 
 
-def _save_token_to_db(token: Optional[str], db_path: Path = DEFAULT_DB_FILE) -> None:
+def _save_token_to_db(
+    token: Optional[str],
+    passphrase: Optional[str] = None,
+    db_path: Path = DEFAULT_DB_FILE,
+) -> None:
     if not db_path.exists():
         return
     try:
@@ -105,17 +155,19 @@ def _save_token_to_db(token: Optional[str], db_path: Path = DEFAULT_DB_FILE) -> 
                 """
             )
             if token and token.strip():
-                enc = _encrypt_token(token.strip())
-                cur.execute(
-                    """
-                    INSERT INTO admin_system_config (key, value, updated_at)
-                    VALUES ('github_pat', ?, CURRENT_TIMESTAMP)
-                    ON CONFLICT(key) DO UPDATE SET
-                        value = excluded.value,
-                        updated_at = CURRENT_TIMESTAMP
-                    """,
-                    (enc,),
-                )
+                secret = passphrase or _ACTIVE_VAULT_PASSWORD_MEMORY or os.environ.get("ATOMOS_ADMIN_PASSWORD")
+                if secret:
+                    enc = _encrypt_token(token.strip(), passphrase=secret)
+                    cur.execute(
+                        """
+                        INSERT INTO admin_system_config (key, value, updated_at)
+                        VALUES ('github_pat', ?, CURRENT_TIMESTAMP)
+                        ON CONFLICT(key) DO UPDATE SET
+                            value = excluded.value,
+                            updated_at = CURRENT_TIMESTAMP
+                        """,
+                        (enc,),
+                    )
             else:
                 cur.execute("DELETE FROM admin_system_config WHERE key = 'github_pat'")
             conn.commit()
@@ -123,6 +175,50 @@ def _save_token_to_db(token: Optional[str], db_path: Path = DEFAULT_DB_FILE) -> 
             conn.close()
     except Exception:
         pass
+
+
+def unlock_vault_with_password(password: str, db_path: Path = DEFAULT_DB_FILE) -> Optional[str]:
+    """
+    Called when an admin authenticates with their plaintext password.
+    Caches the key in volatile RAM and unlocks the encrypted GitHub PAT from atomos.db.
+    """
+    global _ACTIVE_VAULT_PASSWORD_MEMORY, _UNLOCKED_GITHUB_TOKEN_MEMORY
+    if not password or not password.strip():
+        return None
+    clean_pw = password.strip()
+    _ACTIVE_VAULT_PASSWORD_MEMORY = clean_pw
+
+    # 1. Try decrypting from atomos.db using this password
+    tok = _load_token_from_db(passphrase=clean_pw, db_path=db_path)
+    if tok:
+        _UNLOCKED_GITHUB_TOKEN_MEMORY = tok
+        os.environ["GITHUB_TOKEN"] = tok
+        return tok
+
+    # 2. If not in DB with this password yet, check if already in RAM/file/git-creds and seal it with this password
+    existing = load_persisted_github_token()
+    if existing and not _is_dummy_test_token(existing):
+        _UNLOCKED_GITHUB_TOKEN_MEMORY = existing
+        _save_token_to_db(existing, passphrase=clean_pw, db_path=db_path)
+        return existing
+    return None
+
+
+def reencrypt_vault_with_new_password(
+    old_password: str,
+    new_password: str,
+    db_path: Path = DEFAULT_DB_FILE,
+) -> None:
+    """Re-encrypts the stored GitHub PAT when the admin changes their password."""
+    global _ACTIVE_VAULT_PASSWORD_MEMORY
+    tok = (
+        _UNLOCKED_GITHUB_TOKEN_MEMORY
+        or _load_token_from_db(passphrase=old_password, db_path=db_path)
+        or load_persisted_github_token()
+    )
+    _ACTIVE_VAULT_PASSWORD_MEMORY = new_password.strip()
+    if tok and not _is_dummy_test_token(tok):
+        _save_token_to_db(tok, passphrase=new_password.strip(), db_path=db_path)
 
 
 def _load_token_from_git_credential_helper() -> Optional[str]:
@@ -149,31 +245,56 @@ def _load_token_from_git_credential_helper() -> Optional[str]:
     return None
 
 
+def has_encrypted_token_in_db(db_path: Path = DEFAULT_DB_FILE) -> bool:
+    """Check whether atomos.db has an encrypted github_pat row (even before vault is unlocked)."""
+    if not db_path.exists():
+        return False
+    try:
+        conn = sqlite3.connect(str(db_path), timeout=5.0)
+        try:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='admin_system_config'"
+            )
+            if not cur.fetchone():
+                return False
+            cur.execute("SELECT value FROM admin_system_config WHERE key = 'github_pat'")
+            row = cur.fetchone()
+            return bool(row and row[0] and str(row[0]).startswith("ENC_V2:"))
+        finally:
+            conn.close()
+    except Exception:
+        return False
+
+
 def load_persisted_github_token() -> Optional[str]:
-    """Load persisted GitHub token from env, data/.github_token, atomos.db, or git credential manager."""
+    """Load persisted GitHub token from server RAM, env, data/.github_token, atomos.db, or git credential manager."""
+    global _UNLOCKED_GITHUB_TOKEN_MEMORY
+    if _UNLOCKED_GITHUB_TOKEN_MEMORY and not _is_dummy_test_token(_UNLOCKED_GITHUB_TOKEN_MEMORY):
+        return _UNLOCKED_GITHUB_TOKEN_MEMORY
+
     for env_key in ("GITHUB_TOKEN", "GH_TOKEN"):
         env_tok = os.environ.get(env_key)
         if env_tok and env_tok.strip() and not _is_dummy_test_token(env_tok):
-            return env_tok.strip()
+            _UNLOCKED_GITHUB_TOKEN_MEMORY = env_tok.strip()
+            return _UNLOCKED_GITHUB_TOKEN_MEMORY
 
     try:
         if TOKEN_FILE.exists():
             val = TOKEN_FILE.read_text(encoding="utf-8").strip()
             if val and not _is_dummy_test_token(val):
+                _UNLOCKED_GITHUB_TOKEN_MEMORY = val
                 os.environ["GITHUB_TOKEN"] = val
                 return val
     except Exception:
         pass
 
-    db_tok = _load_token_from_db()
-    if db_tok:
-        try:
-            TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
-            TOKEN_FILE.write_text(db_tok, encoding="utf-8")
-        except Exception:
-            pass
-        os.environ["GITHUB_TOKEN"] = db_tok
-        return db_tok
+    if _ACTIVE_VAULT_PASSWORD_MEMORY:
+        db_tok = _load_token_from_db(passphrase=_ACTIVE_VAULT_PASSWORD_MEMORY)
+        if db_tok:
+            _UNLOCKED_GITHUB_TOKEN_MEMORY = db_tok
+            os.environ["GITHUB_TOKEN"] = db_tok
+            return db_tok
 
     cred_tok = _load_token_from_git_credential_helper()
     if cred_tok:
@@ -183,20 +304,22 @@ def load_persisted_github_token() -> Optional[str]:
     return None
 
 
-def save_persisted_github_token(token: Optional[str]) -> None:
-    """Persist or clear GitHub token across server memory, data/.github_token, and data/atomos.db."""
-    # Guard against pytest or dummy test tokens clobbering the real server token
+def save_persisted_github_token(token: Optional[str], passphrase: Optional[str] = None) -> None:
+    """Persist or clear GitHub token across server memory, data/.github_token, and encrypted data/atomos.db."""
+    global _UNLOCKED_GITHUB_TOKEN_MEMORY
     if os.environ.get("PYTEST_CURRENT_TEST") or _is_dummy_test_token(token):
         return
 
     try:
         if token and token.strip():
             clean = token.strip()
+            _UNLOCKED_GITHUB_TOKEN_MEMORY = clean
             TOKEN_FILE.parent.mkdir(parents=True, exist_ok=True)
             TOKEN_FILE.write_text(clean, encoding="utf-8")
             os.environ["GITHUB_TOKEN"] = clean
-            _save_token_to_db(clean)
+            _save_token_to_db(clean, passphrase=passphrase)
         else:
+            _UNLOCKED_GITHUB_TOKEN_MEMORY = None
             if TOKEN_FILE.exists():
                 TOKEN_FILE.unlink()
             os.environ.pop("GITHUB_TOKEN", None)

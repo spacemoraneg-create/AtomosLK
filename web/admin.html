@@ -16,7 +16,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="styles.css?v=21" />
+  <link rel="stylesheet" href="styles.css?v=22" />
   <link rel="icon" type="image/png" sizes="64x64" href="assets/favicon.png" />
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
   <link rel="apple-touch-icon" href="assets/logo_icon.png" />
@@ -273,31 +273,63 @@
 
           <div style="margin-top: 16px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.12);">
             <label for="adminGhTokenInput" class="admin-form-label" style="display: flex; justify-content: space-between; flex-wrap: wrap; gap: 6px;">
-              <span>GitHub Access Token (Fine-Grained or Classic)</span>
-              <span id="ghTokenServerStatusLabel" style="font-size: 11px; color: rgba(255, 255, 255, 0.85); font-weight: 400; text-transform: none;">Stored on server &amp; auto-loaded on all unlocked devices</span>
+              <span>GitHub Access Token Vault (PBKDF2-HMAC-SHA256 Encrypted)</span>
+              <span id="ghTokenServerStatusLabel" style="font-size: 11px; color: rgba(255, 255, 255, 0.85); font-weight: 400; text-transform: none;">Checking server vault...</span>
             </label>
             <div style="display: flex; gap: 8px; margin-top: 6px; flex-wrap: wrap;">
               <input
                 type="password"
                 id="adminGhTokenInput"
                 class="admin-text-input"
-                placeholder="github_pat_... or ghp_... (Contents: Read & Write)"
+                placeholder="Enter new github_pat_... or ghp_... to update server vault"
+                autocomplete="off"
                 style="flex: 1; min-width: 220px;"
               />
-              <button type="button" id="toggleGhTokenVisBtn" class="admin-btn admin-btn-outline" style="white-space: nowrap;">
-                Show
-              </button>
               <button type="button" id="saveGhTokenBtn" class="admin-btn admin-btn-secondary" style="white-space: nowrap;">
-                Save to Server
+                Save to Vault
               </button>
               <button type="button" id="clearGhTokenBtn" class="admin-btn admin-btn-outline" style="white-space: nowrap;">
-                Clear
+                Clear Vault
               </button>
             </div>
             <div style="font-size: 11px; color: rgba(255, 255, 255, 0.70); margin-top: 6px;">
-              Persisted in encrypted server storage (atomos.db) and automatically shared with any device that unlocks the Admin Console.
+              Zero-Knowledge Vault: Your GitHub PAT is encrypted on the server using your Admin password and is never sent back to the browser or stored in localStorage. Any device that unlocks Admin automatically uses the server vault.
             </div>
           </div>
+        </div>
+
+        <!-- Security & Administrative Password Box -->
+        <div class="admin-box" style="margin-bottom: 28px;">
+          <div class="admin-box-title">Security &amp; Administrative Password</div>
+          <div style="font-size: 13px; color: rgba(255, 255, 255, 0.80); margin-bottom: 14px; line-height: 1.5; font-weight: 300;">
+            Change your administrative password below. The server stores only a salted 200,000-iteration PBKDF2-HMAC-SHA256 hash, re-encrypts the GitHub PAT vault with your new password, and revokes all other active sessions.
+          </div>
+          <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 12px; margin-bottom: 12px;">
+            <div>
+              <label for="currentAdminPwInput" class="admin-form-label">Current Password</label>
+              <input
+                type="password"
+                id="currentAdminPwInput"
+                class="admin-text-input"
+                placeholder="Enter current admin password..."
+                autocomplete="current-password"
+              />
+            </div>
+            <div>
+              <label for="newAdminPwInput" class="admin-form-label">New Password (Min 8 Characters)</label>
+              <input
+                type="password"
+                id="newAdminPwInput"
+                class="admin-text-input"
+                placeholder="Enter new admin password..."
+                autocomplete="new-password"
+              />
+            </div>
+          </div>
+          <button type="button" id="changeAdminPwBtn" class="admin-btn admin-btn-primary">
+            Update Password &amp; Re-Encrypt Vault
+          </button>
+          <div id="adminPwStatusBox" class="admin-status-box hidden" style="margin-top: 12px;"></div>
         </div>
 
         <!-- Ingested Tournaments Table -->
@@ -781,7 +813,7 @@
     </footer>
   </main>
 
-  <script src="admin.js?v=21"></script>
+  <script src="admin.js?v=22"></script>
   <!-- Cloudflare Web Analytics -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "f88322e0730e4449a5bb81b8e7aad80f"}'></script>
   <!-- End Cloudflare Web Analytics -->

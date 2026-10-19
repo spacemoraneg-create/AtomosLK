@@ -7,8 +7,10 @@ mobile apps, and AI clients using Flask.
 
 import functools
 import hashlib
+import hmac
 import json
 import os
+import secrets
 import subprocess
 import sys
 import threading
@@ -32,8 +34,37 @@ from atomos.analytics.v2_metrics import V2MetricsEngine
 from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER, CLEAN_TOURNAMENT_NAMES, OFFICIAL_TOURNAMENT_DATES
 from atomos.analytics.identity_resolver import IdentityResolver
 
-ADMIN_PASSWORD = "Sexyback"
-ADMIN_AUTH_TOKEN = hashlib.sha256(f"{ADMIN_PASSWORD}_atomos_secure_salt_2026".encode("utf-8")).hexdigest()
+# Salted PBKDF2-HMAC-SHA256 (200,000 iterations) verification hash (no plaintext password in code)
+DEFAULT_ADMIN_PASSWORD_HASH = (
+    "pbkdf2_sha256$200000$"
+    "61746f6d6f735f61646d696e5f76325f73616c745f32303236$"
+    "ee038361f503ee718527e40f2a83b1fb215e22a8af45e013133e8becf1409741"
+)
+SESSION_TTL_SECONDS = 7 * 24 * 3600  # 7 days
+RATE_LIMIT_MAX_ATTEMPTS = 5
+RATE_LIMIT_WINDOW_SECONDS = 300  # 5 minutes
+
+
+def hash_admin_password(password: str, iterations: int = 200_000) -> str:
+    salt = secrets.token_bytes(16)
+    dk = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+    return f"pbkdf2_sha256${iterations}${salt.hex()}${dk.hex()}"
+
+
+def verify_admin_password_hash(password: str, stored_hash: str) -> bool:
+    if not password or not stored_hash:
+        return False
+    try:
+        parts = stored_hash.split("$")
+        if len(parts) != 4 or parts[0] != "pbkdf2_sha256":
+            return False
+        iterations = int(parts[1])
+        salt = bytes.fromhex(parts[2])
+        expected_dk = bytes.fromhex(parts[3])
+        actual_dk = hashlib.pbkdf2_hmac("sha256", password.encode("utf-8"), salt, iterations)
+        return hmac.compare_digest(actual_dk, expected_dk)
+    except Exception:
+        return False
 
 
 def create_app(db_conn=None) -> Flask:
@@ -54,6 +85,9 @@ def create_app(db_conn=None) -> Flask:
         response.headers["Access-Control-Allow-Origin"] = "*"
         response.headers["Access-Control-Allow-Methods"] = "GET, POST, PUT, DELETE, OPTIONS"
         response.headers["Access-Control-Allow-Headers"] = "Content-Type, Authorization, X-Admin-Token, X-GitHub-Token"
+        response.headers["X-Content-Type-Options"] = "nosniff"
+        response.headers["X-Frame-Options"] = "DENY"
+        response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         return response
 
     sync_state: Dict[str, Any] = {
@@ -584,14 +618,137 @@ def create_app(db_conn=None) -> Flask:
         return jsonify(bio)
 
     # =========================================================================
-    # ADMINISTRATIVE API ENDPOINTS (PROTECTED BY PASSWORD "Olivedelight")
+    # ADMINISTRATIVE API ENDPOINTS (PBKDF2-SHA256 + SERVER SESSIONS + RATE LIMIT)
     # =========================================================================
+
+    _failed_login_attempts: Dict[str, List[float]] = defaultdict(list)
+    _auth_lock = threading.Lock()
+
+    def _ensure_security_tables():
+        with _db_write_lock:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS admin_system_config (
+                    key TEXT PRIMARY KEY,
+                    value TEXT NOT NULL,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """
+            )
+            cur.execute(
+                """
+                CREATE TABLE IF NOT EXISTS admin_sessions (
+                    token_hash TEXT PRIMARY KEY,
+                    wrapped_pat TEXT,
+                    expires_at REAL NOT NULL,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """
+            )
+            conn.commit()
+
+    _ensure_security_tables()
+
+    def _get_client_ip() -> str:
+        xff = request.headers.get("X-Forwarded-For", "")
+        if xff:
+            return xff.split(",")[0].strip()
+        return request.remote_addr or "unknown"
+
+    def _is_rate_limited(ip: str) -> Tuple[bool, int]:
+        if app.config.get("TESTING") and not request.headers.get("X-Enforce-Rate-Limit"):
+            return False, 0
+        now = time.time()
+        with _auth_lock:
+            attempts = [t for t in _failed_login_attempts[ip] if now - t < RATE_LIMIT_WINDOW_SECONDS]
+            _failed_login_attempts[ip] = attempts
+            if len(attempts) >= RATE_LIMIT_MAX_ATTEMPTS:
+                retry_after = max(1, int(RATE_LIMIT_WINDOW_SECONDS - (now - attempts[0])))
+                return True, retry_after
+            return False, 0
+
+    def _record_failed_login(ip: str):
+        now = time.time()
+        with _auth_lock:
+            _failed_login_attempts[ip] = [
+                t for t in _failed_login_attempts[ip] if now - t < RATE_LIMIT_WINDOW_SECONDS
+            ] + [now]
+
+    def _clear_failed_logins(ip: str):
+        with _auth_lock:
+            _failed_login_attempts.pop(ip, None)
+
+    def _verify_admin_password(candidate: str) -> bool:
+        if not candidate:
+            return False
+        env_pw = os.environ.get("ATOMOS_ADMIN_PASSWORD")
+        if env_pw and hmac.compare_digest(candidate.encode("utf-8"), env_pw.encode("utf-8")):
+            return True
+        with _db_write_lock:
+            cur = conn.cursor()
+            cur.execute("SELECT value FROM admin_system_config WHERE key = 'admin_password_hash'")
+            row = cur.fetchone()
+            target_hash = str(row["value"]).strip() if row and row["value"] else DEFAULT_ADMIN_PASSWORD_HASH
+        return verify_admin_password_hash(candidate, target_hash)
+
+    def _create_admin_session(active_pat: Optional[str] = None) -> str:
+        from atomos.sync import _encrypt_token, _is_dummy_test_token
+        raw_token = secrets.token_urlsafe(32)
+        token_hash = hashlib.sha256(raw_token.encode("utf-8")).hexdigest()
+        expires_at = time.time() + SESSION_TTL_SECONDS
+        wrapped_pat = None
+        if active_pat and not _is_dummy_test_token(active_pat):
+            wrapped_pat = _encrypt_token(active_pat, passphrase=raw_token)
+        with _db_write_lock:
+            cur = conn.cursor()
+            cur.execute("DELETE FROM admin_sessions WHERE expires_at < ?", (time.time(),))
+            cur.execute(
+                """
+                INSERT OR REPLACE INTO admin_sessions (token_hash, wrapped_pat, expires_at, created_at)
+                VALUES (?, ?, ?, CURRENT_TIMESTAMP)
+                """,
+                (token_hash, wrapped_pat, expires_at),
+            )
+            conn.commit()
+        return raw_token
+
+    def _verify_session_token(raw_token: Optional[str]) -> bool:
+        if not raw_token or not raw_token.strip():
+            return False
+        clean_tok = raw_token.strip()
+        token_hash = hashlib.sha256(clean_tok.encode("utf-8")).hexdigest()
+        now = time.time()
+        with _db_write_lock:
+            cur = conn.cursor()
+            cur.execute(
+                "SELECT wrapped_pat, expires_at FROM admin_sessions WHERE token_hash = ?",
+                (token_hash,),
+            )
+            row = cur.fetchone()
+            if not row:
+                return False
+            if float(row["expires_at"]) < now:
+                cur.execute("DELETE FROM admin_sessions WHERE token_hash = ?", (token_hash,))
+                conn.commit()
+                return False
+            wrapped_pat = row["wrapped_pat"]
+
+        # If server container restarted and RAM vault is cold, unwrap PAT using the client's 256-bit session token
+        if wrapped_pat:
+            import atomos.sync as sync_mod
+            if not sync_mod._UNLOCKED_GITHUB_TOKEN_MEMORY:
+                dec = sync_mod._decrypt_token(str(wrapped_pat), passphrase=clean_tok)
+                if dec and not sync_mod._is_dummy_test_token(dec):
+                    sync_mod._UNLOCKED_GITHUB_TOKEN_MEMORY = dec
+                    os.environ["GITHUB_TOKEN"] = dec
+        return True
 
     def require_admin(f):
         @functools.wraps(f)
         def decorated(*args, **kwargs):
             token = request.headers.get("X-Admin-Token") or request.args.get("token")
-            if not token or token != ADMIN_AUTH_TOKEN:
+            if not _verify_session_token(token):
                 return jsonify({"error": "Administrative authentication required. Access denied.", "authenticated": False}), 401
             return f(*args, **kwargs)
         return decorated
@@ -599,38 +756,106 @@ def create_app(db_conn=None) -> Flask:
     # 19. Admin Authentication
     @app.route("/api/admin/login", methods=["POST"])
     def admin_login():
+        ip = _get_client_ip()
+        limited, retry_after = _is_rate_limited(ip)
+        if limited:
+            return jsonify({
+                "success": False,
+                "error": f"Too many failed login attempts. Try again in {retry_after} seconds.",
+                "authenticated": False,
+            }), 429
+
         payload = request.get_json(force=True, silent=True) or {}
         password = payload.get("password", "").strip()
-        if password == ADMIN_PASSWORD:
-            from atomos.sync import load_persisted_github_token
-            server_pat = load_persisted_github_token() or ""
+        if _verify_admin_password(password):
+            _clear_failed_logins(ip)
+            from atomos.sync import unlock_vault_with_password, load_persisted_github_token, mask_github_token, has_encrypted_token_in_db
+            unlocked_pat = unlock_vault_with_password(password) or load_persisted_github_token() or ""
+            session_token = _create_admin_session(active_pat=unlocked_pat)
             return jsonify({
                 "success": True,
-                "token": ADMIN_AUTH_TOKEN,
-                "github_token": server_pat,
-                "stored_on_server": bool(server_pat),
+                "token": session_token,
+                "token_masked": mask_github_token(unlocked_pat),
+                "stored_on_server": bool(unlocked_pat or has_encrypted_token_in_db()),
                 "message": "Administrative access granted.",
                 "authenticated": True,
             })
+
+        _record_failed_login(ip)
         return jsonify({
             "success": False,
             "error": "Invalid administrative password. Access denied.",
             "authenticated": False,
         }), 401
 
+    @app.route("/api/admin/logout", methods=["POST"])
+    def admin_logout():
+        token = request.headers.get("X-Admin-Token") or request.args.get("token")
+        if token and token.strip():
+            token_hash = hashlib.sha256(token.strip().encode("utf-8")).hexdigest()
+            with _db_write_lock:
+                cur = conn.cursor()
+                cur.execute("DELETE FROM admin_sessions WHERE token_hash = ?", (token_hash,))
+                conn.commit()
+        return jsonify({"success": True, "authenticated": False})
+
     @app.route("/api/admin/verify", methods=["GET"])
     def admin_verify():
         token = request.headers.get("X-Admin-Token") or request.args.get("token")
-        if token and token == ADMIN_AUTH_TOKEN:
-            from atomos.sync import load_persisted_github_token
+        if _verify_session_token(token):
+            from atomos.sync import load_persisted_github_token, mask_github_token, has_encrypted_token_in_db
             server_pat = load_persisted_github_token() or ""
             return jsonify({
                 "authenticated": True,
                 "status": "authorized",
-                "github_token": server_pat,
-                "stored_on_server": bool(server_pat),
+                "token_masked": mask_github_token(server_pat),
+                "stored_on_server": bool(server_pat or has_encrypted_token_in_db()),
             })
         return jsonify({"authenticated": False, "error": "Unauthorized"}), 401
+
+    @app.route("/api/admin/password", methods=["POST"])
+    @require_admin
+    def admin_change_password():
+        payload = request.get_json(force=True, silent=True) or {}
+        current_pw = str(payload.get("current_password") or "").strip()
+        new_pw = str(payload.get("new_password") or "").strip()
+
+        if not current_pw or not new_pw:
+            return jsonify({"error": "Both current_password and new_password are required."}), 400
+        if len(new_pw) < 8:
+            return jsonify({"error": "New administrative password must be at least 8 characters."}), 400
+        if not _verify_admin_password(current_pw):
+            return jsonify({"error": "Current administrative password is incorrect."}), 401
+
+        new_hash = hash_admin_password(new_pw)
+        from atomos.sync import reencrypt_vault_with_new_password, load_persisted_github_token
+        reencrypt_vault_with_new_password(current_pw, new_pw)
+
+        with _db_write_lock:
+            cur = conn.cursor()
+            cur.execute(
+                """
+                INSERT INTO admin_system_config (key, value, updated_at)
+                VALUES ('admin_password_hash', ?, CURRENT_TIMESTAMP)
+                ON CONFLICT(key) DO UPDATE SET
+                    value = excluded.value,
+                    updated_at = CURRENT_TIMESTAMP
+                """,
+                (new_hash,),
+            )
+            cur.execute("DELETE FROM admin_sessions")
+            conn.commit()
+
+        active_pat = load_persisted_github_token() or ""
+        new_session_token = _create_admin_session(active_pat=active_pat)
+        trigger_async_export_and_sync(
+            commit_message="chore(security): update salted PBKDF2 admin hash and re-encrypt server vault"
+        )
+        return jsonify({
+            "success": True,
+            "token": new_session_token,
+            "message": "Administrative password updated and server vault re-encrypted with PBKDF2-HMAC-SHA256.",
+        })
 
     # 20. Admin System & Database Status
     @app.route("/api/admin/status", methods=["GET"])
@@ -688,13 +913,13 @@ def create_app(db_conn=None) -> Flask:
             t["chrono_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], 999)
 
         tournaments = sorted(raw_tournaments, key=lambda x: x["chrono_order"])
-        from atomos.sync import load_persisted_github_token
+        from atomos.sync import load_persisted_github_token, mask_github_token, has_encrypted_token_in_db
         server_pat = load_persisted_github_token() or ""
 
         return jsonify({
             "authenticated": True,
-            "github_token": server_pat,
-            "stored_on_server": bool(server_pat),
+            "token_masked": mask_github_token(server_pat),
+            "stored_on_server": bool(server_pat or has_encrypted_token_in_db()),
             "database": {
                 "file_path": str(db_file),
                 "file_size_mb": file_size_mb,
@@ -1166,7 +1391,7 @@ def create_app(db_conn=None) -> Flask:
     @app.route("/api/admin/github/status", methods=["GET"])
     @require_admin
     def admin_github_status():
-        from atomos.sync import GitHubSyncService, load_persisted_github_token
+        from atomos.sync import GitHubSyncService, load_persisted_github_token, mask_github_token, has_encrypted_token_in_db
         token = get_request_github_token()
         persisted = load_persisted_github_token() or ""
         sync_svc = GitHubSyncService(token=token)
@@ -1177,19 +1402,37 @@ def create_app(db_conn=None) -> Flask:
             "repo": sync_svc.repo,
             "branch": sync_svc.branch,
             "head_sha": head_sha[:7] if head_sha else None,
-            "github_token": persisted or (token or ""),
-            "stored_on_server": bool(persisted),
+            "token_masked": mask_github_token(persisted or token),
+            "stored_on_server": bool(persisted or has_encrypted_token_in_db()),
             "sync_state": sync_state,
         })
 
     @app.route("/api/admin/github/token", methods=["POST"])
     @require_admin
     def admin_github_token():
-        from atomos.sync import save_persisted_github_token, load_persisted_github_token, GitHubSyncService, _is_dummy_test_token
+        from atomos.sync import (
+            save_persisted_github_token,
+            load_persisted_github_token,
+            GitHubSyncService,
+            _is_dummy_test_token,
+            mask_github_token,
+            _encrypt_token,
+        )
         payload = request.get_json(force=True, silent=True) or {}
         token = str(payload.get("token") or "").strip()
         save_persisted_github_token(token)
         persisted = load_persisted_github_token() or ""
+
+        # Update wrapped_pat on the current admin session
+        session_tok = (request.headers.get("X-Admin-Token") or request.args.get("token") or "").strip()
+        if session_tok:
+            s_hash = hashlib.sha256(session_tok.encode("utf-8")).hexdigest()
+            w_pat = _encrypt_token(token, passphrase=session_tok) if (token and not _is_dummy_test_token(token)) else None
+            with _db_write_lock:
+                cur = conn.cursor()
+                cur.execute("UPDATE admin_sessions SET wrapped_pat = ? WHERE token_hash = ?", (w_pat, s_hash))
+                conn.commit()
+
         sync_svc = GitHubSyncService(token=token or persisted or None)
         if token and not _is_dummy_test_token(token):
             trigger_async_export_and_sync(
@@ -1200,7 +1443,7 @@ def create_app(db_conn=None) -> Flask:
             "success": True,
             "configured": sync_svc.is_configured(),
             "auth_mode": sync_svc.get_auth_mode(),
-            "github_token": persisted or token,
+            "token_masked": mask_github_token(persisted or token),
             "stored_on_server": bool(persisted or token),
         })
 
