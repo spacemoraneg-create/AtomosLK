@@ -31,7 +31,7 @@ from atomos.tools import dispatch_tool
 from atomos.pipeline.ingestion import IngestionPipeline
 from atomos.normalizer.validator import IntegrityValidator
 from atomos.analytics.v2_metrics import V2MetricsEngine
-from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER, CLEAN_TOURNAMENT_NAMES, OFFICIAL_TOURNAMENT_DATES
+from atomos.analytics.tournaments import CHRONOLOGICAL_TOURNAMENT_ORDER, CLEAN_TOURNAMENT_NAMES, OFFICIAL_TOURNAMENT_DATES, get_clean_tournament_name
 from atomos.analytics.identity_resolver import IdentityResolver
 
 # Salted PBKDF2-HMAC-SHA256 (200,000 iterations) verification hash (no plaintext password in code)
@@ -905,11 +905,15 @@ def create_app(db_conn=None) -> Flask:
         """)
         raw_tournaments = [dict(row) for row in cur.fetchall()]
         for t in raw_tournaments:
-            t["official_name"] = CLEAN_TOURNAMENT_NAMES.get(t["id"], t["name"])
+            t["official_name"] = get_clean_tournament_name(t["id"], t["name"])
             t["hosting_dates"] = t.get("hosting_dates") or OFFICIAL_TOURNAMENT_DATES.get(t["id"], "2026")
-            t["chrono_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], 999)
+            t["_sort_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], 1000 + int(t["id"]))
 
-        tournaments = sorted(raw_tournaments, key=lambda x: x["chrono_order"])
+        tournaments = sorted(raw_tournaments, key=lambda x: (x["_sort_order"], x["id"]))
+        for idx, t in enumerate(tournaments, 1):
+            t.pop("_sort_order", None)
+            t["chrono_order"] = CHRONOLOGICAL_TOURNAMENT_ORDER.get(t["id"], idx)
+
         from atomos.sync import load_persisted_github_token, mask_github_token, has_encrypted_token_in_db
         server_pat = load_persisted_github_token() or ""
 
@@ -1577,7 +1581,7 @@ def create_app(db_conn=None) -> Flask:
             teams_list = []
             for r in raw_teams:
                 d = dict(r)
-                d["official_tournament_name"] = CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"])
+                d["official_tournament_name"] = get_clean_tournament_name(d["tournament_id"], d["tournament_name"])
                 teams_list.append(d)
 
                 name = r["name"]
@@ -1712,7 +1716,7 @@ def create_app(db_conn=None) -> Flask:
             for vt in variant_teams:
                 v_id = vt["id"]
                 tour_id = vt["tournament_id"]
-                t_name = CLEAN_TOURNAMENT_NAMES.get(tour_id, vt["tour_name"])
+                t_name = get_clean_tournament_name(tour_id, vt["tour_name"])
                 affected_tournaments.append(t_name)
 
                 # Check if target team exists in same tournament
@@ -1899,7 +1903,7 @@ def create_app(db_conn=None) -> Flask:
                 """, (f"%{q}%", f"%{q}%", int(q) if is_num else -1, int(q) if is_num else -1, limit))
                 for r in cur.fetchall():
                     d = dict(r)
-                    d["official_tournament_name"] = CLEAN_TOURNAMENT_NAMES.get(d["tournament_id"], d["tournament_name"])
+                    d["official_tournament_name"] = get_clean_tournament_name(d["tournament_id"], d["tournament_name"])
                     results.append(d)
 
             return jsonify({"success": True, "type": entity_type, "results": results})

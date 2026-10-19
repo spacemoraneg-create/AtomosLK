@@ -315,14 +315,30 @@
       return;
     }
 
+    function cleanTournamentDisplayName(t) {
+      const raw = String(t.official_name || t.name || '').trim();
+      if (/henley\s*2026\s*\|\s*welcome\s+to/i.test(raw)) {
+        return 'Henley Debating Championship (Henley 2026)';
+      }
+      if (raw.includes('|')) {
+        const parts = raw.split('|').map(p => p.trim());
+        const shortName = parts[0];
+        const fullName = parts[parts.length - 1].replace(/^Welcome\s+to\s+/i, '').replace(/\s+20\d{2}$/, '').trim();
+        if (fullName && shortName) return `${fullName} (${shortName})`;
+      }
+      return raw.replace(/^Welcome\s+to\s+/i, '').trim();
+    }
+
     container.innerHTML = tournaments
-      .map((t) => {
+      .map((t, idx) => {
+        const orderNum = (t.chrono_order && t.chrono_order < 900) ? t.chrono_order : (idx + 1);
+        const cleanName = cleanTournamentDisplayName(t);
         return `
           <div class="ops-tour-card">
             <div class="ops-tour-main">
               <div class="ops-tour-title-row">
-                <span class="ops-tour-order monospace">#${t.chrono_order ?? t.id}</span>
-                <span class="ops-tour-name">${escapeHtml(t.official_name || t.name)}</span>
+                <span class="ops-tour-order monospace">#${orderNum}</span>
+                <span class="ops-tour-name">${escapeHtml(cleanName)}</span>
                 <span class="badge-count monospace" style="font-size: 10px;">${escapeHtml(t.slug)}</span>
               </div>
               <div class="ops-tour-meta monospace">
@@ -340,7 +356,7 @@
                 class="admin-btn admin-btn-secondary admin-btn-sm btn-ops-edit-dates"
                 data-id="${t.id}"
                 data-slug="${escapeHtml(t.slug)}"
-                data-name="${escapeHtml(t.official_name || t.name)}"
+                data-name="${escapeHtml(cleanName)}"
                 data-dates="${escapeHtml(t.hosting_dates || '')}"
               >
                 EDIT DATES
@@ -349,7 +365,7 @@
                 class="admin-btn admin-btn-danger admin-btn-sm btn-ops-delete"
                 data-id="${t.id}"
                 data-slug="${escapeHtml(t.slug)}"
-                data-name="${escapeHtml(t.official_name || t.name)}"
+                data-name="${escapeHtml(cleanName)}"
               >
                 DELETE
               </button>
@@ -416,13 +432,26 @@
     }
 
     tbody.innerHTML = tournaments
-      .map((t) => {
+      .map((t, idx) => {
+        const orderNum = (t.chrono_order && t.chrono_order < 900) ? t.chrono_order : (idx + 1);
+        const raw = String(t.official_name || t.name || '').trim();
+        let cleanName = raw;
+        if (/henley\s*2026\s*\|\s*welcome\s+to/i.test(raw)) {
+          cleanName = 'Henley Debating Championship (Henley 2026)';
+        } else if (raw.includes('|')) {
+          const parts = raw.split('|').map(p => p.trim());
+          const shortName = parts[0];
+          const fullName = parts[parts.length - 1].replace(/^Welcome\s+to\s+/i, '').replace(/\s+20\d{2}$/, '').trim();
+          if (fullName && shortName) cleanName = `${fullName} (${shortName})`;
+        } else {
+          cleanName = raw.replace(/^Welcome\s+to\s+/i, '').trim();
+        }
         return `
           <tr>
-            <td class="monospace" style="color: #ffffff; font-weight: 700;">#${t.chrono_order ?? t.id}</td>
+            <td class="monospace" style="color: #ffffff; font-weight: 700;">#${orderNum}</td>
             <td class="monospace">${escapeHtml(t.slug)}</td>
             <td style="font-weight: 500;">
-              <div>${escapeHtml(t.official_name || t.name)}</div>
+              <div>${escapeHtml(cleanName)}</div>
               <div style="font-size: 11px; color: #ffffff; font-family: var(--font-mono); margin-top: 2px;">
                 ${t.hosting_dates ? escapeHtml(t.hosting_dates) : '2026'} · ${t.source_url ? escapeHtml(t.source_url) : 'Local Tab Archive'}
               </div>
@@ -437,7 +466,7 @@
                 class="admin-btn admin-btn-secondary admin-btn-sm btn-edit-dates-row"
                 data-id="${t.id}"
                 data-slug="${escapeHtml(t.slug)}"
-                data-name="${escapeHtml(t.official_name || t.name)}"
+                data-name="${escapeHtml(cleanName)}"
                 data-dates="${escapeHtml(t.hosting_dates || '')}"
                 style="margin-right: 6px;"
                 title="Edit tournament hosting dates"
@@ -448,7 +477,7 @@
                 class="admin-btn admin-btn-danger admin-btn-sm btn-delete-row"
                 data-id="${t.id}"
                 data-slug="${escapeHtml(t.slug)}"
-                data-name="${escapeHtml(t.name)}"
+                data-name="${escapeHtml(cleanName)}"
                 title="Purge tournament from database"
               >
                 DELETE

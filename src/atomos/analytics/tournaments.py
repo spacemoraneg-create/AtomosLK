@@ -241,7 +241,7 @@ class TournamentRankingsEngine:
             rankings.append({
                 "tournament_id": tid,
                 "tournament_slug": slug,
-                "tournament_name": CLEAN_TOURNAMENT_NAMES.get(tid, full_name),
+                "tournament_name": get_clean_tournament_name(tid, full_name),
                 "dates": (row[3] if len(row) > 3 and row[3] else None) or OFFICIAL_TOURNAMENT_DATES.get(tid, "TBD"),
                 "apttss": apttss,
                 "apttss_breaking": apttss_breaking,
