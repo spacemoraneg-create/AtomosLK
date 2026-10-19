@@ -1,0 +1,349 @@
+{
+  "tournament_name": "Henley 2026 | Welcome to Henley Debating Championship 2026",
+  "tournament_slug": "Henley2026",
+  "total_elimination_stages": 4,
+  "champion": {
+    "team": "LC A",
+    "institution": "Ladies' College"
+  },
+  "runner_up": {
+    "team": "DS A",
+    "institution": "D. S. Senanayake College"
+  },
+  "is_same_institution_closeout": false,
+  "stages": [
+    {
+      "stage_name": "Partial Octofinals",
+      "round_number": 8,
+      "motion": "This House Prefers secondary schooling (ages 12 to 18) to center on self-driven learning as opposed to group-driven learning.",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 10161,
+          "venue": "Octofinals @",
+          "proposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "BC A",
+            "institution": "Bishop's College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "TCK A",
+            "winner_institution": "Trinity College Kandy",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Daniel)"
+          ]
+        },
+        {
+          "debate_id": 10163,
+          "venue": "Octofinals @",
+          "proposition": {
+            "team_name": "HCK A",
+            "institution": "Hillwood College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "IC A",
+            "institution": "Isipathana College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "IC A",
+            "winner_institution": "Isipathana College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Mauli)"
+          ]
+        },
+        {
+          "debate_id": 10165,
+          "venue": "Octofinals @",
+          "proposition": {
+            "team_name": "AIS A",
+            "institution": "Asian International School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "VV A",
+            "winner_institution": "Visakha Vidyalaya",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka , Amnah , Kaveesha)"
+          ]
+        },
+        {
+          "debate_id": 10167,
+          "venue": "Octofinals @",
+          "proposition": {
+            "team_name": "Moir A",
+            "institution": "Elizabeth Moir School",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "STC A",
+            "winner_institution": "S. Thomas' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sanithma , Navidi , Vihara)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Quarterfinals",
+      "round_number": 9,
+      "motion": "This House Opposes the scepticism toward political compromise within progressive spaces",
+      "info_slide": null,
+      "matches_count": 4,
+      "matchups": [
+        {
+          "debate_id": 10169,
+          "venue": "Quarterfinals @ 3",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "STC A",
+            "institution": "S. Thomas' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "AC A",
+            "winner_institution": "Ananda College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Sanithma)"
+          ]
+        },
+        {
+          "debate_id": 10171,
+          "venue": "Quarterfinals @ 4",
+          "proposition": {
+            "team_name": "IC A",
+            "institution": "Isipathana College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "DS A",
+            "winner_institution": "D. S. Senanayake College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu)"
+          ]
+        },
+        {
+          "debate_id": 10173,
+          "venue": "Quarterfinals @ 1",
+          "proposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "TCK A",
+            "institution": "Trinity College Kandy",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "RC A",
+            "winner_institution": "Royal College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Rachel , Mauli , Nethma)"
+          ]
+        },
+        {
+          "debate_id": 10175,
+          "venue": "Quarterfinals @ 2",
+          "proposition": {
+            "team_name": "VV A",
+            "institution": "Visakha Vidyalaya",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "LC A",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Senuka , Yasindu)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Semifinals",
+      "round_number": 10,
+      "motion": "This house, as God, believes that the project of humanity has failed",
+      "info_slide": null,
+      "matches_count": 2,
+      "matchups": [
+        {
+          "debate_id": 10177,
+          "venue": "Semifinals @ 2",
+          "proposition": {
+            "team_name": "AC A",
+            "institution": "Ananda College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Opposition",
+            "winner_team": "LC A",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Akindu , Methira , Senuka)"
+          ]
+        },
+        {
+          "debate_id": 10179,
+          "venue": "Semifinals @ 1",
+          "proposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "RC A",
+            "institution": "Royal College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "DS A",
+            "winner_institution": "D. S. Senanayake College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Rachel , Kaveesha , Mauli , Sanithma)"
+          ]
+        }
+      ]
+    },
+    {
+      "stage_name": "Grand Final",
+      "round_number": 11,
+      "motion": "THO the Narrative that power tends to corrupt",
+      "info_slide": null,
+      "matches_count": 1,
+      "matchups": [
+        {
+          "debate_id": 10181,
+          "venue": "Grand Final @ 1",
+          "proposition": {
+            "team_name": "LC A",
+            "institution": "Ladies' College",
+            "team_score": null,
+            "lineup": []
+          },
+          "opposition": {
+            "team_name": "DS A",
+            "institution": "D. S. Senanayake College",
+            "team_score": null,
+            "lineup": []
+          },
+          "result": {
+            "winner_side": "Proposition",
+            "winner_team": "LC A",
+            "winner_institution": "Ladies' College",
+            "decision": "1-0",
+            "margin": null,
+            "is_unanimous": true
+          },
+          "adjudicators": [
+            "Official Panel Decision (Shalem , Aliza , Jayageeth , Kaveesha , Methira , Senuka , Shakeeb)"
+          ]
+        }
+      ]
+    }
+  ]
+}

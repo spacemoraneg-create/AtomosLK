@@ -1,13 +1,13 @@
 {
-  "version": 1792385429494,
-  "generated_at": "2026-10-19T04:50:29Z",
+  "version": 1792389769878,
+  "generated_at": "2026-10-19T06:02:49Z",
   "repo": "spacemoraneg-create/AtomosLK",
   "branch": "main",
   "counts": {
-    "tournaments": 10,
-    "persons": 803,
-    "institutions": 64,
-    "debates": 1096,
-    "speeches": 8034
+    "tournaments": 11,
+    "persons": 846,
+    "institutions": 66,
+    "debates": 1191,
+    "speeches": 8698
   }
 }
