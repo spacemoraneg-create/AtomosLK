@@ -1072,19 +1072,21 @@ class AtomosAgent:
 
                     answer = (
                         f"### Reconstructed Speaker Tab Rank Analysis: **{data.get('canonical_name', name)}** ({data.get('institution', 'Independent')})\n\n"
-                        f"Speaker tabs are reverse-engineered directly from all raw preliminary substantive speeches (`speech_performances`) across every tournament in the database.\n\n"
-                        f"#### Career Average Speaker Tab Rank Summary\n"
-                        f"| Methodology | Career Avg Speaker Tab Rank | Best Rank | Exact Arithmetic Derivation |\n"
-                        f"| :--- | :--- | :--- | :--- |\n"
-                        f"| **1. WSDC Qualifying Speaker Tab (Ranked by Avg Score, >=3 Prelims)** | **{avg_wsdc}** | {best_avg_str} | `{data.get('derivation_avg_eligible') or 'N/A'}` |\n"
-                        f"| **2. Tabbycat Full-Prelim Speaker Tab (Ranked by Total Points, 100% Prelims Spoken)** | **{avg_full_tot}** | {best_tot_str} | `{data.get('derivation_total_full_prelims') or 'N/A'}` |\n"
-                        f"| **3. Full-Prelim Speaker Tab (Ranked by Average Score, 100% Prelims Spoken)** | **{avg_full_avg}** | {best_avg_str} | `{data.get('derivation_avg_full_prelims') or 'N/A'}` |\n"
-                        f"| **4. All Qualifying Tournaments (>=3 Prelims, Ranked by Total Points)** | **{avg_elig_tot}** | {best_tot_str} | `{data.get('derivation_total_eligible') or 'N/A'}` |\n"
-                        f"| **5. All Tournaments Attended (Including 1-Round Appearances, by Total Points)** | **{avg_all_tot}** | {best_tot_str} | `{data.get('derivation_total_all') or 'N/A'}` |\n\n"
+                        f"- **Average Speaker Tab Rank (Default Priority — Rank by Avg, Eligible Pool >=3 Prelims)**: **{avg_wsdc}** (`{data.get('derivation_avg_eligible') or 'N/A'}`)\n"
+                        f"- **Best Speaker Tab Rank (Eligible Pool)**: **{best_avg_str}**\n"
+                        f"- **Qualifying Tournaments (>=3 Prelims)**: **{data.get('eligible_tournaments_count', 0)}** (out of {data.get('tournaments_attended', 0)} attended)\n\n"
                         f"#### Tournament-by-Tournament Reconstructed Speaker Tab Standings ({data.get('tournaments_attended', 0)} Tournaments)\n"
                         f"| Tournament | Team | Prelims Spoken | Substantive Avg | Total Points | Rank by Avg (Eligible Pool) | Rank by Total Pts (All Pool) | Raw Prelim Scores |\n"
                         f"| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n"
-                        f"{t_md}\n"
+                        f"{t_md}\n\n"
+                        f"#### Career Average Speaker Tab Rank Summary (All Methodologies)\n"
+                        f"| Methodology | Career Avg Speaker Tab Rank | Best Rank | Exact Arithmetic Derivation |\n"
+                        f"| :--- | :--- | :--- | :--- |\n"
+                        f"| **1. Rank by Avg (Eligible Pool >=3 Prelims) [DEFAULT PRIORITY]** | **{avg_wsdc}** | {best_avg_str} | `{data.get('derivation_avg_eligible') or 'N/A'}` |\n"
+                        f"| **2. Full-Prelim Speaker Tab (Ranked by Total Points, 100% Prelims Spoken)** | **{avg_full_tot}** | {best_tot_str} | `{data.get('derivation_total_full_prelims') or 'N/A'}` |\n"
+                        f"| **3. Full-Prelim Speaker Tab (Ranked by Average Score, 100% Prelims Spoken)** | **{avg_full_avg}** | {best_avg_str} | `{data.get('derivation_avg_full_prelims') or 'N/A'}` |\n"
+                        f"| **4. All Qualifying Tournaments (>=3 Prelims, Ranked by Total Points)** | **{avg_elig_tot}** | {best_tot_str} | `{data.get('derivation_total_eligible') or 'N/A'}` |\n"
+                        f"| **5. All Tournaments Attended (Including 1-Round Appearances, by Total Points)** | **{avg_all_tot}** | {best_tot_str} | `{data.get('derivation_total_all') or 'N/A'}` |\n"
                     )
                     return AgentResult(query=query, intent="RECONSTRUCT_SPEAKER_TAB", answer=answer, tool_calls=tool_calls, data=data)
 

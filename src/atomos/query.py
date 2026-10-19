@@ -1520,6 +1520,7 @@ class AtomosQuery:
                     "total_points": info["total_points"],
                     "tournament_average": info["avg_score"],
                     "stdev": info["stdev"],
+                    "speaker_tab_rank": r_avg,
                     "rank_by_avg_eligible": r_avg,
                     "rank_by_total_points": r_tot,
                     "rank_by_avg_all_speakers": r_avg_all,
@@ -1550,8 +1551,12 @@ class AtomosQuery:
                 default=None,
             )
 
+            default_avg_rank = truncate_3(sum(elig_avg_ranks) / len(elig_avg_ranks)) if elig_avg_ranks else None
+            default_derivation = _derive_str(elig_avg_ranks)
+
             return {
                 "mode": "debater",
+                "default_priority_methodology": "Rank by Avg (Eligible Pool, >=3 Prelims)",
                 "person_id": pid,
                 "canonical_name": p_meta["name"],
                 "institution": p_meta["institution"],
@@ -1559,8 +1564,10 @@ class AtomosQuery:
                 "tournaments_attended": len(tournaments_list),
                 "eligible_tournaments_count": len(elig_avg_ranks),
                 "full_prelim_tournaments_count": len(full_prelim_total_ranks),
-                "avg_rank_by_avg_eligible": truncate_3(sum(elig_avg_ranks) / len(elig_avg_ranks)) if elig_avg_ranks else None,
-                "derivation_avg_eligible": _derive_str(elig_avg_ranks),
+                "avg_speaker_tab_rank": default_avg_rank,
+                "derivation_speaker_tab_rank": default_derivation,
+                "avg_rank_by_avg_eligible": default_avg_rank,
+                "derivation_avg_eligible": default_derivation,
                 "avg_rank_by_total_full_prelims": truncate_3(sum(full_prelim_total_ranks) / len(full_prelim_total_ranks)) if full_prelim_total_ranks else None,
                 "derivation_total_full_prelims": _derive_str(full_prelim_total_ranks),
                 "avg_rank_by_avg_full_prelims": truncate_3(sum(full_prelim_avg_ranks) / len(full_prelim_avg_ranks)) if full_prelim_avg_ranks else None,
