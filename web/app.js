@@ -3502,6 +3502,11 @@
 
   function formatInlineMarkdown(str) {
     if (!str) return '';
+    // Clean up math/LaTeX syntax for clean human readability: $\ge 3$ -> ≥ 3
+    str = str.replace(/\\ge\b/g, '≥');
+    str = str.replace(/\\le\b/g, '≤');
+    str = str.replace(/\\times\b/g, '×');
+    str = str.replace(/\$([^\$]+)\$/g, '$1');
     let s = escapeHtml(str);
     s = s.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>');
     s = s.replace(/\*(.*?)\*/g, '<em>$1</em>');
