@@ -271,20 +271,15 @@ def create_app(db_conn=None) -> Flask:
             result = agent.ask(query, session_id=session_id)
             return jsonify(result.to_dict())
         except Exception as exc:
-            try:
-                # Deterministic fallback grounded directly in SQLite
-                fb_agent = AtomosAgent(conn, use_llm=False)
-                res = fb_agent.ask(query)
-                return jsonify(res.to_dict())
-            except Exception as inner_exc:
-                return jsonify({
-                    "query": query,
-                    "intent": "ERROR",
-                    "answer": f"Unable to process query: {str(exc)}",
-                    "tool_calls": [],
-                    "success": False,
-                    "error": str(exc),
-                }), 200
+            return jsonify({
+                "query": query,
+                "intent": "AI_UNAVAILABLE",
+                "answer": "AI assistance is unavailable currently.",
+                "tool_calls": [],
+                "success": False,
+                "error": str(exc),
+            }), 200
+
 
     @app.route("/api/chat/reset", methods=["POST"])
     def reset_chat():

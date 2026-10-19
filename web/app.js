@@ -3495,16 +3495,10 @@
       }
     } catch (e) {}
 
-    // Fallback to GitHub-synced client analytical engine when live backend is offline
-    try {
-      const fallbackMd = await answerChatFromGitHubData(promptText);
-      botMsg.innerHTML = formatMarkdownToHtml(fallbackMd);
-      messages.scrollTop = messages.scrollHeight;
-    } catch (err) {
-      botMsg.innerHTML = `<div style="color: rgba(255, 255, 255, 0.72);">Unable to process circuit query.</div>`;
-      messages.scrollTop = messages.scrollHeight;
-    }
+    botMsg.innerHTML = `<div>AI assistance is unavailable currently.</div>`;
+    messages.scrollTop = messages.scrollHeight;
   }
+
 
   function formatInlineMarkdown(str) {
     if (!str) return '';

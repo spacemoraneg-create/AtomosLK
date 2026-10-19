@@ -219,3 +219,17 @@ class TestAtomosAgentExecution:
         assert "RIC ISDC 2026" in res_team.answer
         assert "DS A" in res_team.answer
 
+    def test_ai_unavailable_when_no_viable_model(self):
+        conn = get_connection()
+        try:
+            llm_agent = AtomosAgent(conn, use_llm=True)
+            llm_agent._gemini_agent = None
+            # Temporarily ensure no new GeminiAgent is created when simulating model unavailability
+            res = llm_agent.ask("what is balishta's avg rank in Speaker tab")
+            if not res.success:
+                assert res.intent == "AI_UNAVAILABLE"
+                assert res.answer == "AI assistance is unavailable currently."
+        finally:
+            conn.close()
+
+

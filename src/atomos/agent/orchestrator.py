@@ -58,6 +58,9 @@ class AgentResult:
         }
 
 
+AI_UNAVAILABLE_MESSAGE = "AI assistance is unavailable currently."
+
+
 class AtomosAgent:
     """
     AI debate analyst grounded in the Atomos database.
@@ -68,10 +71,10 @@ class AtomosAgent:
         self._query_engine = AtomosQuery(self._conn)
         self._session_last_entity: Dict[str, str] = {}
 
-        # Determine whether to use Cloud LLM (Gemini)
+        # Default to strict Cloud LLM mode unless explicitly initialized with use_llm=False
         from atomos.config import get_gemini_api_key
         has_key = bool(get_gemini_api_key())
-        self._use_llm = has_key if use_llm is None else use_llm
+        self._use_llm = True if use_llm is None else use_llm
 
         self._gemini_agent = None
         if self._use_llm and has_key:
@@ -99,28 +102,49 @@ class AtomosAgent:
 
     def ask(self, query: str, session_id: str = "default") -> AgentResult:
         """Process a natural language question and return a structured AgentResult."""
-        # 1. Prioritize Cloud LLM (Gemini) if active
-        if self._use_llm and self._gemini_agent:
-            try:
-                g_res = self._gemini_agent.run(query, session_id=session_id)
-                if g_res.get("success") and g_res.get("answer"):
-                    for tc in g_res.get("tool_calls", []):
-                        args = tc.get("args", {})
-                        for k in ("identifier", "debater", "team_name"):
-                            if args.get(k):
-                                self._session_last_entity[session_id] = str(args[k])
-                    return AgentResult(
-                        query=query,
-                        intent="GEMINI_LLM",
-                        answer=g_res.get("answer", ""),
-                        tool_calls=g_res.get("tool_calls", []),
-                        data=g_res.get("data", {}),
-                        success=True,
-                    )
-            except Exception:
-                pass
+        # 1. Strict Cloud LLM (Gemini) mode: never push a canned fallback answer if a viable model is unavailable
+        if self._use_llm:
+            err_detail = "No viable AI model is currently available."
+            if self._gemini_agent is None:
+                from atomos.config import get_gemini_api_key
+                if get_gemini_api_key():
+                    try:
+                        from atomos.agent.gemini_agent import GeminiAgent
+                        self._gemini_agent = GeminiAgent(query_engine=self._query_engine)
+                    except Exception as init_exc:
+                        err_detail = str(init_exc)
 
-        # 2. Local deterministic & reverse-engineering synthesis engine (grounded in atomos.db)
+            if self._gemini_agent is not None:
+                try:
+                    g_res = self._gemini_agent.run(query, session_id=session_id)
+                    if g_res.get("success") and g_res.get("answer"):
+                        for tc in g_res.get("tool_calls", []):
+                            args = tc.get("args", {})
+                            for k in ("identifier", "debater", "team_name"):
+                                if args.get(k):
+                                    self._session_last_entity[session_id] = str(args[k])
+                        return AgentResult(
+                            query=query,
+                            intent="GEMINI_LLM",
+                            answer=g_res.get("answer", ""),
+                            tool_calls=g_res.get("tool_calls", []),
+                            data=g_res.get("data", {}),
+                            success=True,
+                        )
+                    err_detail = str(g_res.get("error") or err_detail)
+                except Exception as run_exc:
+                    err_detail = str(run_exc)
+
+            return AgentResult(
+                query=query,
+                intent="AI_UNAVAILABLE",
+                answer=AI_UNAVAILABLE_MESSAGE,
+                tool_calls=[],
+                success=False,
+                error=err_detail,
+            )
+
+        # 2. Local deterministic engine (only used when explicitly initialized with use_llm=False)
         from atomos.agent.prompts import is_off_topic_query, OFF_TOPIC_REFUSAL
         if is_off_topic_query(query):
             return AgentResult(

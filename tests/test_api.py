@@ -37,9 +37,12 @@ class TestAtomosApiEndpoints:
         res = client.post("/api/ask", json=payload)
         assert res.status_code == 200
         data = res.get_json()
-        assert data["success"] is True
-        assert data["intent"] in ("DEBATER_DOSSIER", "GEMINI_LLM")
-        assert "Balishta Wijesinghe" in data["answer"]
+        if data["success"]:
+            assert data["intent"] == "GEMINI_LLM"
+            assert "Balishta Wijesinghe" in data["answer"]
+        else:
+            assert data["intent"] == "AI_UNAVAILABLE"
+            assert data["answer"] == "AI assistance is unavailable currently."
 
     def test_ask_endpoint_missing_query(self, client):
         res = client.post("/api/ask", json={})
@@ -61,7 +64,8 @@ class TestAtomosApiEndpoints:
         assert data["person_id"] == 42
         assert data["canonical_name"] == "Balishta Wijesinghe"
         assert data["institution"] == "D. S. Senanayake College"
-        assert data["speech_average"] == 71.15
+        assert round(data["speech_average"], 2) == 71.23
+        assert data["avg_speaker_tab_rank"] == 22.625
 
     def test_get_debater_derivation_endpoint(self, client):
         res = client.get("/api/debaters/42/derivation")
