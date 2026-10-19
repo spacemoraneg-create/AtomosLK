@@ -17,15 +17,21 @@ from atomos.query import AtomosQuery
 from atomos.tools import dispatch_tool
 
 
-def fmt_val(v: Any, max_decimals: int = 5) -> str:
-    """Format a value preserving up to 5 decimal places with zero premature rounding."""
+def fmt_val(v: Any, max_decimals: int = 3) -> str:
+    """Universal Precision Rule: Do not round up, show up to 3 decimal places if exist."""
     if v is None:
         return "N/A"
     try:
+        import math
         f = float(v)
-        rounded = round(f, max_decimals)
-        s = f"{rounded:.{max_decimals}f}".rstrip('0').rstrip('.')
-        return s if s else "0"
+        if math.isnan(f) or math.isinf(f):
+            return "N/A"
+        if f % 1 == 0:
+            return str(int(f))
+        s = f"{f:.8f}"
+        parts = s.split(".")
+        dec = parts[1][:max_decimals].rstrip("0")
+        return f"{parts[0]}.{dec}" if dec else parts[0]
     except (ValueError, TypeError):
         return str(v)
 
@@ -60,6 +66,7 @@ class AtomosAgent:
     def __init__(self, conn: Optional[sqlite3.Connection] = None, use_llm: Optional[bool] = None):
         self._conn = conn or get_connection()
         self._query_engine = AtomosQuery(self._conn)
+        self._session_last_entity: Dict[str, str] = {}
 
         # Determine whether to use Cloud LLM (Gemini)
         from atomos.config import get_gemini_api_key
@@ -76,6 +83,10 @@ class AtomosAgent:
 
     def reset_memory(self, session_id: Optional[str] = None):
         """Reset conversation memory in the underlying LLM agent."""
+        if session_id:
+            self._session_last_entity.pop(session_id, None)
+        else:
+            self._session_last_entity.clear()
         if self._gemini_agent:
             self._gemini_agent.reset_memory(session_id=session_id)
 
@@ -93,6 +104,11 @@ class AtomosAgent:
             try:
                 g_res = self._gemini_agent.run(query, session_id=session_id)
                 if g_res.get("success") and g_res.get("answer"):
+                    for tc in g_res.get("tool_calls", []):
+                        args = tc.get("args", {})
+                        for k in ("identifier", "debater", "team_name"):
+                            if args.get(k):
+                                self._session_last_entity[session_id] = str(args[k])
                     return AgentResult(
                         query=query,
                         intent="GEMINI_LLM",
@@ -101,25 +117,10 @@ class AtomosAgent:
                         data=g_res.get("data", {}),
                         success=True,
                     )
-                elif g_res.get("error"):
-                    try:
-                        self._gemini_agent.model = "gemini-3.1-flash-lite"
-                        g_res2 = self._gemini_agent.run(query, session_id=session_id)
-                        if g_res2.get("success") and g_res2.get("answer"):
-                            return AgentResult(
-                                query=query,
-                                intent="GEMINI_LLM",
-                                answer=g_res2.get("answer", ""),
-                                tool_calls=g_res2.get("tool_calls", []),
-                                data=g_res2.get("data", {}),
-                                success=True,
-                            )
-                    except Exception:
-                        pass
             except Exception:
                 pass
 
-        # 2. Local deterministic fallback engine (grounded in atomos.db)
+        # 2. Local deterministic & reverse-engineering synthesis engine (grounded in atomos.db)
         from atomos.agent.prompts import is_off_topic_query, OFF_TOPIC_REFUSAL
         if is_off_topic_query(query):
             return AgentResult(
@@ -133,6 +134,11 @@ class AtomosAgent:
         intent, params = classify_intent(query)
         tool_calls: List[Dict[str, Any]] = []
 
+        # Resolve conversational pronouns ("his", "her", "their", "he", "she") from session context
+        if not params.get("identifier") and session_id in self._session_last_entity:
+            import re
+            if re.search(r"\b(his|her|their|him|he|she)\b", query.lower()):
+                params["identifier"] = self._session_last_entity[session_id]
 
         try:
             if intent == AgentIntent.GREETING:
@@ -143,6 +149,12 @@ class AtomosAgent:
                 return self._handle_help(query, tool_calls)
             elif intent in (AgentIntent.GENERAL_CIRCUIT, AgentIntent.CIRCUIT_META):
                 return self._handle_circuit_meta(query, tool_calls)
+            elif intent == AgentIntent.RECONSTRUCT_SPEAKER_TAB:
+                return self._handle_reconstructed_speaker_tab(query, params, tool_calls, session_id=session_id)
+            elif intent == AgentIntent.RECONSTRUCT_TEAM_TAB:
+                return self._handle_reconstructed_team_tab(query, params, tool_calls, session_id=session_id)
+            elif intent == AgentIntent.ELO_ANALYSIS:
+                return self._handle_elo_analysis(query, params, tool_calls, session_id=session_id)
             elif intent == AgentIntent.SUPERLATIVE_ROUND:
                 return self._handle_superlative_round(query, params, tool_calls)
             elif intent == AgentIntent.SIDE_SPLIT:
@@ -164,11 +176,14 @@ class AtomosAgent:
             elif intent == AgentIntent.INSTITUTION_DOSSIER:
                 return self._handle_institution_dossier(query, params, tool_calls)
             elif intent == AgentIntent.DEBATER_DOSSIER:
-                return self._handle_debater_dossier(query, params, tool_calls)
+                res = self._handle_debater_dossier(query, params, tool_calls)
+                if params.get("identifier"):
+                    self._session_last_entity[session_id] = str(params["identifier"])
+                return res
             elif intent == AgentIntent.MOTION_INTELLIGENCE:
                 return self._handle_motion_intelligence(query, params, tool_calls)
             else:
-                return self._handle_general_search(query, tool_calls)
+                return self._handle_general_search(query, tool_calls, session_id=session_id)
 
         except Exception as exc:
             return AgentResult(
@@ -199,15 +214,25 @@ class AtomosAgent:
                 return pid, row[0]
             return pid, f"Debater #{pid}"
 
-        # Search via UnifiedSearchEngine
-        tool_calls.append({"tool": "search_entities", "args": {"query": str(identifier), "entity_types": ["debater"], "limit": 1}})
-        matches = self._query_engine.search(str(identifier), entity_types=["debater"], limit=1)
-        if matches:
-            pid = matches[0].get("person_id") or matches[0].get("id")
-            name = matches[0].get("canonical_name") or matches[0].get("name")
-            return pid, name
+        raw_str = str(identifier).strip()
+        candidates = [raw_str]
+        # Strip possessive 's or trailing s if missing apostrophe (e.g. "balishtas" -> "balishta")
+        cleaned = raw_str.replace("’", "'")
+        if cleaned.lower().endswith("'s"):
+            candidates.append(cleaned[:-2].strip())
+        elif cleaned.lower().endswith("s") and len(cleaned) > 4:
+            candidates.append(cleaned[:-1].strip())
 
-        return None, str(identifier)
+        for cand in candidates:
+            tool_calls.append({"tool": "search_entities", "args": {"query": cand, "entity_types": ["debater"], "limit": 1}})
+            matches = self._query_engine.search(cand, entity_types=["debater"], limit=1)
+            if matches:
+                pid = matches[0].get("person_id") or matches[0].get("id")
+                name = matches[0].get("canonical_name") or matches[0].get("name")
+                return pid, name
+
+        return None, raw_str
+
 
     # ------------------------------------------------------------------------
     # CONVERSATIONAL & SYSTEM HANDLERS
@@ -885,13 +910,14 @@ class AtomosAgent:
         )
         return AgentResult(query=query, intent="INSTITUTION_DOSSIER", answer=answer, tool_calls=tool_calls, data={"name": inst_prof.name})
 
-    def _handle_debater_dossier(self, query: str, params: Dict[str, Any], tool_calls: List[Dict[str, Any]]) -> AgentResult:
+    def _handle_debater_dossier(self, query: str, params: Dict[str, Any], tool_calls: List[Dict[str, Any]], session_id: str = "default") -> AgentResult:
         identifier = params.get("identifier", query)
         pid, name = self._resolve_debater(identifier, tool_calls)
 
         if not pid:
             return AgentResult(query=query, intent="DEBATER_DOSSIER", answer=f"Could not locate debater '{identifier}' in the database.", tool_calls=tool_calls, success=False)
 
+        self._session_last_entity[session_id] = name
         tool_calls.append({"tool": "get_debater_profile", "args": {"identifier": pid, "compact": False}})
         data = self._query_engine.get_debater(pid, compact=False)
 
@@ -910,13 +936,18 @@ class AtomosAgent:
         consistency = fmt_val(data.get("avg_of_deviations"))
         reply_avg = fmt_val(data.get("reply_average"))
         reply_cnt = data.get("reply_speech_count", 0)
+        avg_sp_rank = fmt_val(data.get("avg_speaker_tab_rank")) if data.get("avg_speaker_tab_rank") is not None else "N/A"
+        avg_sp_rank_full = fmt_val(data.get("avg_speaker_tab_rank_full_prelims")) if data.get("avg_speaker_tab_rank_full_prelims") is not None else "N/A"
 
         tournaments = data.get("tournaments", [])
         tourn_rows = []
         for t in tournaments:
+            r_avg = f"#{t['speaker_tab_rank_avg']} / {t['eligible_speakers']}" if t.get("speaker_tab_rank_avg") else "--"
+            r_tot = f"#{t['speaker_tab_rank_total']} / {t['total_speakers']}" if t.get("speaker_tab_rank_total") else "--"
             tourn_rows.append(
-                f"| {t['tournament_name']} | {t['tournament_slug']} | **{fmt_val(t.get('tournament_average'))} pts** | "
-                f"{len(t.get('prelim_substantive_scores', []))} | {'ELIGIBLE' if t.get('is_eligible') else 'INELIGIBLE'} |"
+                f"| **{t['tournament_name']}** | **{fmt_val(t.get('tournament_average'))} pts** | "
+                f"{fmt_val(t.get('total_points'))} pts | {len(t.get('prelim_substantive_scores', []))}/{t.get('max_prelims', 5)} | "
+                f"**{r_avg}** | {r_tot} |"
             )
         tourn_md = "\n".join(tourn_rows)
 
@@ -927,16 +958,229 @@ class AtomosAgent:
             f"- **Master Tab Rank**: **{mt_rank}** (Critical Stats Rank: **{cs_rank}**)\n"
             f"- **Cumulative Speech Avg (New Standard)**: **{new_avg} pts**\n"
             f"- **Mean of Tournament Avgs (Legacy)**: **{leg_avg} pts**\n"
+            f"- **Career Avg Speaker Tab Rank (WSDC Qualifying >=3 Prelims)**: **{avg_sp_rank}**\n"
+            f"- **Career Avg Speaker Tab Rank (Tabbycat Full Prelims)**: **{avg_sp_rank_full}**\n"
             f"- **Win Rate**: **{win_rate}%** ({data.get('wins_debated', 0)} wins / {data.get('total_debates', 0)} debates)\n"
             f"- **Break Rate**: **{brk_rate}%** ({data.get('eligible_tournaments_count', 0)} eligible tournaments)\n"
             f"- **Consistency Deviation (σ)**: {consistency} pts\n"
             f"- **Reply Tab Average**: {reply_avg} ({reply_cnt} replies)\n\n"
-            f"#### Tournament Campaigns ({len(tournaments)} Tracked):\n"
-            f"| Tournament | Slug | Substantive Avg | Prelims | Status |\n"
-            f"| :--- | :--- | :--- | :--- | :--- |\n"
+            f"#### Tournament Campaigns & Reconstructed Speaker Tab Ranks ({len(tournaments)} Tracked):\n"
+            f"| Tournament | Substantive Avg | Total Pts | Prelims | Speaker Tab Rank (by Avg) | Speaker Tab Rank (by Total) |\n"
+            f"| :--- | :--- | :--- | :--- | :--- | :--- |\n"
             f"{tourn_md}\n"
         )
         return AgentResult(query=query, intent="DEBATER_DOSSIER", answer=answer, tool_calls=tool_calls, data=data)
+
+    def _handle_reconstructed_speaker_tab(self, query: str, params: Dict[str, Any], tool_calls: List[Dict[str, Any]], session_id: str = "default") -> AgentResult:
+        identifier = params.get("identifier")
+        tournament = params.get("tournament")
+        mode = params.get("mode", "auto")
+
+        # Resolve pronouns ("his", "her", "their") from session memory if needed
+        if not identifier and mode == "debater":
+            identifier = self._session_last_entity.get(session_id)
+
+        # If identifier is not extracted by regex, attempt to resolve from the query text
+        if not identifier and not tournament and mode != "circuit":
+            pid, resolved_name = self._resolve_debater(query, tool_calls)
+            if pid:
+                identifier = resolved_name
+                mode = "debater"
+
+        if (mode == "tournament" or (tournament and not identifier)) and tournament:
+            tool_calls.append({"tool": "reconstruct_speaker_tab", "args": {"tournament": tournament, "limit": 25}})
+            data = self._query_engine.reconstruct_speaker_tab(tournament=tournament, limit=25)
+            if "error" in data:
+                return AgentResult(query=query, intent="RECONSTRUCT_SPEAKER_TAB", answer=f"Error: {data['error']}", tool_calls=tool_calls, success=False)
+
+            t_name = data.get("tournament_name", tournament)
+            rows = []
+            for s in data.get("top_by_wsdc_average", [])[:25]:
+                r_scores_dict = s.get("round_scores") or {}
+                scores_csv = ", ".join(f"{k}: {fmt_val(v)}" for k, v in r_scores_dict.items())
+                rows.append(
+                    f"| **#{s['rank_by_avg_eligible']}** | #{s['rank_by_total_points']} | **{s['speaker_name']}** | {s['institution']} | "
+                    f"{s.get('team_name') or '-'} | **{fmt_val(s['tournament_average'])} pts** | {fmt_val(s['total_points'])} pts | "
+                    f"{s['prelims_spoken']}/{s['max_prelims']} | `{scores_csv}` |"
+                )
+            table_md = "\n".join(rows)
+            answer = (
+                f"### Reconstructed Tournament Speaker Tab: **{t_name}**\n\n"
+                f"- **Eligible Speakers (>=3 Prelims)**: {data.get('eligible_speakers', 0)} (Total Speakers: {data.get('total_speakers', 0)})\n"
+                f"- **Scheduled Preliminary Rounds**: {data.get('max_prelims', 5)}\n\n"
+                f"| Rank (Avg) | Rank (Total) | Speaker | Institution | Team | Substantive Avg | Total Points | Prelims | Scores |\n"
+                f"| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n"
+                f"{table_md}\n"
+            )
+            return AgentResult(query=query, intent="RECONSTRUCT_SPEAKER_TAB", answer=answer, tool_calls=tool_calls, data=data)
+
+        if identifier:
+            pid, name = self._resolve_debater(str(identifier), tool_calls)
+            if pid:
+                self._session_last_entity[session_id] = name
+                tool_calls.append({"tool": "reconstruct_speaker_tab", "args": {"identifier": pid, "tournament": tournament}})
+                data = self._query_engine.reconstruct_speaker_tab(identifier=pid, tournament=tournament)
+                if "error" not in data:
+                    t_rows = []
+                    for r in data.get("tournaments", []):
+                        r_avg_val = r.get("rank_by_avg_eligible")
+                        r_avg_str = f"**#{r_avg_val}** / {r['eligible_speakers']}" if r_avg_val is not None else "Ineligible (<3 Rds)"
+                        r_tot_str = f"**#{r['rank_by_total_points']}** / {r['total_speakers']}"
+                        full_badge = "Full Prelims" if r.get("spoke_all_prelims") else ("Qualifying (>=3)" if r.get("is_eligible") else "Sub-threshold (<3)")
+                        scores_list = r.get("round_scores") or []
+                        scores_csv = ", ".join(f"R{sc['round']}: {fmt_val(sc['score'])}" for sc in scores_list)
+                        t_rows.append(
+                            f"| **{r['tournament_name']}** | {r.get('team_name') or '-'} | {r['prelims_spoken']}/{r['max_prelims']} ({full_badge}) | "
+                            f"**{fmt_val(r['tournament_average'])} pts** | {fmt_val(r['total_points'])} pts | {r_avg_str} | {r_tot_str} | `{scores_csv}` |"
+                        )
+                    t_md = "\n".join(t_rows)
+
+                    avg_wsdc = fmt_val(data.get("avg_rank_by_avg_eligible"))
+                    avg_full_tot = fmt_val(data.get("avg_rank_by_total_full_prelims"))
+                    avg_full_avg = fmt_val(data.get("avg_rank_by_avg_full_prelims"))
+                    avg_elig_tot = fmt_val(data.get("avg_rank_by_total_eligible"))
+                    avg_all_tot = fmt_val(data.get("avg_rank_by_total_all"))
+
+                    best_avg_obj = data.get("best_rank_by_avg") or {}
+                    best_tot_obj = data.get("best_rank_by_total") or {}
+                    best_avg_str = f"#{best_avg_obj['rank']} ({best_avg_obj['tournament_name']})" if best_avg_obj.get("rank") else "N/A"
+                    best_tot_str = f"#{best_tot_obj['rank']} ({best_tot_obj['tournament_name']})" if best_tot_obj.get("rank") else "N/A"
+
+                    answer = (
+                        f"### Reconstructed Speaker Tab Rank Analysis: **{data.get('canonical_name', name)}** ({data.get('institution', 'Independent')})\n\n"
+                        f"Speaker tabs are reverse-engineered directly from all raw preliminary substantive speeches (`speech_performances`) across every tournament in the database.\n\n"
+                        f"#### Career Average Speaker Tab Rank Summary\n"
+                        f"| Methodology | Career Avg Speaker Tab Rank | Best Rank | Exact Arithmetic Derivation |\n"
+                        f"| :--- | :--- | :--- | :--- |\n"
+                        f"| **1. WSDC Qualifying Speaker Tab (Ranked by Avg Score, >=3 Prelims)** | **{avg_wsdc}** | {best_avg_str} | `{data.get('derivation_avg_eligible') or 'N/A'}` |\n"
+                        f"| **2. Tabbycat Full-Prelim Speaker Tab (Ranked by Total Points, 100% Prelims Spoken)** | **{avg_full_tot}** | {best_tot_str} | `{data.get('derivation_total_full_prelims') or 'N/A'}` |\n"
+                        f"| **3. Full-Prelim Speaker Tab (Ranked by Average Score, 100% Prelims Spoken)** | **{avg_full_avg}** | {best_avg_str} | `{data.get('derivation_avg_full_prelims') or 'N/A'}` |\n"
+                        f"| **4. All Qualifying Tournaments (>=3 Prelims, Ranked by Total Points)** | **{avg_elig_tot}** | {best_tot_str} | `{data.get('derivation_total_eligible') or 'N/A'}` |\n"
+                        f"| **5. All Tournaments Attended (Including 1-Round Appearances, by Total Points)** | **{avg_all_tot}** | {best_tot_str} | `{data.get('derivation_total_all') or 'N/A'}` |\n\n"
+                        f"#### Tournament-by-Tournament Reconstructed Speaker Tab Standings ({data.get('tournaments_attended', 0)} Tournaments)\n"
+                        f"| Tournament | Team | Prelims Spoken | Substantive Avg | Total Points | Rank by Avg (Eligible Pool) | Rank by Total Pts (All Pool) | Raw Prelim Scores |\n"
+                        f"| :--- | :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n"
+                        f"{t_md}\n"
+                    )
+                    return AgentResult(query=query, intent="RECONSTRUCT_SPEAKER_TAB", answer=answer, tool_calls=tool_calls, data=data)
+
+        # Circuit Leaderboard of Reconstructed Average Speaker Tab Rank
+        tool_calls.append({"tool": "reconstruct_speaker_tab", "args": {"min_tournaments": 2, "limit": 20}})
+        data = self._query_engine.reconstruct_speaker_tab(min_tournaments=2, limit=20)
+        rows = []
+        for i, r in enumerate(data.get("leaderboard", []), 1):
+            rows.append(
+                f"| #{i} | **{r['speaker_name']}** | {r['institution']} | **{fmt_val(r['avg_speaker_tab_rank_eligible'])}** | "
+                f"{fmt_val(r['avg_speaker_tab_rank_full_prelims'])} | #{r.get('best_speaker_tab_rank_avg') or 'N/A'} | "
+                f"{r['eligible_tournaments']} |"
+            )
+        table_md = "\n".join(rows)
+        answer = (
+            f"### Reconstructed Circuit Leaderboard — Lowest Career Average Speaker Tab Rank (Min. 2 Qualifying Tournaments)\n\n"
+            f"| Pos | Debater | Institution | Career Avg Tab Rank (by Avg) | Full-Prelim Avg Tab Rank (by Total) | Peak Rank | Qualifying Tourns |\n"
+            f"| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n"
+            f"{table_md}\n"
+        )
+        return AgentResult(query=query, intent="RECONSTRUCT_SPEAKER_TAB", answer=answer, tool_calls=tool_calls, data=data)
+
+    def _handle_reconstructed_team_tab(self, query: str, params: Dict[str, Any], tool_calls: List[Dict[str, Any]], session_id: str = "default") -> AgentResult:
+        tournament = params.get("tournament")
+        team_name = params.get("team_name")
+        identifier = params.get("identifier")
+
+        if not team_name and identifier:
+            pid, name = self._resolve_debater(str(identifier), tool_calls)
+            if pid:
+                self._session_last_entity[session_id] = name
+                prof = self._query_engine.get_debater(pid, compact=True)
+                teams = prof.get("teams_debated", [])
+                if teams:
+                    team_name = teams[0]
+
+        tool_calls.append({"tool": "reconstruct_team_tab", "args": {"tournament": tournament, "team_name": team_name, "limit": 25}})
+        data = self._query_engine.reconstruct_team_tab(tournament=tournament, team_name=team_name, limit=25)
+        if "error" in data:
+            return AgentResult(query=query, intent="RECONSTRUCT_TEAM_TAB", answer=f"Error: {data['error']}", tool_calls=tool_calls, success=False)
+
+        if data.get("mode") == "tournament":
+            t_name = data.get("tournament_name", tournament)
+            rows = []
+            for t in data.get("standings", [])[:25]:
+                brk = "Yes" if t.get("broke") else "No"
+                losses = max(0, (t.get("prelim_debates") or 0) - (t.get("prelim_wins") or 0))
+                rows.append(
+                    f"| **#{t['prelim_tab_rank']}** | **{t['team_name']}** | {t['institution']} | "
+                    f"**{t['prelim_wins']}W - {losses}L** ({t.get('ballots_won', 0)} ballots) | **{fmt_val(t['total_team_score'])} pts** | "
+                    f"{fmt_val(t['atss'])} pts | {brk} |"
+                )
+            table_md = "\n".join(rows)
+            answer = (
+                f"### Reconstructed Preliminary Team Tab: **{t_name}**\n\n"
+                f"| Prelim Rank | Team | Institution | Prelim Record | Total Team Speaks | Avg Team Score (ATSS) | Broke |\n"
+                f"| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n"
+                f"{table_md}\n"
+            )
+            return AgentResult(query=query, intent="RECONSTRUCT_TEAM_TAB", answer=answer, tool_calls=tool_calls, data=data)
+
+        rows = []
+        for r in data.get("campaigns", [])[:25]:
+            brk = "Yes" if r.get("broke") else "No"
+            losses = max(0, (r.get("prelim_debates") or 0) - (r.get("prelim_wins") or 0))
+            rows.append(
+                f"| **{r['tournament_name']}** | **{r['team_name']}** | **#{r['prelim_tab_rank']}** / {r['total_teams']} | "
+                f"**{r['prelim_wins']}W - {losses}L** | {fmt_val(r['total_team_score'])} pts | {fmt_val(r['atss'])} pts | {brk} |"
+            )
+        table_md = "\n".join(rows)
+        answer = (
+            f"### Reconstructed Team Tab Standings: **{data.get('team_name', team_name)}** ({data.get('institution', 'Independent')})\n\n"
+            f"- **Average Preliminary Team Tab Rank (All Campaigns)**: **{fmt_val(data.get('avg_prelim_team_tab_rank_all'))}** across {data.get('tournaments_competed', 0)} tournaments\n"
+            f"- **Average Break Seed Rank (BRA)**: **{fmt_val(data.get('avg_break_seed_rank_bra'))}** ({data.get('breaks_count', 0)} breaks)\n"
+            f"- **Peak Prelim Tab Rank**: **#{data.get('best_prelim_tab_rank') or 'N/A'}**\n\n"
+            f"| Tournament | Team | Prelim Tab Rank | Prelim Record | Total Team Speaks | ATSS | Broke |\n"
+            f"| :--- | :--- | :--- | :--- | :--- | :--- | :--- |\n"
+            f"{table_md}\n"
+        )
+        return AgentResult(query=query, intent="RECONSTRUCT_TEAM_TAB", answer=answer, tool_calls=tool_calls, data=data)
+
+    def _handle_elo_analysis(self, query: str, params: Dict[str, Any], tool_calls: List[Dict[str, Any]], session_id: str = "default") -> AgentResult:
+        mode = params.get("mode", "leaderboard")
+        identifier = params.get("identifier")
+
+        if identifier:
+            tool_calls.append({"tool": "get_elo_trajectory", "args": {"identifier": identifier}})
+            data = self._query_engine.get_elo_trajectory(identifier=identifier)
+            if "error" not in data:
+                hist = data.get("history", [])
+                rows = [
+                    f"| #{i} | {h.get('tournament_name')} | {h.get('round_name')} | {h.get('opponent')} | {h.get('result')} | **{fmt_val(h.get('elo_after'))}** ({h.get('delta'):+.2f}) |"
+                    for i, h in enumerate(hist[-15:], 1)
+                ]
+                table_md = "\n".join(rows)
+                answer = (
+                    f"### Elo Rating Trajectory: **{data.get('name', identifier)}**\n\n"
+                    f"- **Current Elo**: **{fmt_val(data.get('current_elo'))}** (Peak Elo: **{fmt_val(data.get('peak_elo'))}**)\n\n"
+                    f"| Step | Tournament | Round | Opponent | Outcome | Elo After (Delta) |\n"
+                    f"| :--- | :--- | :--- | :--- | :--- | :--- |\n"
+                    f"{table_md}\n"
+                )
+                return AgentResult(query=query, intent="ELO_ANALYSIS", answer=answer, tool_calls=tool_calls, data=data)
+
+        tool_calls.append({"tool": "get_elo_leaderboard", "args": {"mode": "debater", "limit": 20}})
+        data = self._query_engine.get_elo_leaderboard(mode="debater", limit=20)
+        rows = []
+        for i, r in enumerate(data.get("leaderboard", []), 1):
+            rows.append(
+                f"| #{i} | **{r.get('name')}** | {r.get('institution', 'Independent')} | **{fmt_val(r.get('elo'))}** | "
+                f"{fmt_val(r.get('peak_elo'))} | {r.get('debates', 0)} |"
+            )
+        table_md = "\n".join(rows)
+        answer = (
+            f"### National Debater Elo Leaderboard\n\n"
+            f"| Rank | Debater | Institution | Current Elo | Peak Elo | Debates |\n"
+            f"| :--- | :--- | :--- | :--- | :--- | :--- |\n"
+            f"{table_md}\n"
+        )
+        return AgentResult(query=query, intent="ELO_ANALYSIS", answer=answer, tool_calls=tool_calls, data=data)
 
     def _handle_motion_intelligence(self, query: str, params: Dict[str, Any], tool_calls: List[Dict[str, Any]]) -> AgentResult:
         theme = params.get("theme")
@@ -956,7 +1200,20 @@ class AtomosAgent:
         )
         return AgentResult(query=query, intent="MOTION_INTELLIGENCE", answer=answer, tool_calls=tool_calls, data=data)
 
-    def _handle_general_search(self, query: str, tool_calls: List[Dict[str, Any]]) -> AgentResult:
+    def _handle_general_search(self, query: str, tool_calls: List[Dict[str, Any]], session_id: str = "default") -> AgentResult:
+        # Before falling back to a plain entity list, check if the query mentions a debater and "rank" / "tab" / "average"
+        q_low = query.lower()
+        if any(w in q_low for w in ["rank", "tab", "average", "avg", "speaks", "speaker"]):
+            pid, name = self._resolve_debater(query, tool_calls)
+            if pid:
+                if "tab" in q_low or "rank" in q_low:
+                    return self._handle_reconstructed_speaker_tab(
+                        query, {"mode": "debater", "identifier": name}, tool_calls, session_id=session_id
+                    )
+                return self._handle_debater_dossier(
+                    query, {"identifier": name}, tool_calls, session_id=session_id
+                )
+
         tool_calls.append({"tool": "search_entities", "args": {"query": query, "limit": 5}})
         results = self._query_engine.search(query, limit=5)
 
@@ -964,10 +1221,16 @@ class AtomosAgent:
             return AgentResult(
                 query=query,
                 intent="GENERAL_SEARCH",
-                answer=f"No direct matches found for *\"{query}\"*. You can ask for a debater profile, school comparison, motion analysis, or circuit statistics.",
+                answer=f"No direct matches found for *\"{query}\"*. You can ask for a debater profile, reconstructed speaker tab rank, school comparison, motion analysis, or circuit statistics.",
                 tool_calls=tool_calls,
                 success=True
             )
+
+        # If the top result is a single debater, return their full dossier directly instead of just a bullet point
+        if len(results) >= 1 and results[0].get("type") == "debater":
+            top_name = results[0].get("canonical_name") or results[0].get("name")
+            if top_name and top_name.lower().split()[0] in q_low:
+                return self._handle_debater_dossier(query, {"identifier": top_name}, tool_calls, session_id=session_id)
 
         items = []
         for r in results:
@@ -978,3 +1241,4 @@ class AtomosAgent:
 
         answer = f"Found the following records matching *\"{query}\"*:\n\n{items_md}"
         return AgentResult(query=query, intent="GENERAL_SEARCH", answer=answer, tool_calls=tool_calls, data={"results": results})
+

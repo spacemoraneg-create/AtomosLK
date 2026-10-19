@@ -97,6 +97,30 @@ class AtomosQuery:
             return {"error": f"No debater profile found for ID #{person_id}."}
 
         data = dataclasses.asdict(prof)
+        from atomos.analytics.v2_metrics import V2MetricsEngine
+        from atomos.analytics.tournaments import get_clean_tournament_name
+        v2 = V2MetricsEngine(self._conn)
+        sp_summary = v2._get_person_speaker_tab_summary(person_id)
+        data["avg_speaker_tab_rank"] = sp_summary["avg_speaker_tab_rank"]
+        data["avg_speaker_tab_rank_full_prelims"] = sp_summary["avg_speaker_tab_rank_full_prelims"]
+        data["avg_speaker_tab_rank_total_eligible"] = sp_summary["avg_speaker_tab_rank_total_eligible"]
+        data["avg_speaker_tab_rank_total_all"] = sp_summary["avg_speaker_tab_rank_total_all"]
+        data["best_speaker_tab_rank_avg"] = sp_summary["best_speaker_tab_rank_avg"]
+        data["best_speaker_tab_rank_total"] = sp_summary["best_speaker_tab_rank_total"]
+        per_tour = sp_summary["per_tournament"]
+
+        for t in data.get("tournaments", []):
+            tid = t.get("tournament_id")
+            if tid is not None:
+                t["tournament_name"] = get_clean_tournament_name(tid, t.get("tournament_name", ""))
+                t_tab = per_tour.get(tid, {})
+                t["speaker_tab_rank_avg"] = t_tab.get("rank_by_avg")
+                t["speaker_tab_rank_total"] = t_tab.get("rank_by_total")
+                t["eligible_speakers"] = t_tab.get("eligible_speakers")
+                t["total_speakers"] = t_tab.get("total_speakers")
+                t["total_points"] = t_tab.get("total_points")
+                t["max_prelims"] = t_tab.get("max_prelims", 5)
+
         if compact:
             data.pop("derivation_text", None)
             for t in data.get("tournaments", []):
@@ -104,6 +128,7 @@ class AtomosQuery:
                 t.pop("elim_rounds", None)
 
         return data
+
 
     def get_head_to_head(
         self,
@@ -1315,7 +1340,481 @@ class AtomosQuery:
             "debates": all_records,
         }
 
+    def _resolve_tournament_id(self, tournament: str) -> Optional[int]:
+        """Resolve tournament name, slug, or circuit alias to tournament_id."""
+        if not tournament:
+            return None
+        t_clean = tournament.strip()
+        if t_clean.isdigit():
+            return int(t_clean)
+        t_low = t_clean.lower()
+        alias_map = {
+            "vijis": 1, "vijitha": 1,
+            "aisdc": 2, "ais": 2,
+            "apiit": 3,
+            "slsdc": 4, "law fac": 4, "law faculty": 4,
+            "vvidc": 7, "visakha": 7,
+            "metho": 10, "shanthi": 10,
+            "ric": 16, "isdc": 16,
+            "chaps": 18, "chap's": 18, "chapman": 18,
+            "nixon": 44, "nixons": 44, "nixon's": 44, "lillian": 44,
+            "stanley": 45, "stanleys": 45, "stanley's": 45,
+            "henley": 46, "henleys": 46,
+        }
+        for k, tid in alias_map.items():
+            if k in t_low:
+                return tid
+        t_search = self._search_engine.search_tournaments(t_clean, limit=1)
+        if t_search:
+            return t_search[0]["tournament_id"]
+        cur = self._conn.cursor()
+        cur.execute("SELECT id FROM tournaments WHERE slug LIKE ? OR name LIKE ? LIMIT 1", (f"%{t_clean}%", f"%{t_clean}%"))
+        r = cur.fetchone()
+        return r[0] if r else None
+
+    def reconstruct_speaker_tab(
+        self,
+        identifier: Optional[str] = None,
+        tournament: Optional[str] = None,
+        min_tournaments: int = 3,
+        limit: int = 25,
+    ) -> Dict[str, Any]:
+        """
+        Reverse-engineer per-tournament Speaker Tabs directly from raw preliminary
+        substantive speech scores in atomos.db.
+
+        Modes:
+        1. Debater Mode (identifier provided):
+           Returns the debater's reconstructed Speaker Tab rank in every tournament
+           they competed in (both by WSDC Qualifying Average [>=3 prelims] and by
+           Tabbycat Cumulative Total Points), round-by-round scores, field sizes,
+           and their career Average Speaker Tab Ranks with step-by-step derivations.
+        2. Tournament Mode (tournament provided without identifier):
+           Reconstructs the complete Speaker Tab for that tournament (top `limit`
+           speakers by Qualifying Average and by Total Prelim Points).
+        3. Circuit Leaderboard Mode (neither provided):
+           Ranks circuit debaters (with >= `min_tournaments` qualifying tournaments)
+           by their Average Speaker Tab Rank across tournaments.
+        """
+        from atomos.analytics.v2_metrics import V2MetricsEngine, truncate_3, calc_sample_stdev, CANONICAL_TEAM_ALIASES
+        from atomos.analytics.tournaments import get_clean_tournament_name, CHRONOLOGICAL_TOURNAMENT_ORDER
+
+        v2 = V2MetricsEngine(self._conn)
+        tabs = v2._get_reconstructed_speaker_tabs()
+        cur = self._conn.cursor()
+
+        # Fetch tournament metadata
+        cur.execute("SELECT id, slug, name FROM tournaments")
+        tour_meta = {
+            r["id"]: {
+                "id": r["id"],
+                "slug": r["slug"],
+                "raw_name": r["name"],
+                "clean_name": get_clean_tournament_name(r["id"], r["name"]),
+            }
+            for r in cur.fetchall()
+        }
+
+        # Fetch person names, schools, and per-tournament teams + round scores
+        cur.execute("""
+            SELECT r.tournament_id,
+                   sp.person_id,
+                   p.canonical_name,
+                   p.national_level,
+                   COALESCE(tm.canonical_name, tm.name) as team_name,
+                   inst.name as inst_name,
+                   r.round_number,
+                   AVG(sp.total_score) as speech_score
+            FROM speech_performances sp
+            JOIN rounds r ON sp.round_id = r.id
+            JOIN debates d ON sp.debate_id = d.id
+            JOIN persons p ON sp.person_id = p.id
+            JOIN teams tm ON sp.team_id = tm.id
+            LEFT JOIN institutions inst ON tm.institution_id = inst.id
+            WHERE sp.speech_type = 'SUBSTANTIVE'
+              AND r.round_type = 'PRELIMINARY'
+              AND d.is_walkover = 0
+              AND sp.total_score > 0
+            GROUP BY r.tournament_id, sp.person_id, r.round_number, sp.debate_id, sp.position
+            ORDER BY r.tournament_id, sp.person_id, r.round_number
+        """)
+        person_info: Dict[int, Dict[str, Any]] = {}
+        person_tour_meta: Dict[Tuple[int, int], Dict[str, Any]] = {}
+        for r in cur.fetchall():
+            tid = r["tournament_id"]
+            pid = r["person_id"]
+            rnum = r["round_number"]
+            sc = float(r["speech_score"])
+            raw_t = r["team_name"] or "Team"
+            clean_t = CANONICAL_TEAM_ALIASES.get(raw_t, raw_t)
+            person_info[pid] = {
+                "person_id": pid,
+                "name": r["canonical_name"],
+                "national_level": r["national_level"],
+                "institution": r["inst_name"] or person_info.get(pid, {}).get("institution") or "Independent",
+            }
+            pt = person_tour_meta.setdefault((pid, tid), {"team": clean_t, "rounds": {}})
+            pt["team"] = clean_t
+            pt["rounds"][rnum] = max(pt["rounds"].get(rnum, 0.0), sc)
+
+        target_tid = self._resolve_tournament_id(tournament) if tournament else None
+
+        # MODE 1: DEBATER SPEAKER TAB RECONSTRUCTION
+        if identifier:
+            pid = self._resolve_debater_id(identifier)
+            if not pid or pid not in person_info:
+                return {"error": f"Debater '{identifier}' not found in preliminary speech records."}
+
+            p_meta = person_info[pid]
+            tournaments_list = []
+            elig_avg_ranks: List[int] = []
+            full_prelim_total_ranks: List[int] = []
+            full_prelim_avg_ranks: List[int] = []
+            elig_total_ranks: List[int] = []
+            all_total_ranks: List[int] = []
+            all_avg_unfiltered_ranks: List[int] = []
+
+            sorted_tids = sorted(
+                [tid for tid in tabs.keys() if pid in tabs[tid] and (target_tid is None or tid == target_tid)],
+                key=lambda x: CHRONOLOGICAL_TOURNAMENT_ORDER.get(x, x),
+            )
+
+            for tid in sorted_tids:
+                info = tabs[tid][pid]
+                pt = person_tour_meta.get((pid, tid), {"team": "Unknown", "rounds": {}})
+                r_scores = [
+                    {"round": rnum, "score": truncate_3(sc)}
+                    for rnum, sc in sorted(pt["rounds"].items())
+                ]
+                t_name = tour_meta.get(tid, {}).get("clean_name", f"Tournament #{tid}")
+                t_slug = tour_meta.get(tid, {}).get("slug", "")
+
+                r_avg = info["rank_by_avg"]
+                r_tot = info["rank_by_total"]
+                r_avg_all = info["rank_by_avg_all"]
+                elig_cnt = info["eligible_speakers"]
+                tot_cnt = info["total_speakers"]
+
+                all_total_ranks.append(r_tot)
+                all_avg_unfiltered_ranks.append(r_avg_all)
+                if info["is_eligible"] and r_avg is not None:
+                    elig_avg_ranks.append(r_avg)
+                    elig_total_ranks.append(r_tot)
+                if info["spoke_all_prelims"]:
+                    full_prelim_total_ranks.append(r_tot)
+                    if r_avg is not None:
+                        full_prelim_avg_ranks.append(r_avg)
+
+                pct_elig = truncate_3(r_avg / elig_cnt * 100.0) if (r_avg is not None and elig_cnt > 0) else None
+                pct_tot = truncate_3(r_tot / tot_cnt * 100.0) if tot_cnt > 0 else None
+
+                tournaments_list.append({
+                    "tournament_id": tid,
+                    "tournament_name": t_name,
+                    "tournament_slug": t_slug,
+                    "team_name": pt["team"],
+                    "prelims_spoken": info["prelims_spoken"],
+                    "max_prelims": info["max_prelims"],
+                    "is_eligible": info["is_eligible"],
+                    "spoke_all_prelims": info["spoke_all_prelims"],
+                    "total_points": info["total_points"],
+                    "tournament_average": info["avg_score"],
+                    "stdev": info["stdev"],
+                    "rank_by_avg_eligible": r_avg,
+                    "rank_by_total_points": r_tot,
+                    "rank_by_avg_all_speakers": r_avg_all,
+                    "eligible_speakers": elig_cnt,
+                    "total_speakers": tot_cnt,
+                    "top_percentile_eligible": pct_elig,
+                    "top_percentile_total": pct_tot,
+                    "round_scores": r_scores,
+                })
+
+            def _derive_str(vals: List[int]) -> Optional[str]:
+                if not vals:
+                    return None
+                s = sum(vals)
+                n = len(vals)
+                avg_v = truncate_3(s / n)
+                expr = " + ".join(str(v) for v in vals)
+                return f"({expr}) / {n} = {s} / {n} = {avg_v}"
+
+            best_avg_tour = min(
+                [t for t in tournaments_list if t["rank_by_avg_eligible"] is not None],
+                key=lambda t: (t["rank_by_avg_eligible"], -t["tournament_average"]),
+                default=None,
+            )
+            best_tot_tour = min(
+                tournaments_list,
+                key=lambda t: (t["rank_by_total_points"], -t["total_points"]),
+                default=None,
+            )
+
+            return {
+                "mode": "debater",
+                "person_id": pid,
+                "canonical_name": p_meta["name"],
+                "institution": p_meta["institution"],
+                "national_level": p_meta["national_level"],
+                "tournaments_attended": len(tournaments_list),
+                "eligible_tournaments_count": len(elig_avg_ranks),
+                "full_prelim_tournaments_count": len(full_prelim_total_ranks),
+                "avg_rank_by_avg_eligible": truncate_3(sum(elig_avg_ranks) / len(elig_avg_ranks)) if elig_avg_ranks else None,
+                "derivation_avg_eligible": _derive_str(elig_avg_ranks),
+                "avg_rank_by_total_full_prelims": truncate_3(sum(full_prelim_total_ranks) / len(full_prelim_total_ranks)) if full_prelim_total_ranks else None,
+                "derivation_total_full_prelims": _derive_str(full_prelim_total_ranks),
+                "avg_rank_by_avg_full_prelims": truncate_3(sum(full_prelim_avg_ranks) / len(full_prelim_avg_ranks)) if full_prelim_avg_ranks else None,
+                "derivation_avg_full_prelims": _derive_str(full_prelim_avg_ranks),
+                "avg_rank_by_total_eligible": truncate_3(sum(elig_total_ranks) / len(elig_total_ranks)) if elig_total_ranks else None,
+                "derivation_total_eligible": _derive_str(elig_total_ranks),
+                "avg_rank_by_total_all": truncate_3(sum(all_total_ranks) / len(all_total_ranks)) if all_total_ranks else None,
+                "derivation_total_all": _derive_str(all_total_ranks),
+                "avg_rank_by_avg_unfiltered_all": truncate_3(sum(all_avg_unfiltered_ranks) / len(all_avg_unfiltered_ranks)) if all_avg_unfiltered_ranks else None,
+                "best_rank_by_avg": {
+                    "rank": best_avg_tour["rank_by_avg_eligible"],
+                    "eligible_speakers": best_avg_tour["eligible_speakers"],
+                    "tournament_name": best_avg_tour["tournament_name"],
+                    "average": best_avg_tour["tournament_average"],
+                } if best_avg_tour else None,
+                "best_rank_by_total": {
+                    "rank": best_tot_tour["rank_by_total_points"],
+                    "total_speakers": best_tot_tour["total_speakers"],
+                    "tournament_name": best_tot_tour["tournament_name"],
+                    "total_points": best_tot_tour["total_points"],
+                    "average": best_tot_tour["tournament_average"],
+                } if best_tot_tour else None,
+                "tournaments": tournaments_list,
+            }
+
+        # MODE 2: SINGLE TOURNAMENT SPEAKER TAB RECONSTRUCTION
+        if target_tid is not None:
+            if target_tid not in tabs:
+                return {"error": f"No preliminary speech data found for tournament '{tournament}'."}
+            p_map = tabs[target_tid]
+            t_info = tour_meta.get(target_tid, {"clean_name": f"Tournament #{target_tid}", "slug": ""})
+            entries = []
+            for pid, info in p_map.items():
+                pm = person_info.get(pid, {"name": f"Debater #{pid}", "institution": "Independent", "national_level": None})
+                pt = person_tour_meta.get((pid, target_tid), {"team": "Unknown", "rounds": {}})
+                r_scores = {f"R{rnum}": truncate_3(sc) for rnum, sc in sorted(pt["rounds"].items())}
+                entries.append({
+                    "person_id": pid,
+                    "speaker_name": pm["name"],
+                    "team_name": pt["team"],
+                    "institution": pm["institution"],
+                    "national_level": pm["national_level"],
+                    "prelims_spoken": info["prelims_spoken"],
+                    "max_prelims": info["max_prelims"],
+                    "is_eligible": info["is_eligible"],
+                    "spoke_all_prelims": info["spoke_all_prelims"],
+                    "total_points": info["total_points"],
+                    "tournament_average": info["avg_score"],
+                    "stdev": info["stdev"],
+                    "rank_by_avg_eligible": info["rank_by_avg"],
+                    "rank_by_total_points": info["rank_by_total"],
+                    "round_scores": r_scores,
+                })
+
+            by_avg = [e for e in entries if e["is_eligible"] and e["rank_by_avg_eligible"] is not None]
+            by_avg.sort(key=lambda e: (e["rank_by_avg_eligible"], -e["tournament_average"], -e["total_points"]))
+
+            by_total = list(entries)
+            by_total.sort(key=lambda e: (e["rank_by_total_points"], -e["total_points"], -e["tournament_average"]))
+
+            return {
+                "mode": "tournament",
+                "tournament_id": target_tid,
+                "tournament_name": t_info["clean_name"],
+                "tournament_slug": t_info["slug"],
+                "max_prelims": entries[0]["max_prelims"] if entries else 5,
+                "total_speakers": len(entries),
+                "eligible_speakers": len(by_avg),
+                "top_by_wsdc_average": by_avg[:limit],
+                "top_by_tabbycat_total_points": by_total[:limit],
+            }
+
+        # MODE 3: CIRCUIT LEADERBOARD BY AVERAGE SPEAKER TAB RANK
+        leaderboard = []
+        for pid, pm in person_info.items():
+            summary = v2._get_person_speaker_tab_summary(pid)
+            if summary["eligible_tournaments_count"] < min_tournaments:
+                continue
+            leaderboard.append({
+                "person_id": pid,
+                "speaker_name": pm["name"],
+                "institution": pm["institution"],
+                "national_level": pm["national_level"],
+                "eligible_tournaments": summary["eligible_tournaments_count"],
+                "full_prelim_tournaments": summary["full_prelim_tournaments_count"],
+                "avg_speaker_tab_rank_eligible": summary["avg_speaker_tab_rank"],
+                "avg_speaker_tab_rank_full_prelims": summary["avg_speaker_tab_rank_full_prelims"],
+                "avg_speaker_tab_rank_total_eligible": summary["avg_speaker_tab_rank_total_eligible"],
+                "best_speaker_tab_rank_avg": summary["best_speaker_tab_rank_avg"],
+                "best_speaker_tab_rank_total": summary["best_speaker_tab_rank_total"],
+            })
+
+        leaderboard.sort(key=lambda x: (
+            x["avg_speaker_tab_rank_eligible"] if x["avg_speaker_tab_rank_eligible"] is not None else 9999,
+            -x["eligible_tournaments"],
+        ))
+        for idx, item in enumerate(leaderboard, 1):
+            item["rank"] = idx
+
+        return {
+            "mode": "circuit_leaderboard",
+            "min_tournaments": min_tournaments,
+            "total_qualified_debaters": len(leaderboard),
+            "leaderboard": leaderboard[:limit],
+        }
+
+    def reconstruct_team_tab(
+        self,
+        tournament: Optional[str] = None,
+        team_name: Optional[str] = None,
+        limit: int = 25,
+    ) -> Dict[str, Any]:
+        """
+        Reverse-engineer Preliminary Team Tabs (Break Standings) for any tournament
+        or team directly from raw preliminary debates, adjudicator ballots, and speeches.
+        """
+        from atomos.analytics.v2_metrics import truncate_3, CANONICAL_TEAM_ALIASES
+        from atomos.analytics.tournaments import get_clean_tournament_name, CHRONOLOGICAL_TOURNAMENT_ORDER
+        from atomos.analytics.critical_stats import CriticalStatsEngine
+
+        cur = self._conn.cursor()
+        crit = CriticalStatsEngine(self._conn)
+        breaking = crit._get_breaking_teams()
+
+        cur.execute("SELECT id, slug, name FROM tournaments")
+        tour_meta = {
+            r["id"]: {
+                "id": r["id"],
+                "slug": r["slug"],
+                "clean_name": get_clean_tournament_name(r["id"], r["name"]),
+            }
+            for r in cur.fetchall()
+        }
+
+        # Reconstruct team prelim wins, ballots, and total substantive speaker points per debate
+        cur.execute("""
+            SELECT r.tournament_id,
+                   d.id as debate_id,
+                   r.round_number,
+                   t.id as team_id,
+                   COALESCE(t.canonical_name, t.name) as raw_team_name,
+                   inst.name as inst_name,
+                   CASE WHEN d.prop_team_id = t.id THEN 'Proposition' ELSE 'Opposition' END as side,
+                   SUM(CASE WHEN (d.prop_team_id = t.id AND b.winner_side = 'Proposition')
+                              OR (d.opp_team_id = t.id AND b.winner_side = 'Opposition') THEN 1 ELSE 0 END) as ballots_won,
+                   SUM(CASE WHEN (d.prop_team_id = t.id AND b.winner_side = 'Opposition')
+                              OR (d.opp_team_id = t.id AND b.winner_side = 'Proposition') THEN 1 ELSE 0 END) as ballots_lost,
+                   AVG(CASE WHEN d.prop_team_id = t.id THEN b.prop_total_score ELSE b.opp_total_score END) as team_debate_score,
+                   AVG(CASE WHEN d.prop_team_id = t.id THEN b.win_margin ELSE -b.win_margin END) as debate_margin
+            FROM debates d
+            JOIN rounds r ON d.round_id = r.id
+            JOIN teams t ON (d.prop_team_id = t.id OR d.opp_team_id = t.id)
+            LEFT JOIN institutions inst ON t.institution_id = inst.id
+            JOIN adjudicator_ballots b ON d.id = b.debate_id
+            WHERE r.round_type = 'PRELIMINARY' AND d.is_walkover = 0
+            GROUP BY r.tournament_id, d.id, t.id
+        """)
+        tour_teams: Dict[int, Dict[str, Dict[str, Any]]] = defaultdict(dict)
+        for r in cur.fetchall():
+            tid = r["tournament_id"]
+            raw_t = r["raw_team_name"]
+            t_cname = CANONICAL_TEAM_ALIASES.get(raw_t, raw_t)
+            entry = tour_teams[tid].setdefault(t_cname, {
+                "team_name": t_cname,
+                "raw_team_name": raw_t,
+                "institution": r["inst_name"] or "Independent",
+                "prelim_debates": 0,
+                "prelim_wins": 0,
+                "ballots_won": 0,
+                "team_scores": [],
+                "margins": [],
+            })
+            entry["prelim_debates"] += 1
+            if (r["ballots_won"] or 0) > (r["ballots_lost"] or 0):
+                entry["prelim_wins"] += 1
+            entry["ballots_won"] += (r["ballots_won"] or 0)
+            if r["team_debate_score"]:
+                entry["team_scores"].append(float(r["team_debate_score"]))
+            if r["debate_margin"] is not None:
+                entry["margins"].append(float(r["debate_margin"]))
+
+        reconstructed_team_tabs: Dict[int, List[Dict[str, Any]]] = {}
+        for tid, tmap in tour_teams.items():
+            tlist = []
+            for t_cname, e in tmap.items():
+                tot_sc = sum(e["team_scores"])
+                atss = tot_sc / len(e["team_scores"]) if e["team_scores"] else 0.0
+                avg_m = sum(e["margins"]) / len(e["margins"]) if e["margins"] else 0.0
+                broke = ((e["raw_team_name"], tid) in breaking) or ((t_cname, tid) in breaking)
+                tlist.append({
+                    "tournament_id": tid,
+                    "tournament_name": tour_meta.get(tid, {}).get("clean_name", f"Tournament #{tid}"),
+                    "team_name": t_cname,
+                    "institution": e["institution"],
+                    "prelim_debates": e["prelim_debates"],
+                    "prelim_wins": e["prelim_wins"],
+                    "ballots_won": e["ballots_won"],
+                    "total_team_score": truncate_3(tot_sc) or 0.0,
+                    "atss": truncate_3(atss) or 0.0,
+                    "avg_margin": truncate_3(avg_m) or 0.0,
+                    "broke": broke,
+                    "_sort_key": (e["prelim_wins"], round(tot_sc, 4), round(atss, 4), e["ballots_won"], round(avg_m, 4)),
+                })
+            tlist.sort(key=lambda x: x["_sort_key"], reverse=True)
+            total_t = len(tlist)
+            for idx, item in enumerate(tlist, 1):
+                item.pop("_sort_key", None)
+                item["prelim_tab_rank"] = idx
+                item["total_teams"] = total_t
+            reconstructed_team_tabs[tid] = tlist
+
+        target_tid = self._resolve_tournament_id(tournament) if tournament else None
+
+        if team_name:
+            q_team = CANONICAL_TEAM_ALIASES.get(team_name.strip(), team_name.strip()).lower()
+            campaigns = []
+            for tid in sorted(reconstructed_team_tabs.keys(), key=lambda x: CHRONOLOGICAL_TOURNAMENT_ORDER.get(x, x)):
+                if target_tid is not None and tid != target_tid:
+                    continue
+                for item in reconstructed_team_tabs[tid]:
+                    if item["team_name"].lower() == q_team or q_team in item["team_name"].lower():
+                        campaigns.append(item)
+            if not campaigns:
+                return {"error": f"Team '{team_name}' not found in reconstructed tournament team tabs."}
+            all_ranks = [c["prelim_tab_rank"] for c in campaigns]
+            break_ranks = [c["prelim_tab_rank"] for c in campaigns if c["broke"]]
+            return {
+                "mode": "team",
+                "team_name": campaigns[0]["team_name"],
+                "institution": campaigns[0]["institution"],
+                "tournaments_competed": len(campaigns),
+                "breaks_count": len(break_ranks),
+                "avg_prelim_team_tab_rank_all": truncate_3(sum(all_ranks) / len(all_ranks)),
+                "avg_break_seed_rank_bra": truncate_3(sum(break_ranks) / len(break_ranks)) if break_ranks else None,
+                "best_prelim_tab_rank": min(all_ranks),
+                "campaigns": campaigns,
+            }
+
+        if target_tid is not None:
+            if target_tid not in reconstructed_team_tabs:
+                return {"error": f"Tournament '{tournament}' not found in team tab records."}
+            tlist = reconstructed_team_tabs[target_tid]
+            return {
+                "mode": "tournament",
+                "tournament_id": target_tid,
+                "tournament_name": tour_meta.get(target_tid, {}).get("clean_name", f"Tournament #{target_tid}"),
+                "total_teams": len(tlist),
+                "standings": tlist[:limit],
+            }
+
+        return {"error": "Please specify either `tournament` or `team_name` for reconstruct_team_tab."}
+
     def close(self):
         """Close underlying database connection if owned."""
         if self._conn:
             self._conn.close()
+

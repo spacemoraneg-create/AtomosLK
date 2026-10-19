@@ -28,6 +28,7 @@ OFFICIAL_TOURNAMENT_DATES = {
     18: "July 31 – Aug 3, 2026", # Chap's '26
     44: "Sept 18–21, 2026",     # Nixon's 2026
     45: "Oct 2–3, 2026",        # Stanley's '26
+    46: "Oct 16–18, 2026",      # Henley 2026
 }
 
 CHRONOLOGICAL_TOURNAMENT_ORDER = {
@@ -41,6 +42,7 @@ CHRONOLOGICAL_TOURNAMENT_ORDER = {
     4: 8,   # SLSDC 2026 (Aug 22–31)
     44: 9,  # Nixon's 2026 (Sept 18–21)
     45: 10, # Stanley's '26 (Oct 2–3)
+    46: 11, # Henley 2026 (Oct 16–18)
 }
 
 CLEAN_TOURNAMENT_NAMES = {
@@ -54,7 +56,27 @@ CLEAN_TOURNAMENT_NAMES = {
     18: "Frances Chapman Memorial (Chap's '26)",
     44: "Lillian Nixon's Memorial (Nixon's 2026)",
     45: "Stanley Abeysekera Memorial (Stanley's '26)",
+    46: "Henley Debating Championship (Henley 2026)",
 }
+
+
+def get_clean_tournament_name(tid: int, raw_name: Optional[str] = None) -> str:
+    """Return clean tournament name from registry or strip Tabbycat '| Welcome to' boilerplate."""
+    if tid in CLEAN_TOURNAMENT_NAMES:
+        return CLEAN_TOURNAMENT_NAMES[tid]
+    if not raw_name:
+        return f"Tournament #{tid}"
+    if "|" in raw_name:
+        parts = [p.strip() for p in raw_name.split("|", 1)]
+        short, welcome = parts[0], parts[1]
+        for prefix in ("Welcome to ", "welcome to "):
+            if welcome.startswith(prefix):
+                welcome = welcome[len(prefix):].strip()
+        if welcome and short and short.lower() not in welcome.lower():
+            return f"{welcome} ({short})"
+        return welcome or short
+    return raw_name.strip()
+
 
 
 def truncate_3(val: Optional[float]) -> Optional[float]:

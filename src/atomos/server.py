@@ -103,6 +103,8 @@ def create_app(db_conn=None) -> Flask:
         v2_engine._elo_cache = None
         if hasattr(v2_engine, "_break_seeds_cache"):
             v2_engine._break_seeds_cache = None
+        if hasattr(v2_engine, "_speaker_tabs_cache"):
+            v2_engine._speaker_tabs_cache = None
 
     def get_request_github_token() -> Optional[str]:
         from atomos.sync import load_persisted_github_token, save_persisted_github_token, _is_dummy_test_token

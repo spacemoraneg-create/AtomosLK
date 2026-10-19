@@ -196,15 +196,18 @@ class GeminiAgent:
 
         # Fast and resilient model hierarchy: prioritize fastest available model with highest quota headroom
         candidate_models = [
+            "gemini-2.5-flash-lite",
+            "gemini-2.5-flash",
             "gemini-flash-lite-latest",
-            "gemini-3.1-flash-lite",
             "gemini-flash-latest",
-            "gemini-3.6-flash",
+            "gemini-2.0-flash",
+            "gemini-3.1-flash-lite-preview",
+            "gemini-3-flash-preview",
         ]
         if self.model and self.model in candidate_models:
             candidate_models.remove(self.model)
             candidate_models.insert(0, self.model)
-        elif self.model and self.model not in ("gemini-2.5-flash", "gemini-2.0-flash"):
+        elif self.model:
             candidate_models.insert(0, self.model)
 
         # Build contents from pristine compacted conversation history + new user query
@@ -266,6 +269,11 @@ class GeminiAgent:
                             contents = req_contents
                         active_model = m
                         break
+                    elif r.status_code == 401:
+                        # Invalid API key — do not retry 7 models with the same invalid key
+                        last_err = f"Model {m} status 401: {r.text[:140]}"
+                        resp = r
+                        break
                     elif r.status_code == 400 and step > 0:
                         # Retry once on the same model after stripping thought signatures
                         clean_c = _strip_thought_signatures(contents)
@@ -278,10 +286,11 @@ class GeminiAgent:
                             break
                         last_err = f"Model {m} status {r2.status_code}: {r2.text[:140]}"
                         continue
-                    elif r.status_code in (400, 404, 429, 500, 502, 503, 504):
+                    elif r.status_code in (400, 403, 404, 429, 500, 502, 503, 504):
                         last_err = f"Model {m} status {r.status_code}: {r.text[:140]}"
                         continue
                     else:
+                        last_err = f"Model {m} status {r.status_code}: {r.text[:140]}"
                         resp = r
                         break
                 except Exception as exc:
@@ -289,7 +298,7 @@ class GeminiAgent:
                     continue
 
             if resp is None or resp.status_code != 200:
-                err_text = resp.text if resp else last_err
+                err_text = last_err or (resp.text if resp else "Unknown error")
                 return {
                     "query": query,
                     "intent": "GEMINI_LLM",

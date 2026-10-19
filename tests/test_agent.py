@@ -70,8 +70,9 @@ class TestAtomosAgentExecution:
         assert res.intent == AgentIntent.DEBATER_DOSSIER.value
         assert "Balishta Wijesinghe" in res.answer
         assert "D. S. Senanayake College" in res.answer
-        assert "71.15" in res.answer  # New regulation speech avg
-        assert "64.86486%" in res.answer  # Unrounded win rate
+        assert "71.23" in res.answer  # New regulation speech avg across 10 attended tournaments
+        assert "67.5%" in res.answer  # Win rate
+        assert "22.625" in res.answer  # Career Avg Speaker Tab Rank
 
     def test_ask_debater_by_id(self, agent):
         res = agent.ask("Scout debater #42")
@@ -107,7 +108,7 @@ class TestAtomosAgentExecution:
         assert res.intent == AgentIntent.MATH_DERIVATION.value
         assert "WSDC & Atomos Master Tab Standardization Rules" in res.answer
         assert "Sum of Qualifying Speeches" in res.answer
-        assert "71.15 pts" in res.answer
+        assert "71.23026 pts" in res.answer
 
     def test_ask_circuit_summary(self, agent):
         res = agent.ask("How many debaters and tournaments are in the circuit?")
@@ -151,8 +152,8 @@ class TestAtomosAgentExecution:
         assert res.intent == AgentIntent.SIDE_SPLIT.value
         assert "Proposition" in res.answer
         assert "Opposition" in res.answer
-        assert "70.978" in res.answer
-        assert "71.411" in res.answer
+        assert "71.04" in res.answer
+        assert "71.5" in res.answer
 
     def test_ask_adjudicator_lookup(self, agent):
         res = agent.ask("who judged balishta when he scored his highest score?")
@@ -187,3 +188,34 @@ class TestAtomosAgentExecution:
         bad_res = dispatch_tool("execute_sql", {"query": "DELETE FROM persons WHERE id = 1"})
         assert "error" in bad_res
         assert "strictly forbidden" in bad_res["error"]
+
+    def test_reconstruct_speaker_tab_debater(self, agent):
+        res = agent.ask("what is balishta's avg rank in Speaker tab")
+        assert res.success is True
+        assert res.intent == AgentIntent.RECONSTRUCT_SPEAKER_TAB.value
+        assert "Balishta Wijesinghe" in res.answer
+        assert "22.625" in res.answer
+        assert "17.4" in res.answer
+        assert "RIC ISDC 2026" in res.answer
+        assert "(20 + 47 + 21 + 25 + 9 + 18 + 29 + 12) / 8 = 181 / 8 = 22.625" in res.answer
+
+        # Also test without apostrophe ("balishtas")
+        res_no_apos = agent.ask("what is balishtas avg rank in Speaker tab")
+        assert res_no_apos.success is True
+        assert res_no_apos.intent == AgentIntent.RECONSTRUCT_SPEAKER_TAB.value
+        assert "Balishta Wijesinghe" in res_no_apos.answer
+        assert "22.625" in res_no_apos.answer
+
+    def test_reconstruct_speaker_tab_tournament_and_team_tab(self, agent):
+        res_t = agent.ask("speaker tab for Henley 2026")
+        assert res_t.success is True
+        assert res_t.intent == AgentIntent.RECONSTRUCT_SPEAKER_TAB.value
+        assert "Henley 2026" in res_t.answer
+        assert "Savithru Liyanapathirana" in res_t.answer
+
+        res_team = agent.ask("prelim team tab for RIC ISDC 2026")
+        assert res_team.success is True
+        assert res_team.intent == AgentIntent.RECONSTRUCT_TEAM_TAB.value
+        assert "RIC ISDC 2026" in res_team.answer
+        assert "DS A" in res_team.answer
+

@@ -485,6 +485,58 @@ TOOL_SCHEMAS: List[Dict[str, Any]] = [
             }
         }
     },
+    {
+        "type": "function",
+        "function": {
+            "name": "reconstruct_speaker_tab",
+            "description": "Reverse-engineer per-tournament Speaker Tabs directly from raw preliminary substantive speech scores in atomos.db. Use this whenever asked about: (1) a debater's average rank in the Speaker Tab across tournaments or their tournament-by-tournament Speaker Tab ranks (e.g. 'what is Balishta\\'s avg rank in Speaker tab'), (2) recreating/reconstructing the Speaker Tab for a specific tournament (e.g. 'Henley 2026', 'Chaps', 'SLSDC'), or (3) which debater has the best average Speaker Tab rank across the circuit.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "identifier": {
+                        "type": "string",
+                        "description": "Optional debater canonical name or Person ID (e.g. 'Balishta Wijesinghe', 'Balishta', '42'). Provide this to get a debater's tournament-by-tournament Speaker Tab ranks and career Average Speaker Tab Rank."
+                    },
+                    "tournament": {
+                        "type": "string",
+                        "description": "Optional tournament name, slug, or circuit alias (e.g. 'Henley 2026', 'Chaps', 'SLSDC', 'VVIDC', 'Vijis', 'Metho', 'RIC', 'AIS', 'APIIT', 'Stanleys', 'Nixons'). Provide this to reconstruct a tournament's Speaker Tab."
+                    },
+                    "min_tournaments": {
+                        "type": "integer",
+                        "description": "For circuit-wide average speaker tab rank leaderboard mode (when neither identifier nor tournament is specified), minimum qualifying tournaments required (default: 3)."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum rows to return for tournament speaker tab or circuit leaderboard (default: 25)."
+                    }
+                }
+            }
+        }
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "reconstruct_team_tab",
+            "description": "Reverse-engineer Preliminary Team Tabs (Break Standings) for any tournament or team directly from raw preliminary debates, adjudicator ballots, and speech scores in atomos.db. Returns prelim wins, ballots won, total team speaker points, ATSS, average margin, reconstructed prelim seed/rank (1..N), whether the team broke, and career Average Prelim Team Tab Rank.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "team_name": {
+                        "type": "string",
+                        "description": "Optional team name (e.g. 'DS B', 'DS A', 'RC A') to retrieve their reconstructed preliminary team tab rank across every tournament."
+                    },
+                    "tournament": {
+                        "type": "string",
+                        "description": "Optional tournament name, slug, or alias (e.g. 'Henley 2026', 'Chaps', 'SLSDC', 'VVIDC') to reconstruct the full preliminary team tab for that tournament."
+                    },
+                    "limit": {
+                        "type": "integer",
+                        "description": "Maximum teams to return (default: 25)."
+                    }
+                }
+            }
+        }
+    },
 ]
 
 
@@ -671,6 +723,28 @@ def dispatch_tool(
             deb = args.get("debater") or args.get("debater_name") or args.get("identifier") or ""
             adj = args.get("adjudicator") or args.get("adjudicator_name") or args.get("judge")
             return query_engine.get_debater_adjudicator_record(debater=deb, adjudicator=adj)
+
+        elif name == "reconstruct_speaker_tab":
+            ident = args.get("identifier") or args.get("debater") or args.get("name")
+            tourn = args.get("tournament")
+            min_t = args.get("min_tournaments", 3)
+            limit = args.get("limit", 25)
+            return query_engine.reconstruct_speaker_tab(
+                identifier=ident,
+                tournament=tourn,
+                min_tournaments=min_t,
+                limit=limit,
+            )
+
+        elif name == "reconstruct_team_tab":
+            tname = args.get("team_name") or args.get("team")
+            tourn = args.get("tournament")
+            limit = args.get("limit", 25)
+            return query_engine.reconstruct_team_tab(
+                tournament=tourn,
+                team_name=tname,
+                limit=limit,
+            )
 
         else:
             return {"error": f"Unknown tool name '{name}'."}

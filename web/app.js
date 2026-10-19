@@ -3331,12 +3331,16 @@
     if (qWords.length > 0) {
       const sortedByActivity = [...(spkAll || [])].sort((a, b) => (b.prelims_debated || 0) - (a.prelims_debated || 0));
       for (const w of qWords) {
-        if (matchedSpeakers.some(ms => (ms.name || '').toLowerCase().split(/\s+/).includes(w))) continue;
+        const wStem = w.endsWith('s') && w.length > 4 ? w.slice(0, -1) : w;
+        if (matchedSpeakers.some(ms => {
+          const tokens = (ms.name || '').toLowerCase().split(/\s+/);
+          return tokens.includes(w) || tokens.includes(wStem);
+        })) continue;
         const found = sortedByActivity.find(s => {
           const sName = (s.name || s.speaker_name || '').toLowerCase();
           if (seenIds.has(sName)) return false;
           const parts = sName.replace(/[^a-z0-9\s]/g, ' ').split(/\s+/);
-          return parts.includes(w);
+          return parts.includes(w) || parts.includes(wStem);
         });
         if (found) {
           seenIds.add((found.name || found.speaker_name || '').toLowerCase());
@@ -3349,9 +3353,9 @@
       const rows = matchedSpeakers.slice(0, 5);
       return [
         `### Debater Comparison (${rows.map(r => r.name).join(' vs ')})`,
-        `| Debater | Institution | Speaker Avg | Elo (Peak) | Win % | Prelims | Highest Achievement |`,
-        `| --- | --- | --- | --- | --- | --- | --- |`,
-        ...rows.map(s => `| ${s.name} | ${s.institution} | ${fmt(s.speaker_score, 3)} | ${fmt(s.elo || 1500, 3)} (${fmt(s.peak_elo || s.elo || 1500, 3)}) | ${fmt(s.win_percentage, 3)}% | ${s.prelims_debated} | ${s.highest_achievement || 'Preliminary Rounds'} |`),
+        `| Debater | Institution | Speaker Avg | Avg Speaker Tab Rank | Elo (Peak) | Win % | Prelims | Highest Achievement |`,
+        `| --- | --- | --- | --- | --- | --- | --- | --- |`,
+        ...rows.map(s => `| ${s.name} | ${s.institution} | ${fmt(s.speaker_score, 3)} | ${s.avg_speaker_tab_rank != null ? fmt(s.avg_speaker_tab_rank, 3) : '—'} | ${fmt(s.elo || 1500, 3)} (${fmt(s.peak_elo || s.elo || 1500, 3)}) | ${fmt(s.win_percentage, 3)}% | ${s.prelims_debated} | ${s.highest_achievement || 'Preliminary Rounds'} |`),
       ].join('\n');
     }
 
@@ -3361,19 +3365,28 @@
       const p1 = pos['1st'] && pos['1st'].average ? fmt(pos['1st'].average, 3) : '—';
       const p2 = pos['2nd'] && pos['2nd'].average ? fmt(pos['2nd'].average, 3) : '—';
       const p3 = pos['3rd'] && pos['3rd'].average ? fmt(pos['3rd'].average, 3) : '—';
+      const tb = matchedSpeaker.tournament_breakdown || [];
+      const eligRanks = tb.filter(t => t.speaker_tab_rank_avg != null).map(t => t.speaker_tab_rank_avg);
+      const eligDeriv = eligRanks.length > 0
+        ? `((${eligRanks.join(' + ')}) / ${eligRanks.length} = ${eligRanks.reduce((a, b) => a + b, 0)} / ${eligRanks.length} = ${fmt(matchedSpeaker.avg_speaker_tab_rank, 3)})`
+        : '';
       const lines = [
         `### ${matchedSpeaker.name} (${matchedSpeaker.institution})`,
         `- **Speaker Average:** ${fmt(matchedSpeaker.speaker_score, 3)} pts (${matchedSpeaker.prelims_debated} prelims across ${matchedSpeaker.tournaments_debated} tournaments)`,
+        `- **Career Avg Speaker Tab Rank (WSDC Qualifying >=3 Prelims):** **${matchedSpeaker.avg_speaker_tab_rank != null ? fmt(matchedSpeaker.avg_speaker_tab_rank, 3) : '—'}** ${eligDeriv}`,
+        `- **Career Avg Speaker Tab Rank (Tabbycat Full Prelims by Total Pts):** **${matchedSpeaker.avg_speaker_tab_rank_full_prelims != null ? fmt(matchedSpeaker.avg_speaker_tab_rank_full_prelims, 3) : '—'}** · **Best Tab Rank:** ${matchedSpeaker.best_speaker_tab_rank_avg ? '#' + matchedSpeaker.best_speaker_tab_rank_avg : '—'}`,
         `- **Debater Elo:** ${fmt(matchedSpeaker.elo || 1500, 3)} (Peak: ${fmt(matchedSpeaker.peak_elo || matchedSpeaker.elo || 1500, 3)})`,
         `- **Win Rate:** ${fmt(matchedSpeaker.win_percentage, 3)}% · **StDev:** ${fmt(matchedSpeaker.stdev, 3)}`,
         `- **Highest Achievement:** ${matchedSpeaker.highest_achievement || 'Preliminary Rounds'} · **National Status:** ${matchedSpeaker.national_level || '—'}`,
         `- **Position Averages:** 1st: ${p1} · 2nd: ${p2} · 3rd: ${p3}`,
       ];
-      const tb = matchedSpeaker.tournament_breakdown || [];
       if (tb.length > 0) {
-        lines.push('', `| Tournament | Team | Avg Score | Stage Reached |`, `| --- | --- | --- | --- |`);
+        lines.push('', `| Tournament | Team | Prelims | Avg Score | Total Pts | Speaker Tab Rank (Avg) | Speaker Tab Rank (Total) | Stage Reached |`, `| --- | --- | --- | --- | --- | --- | --- | --- |`);
         tb.forEach(t => {
-          lines.push(`| ${t.tournament_name} | ${t.team_name || '—'} | ${fmt(t.average_score || t.tournament_average, 3)} | ${t.highest_break || t.highest_stage || 'Preliminary Rounds'} |`);
+          const rAvg = t.speaker_tab_rank_avg != null ? `#${t.speaker_tab_rank_avg} / ${t.eligible_speakers || '—'}` : 'Ineligible (<3)';
+          const rTot = t.speaker_tab_rank_total != null ? `#${t.speaker_tab_rank_total} / ${t.total_speakers || '—'}` : '—';
+          const prelimStr = t.max_prelims ? `${t.prelims_debated}/${t.max_prelims}` : `${t.prelims_debated || '—'}`;
+          lines.push(`| ${t.tournament_name} | ${t.team_name || '—'} | ${prelimStr} | **${fmt(t.average_score || t.tournament_average, 3)}** | ${t.total_points != null ? fmt(t.total_points, 3) : '—'} | **${rAvg}** | ${rTot} | ${t.highest_break || t.highest_stage || 'Preliminary Rounds'} |`);
         });
       }
       return lines.join('\n');
