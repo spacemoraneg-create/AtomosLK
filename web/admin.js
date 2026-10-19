@@ -2734,7 +2734,7 @@
     if (authParam) {
       if (passwordInput) passwordInput.value = authParam;
       handleLogin().then(() => {
-        if (authParam === 'Sexyback' || authParam === 'Olivedelight') {
+        if (getStoredToken()) {
           if (tabParam) {
             const tabBtn = document.querySelector(`.admin-tab-btn[data-tab="pane${tabParam.charAt(0).toUpperCase() + tabParam.slice(1)}"]`);
             if (tabBtn) tabBtn.click();
